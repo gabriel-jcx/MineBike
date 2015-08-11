@@ -12,6 +12,7 @@ gui.stats.resistance=Resistance
 gui.quest.current=Current Quest
 
 world.structure.tower=Tower
+world.structure.garden=Garden
 world.theme.norman=Norman
 world.theme.desert=Desert
 world.theme.ice=Ice

@@ -9,70 +9,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class ThemeIce implements Theme {
 	
-	public Block getWallBlock() {
-		return Blocks.snow;
-	}
-	
-	public int getWallMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateWallBlock() {
-		return Blocks.snow;
-	}
-	
-	public int getAlternateWallMeta() {
-		return 0;
-	}
-	
-	public Block getFloorBlock() {
-		return Blocks.ice;
-	}
-	
-	public int getFloorMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateFloorBlock() {
-		return Blocks.packed_ice;
-	}
-	
-	public int getAlternateFloorMeta() {
-		return 0;
-	}
-	
-	public Block getRoofBlock() {
-		return Blocks.gold_block;
-	}
-	
-	public int getRoofMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateRoofBlock() {
-		return Blocks.iron_block;
-	}
-	
-	public int getAlternateRoofMeta() {
-		return 0;
-	}
-	
-	public Block getStairBlock() {
-		return Blocks.stone_brick_stairs;
-	}
-	
-	public Block getTorchBlock() {
-		return Blocks.air;
-	}
-	
-	public Block getCenterBlock() {
-		return Blocks.diamond_block;
-	}
-	
-	public Block getDoorBlock() {
-		return Blocks.iron_bars;
-	}
-	
 	public String getName() {
 		return "ice";
 	}
@@ -84,5 +20,58 @@ public class ThemeIce implements Theme {
 		list.add(BiomeGenBase.iceMountains);
 		list.add(BiomeGenBase.icePlains);
 		return list;
+	}
+	
+	public BlockMeta getWallBlock() {
+		return new BlockMeta(Blocks.snow,0);
+	}
+	
+	public BlockMeta getAlternateWallBlock() {
+		return new BlockMeta(Blocks.snow,0);
+	}
+	
+	public BlockMeta getFloorBlock() {
+		return new BlockMeta(Blocks.ice,0);
+	}
+	
+	public BlockMeta getAlternateFloorBlock() {
+		return new BlockMeta(Blocks.packed_ice,0);
+	}
+	
+	public BlockMeta getRoofBlock() {
+		return new BlockMeta(Blocks.gold_block,0);
+	}
+	
+	public BlockMeta getAlternateRoofBlock() {
+		return new BlockMeta(Blocks.iron_block,0);
+	}
+	
+	
+	public Block getStairBlock() {
+		return Blocks.stone_brick_stairs;
+	}
+	
+	public Block getTorchBlock() {
+		return Blocks.air;
+	}
+	
+	public BlockMeta getCenterBlock() {
+		return new BlockMeta(Blocks.diamond_block,0);
+	}
+	
+	public Block getDoorBlock() {
+		return Blocks.iron_bars;
+	}
+	
+	public BlockMeta getCrop() {
+		return new BlockMeta(Blocks.melon_stem,1);
+	}
+
+	public BlockMeta getFence() {
+		return new BlockMeta(Blocks.fence,0);
+	}
+
+	public BlockMeta getSoil() {
+		return new BlockMeta(Blocks.farmland,7);
 	}
 }

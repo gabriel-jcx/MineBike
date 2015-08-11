@@ -3,75 +3,13 @@ package com.ramon.hellow.worldgen;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ramon.hellow.worldgen.Theme.BlockMeta;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class ThemeNorman implements Theme {
-	
-	public Block getWallBlock() {
-		return Blocks.cobblestone;
-	}
-	
-	public int getWallMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateWallBlock() {
-		return Blocks.mossy_cobblestone;
-	}
-	
-	public int getAlternateWallMeta() {
-		return 0;
-	}
-	
-	public Block getFloorBlock() {
-		return Blocks.planks;
-	}
-	
-	public int getFloorMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateFloorBlock() {
-		return Blocks.planks;
-	}
-	
-	public int getAlternateFloorMeta() {
-		return 1;
-	}
-	
-	public Block getRoofBlock() {
-		return Blocks.planks;
-	}
-	
-	public int getRoofMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateRoofBlock() {
-		return Blocks.hay_block;
-	}
-	
-	public int getAlternateRoofMeta() {
-		return 0;
-	}
-	
-	public Block getStairBlock() {
-		return Blocks.oak_stairs;
-	}
-	
-	public Block getTorchBlock() {
-		return Blocks.torch;
-	}
-	
-	public Block getCenterBlock() {
-		return Blocks.glowstone;
-	}
-	
-	public Block getDoorBlock() {
-		return Blocks.wooden_door;
-	}
 	
 	public String getName() {
 		return "norman";
@@ -88,5 +26,57 @@ public class ThemeNorman implements Theme {
 		list.add(BiomeGenBase.extremeHills);
 		list.add(BiomeGenBase.jungle);
 		return list;
+	}
+	
+	public BlockMeta getWallBlock() {
+		return new BlockMeta(Blocks.cobblestone,0);
+	}
+	
+	public BlockMeta getAlternateWallBlock() {
+		return new BlockMeta(Blocks.mossy_cobblestone,0);
+	}
+	
+	public BlockMeta getFloorBlock() {
+		return new BlockMeta(Blocks.planks,0);
+	}
+	
+	public BlockMeta getAlternateFloorBlock() {
+		return new BlockMeta(Blocks.planks,1);
+	}
+	
+	public BlockMeta getRoofBlock() {
+		return new BlockMeta(Blocks.planks,0);
+	}
+	
+	public BlockMeta getAlternateRoofBlock() {
+		return new BlockMeta(Blocks.hay_block,0);
+	}
+	
+	public Block getStairBlock() {
+		return Blocks.oak_stairs;
+	}
+	
+	public Block getTorchBlock() {
+		return Blocks.torch;
+	}
+	
+	public BlockMeta getCenterBlock() {
+		return new BlockMeta(Blocks.glowstone,0);
+	}
+	
+	public Block getDoorBlock() {
+		return Blocks.wooden_door;
+	}
+	
+	public BlockMeta getCrop() {
+		return new BlockMeta(Blocks.carrots,1);
+	}
+	
+	public BlockMeta getFence() {
+		return new BlockMeta(Blocks.fence,0);
+	}
+
+	public BlockMeta getSoil() {
+		return new BlockMeta(Blocks.farmland,7);
 	}
 }

@@ -1,5 +1,6 @@
 package com.ramon.hellow;
 
+import java.util.List;
 import java.util.Random;
 
 import com.ramon.hellow.worldgen.Structure;
@@ -58,6 +59,18 @@ public class WorldGen implements IWorldGenerator {
 					if (b==Blocks.grass) {
 						b = Blocks.dirt;
 					}
+					/*Code below is unusable because it introduces order dependence - the way chunks generate is dependent upon when they are generated
+					 * for a procedural game like Minecraft this is VERY BAD
+					List<WorldStructure> structs = BikeWorldData.get(world).getStructures();
+					for (WorldStructure ws:structs) {
+						int xc = ws.getX();
+						int yc = ws.getY();
+						int zc = ws.getZ();
+						//Minimum distance from other structures
+						if (Math.sqrt(Math.pow(xc-x,2)+Math.pow(yc-y, 2)+Math.pow(zc-z, 2))<200) {
+							return;
+						}
+					}*/
 					//If we can generate a structure on this block
 					if (context.canGenerateOn.contains(b)) {
 						//Get a theme for this biome
@@ -67,7 +80,7 @@ public class WorldGen implements IWorldGenerator {
 							return;
 						}
 						//Pick a structure
-						Structure structure = new StructureTower();
+						Structure structure = context.getStructure(theme,random);
 						int width = structure.getWidth();
 						int length = structure.getLength();
 						int depth = structure.getDepth();
@@ -76,9 +89,9 @@ public class WorldGen implements IWorldGenerator {
 						for(int i=x-width/2;i<=x+width/2;i++) {
 							for(int j=z-length/2;j<=z+length/2;j++) {
 								boolean outlineX = (i==x-width/2||i==x+width/2);
-								boolean outlineY = (j==z-length/2||j==z+length/2);
-								boolean outline = (outlineX||outlineY);
-								boolean corner = (outlineX&&outlineY);
+								boolean outlineZ = (j==z-length/2||j==z+length/2);
+								boolean outline = (outlineX||outlineZ);
+								boolean corner = (outlineX&&outlineZ);
 								for (int k=y-depth;k<=y;k++) {
 									world.setBlock(i,k,j,b);
 								}

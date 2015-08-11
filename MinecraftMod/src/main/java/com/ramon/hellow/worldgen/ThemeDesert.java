@@ -9,70 +9,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class ThemeDesert implements Theme {
 	
-	public Block getWallBlock() {
-		return Blocks.sandstone;
-	}
-	
-	public int getWallMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateWallBlock() {
-		return Blocks.sandstone;
-	}
-	
-	public int getAlternateWallMeta() {
-		return 1;
-	}
-	
-	public Block getFloorBlock() {
-		return Blocks.planks;
-	}
-	
-	public int getFloorMeta() {
-		return 2;
-	}
-	
-	public Block getAlternateFloorBlock() {
-		return Blocks.sandstone;
-	}
-	
-	public int getAlternateFloorMeta() {
-		return 2;
-	}
-	
-	public Block getRoofBlock() {
-		return Blocks.brick_block;
-	}
-	
-	public int getRoofMeta() {
-		return 0;
-	}
-	
-	public Block getAlternateRoofBlock() {
-		return Blocks.nether_brick;
-	}
-	
-	public int getAlternateRoofMeta() {
-		return 0;
-	}
-	
-	public Block getStairBlock() {
-		return Blocks.sandstone_stairs;
-	}
-	
-	public Block getTorchBlock() {
-		return Blocks.redstone_torch;
-	}
-	
-	public Block getCenterBlock() {
-		return Blocks.redstone_lamp;
-	}
-	
-	public Block getDoorBlock() {
-		return Blocks.iron_door;
-	}
-	
 	public String getName() {
 		return "desert";
 	}
@@ -85,5 +21,57 @@ public class ThemeDesert implements Theme {
 		list.add(BiomeGenBase.mesaPlateau);
 		list.add(BiomeGenBase.mesaPlateau_F);
 		return list;
+	}
+	
+	public BlockMeta getWallBlock() {
+		return new BlockMeta(Blocks.sandstone,0);
+	}
+	
+	public BlockMeta getAlternateWallBlock() {
+		return new BlockMeta(Blocks.sandstone,1);
+	}
+	
+	public BlockMeta getFloorBlock() {
+		return new BlockMeta(Blocks.planks,2);
+	}
+		
+	public BlockMeta getAlternateFloorBlock() {
+		return new BlockMeta(Blocks.planks,0);
+	}
+	
+	public BlockMeta getRoofBlock() {
+		return new BlockMeta(Blocks.brick_block,0);
+	}
+	
+	public BlockMeta getAlternateRoofBlock() {
+		return new BlockMeta(Blocks.nether_brick,0);
+	}
+	
+	public Block getStairBlock() {
+		return Blocks.sandstone_stairs;
+	}
+	
+	public Block getTorchBlock() {
+		return Blocks.redstone_torch;
+	}
+	
+	public BlockMeta getCenterBlock() {
+		return new BlockMeta(Blocks.redstone_lamp,0);
+	}
+	
+	public Block getDoorBlock() {
+		return Blocks.iron_door;
+	}
+	
+	public BlockMeta getCrop() {
+		return new BlockMeta(Blocks.wheat,2);
+	}
+
+	public BlockMeta getFence() {
+		return new BlockMeta(Blocks.nether_brick_fence,0);
+	}
+
+	public BlockMeta getSoil() {
+		return new BlockMeta(Blocks.farmland,7);
 	}
 }

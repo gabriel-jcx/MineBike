@@ -25,9 +25,7 @@ public class Bike extends Item {
 	
 	public ItemStack onItemRightClick(ItemStack i, World w, EntityPlayer p)
     {
-		if (context.getSpeed() < 0.4) {
-			context.setSpeed((float) (context.getSpeed()+.1));
-		}
+		context.setSpeed((float) (Math.min(0.4,context.getSpeed()+.04)));
         return i;
     }
 }

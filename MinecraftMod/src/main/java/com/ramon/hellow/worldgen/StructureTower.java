@@ -37,11 +37,11 @@ public class StructureTower implements Structure {
 		for (int s=0;s<stories;s++) {
 			points = getDisc(x,y+s*getStoryHeight(),z,getRadius()-1,false);
 			for (Point point:points) {
-				Block bl = theme.getFloorBlock();
-				int mt = theme.getFloorMeta();
+				Block bl = theme.getFloorBlock().getBlock();
+				int mt = theme.getFloorBlock().getMeta();
 				if (random.nextInt(5)<1) {
-					bl = theme.getAlternateFloorBlock();
-					mt = theme.getAlternateFloorMeta();
+					bl = theme.getAlternateFloorBlock().getBlock();
+					mt = theme.getAlternateFloorBlock().getMeta();
 				}
 				world.setBlock(point.x, point.y,point.z, bl,mt,1+2);
 			}
@@ -52,8 +52,8 @@ public class StructureTower implements Structure {
 		while(roofRadius>=0) {
 			points = getDisc(x,y+roofHeight,z,roofRadius,true);
 			for(Point point : points) {
-				Block bl = theme.getRoofBlock();
-				int mt = theme.getRoofMeta();
+				Block bl = theme.getRoofBlock().getBlock();
+				int mt = theme.getRoofBlock().getMeta();
 				world.setBlock(point.x, y+roofHeight, point.z, bl, mt, 1+2);
 			}
 			roofHeight++;
@@ -76,7 +76,7 @@ public class StructureTower implements Structure {
 		}
 		
 		//Centerpiece
-		world.setBlock(x, y, z, theme.getCenterBlock());
+		world.setBlock(x, y, z, theme.getCenterBlock().getBlock(), theme.getCenterBlock().getMeta(), 1+2);
 		
 		//Doorway
 		world.setBlock(x, y+1, z+getLength()/2, Blocks.air);
@@ -99,11 +99,11 @@ public class StructureTower implements Structure {
 	private void buildWall(World world,int i,int j,int y,Theme theme,Random random,int height) {
 		for (int k=y;k<y+height;k++) {
 			//Walls
-			Block bl = theme.getWallBlock();
-			int mt = theme.getWallMeta();
+			Block bl = theme.getWallBlock().getBlock();
+			int mt = theme.getWallBlock().getMeta();
 			if (random.nextInt(5)<1) {
-				bl = theme.getAlternateWallBlock();
-				mt = theme.getAlternateWallMeta();
+				bl = theme.getAlternateWallBlock().getBlock();
+				mt = theme.getAlternateWallBlock().getMeta();
 			}
 			world.setBlock(i, k, j, bl, mt, 1+2);
 		}

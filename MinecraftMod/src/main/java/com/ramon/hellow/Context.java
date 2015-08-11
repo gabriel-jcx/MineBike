@@ -8,6 +8,7 @@ import java.util.Random;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 
 import com.ramon.hellow.worldgen.Structure;
+import com.ramon.hellow.worldgen.StructureGarden;
 import com.ramon.hellow.worldgen.StructureTower;
 import com.ramon.hellow.worldgen.Theme;
 import com.ramon.hellow.worldgen.ThemeDesert;
@@ -65,21 +66,41 @@ public class Context {
 		canGenerateOn.add(Blocks.dirt);
 		canGenerateOn.add(Blocks.sand);
 		canGenerateOn.add(Blocks.stone);
+		canGenerateOn.add(Blocks.stained_hardened_clay);
+		canGenerateOn.add(Blocks.hardened_clay);
 		
 		themes.add(new ThemeDesert());
 		themes.add(new ThemeNorman());
 		themes.add(new ThemeIce());
 		
 		structures.add(new StructureTower());
+		structures.add(new StructureGarden());
 	}
 	
 	public Theme getTheme(BiomeGenBase biome,Random random) {
-		int i = random.nextInt(themes.size()-1);
+		int i = random.nextInt(themes.size());
 		int j = 0;
 		while(j<themes.size()) {
 			Theme th = themes.get(i);
 			if ( th.getBiomes().contains(biome) ) {
 				return th;
+			}
+			i++;
+			if (i>=themes.size()) {
+				i-=themes.size();
+			}
+			j++;
+		}
+		return null;
+	}
+	
+	public Structure getStructure(Theme theme, Random random) {
+		int i = random.nextInt(structures.size());
+		int j = 0;
+		while(j<structures.size()) {
+			Structure struct = structures.get(i);
+			if (true) {
+				return struct;
 			}
 			i++;
 			if (i>=themes.size()) {

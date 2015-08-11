@@ -12,27 +12,45 @@ public interface Theme {
 	
 	public List<BiomeGenBase> getBiomes();
 	
-	public Block getWallBlock();
-	public int getWallMeta();
-	public Block getAlternateWallBlock();
-	public int getAlternateWallMeta();
+	public BlockMeta getWallBlock();
+	public BlockMeta getAlternateWallBlock();
 	
-	public Block getFloorBlock();
-	public int getFloorMeta();
-	public Block getAlternateFloorBlock();
-	public int getAlternateFloorMeta();
+	public BlockMeta getFloorBlock();
+	public BlockMeta getAlternateFloorBlock();
 	
-	public Block getRoofBlock();
-	public int getRoofMeta();
-	public Block getAlternateRoofBlock();
-	public int getAlternateRoofMeta();
+	public BlockMeta getRoofBlock();
+	public BlockMeta getAlternateRoofBlock();
 	
 	public Block getStairBlock();
 	
 	public Block getTorchBlock();
 	
-	public Block getCenterBlock();
+	public BlockMeta getCenterBlock();
 
 	public Block getDoorBlock();
+	
+	public BlockMeta getCrop();
+	
+	public BlockMeta getFence();
+	
+	public BlockMeta getSoil();
+	
+	public class BlockMeta {
+		private Block block;
+		private int meta;
+		
+		protected BlockMeta(Block block,int meta) {
+			this.block = block;
+			this.meta = meta;
+		}
+		
+		public Block getBlock() {
+			return block;
+		}
+		
+		public int getMeta() {
+			return meta;
+		}
+	}
 	
 }
