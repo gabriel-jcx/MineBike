@@ -8,6 +8,7 @@ import com.ramon.hellow.Main;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -50,7 +51,7 @@ public class GuiStats extends Gui {
 	    	drawRect(0, 0, xPos + WIDTH , yPos + HEIGHT , 0xFF000000);
 	    	drawRect(1, 1, xPos + WIDTH - 1 , yPos + HEIGHT - 1, 0xFFAAAAAA);
 	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	    	mc.fontRenderer.drawString("Heartrate: ",xPos,yPos+3,0xFFFFFF);
+	    	mc.fontRenderer.drawString(I18n.format("gui.stats.heartrate", new Object[0])+": ",xPos,yPos+3,0xFFFFFF);
 	    	mc.renderEngine.bindTexture(HEART_TEXTURE);
 	        if (context.bump == false) {
 	        	drawTexturedModalRect(xPos + HEART_OFFSET, yPos, 0, 0, HEART_SIZE , HEART_SIZE);
@@ -58,9 +59,9 @@ public class GuiStats extends Gui {
 	        else {
 	        	drawTexturedModalRect(xPos + HEART_OFFSET, yPos, HEART_SIZE, 0, HEART_SIZE, HEART_SIZE);
 	        }
-	        mc.fontRenderer.drawString(context.heartrate+" BPM",xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
-	    	mc.fontRenderer.drawString("Speed: "+(context.getSpeed()*20)+" meters per second"+" Rotstate: "+context.rotation,xPos,yPos+HEART_SIZE,0xFFFFFF);
-	    	mc.fontRenderer.drawString("Resistance: "+(context.resistance)+" ("+context.block.getLocalizedName()+")",xPos,yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT,0xFFFFFF);
+	        mc.fontRenderer.drawString(context.heartrate+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
+	    	mc.fontRenderer.drawString(I18n.format("gui.stats.speed", new Object[0])+": "+(context.getSpeed()*20)+" meters per second"+" Rot: "+context.rotation,xPos,yPos+HEART_SIZE,0xFFFFFF);
+	    	mc.fontRenderer.drawString(I18n.format("gui.stats.resistance", new Object[0])+": "+(context.resistance)+" ("+context.block.getLocalizedName()+")",xPos,yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT,0xFFFFFF);
     	}
     }
 }

@@ -74,7 +74,7 @@ public class ThemeNorman implements Theme {
 	}
 	
 	public String getName() {
-		return "Norman";
+		return "norman";
 	}
 
 	public List<BiomeGenBase> getBiomes() {

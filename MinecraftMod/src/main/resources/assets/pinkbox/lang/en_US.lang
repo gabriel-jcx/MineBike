@@ -1,1 +1,17 @@
 item.bike.name=Bike
+
+gui.connection.title=Connection
+gui.connection.connect=Connect
+gui.connection.test=Test
+
+gui.stats.heartrate=Heartrate
+gui.stats.bpm=BPM
+gui.stats.speed=Speed
+gui.stats.resistance=Resistance
+
+gui.quest.current=Current Quest
+
+world.structure.tower=Tower
+world.theme.norman=Norman
+world.theme.desert=Desert
+world.theme.ice=Ice

@@ -11,6 +11,7 @@ import com.ramon.hellow.worldgen.WorldStructure;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -42,27 +43,36 @@ public class WorldGen implements IWorldGenerator {
 	private void generateSurface(World world, Random random, int chunkX, int chunkZ, Context context)
 	{
 		BiomeGenBase biome = world.getBiomeGenForCoords(chunkX, chunkZ);
+		//Check every block in the chunk
 		for(int x=chunkX;x<chunkX+16;x++) {
 			for (int z=chunkZ;z<chunkZ+16;z++) {
+				//Low probability - so we don't have structures everywhere!
 				if (random.nextInt(10000)<5) {
 					int y = 200;
+					//Blocks that cannot support a structure (make this into a data structure of some kind?)
 					while(world.getBlock(x,y,z)==Blocks.air||world.getBlock(x, y, z)==Blocks.snow_layer) {
 						y--;
 					}
 					Block b = world.getBlock(x, y, z);
+					//Don't want to place a structure on grass - only on dirt
 					if (b==Blocks.grass) {
 						b = Blocks.dirt;
 					}
+					//If we can generate a structure on this block
 					if (context.canGenerateOn.contains(b)) {
+						//Get a theme for this biome
 						Theme theme = context.getTheme(biome,random);
+						//If no themes work in this biome
 						if (theme==null) {
 							return;
 						}
+						//Pick a structure
 						Structure structure = new StructureTower();
 						int width = structure.getWidth();
 						int length = structure.getLength();
 						int depth = structure.getDepth();
 						int height = structure.getHeight();
+						//Carve out some space in the world for the structure
 						for(int i=x-width/2;i<=x+width/2;i++) {
 							for(int j=z-length/2;j<=z+length/2;j++) {
 								boolean outlineX = (i==x-width/2||i==x+width/2);
@@ -79,15 +89,16 @@ public class WorldGen implements IWorldGenerator {
 								}
 							}
 						}
+						//Build it!
 						structure.generate(world, x, y, z, theme, random);
-						WorldStructure struct = new WorldStructure(theme.getName()+" "+structure.getName(),x,y,z,world,structure,theme);
+						WorldStructure struct = new WorldStructure(I18n.format("world.theme."+theme.getName(),new Object[0])+" "+I18n.format("world.structure."+structure.getName(),new Object[0]),x,y,z,world,structure,theme);
+						//Keep track of it in our world data
 						BikeWorldData.get(world).addStructure(struct);
 						return;
 					}
 				}
 			}
 		}
-		//this.addOreSpawn(Tutorial.tutorialBlock, world, random, x, z, 16, 16, 4 + random.nextInt(3), 5, 15, 50);
 	}
 	 
 	private void generateNether(World world, Random random, int x, int z)
@@ -95,7 +106,6 @@ public class WorldGen implements IWorldGenerator {
 		int Xcoord = x + random.nextInt(16);
 	    int Ycoord = 10 + random.nextInt(128);
 	    int Zcoord = z + random.nextInt(16);
-	    //(new WorldGenMinable(Tutorial.tutorialBlock, 1, 15, Blocks.netherrack)).generate(world, random, Xcoord, Ycoord, Zcoord);
 	}
 	 
 	/**

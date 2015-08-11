@@ -11,6 +11,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -52,7 +53,7 @@ public class GuiQuest extends Gui {
 	    	int WIDTH = 200;
 	    	int HEIGHT = QUESTBOX_HEIGHT;
 	        drawTexturedModalRect(0, yPos, 0, 0, QUESTBOX_WIDTH , QUESTBOX_HEIGHT);
-	        mc.fontRenderer.drawString("Current Quest: ",xPos+2,yPos+2,0x000000);
+	        mc.fontRenderer.drawString(I18n.format("gui.quest.current", new Object[0])+": ",xPos+2,yPos+2,0x000000);
 	        mc.fontRenderer.drawString("Slay: "+100+"x §2Zombies",xPos+2,yPos+2+mc.fontRenderer.FONT_HEIGHT,0x000000);
 	    }
     }

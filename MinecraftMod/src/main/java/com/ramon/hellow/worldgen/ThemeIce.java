@@ -74,7 +74,7 @@ public class ThemeIce implements Theme {
 	}
 	
 	public String getName() {
-		return "Ice";
+		return "ice";
 	}
 	
 	public List<BiomeGenBase> getBiomes() {

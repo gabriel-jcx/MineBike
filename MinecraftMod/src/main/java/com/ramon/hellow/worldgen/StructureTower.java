@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 public class StructureTower implements Structure {
 	
 	public String getName() {
-		return "Tower";
+		return "tower";
 	}
 	
 	public int getWidth() { return 6; }
@@ -130,6 +130,7 @@ public class StructureTower implements Structure {
 		int curX = radius;
 		int curZ = 0;
 		int decisionOver2 = 1 - curX;
+		//Circle algorithm (thanks wikipedia)
 		while(curX>=curZ) {
 			points.add(new Point(x+curX,y,z+curZ));
 			points.add(new Point(x+curZ,y,z+curX));

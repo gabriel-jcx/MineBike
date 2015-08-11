@@ -14,7 +14,9 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ClientEventHandler {
@@ -62,6 +64,13 @@ public class ClientEventHandler {
 					BiGXNetPacket packet = new BiGXNetPacket(BiGXPacketHandler.START, 0x0100, 0x2819, buf.array());
 					BiGXPacketHandler.sendPacket(packet);
 				}
+			}
+		}
+		
+		@SubscribeEvent
+		public void onGuiOpen(GuiOpenEvent event) {
+			if (event.gui instanceof GuiMainMenu) {
+				event.gui = new GuiMenu();
 			}
 		}
 }
