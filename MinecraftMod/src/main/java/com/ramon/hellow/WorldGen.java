@@ -3,12 +3,12 @@ package com.ramon.hellow;
 import java.util.List;
 import java.util.Random;
 
-import com.ramon.hellow.worldgen.Structure;
-import com.ramon.hellow.worldgen.StructureTower;
-import com.ramon.hellow.worldgen.Theme;
-import com.ramon.hellow.worldgen.ThemeDesert;
-import com.ramon.hellow.worldgen.ThemeNorman;
-import com.ramon.hellow.worldgen.WorldStructure;
+import com.ramon.hellow.worldgen.structures.Structure;
+import com.ramon.hellow.worldgen.structures.StructureTower;
+import com.ramon.hellow.worldgen.structures.WorldStructure;
+import com.ramon.hellow.worldgen.themes.Theme;
+import com.ramon.hellow.worldgen.themes.ThemeDesert;
+import com.ramon.hellow.worldgen.themes.ThemeNorman;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
@@ -59,18 +59,6 @@ public class WorldGen implements IWorldGenerator {
 					if (b==Blocks.grass) {
 						b = Blocks.dirt;
 					}
-					/*Code below is unusable because it introduces order dependence - the way chunks generate is dependent upon when they are generated
-					 * for a procedural game like Minecraft this is VERY BAD
-					List<WorldStructure> structs = BikeWorldData.get(world).getStructures();
-					for (WorldStructure ws:structs) {
-						int xc = ws.getX();
-						int yc = ws.getY();
-						int zc = ws.getZ();
-						//Minimum distance from other structures
-						if (Math.sqrt(Math.pow(xc-x,2)+Math.pow(yc-y, 2)+Math.pow(zc-z, 2))<200) {
-							return;
-						}
-					}*/
 					//If we can generate a structure on this block
 					if (context.canGenerateOn.contains(b)) {
 						//Get a theme for this biome
@@ -79,34 +67,32 @@ public class WorldGen implements IWorldGenerator {
 						if (theme==null) {
 							return;
 						}
+						//Allocate memory
+						theme.allocateMemory();
 						//Pick a structure
 						Structure structure = context.getStructure(theme,random);
-						int width = structure.getWidth();
-						int length = structure.getLength();
-						int depth = structure.getDepth();
-						int height = structure.getHeight();
+						int width = structure.width;
+						int length = structure.length;
+						int depth = structure.depth;
+						int height = structure.height;
 						//Carve out some space in the world for the structure
 						for(int i=x-width/2;i<=x+width/2;i++) {
 							for(int j=z-length/2;j<=z+length/2;j++) {
-								boolean outlineX = (i==x-width/2||i==x+width/2);
-								boolean outlineZ = (j==z-length/2||j==z+length/2);
-								boolean outline = (outlineX||outlineZ);
-								boolean corner = (outlineX&&outlineZ);
 								for (int k=y-depth;k<=y;k++) {
 									world.setBlock(i,k,j,b);
 								}
 								for (int k=y;k<y+height;k++) {
-									if (!outline) {
-										world.setBlock(i, k, j, Blocks.air);
-									}
+									world.setBlock(i, k, j, Blocks.air);
 								}
 							}
 						}
 						//Build it!
 						structure.generate(world, x, y, z, theme, random);
-						WorldStructure struct = new WorldStructure(I18n.format("world.theme."+theme.getName(),new Object[0])+" "+I18n.format("world.structure."+structure.getName(),new Object[0]),x,y,z,world,structure,theme);
+						WorldStructure struct = new WorldStructure(I18n.format("world.theme."+theme.name,new Object[0])+" "+I18n.format("world.structure."+structure.name,new Object[0]),x,y,z,world,structure,theme);
 						//Keep track of it in our world data
 						BikeWorldData.get(world).addStructure(struct);
+						//Deallocate memory
+						theme.deallocateMemory();
 						return;
 					}
 				}

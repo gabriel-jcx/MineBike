@@ -21,7 +21,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ClientEventHandler {
 	
-		public Context context;
+		private Context context;
 		
 		public ClientEventHandler(Context con) {
 			context = con;
@@ -70,7 +70,9 @@ public class ClientEventHandler {
 		@SubscribeEvent
 		public void onGuiOpen(GuiOpenEvent event) {
 			if (event.gui instanceof GuiMainMenu) {
-				event.gui = new GuiMenu();
+				GuiMenu gui = new GuiMenu();
+				gui.setContext(context);
+				event.gui = gui;
 			}
 		}
 }

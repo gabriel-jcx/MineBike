@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ramon.hellow.quests.Quest;
-import com.ramon.hellow.worldgen.WorldStructure;
+import com.ramon.hellow.worldgen.structures.WorldStructure;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -47,8 +47,8 @@ public class BikeWorldData extends WorldSavedData {
 			tag.setInteger("x", struct.getX());
 			tag.setInteger("y", struct.getY());
 			tag.setInteger("z", struct.getZ());
-			tag.setString("structure", struct.getStructure().getName());
-			tag.setString("theme", struct.getTheme().getName());
+			tag.setString("structure", struct.getStructure().name);
+			tag.setString("theme", struct.getTheme().name);
 			tag.setInteger("world", struct.getWorld().provider.dimensionId);
 			list.appendTag(tag);
 		}

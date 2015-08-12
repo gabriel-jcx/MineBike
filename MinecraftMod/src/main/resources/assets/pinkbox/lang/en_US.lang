@@ -3,6 +3,8 @@ item.bike.name=Bike
 gui.connection.title=Connection
 gui.connection.connect=Connect
 gui.connection.test=Test
+gui.connection.connected.false=Not Connected
+gui.connection.connected.true=Connected
 
 gui.stats.heartrate=Heartrate
 gui.stats.bpm=BPM

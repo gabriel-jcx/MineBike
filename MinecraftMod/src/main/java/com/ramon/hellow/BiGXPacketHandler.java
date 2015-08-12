@@ -13,8 +13,8 @@ import net.minecraft.client.Minecraft;
 
 public class BiGXPacketHandler {
 	
-	public static int START = 0x1101;
-	public static int STOP = 0x1102;
+	public static final int START = 0x1101;
+	public static final int STOP = 0x1102;
 	
 	public static boolean Handle(BiGXNetPacket packet) {
 		/*System.out.println( "[From Server] Packet Information "
@@ -47,6 +47,9 @@ public class BiGXPacketHandler {
 			case 0x1005:
 				//Heartrate
 				context.heartrate = buf.getInt();
+			break;
+			case 0x1102:
+				context.connected = true;
 			break;
 		}
 		return true;

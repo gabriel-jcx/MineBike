@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import com.ramon.hellow.BikeWorldData;
 import com.ramon.hellow.Context;
 import com.ramon.hellow.Main;
-import com.ramon.hellow.worldgen.WorldStructure;
+import com.ramon.hellow.worldgen.structures.WorldStructure;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;

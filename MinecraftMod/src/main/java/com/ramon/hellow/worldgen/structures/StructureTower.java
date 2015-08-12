@@ -1,32 +1,34 @@
-package com.ramon.hellow.worldgen;
+package com.ramon.hellow.worldgen.structures;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.ramon.hellow.worldgen.themes.Theme;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.world.World;
 
-public class StructureTower implements Structure {
+public class StructureTower extends Structure {
 	
-	public String getName() {
-		return "tower";
-	}
+	public static final String name = "tower";
 	
-	public int getWidth() { return 6; }
-	public int getLength() { return 6; }
-	public int getDepth() { return 3; }
-	public int getHeight() { return 25; }
+	public static final int width = 6;
+	public static final int length = 6;
+	public static final int depth = 3;
+	public static final int height = 25;
 	
-	private int getRadius() { return getWidth()/2; }
+	private static final int storyHeight = 4;
+		
+	private int getRadius() { return width/2; }
 	
 	public void generate(World world,int x,int y,int z,Theme theme,Random random) {
 		int minStories = 2;
 		int maxStories = 5;
 		int stories = minStories + random.nextInt(maxStories-minStories);
-		int height = stories * getStoryHeight();
+		int height = stories * storyHeight;
 		int radius = getRadius();
 		//Walls
 		ArrayList<Point> points = getCircle(x,y,z,radius);
@@ -35,13 +37,13 @@ public class StructureTower implements Structure {
 		}
 		//Floors
 		for (int s=0;s<stories;s++) {
-			points = getDisc(x,y+s*getStoryHeight(),z,getRadius()-1,false);
+			points = getDisc(x,y+s*storyHeight,z,getRadius()-1,false);
 			for (Point point:points) {
-				Block bl = theme.getFloorBlock().getBlock();
-				int mt = theme.getFloorBlock().getMeta();
+				Block bl = theme.getFloor().getBlock();
+				int mt = theme.getFloor().getMeta();
 				if (random.nextInt(5)<1) {
-					bl = theme.getAlternateFloorBlock().getBlock();
-					mt = theme.getAlternateFloorBlock().getMeta();
+					bl = theme.getAlternateFloor().getBlock();
+					mt = theme.getAlternateFloor().getMeta();
 				}
 				world.setBlock(point.x, point.y,point.z, bl,mt,1+2);
 			}
@@ -52,8 +54,8 @@ public class StructureTower implements Structure {
 		while(roofRadius>=0) {
 			points = getDisc(x,y+roofHeight,z,roofRadius,true);
 			for(Point point : points) {
-				Block bl = theme.getRoofBlock().getBlock();
-				int mt = theme.getRoofBlock().getMeta();
+				Block bl = theme.getRoof().getBlock();
+				int mt = theme.getRoof().getMeta();
 				world.setBlock(point.x, y+roofHeight, point.z, bl, mt, 1+2);
 			}
 			roofHeight++;
@@ -66,44 +68,40 @@ public class StructureTower implements Structure {
 		
 		//Torches
 		for(int s=0;s<stories;s++) {
-			world.setBlock(x-getWidth()/2+1, y+s*getStoryHeight()+2, z, theme.getTorchBlock(), 1, 1+3);
-			world.setBlock(x+getWidth()/2-1, y+s*getStoryHeight()+2, z, theme.getTorchBlock(), 2, 1+3);
+			world.setBlock(x-width/2+1, y+s*storyHeight+2, z, theme.getTorch().getBlock(), 1, 1+3);
+			world.setBlock(x+width/2-1, y+s*storyHeight+2, z, theme.getTorch().getBlock(), 2, 1+3);
 		}
 		
 		//Ladder
-		for(int i=1;i<(stories-1)*getStoryHeight()+1;i++) {
-			world.setBlock(x, y+i, z-getLength()/2+1, Blocks.ladder, 3, 1+2);
+		for(int i=1;i<(stories-1)*storyHeight+1;i++) {
+			world.setBlock(x, y+i, z-length/2+1, Blocks.ladder, 3, 1+2);
 		}
 		
 		//Centerpiece
-		world.setBlock(x, y, z, theme.getCenterBlock().getBlock(), theme.getCenterBlock().getMeta(), 1+2);
+		world.setBlock(x, y, z, theme.getCenter().getBlock(), theme.getCenter().getMeta(), 1+2);
 		
 		//Doorway
-		world.setBlock(x, y+1, z+getLength()/2, Blocks.air);
-		world.setBlock(x, y+2, z+getLength()/2, Blocks.air);
+		world.setBlock(x, y+1, z+length/2, Blocks.air);
+		world.setBlock(x, y+2, z+length/2, Blocks.air);
 		
 		//Door
 		int orientation = 3;
-		ItemDoor.placeDoorBlock(world, x, y+1, z+getLength()/2, orientation, theme.getDoorBlock());
+		ItemDoor.placeDoorBlock(world, x, y+1, z+length/2, orientation, theme.getDoor().getBlock());
 		
 		//Lever
-		if (theme.getDoorBlock()==Blocks.iron_door) {
-			world.setBlock(x-1, y+2, z+getLength()/2+1, Blocks.lever, 3, 1+2);
+		if (theme.getDoor().getBlock()==Blocks.iron_door) {
+			world.setBlock(x-1, y+2, z+length/2+1, Blocks.lever, 3, 1+2);
 		}
-	}
-	
-	private int getStoryHeight() {
-		return 4;
 	}
 	
 	private void buildWall(World world,int i,int j,int y,Theme theme,Random random,int height) {
 		for (int k=y;k<y+height;k++) {
 			//Walls
-			Block bl = theme.getWallBlock().getBlock();
-			int mt = theme.getWallBlock().getMeta();
+			Block bl = theme.getWall().getBlock();
+			int mt = theme.getWall().getMeta();
 			if (random.nextInt(5)<1) {
-				bl = theme.getAlternateWallBlock().getBlock();
-				mt = theme.getAlternateWallBlock().getMeta();
+				bl = theme.getAlternateWall().getBlock();
+				mt = theme.getAlternateWall().getMeta();
 			}
 			world.setBlock(i, k, j, bl, mt, 1+2);
 		}

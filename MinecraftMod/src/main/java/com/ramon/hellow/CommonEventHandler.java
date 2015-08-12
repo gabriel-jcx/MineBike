@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ramon.hellow.item.ModItems;
-import com.ramon.hellow.worldgen.WorldStructure;
+import com.ramon.hellow.worldgen.structures.WorldStructure;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -64,9 +64,6 @@ public class CommonEventHandler {
 						if (p.isRiding()) {
 							p.ridingEntity.setVelocity(p.motionX, p.ridingEntity.motionY, p.motionY);
 						}
-						//If 1 or 0.5 seconds has elapsed
-						if (server_tick==0||server_tick==10) {
-						}
 					}
 			}
 		}
@@ -83,10 +80,5 @@ public class CommonEventHandler {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static void setFoodLevel(EntityPlayer p,int food) {
-		p.getFoodStats().addStats(Math.min(food-p.getFoodStats().getFoodLevel(),20), 0);
-	}
-	
+	}	
 }

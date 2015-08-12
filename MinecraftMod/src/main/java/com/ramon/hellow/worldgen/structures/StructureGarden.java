@@ -1,31 +1,36 @@
-package com.ramon.hellow.worldgen;
+package com.ramon.hellow.worldgen.structures;
 
 import java.util.Random;
+
+import com.ramon.hellow.worldgen.themes.Theme;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class StructureGarden implements Structure {
-	public String getName() {
-		return "garden";
-	}
+public class StructureGarden extends Structure {
 	
-	public int getWidth() { return 8; }
-	public int getLength() { return 6; }
-	public int getDepth() { return 3; }
-	public int getHeight() { return 3; }
-
+	public static final String name = "garden";
+	
+	public static final int width = 8;
+	public static final int length = 6;
+	public static final int depth = 3;
+	public static final int height = 3;
+	
 	@Override
 	public void generate(World world, int x, int y, int z, Theme theme, Random random) {
-		for(int i=x-getWidth()/2;i<=x+getWidth()/2;i++) {
-			for(int j=z-getLength()/2;j<=z+getLength()/2;j++) {
-				boolean outlineX = (i==x-getWidth()/2||i==x+getWidth()/2);
-				boolean outlineZ = (j==z-getLength()/2||j==z+getLength()/2);
+		int x1 = x-width/2;
+		int x2 = x+width/2;
+		int z1 = z-length/2;
+		int z2 = z+length/2;
+		for(int i=x1;i<=x2;i++) {
+			for(int j=z1;j<=z2;j++) {
+				boolean outlineX = (i==x1||i==x2);
+				boolean outlineZ = (j==z1||j==z2);
 				boolean outline = (outlineX||outlineZ);
 				boolean corner = (outlineX&&outlineZ);
 				//walls
 				if (outline) {
-					world.setBlock(i, y, j, theme.getWallBlock().getBlock(),theme.getWallBlock().getMeta(),1+2);
+					world.setBlock(i, y, j, theme.getWall().getBlock(),theme.getWall().getMeta(),1+2);
 					world.setBlock(i, y+1, j, theme.getFence().getBlock(),theme.getFence().getMeta(), 1+2);
 				}
 				//Crops
@@ -39,7 +44,7 @@ public class StructureGarden implements Structure {
 				}
 				//lighting
 				if (corner) {
-					world.setBlock(i, y+2, j, theme.getTorchBlock(),0,1+2);
+					world.setBlock(i, y+2, j, theme.getTorch().getBlock(),0,1+2);
 				}
 			}
 		}

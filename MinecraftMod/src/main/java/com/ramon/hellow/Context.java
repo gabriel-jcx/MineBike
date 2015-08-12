@@ -7,14 +7,14 @@ import java.util.Random;
 
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 
-import com.ramon.hellow.worldgen.Structure;
-import com.ramon.hellow.worldgen.StructureGarden;
-import com.ramon.hellow.worldgen.StructureTower;
-import com.ramon.hellow.worldgen.Theme;
-import com.ramon.hellow.worldgen.ThemeDesert;
-import com.ramon.hellow.worldgen.ThemeIce;
-import com.ramon.hellow.worldgen.ThemeNorman;
-import com.ramon.hellow.worldgen.WorldStructure;
+import com.ramon.hellow.worldgen.structures.Structure;
+import com.ramon.hellow.worldgen.structures.StructureGarden;
+import com.ramon.hellow.worldgen.structures.StructureTower;
+import com.ramon.hellow.worldgen.structures.WorldStructure;
+import com.ramon.hellow.worldgen.themes.Theme;
+import com.ramon.hellow.worldgen.themes.ThemeDesert;
+import com.ramon.hellow.worldgen.themes.ThemeIce;
+import com.ramon.hellow.worldgen.themes.ThemeNorman;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -28,6 +28,7 @@ public class Context {
 	public boolean bump = false;
 	public Block block = Blocks.air;
 	public int rotation = 0;
+	public boolean connected = false;
 	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
@@ -80,7 +81,8 @@ public class Context {
 	public Theme getTheme(BiomeGenBase biome,Random random) {
 		int i = random.nextInt(themes.size());
 		int j = 0;
-		while(j<themes.size()) {
+		int size = themes.size();
+		while(j<size) {
 			Theme th = themes.get(i);
 			if ( th.getBiomes().contains(biome) ) {
 				return th;
@@ -97,8 +99,10 @@ public class Context {
 	public Structure getStructure(Theme theme, Random random) {
 		int i = random.nextInt(structures.size());
 		int j = 0;
-		while(j<structures.size()) {
+		int size = structures.size();
+		while(j<size) {
 			Structure struct = structures.get(i);
+			//Add code to check whether a structure can be placed here
 			if (true) {
 				return struct;
 			}
@@ -121,7 +125,7 @@ public class Context {
 	
 	public Structure getStructure(String name) {
 		for (Structure structure:structures) {
-			if (structure.getName().equals(name)) {
+			if (structure.name.equals(name)) {
 				return structure;
 			}
 		}
@@ -130,7 +134,7 @@ public class Context {
 	
 	public Theme getTheme(String name) {
 		for (Theme theme:themes) {
-			if (theme.getName().equals(name)) {
+			if (theme.name.equals(name)) {
 				return theme;
 			}
 		}

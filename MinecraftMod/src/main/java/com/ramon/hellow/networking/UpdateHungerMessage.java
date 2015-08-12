@@ -36,7 +36,6 @@ public class UpdateHungerMessage implements IMessage {
 
 		@Override
 		public IMessage onMessage(UpdateHungerMessage message, MessageContext ctx) {
-			CommonEventHandler.setFoodLevel(ctx.getServerHandler().playerEntity, message.hunger);
 			return null;
 		}
 
