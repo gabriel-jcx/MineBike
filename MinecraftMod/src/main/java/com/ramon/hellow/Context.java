@@ -29,6 +29,7 @@ public class Context {
 	public Block block = Blocks.air;
 	public int rotation = 0;
 	public boolean connected = false;
+	public Main main = null;
 	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
@@ -52,7 +53,9 @@ public class Context {
 	
 	public List<Structure> structures = new ArrayList<Structure>();
 	
-	public Context() {
+	public Context(Main main) {
+		this.main = main;
+		
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);
 		resistances.put(Blocks.stone, Resistance.MLOW);
@@ -102,8 +105,16 @@ public class Context {
 		int size = structures.size();
 		while(j<size) {
 			Structure struct = structures.get(i);
-			//Add code to check whether a structure can be placed here
-			if (true) {
+			List<Class> themes = struct.getBannedThemes();
+			boolean can_use = true;
+			//Again this is probably the wrong way to do this! needs serious consideration tomorrow
+			for (Object cl:themes) {
+				if (theme.getClass().equals((Class) cl)) {
+					can_use = false;
+					break;
+				}
+			}
+			if (can_use) {
 				return struct;
 			}
 			i++;
@@ -125,7 +136,7 @@ public class Context {
 	
 	public Structure getStructure(String name) {
 		for (Structure structure:structures) {
-			if (structure.name.equals(name)) {
+			if (structure.getName().equals(name)) {
 				return structure;
 			}
 		}
@@ -134,7 +145,7 @@ public class Context {
 	
 	public Theme getTheme(String name) {
 		for (Theme theme:themes) {
-			if (theme.name.equals(name)) {
+			if (theme.getName().equals(name)) {
 				return theme;
 			}
 		}

@@ -10,7 +10,7 @@ public final class ModItems {
 	public static Item Bike;
 	
 	public static final void init(Context con){
-		Bike = new Bike(con);
+		Bike = new ItemBike(con);
 	}
 
 }

@@ -9,7 +9,9 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class ThemeDesert extends Theme {
 	
-	public static final String name = "desert";
+	public ThemeDesert() {
+		name = "desert";
+	}
 	
 	public void allocateMemory()
 	{
@@ -17,8 +19,8 @@ public class ThemeDesert extends Theme {
 		alternateWall = new BlockMeta(Blocks.sandstone,1);
 		floor = new BlockMeta(Blocks.planks,2);
 		alternateFloor = new BlockMeta(Blocks.planks,4);
-		roof = new BlockMeta(Blocks.planks,0);
-		alternateRoof = new BlockMeta(Blocks.hay_block,0);
+		roof = new BlockMeta(Blocks.brick_block,0);
+		alternateRoof = new BlockMeta(Blocks.nether_brick,0);
 		stair = new BlockMeta(Blocks.birch_stairs,0);
 		torch = new BlockMeta(Blocks.redstone_torch,0);
 		center = new BlockMeta(Blocks.redstone_lamp,0);

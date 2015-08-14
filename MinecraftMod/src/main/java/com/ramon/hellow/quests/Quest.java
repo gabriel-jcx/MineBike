@@ -8,24 +8,24 @@ import net.minecraft.entity.player.EntityPlayer;
 public class Quest {
 	private String name;
 	private boolean completed;
-	private List<EntityPlayer> players;
+	private List<String> players;
 	
 	public Quest(String name,boolean completed) {
 		this.name = name;
 		this.completed = completed;
-		players = new ArrayList<EntityPlayer>();
+		players = new ArrayList<String>();
 	}
 	
-	public void addPlayer(EntityPlayer player) {
+	public void addPlayer(String player) {
 		players.add(player);
 	}
 	
-	public void addPlayers(List<EntityPlayer> players) {
+	public void addPlayers(List<String> players) {
 		this.players.addAll(players);
 	}
 	
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
+	public void complete() {
+		completed = true;
 	}
 	
 	public boolean getCompleted() {
@@ -34,5 +34,9 @@ public class Quest {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public List<String> getPlayers() {
+		return players;
 	}
 }

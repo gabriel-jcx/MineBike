@@ -47,8 +47,8 @@ public class BikeWorldData extends WorldSavedData {
 			tag.setInteger("x", struct.getX());
 			tag.setInteger("y", struct.getY());
 			tag.setInteger("z", struct.getZ());
-			tag.setString("structure", struct.getStructure().name);
-			tag.setString("theme", struct.getTheme().name);
+			tag.setString("structure", struct.getStructure().getName());
+			tag.setString("theme", struct.getTheme().getName());
 			tag.setInteger("world", struct.getWorld().provider.dimensionId);
 			list.appendTag(tag);
 		}

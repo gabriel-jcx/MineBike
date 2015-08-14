@@ -11,11 +11,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class Bike extends Item {
+public class ItemBike extends Item {
 	
 	Context context;
 	
-	public Bike(Context con) {
+	public ItemBike(Context con) {
 		context = con;
 		setUnlocalizedName("bike");
 		setCreativeTab(CreativeTabs.tabMisc);

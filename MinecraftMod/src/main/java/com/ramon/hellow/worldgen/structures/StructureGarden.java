@@ -9,12 +9,17 @@ import net.minecraft.world.World;
 
 public class StructureGarden extends Structure {
 	
-	public static final String name = "garden";
-	
-	public static final int width = 8;
-	public static final int length = 6;
-	public static final int depth = 3;
-	public static final int height = 3;
+	public StructureGarden() {
+		name = "garden";
+		width = 8;
+		length = 6;
+		depth = 3;
+		height = 3;
+		//not sure this is the right way to do things at all, needs to be looked at again
+		/*themes.add(ThemeNorman.class);
+		themes.add(ThemeDesert.class);
+		themes.add(ThemeIce.class);*/
+	}
 	
 	@Override
 	public void generate(World world, int x, int y, int z, Theme theme, Random random) {

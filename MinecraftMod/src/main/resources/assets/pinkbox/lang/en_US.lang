@@ -18,3 +18,5 @@ world.structure.garden=Garden
 world.theme.norman=Norman
 world.theme.desert=Desert
 world.theme.ice=Ice
+
+quest.type.explore=Explore

@@ -9,7 +9,9 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class ThemeIce extends Theme {
 	
-	public static final String name = "ice";
+	public ThemeIce() {
+		name = "ice";
+	}
 	
 	@Override
 	public void allocateMemory() {

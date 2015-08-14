@@ -8,7 +8,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public abstract class Theme {
-	public static final String name = "";
+	protected String name = "";
 	
 	protected BlockMeta wall = null;
 	protected BlockMeta alternateWall = null;
@@ -93,6 +93,10 @@ public abstract class Theme {
 	
 	public BlockMeta getSoil() {
 		return soil;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public class BlockMeta {

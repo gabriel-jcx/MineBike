@@ -3,6 +3,8 @@ package com.ramon.hellow;
 import java.util.List;
 import java.util.Random;
 
+import com.ramon.hellow.networking.ReceiveQuestMessage;
+import com.ramon.hellow.quests.Quest;
 import com.ramon.hellow.worldgen.structures.Structure;
 import com.ramon.hellow.worldgen.structures.StructureTower;
 import com.ramon.hellow.worldgen.structures.WorldStructure;
@@ -14,6 +16,7 @@ import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -44,58 +47,74 @@ public class WorldGen implements IWorldGenerator {
 	private void generateSurface(World world, Random random, int chunkX, int chunkZ, Context context)
 	{
 		BiomeGenBase biome = world.getBiomeGenForCoords(chunkX, chunkZ);
+		int structure_separation = 5;
+		//We only want to generate in chunks that are multiples of a certain number, to prevent structures from being near each other
+		if (!(chunkX%structure_separation==0&&chunkZ%structure_separation==0)) {
+			return;
+		}
+		//Low probability so we don't have a very obvious square arrangment
+		if (random.nextInt(5)>1) {
+			return;
+		}
 		//Check every block in the chunk
 		for(int x=chunkX;x<chunkX+16;x++) {
 			for (int z=chunkZ;z<chunkZ+16;z++) {
-				//Low probability - so we don't have structures everywhere!
-				if (random.nextInt(10000)<5) {
-					int y = 200;
-					//Blocks that cannot support a structure (make this into a data structure of some kind?)
-					while(world.getBlock(x,y,z)==Blocks.air||world.getBlock(x, y, z)==Blocks.snow_layer) {
-						y--;
-					}
-					Block b = world.getBlock(x, y, z);
-					//Don't want to place a structure on grass - only on dirt
-					if (b==Blocks.grass) {
-						b = Blocks.dirt;
-					}
-					//If we can generate a structure on this block
-					if (context.canGenerateOn.contains(b)) {
-						//Get a theme for this biome
-						Theme theme = context.getTheme(biome,random);
-						//If no themes work in this biome
-						if (theme==null) {
-							return;
+				//Allow it to be spawned anywhere in the chunk's 16x16 grid
+				if (random.nextInt(16*16)>1) {
+					continue;
+				}
+				int y = 200;
+				//Blocks that cannot support a structure (make this into a data structure of some kind?)
+				while(world.getBlock(x,y,z)==Blocks.air||world.getBlock(x, y, z)==Blocks.snow_layer) {
+					y--;
+				}
+				Block block = world.getBlock(x, y, z);
+				int meta = world.getBlockMetadata(x, y, z);
+				//Don't want to place a structure on grass - only on dirt
+				if (block==Blocks.grass) {
+					block = Blocks.dirt;
+				}
+				//If we can generate a structure on this block
+				if (!context.canGenerateOn.contains(block)) {
+					continue;
+				}
+				//Get a theme for this biome
+				Theme theme = context.getTheme(biome,random);
+				//If no themes work in this biome
+				if (theme==null) {
+					return;
+				}
+				//Allocate memory
+				theme.allocateMemory();
+				//Pick a structure
+				Structure structure = context.getStructure(theme,random);
+				int width = structure.getWidth();
+				int length = structure.getLength();
+				int depth = structure.getDepth();
+				int height = structure.getHeight();
+				//Carve out some space in the world for the structure
+				for(int i=x-width/2;i<=x+width/2;i++) {
+					for(int j=z-length/2;j<=z+length/2;j++) {
+						for (int k=y-depth;k<=y;k++) {
+							world.setBlock(i,k,j,block,meta,3);
 						}
-						//Allocate memory
-						theme.allocateMemory();
-						//Pick a structure
-						Structure structure = context.getStructure(theme,random);
-						int width = structure.width;
-						int length = structure.length;
-						int depth = structure.depth;
-						int height = structure.height;
-						//Carve out some space in the world for the structure
-						for(int i=x-width/2;i<=x+width/2;i++) {
-							for(int j=z-length/2;j<=z+length/2;j++) {
-								for (int k=y-depth;k<=y;k++) {
-									world.setBlock(i,k,j,b);
-								}
-								for (int k=y;k<y+height;k++) {
-									world.setBlock(i, k, j, Blocks.air);
-								}
-							}
+						for (int k=y;k<y+height;k++) {
+							world.setBlock(i, k, j, Blocks.air);
 						}
-						//Build it!
-						structure.generate(world, x, y, z, theme, random);
-						WorldStructure struct = new WorldStructure(I18n.format("world.theme."+theme.name,new Object[0])+" "+I18n.format("world.structure."+structure.name,new Object[0]),x,y,z,world,structure,theme);
-						//Keep track of it in our world data
-						BikeWorldData.get(world).addStructure(struct);
-						//Deallocate memory
-						theme.deallocateMemory();
-						return;
 					}
 				}
+				//Build it!
+				structure.generate(world, x, y, z, theme, random);
+				WorldStructure struct = new WorldStructure(structure.getFullName(theme),x,y,z,world,structure,theme);
+				//Keep track of it in our world data
+				BikeWorldData.get(world).addStructure(struct);
+				//Create a new quest and send it to the client - just a test for now
+				Quest quest = new Quest(StatCollector.translateToLocal("quest.type.explore")+" "+structure.getFullName(theme),false);
+				ReceiveQuestMessage message = new ReceiveQuestMessage(quest);
+				context.main.network.sendToAll(message);
+				//Deallocate memory
+				theme.deallocateMemory();
+				return;
 			}
 		}
 	}

@@ -13,12 +13,13 @@ import net.minecraft.world.World;
 
 public class StructureTower extends Structure {
 	
-	public static final String name = "tower";
-	
-	public static final int width = 6;
-	public static final int length = 6;
-	public static final int depth = 3;
-	public static final int height = 25;
+	public StructureTower() {
+		name = "tower";
+		width = 6;
+		length = 6;
+		depth = 3;
+		height = 25;
+	}
 	
 	private static final int storyHeight = 4;
 		

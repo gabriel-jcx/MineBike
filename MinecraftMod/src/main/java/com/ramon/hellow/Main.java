@@ -24,6 +24,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 
+import com.ramon.hellow.networking.ReceiveQuestMessage;
 import com.ramon.hellow.networking.UpdateHungerMessage;
 
 
@@ -50,13 +51,14 @@ import com.ramon.hellow.networking.UpdateHungerMessage;
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
 	    	instance = this;
-	    	context = new Context();
+	    	context = new Context(this);
 	    	proxy.preInit(e);
 	    	System.out.println("\n\n\n");
 	    	System.out.println(e.getClass() + "");
 	    	System.out.println("\n\n\n");
 	    	network = NetworkRegistry.INSTANCE.newSimpleChannel("BikeChannel");
 	    	network.registerMessage(UpdateHungerMessage.Handler.class,UpdateHungerMessage.class,0,Side.SERVER);
+	    	network.registerMessage(ReceiveQuestMessage.Handler.class, ReceiveQuestMessage.class, 1, Side.CLIENT);
 	    }
 	        
 	    @EventHandler

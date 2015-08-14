@@ -9,7 +9,9 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class ThemeNorman extends Theme {
 	
-	public static final String name = "norman";
+	public ThemeNorman() {
+		name = "norman";
+	}
 	
 	public void allocateMemory()
 	{
