@@ -1,6 +1,6 @@
-package com.ramon.hellow.worldgen.structures;
+package org.ngs.bigx.minecraft.worldgen.structures;
 
-import com.ramon.hellow.worldgen.themes.Theme;
+import org.ngs.bigx.minecraft.worldgen.themes.Theme;
 
 import net.minecraft.world.World;
 

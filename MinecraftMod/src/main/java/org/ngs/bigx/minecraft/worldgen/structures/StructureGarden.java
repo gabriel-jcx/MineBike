@@ -1,8 +1,8 @@
-package com.ramon.hellow.worldgen.structures;
+package org.ngs.bigx.minecraft.worldgen.structures;
 
 import java.util.Random;
 
-import com.ramon.hellow.worldgen.themes.Theme;
+import org.ngs.bigx.minecraft.worldgen.themes.Theme;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;

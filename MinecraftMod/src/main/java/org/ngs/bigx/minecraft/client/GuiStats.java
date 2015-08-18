@@ -42,8 +42,7 @@ public class GuiStats extends Gui {
 	    }
     	int xPos = 2;
     	int yPos = 2;
-        //GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        //GL11.glDisable(GL11.GL_LIGHTING);
+
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
 	    	int WIDTH = 200;

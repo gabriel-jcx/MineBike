@@ -1,4 +1,4 @@
-package com.ramon.hellow.worldgen.themes;
+package org.ngs.bigx.minecraft.worldgen.themes;
 
 import java.util.ArrayList;
 import java.util.List;

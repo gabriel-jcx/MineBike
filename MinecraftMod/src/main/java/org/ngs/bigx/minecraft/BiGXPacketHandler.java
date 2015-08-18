@@ -25,8 +25,7 @@ public class BiGXPacketHandler {
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
 		Context context = Main.instance().context;
 		switch (packet.deviceEvent) {
-			case 0x181A:
-				//Rotation state
+			case org.ngs.bigx.dictionary.protocol.specification.dataType.ROTATIONSTATE:
 				if (Minecraft.getMinecraft().thePlayer!=null) {
 					int old_rotation = context.rotation;
 					int new_rotation = buf.getInt();
@@ -43,10 +42,11 @@ public class BiGXPacketHandler {
 					} 
 				}
 			break;
-			case 0x1005:
-				//Heartrate
+			case org.ngs.bigx.dictionary.protocol.specification.dataType.HEART:
 				context.heartrate = buf.getInt();
 			break;
+			case org.ngs.bigx.dictionary.protocol.specification.dataType.ROTATE:
+				break;
 			case 0x1102:
 				context.connected = true;
 			break;
