@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.structures.Structure;
 import org.ngs.bigx.minecraft.structures.StructureGarden;
@@ -27,7 +29,6 @@ public class Context {
 	public boolean bump = false;
 	public Block block = Blocks.air;
 	public int rotation = 0;
-	public boolean connected = false;
 	public Main main = null;
 	
 	public enum Resistance {
@@ -44,6 +45,13 @@ public class Context {
 		}
 	}
 	
+	/*
+	 * BiGX Related Members
+	 */
+	public BiGXConnectionStateManagerClass connectionStateManager;
+	public static String ipAddress = "localhost";
+	public static int port = 1331;
+	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
 	
 	public List<Block> canGenerateOn = new ArrayList<Block>();
@@ -54,6 +62,9 @@ public class Context {
 	
 	public Context(Main main) {
 		this.main = main;
+		
+		this.connectionStateManager = new BiGXConnectionStateManagerClass();
+		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
 		
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);

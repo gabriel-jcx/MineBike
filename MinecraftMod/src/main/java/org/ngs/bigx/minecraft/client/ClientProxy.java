@@ -21,12 +21,6 @@ public class ClientProxy extends CommonProxy{
 	
 	ClientEventHandler clientEvents;
 	
-	public static BiGXNetClient bigxclient;
-    
-    private static String ServerIPAddress = "192.168.0.100";
-	private static int ServerPortNumber = 1331;
-	private static int tempDeviceId = 100;
-	
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
 		Context context = Main.instance().context;
@@ -39,25 +33,6 @@ public class ClientProxy extends CommonProxy{
 	
 	public void postInit(FMLPostInitializationEvent e) {
 		super.postInit(e);
-		bigxclient = new BiGXNetClient(ServerIPAddress, ServerPortNumber);
-		bigxclient.setReceiveListener(new BiGXNetClientListener() {
-			
-			@Override
-			public void onMessageReceive(Event event, BiGXNetPacket packet) {
-				BiGXPacketHandler.Handle(packet);
-			}
-		});
-		
-		/**
-		 * Sending a packet example from the client to the server
-		 */
-		//Ask for speed
-		BiGXNetPacket packet = new BiGXNetPacket(BiGXPacketHandler.START, 0x0100, 0x2805, new byte[]{0});
-		BiGXPacketHandler.sendPacket(packet);
-		//Ask for heartrate
-		packet = new BiGXNetPacket(BiGXPacketHandler.START, 0x0100, 0x2005, new byte[]{0});
-		BiGXPacketHandler.sendPacket(packet);
-		
 	}
 
 }
