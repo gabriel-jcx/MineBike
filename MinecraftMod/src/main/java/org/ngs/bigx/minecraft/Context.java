@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.structures.Structure;
 import org.ngs.bigx.minecraft.structures.StructureGarden;
 import org.ngs.bigx.minecraft.structures.StructureTower;
@@ -29,6 +30,7 @@ public class Context {
 	public int rotation = 0;
 	public boolean connected = false;
 	public Main main = null;
+	public Quest currentQuest = null;
 	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
@@ -132,6 +134,15 @@ public class Context {
 	public float getSpeed() {
 		return speed;
 	}
+	
+	public void setQuest(Quest quest) {
+		this.currentQuest = quest;
+	}
+	
+	public Quest getQuest() {
+		return currentQuest;
+	}
+	
 	
 	public Structure getStructure(String name) {
 		for (Structure structure:structures) {

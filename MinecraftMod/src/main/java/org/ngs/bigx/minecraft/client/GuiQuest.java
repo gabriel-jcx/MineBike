@@ -1,9 +1,13 @@
 package org.ngs.bigx.minecraft.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BikeWorldData;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.structures.WorldStructure;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -22,10 +26,12 @@ public class GuiQuest extends Gui {
 	private Minecraft mc;
 	
 	private ResourceLocation QUESTBOX_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/questbox.png");
-	private int QUESTBOX_WIDTH = 100;
+	private int QUESTBOX_WIDTH = 101;
 	private int QUESTBOX_HEIGHT = 50;
 	
 	private Context context;
+	
+	private Textbox text;
 	
 	public GuiQuest(Minecraft mc) {
 		super();
@@ -35,6 +41,18 @@ public class GuiQuest extends Gui {
 	public GuiQuest(Context c,Minecraft mc) {
 		this(mc);
 		context = c;
+	}
+	
+	public void updateText() {
+		Quest quest = context.getQuest();
+		if (quest!=null) {
+        	text = quest.getFullDescription(99,mc.fontRenderer);
+		}
+		else {
+			text = new Textbox(99);
+			text.addLine(EnumChatFormatting.DARK_RED+"No Quest",mc.fontRenderer);
+		}
+		
 	}
 
 	@SubscribeEvent
@@ -53,8 +71,13 @@ public class GuiQuest extends Gui {
 	    	int WIDTH = 200;
 	    	int HEIGHT = QUESTBOX_HEIGHT;
 	        drawTexturedModalRect(0, yPos, 0, 0, QUESTBOX_WIDTH , QUESTBOX_HEIGHT);
-	        mc.fontRenderer.drawString(I18n.format("gui.quest.current", new Object[0])+": ",xPos+2,yPos+2,0x000000);
-	        mc.fontRenderer.drawString("Slay: "+100+"x "+EnumChatFormatting.DARK_GREEN+"Zombies",xPos+2,yPos+2+mc.fontRenderer.FONT_HEIGHT,0x000000);
+	        updateText();
+	        List<String> desc = text.getLines();
+	        int i = 0;
+	        for (String s:desc) {
+	        	mc.fontRenderer.drawString(s, xPos+2, yPos+2+mc.fontRenderer.FONT_HEIGHT*i, 0x000000);
+	        	i++;
+	        }
 	    }
     }
 }

@@ -3,7 +3,11 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ngs.bigx.minecraft.client.Textbox;
+
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 
 public class Quest {
 	private String name;
@@ -38,5 +42,17 @@ public class Quest {
 	
 	public List<String> getPlayers() {
 		return players;
+	}
+	
+	public Textbox getFullDescription(int width,FontRenderer font) {
+		Textbox box = new Textbox(width);
+		box.addLine(EnumChatFormatting.BOLD+name,font);
+		if (completed) {
+			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
+		}
+		else {
+			box.addLine(EnumChatFormatting.YELLOW+"In Progress",font);
+		}
+		return box;
 	}
 }
