@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.client.ClientProxy;
+import org.ngs.bigx.minecraft.item.ItemBike;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -34,14 +35,25 @@ public class BiGXPacketHandler {
 						}
 						double change = (new_rotation-old_rotation);
 
-						context.setSpeed( (float) Math.min( 0.4, Math.max( context.getSpeed() + change / 1000 , 0 ) ) );
+						context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + change / 1000 , 0 ) ) );
 					} 
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.specification.dataType.HEART:
 				context.heartrate = buf.getInt();
 			break;
-			case org.ngs.bigx.dictionary.protocol.specification.dataType.ROTATE:
+			case org.ngs.bigx.dictionary.protocol.specification.dataType.MOVE_FORWARDBACKWARD:
+				if (Minecraft.getMinecraft().thePlayer!=null) {
+					int change = buf.getInt();
+					
+					if(change >= 512) {
+						change *= -1;
+					}
+					
+					System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
+					
+					context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change), 0 ) ) );
+				}
 				break;
 		}
 		return true;

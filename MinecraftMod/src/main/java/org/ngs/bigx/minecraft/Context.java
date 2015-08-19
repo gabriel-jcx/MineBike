@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft;
 
+import java.awt.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,8 @@ import org.ngs.bigx.minecraft.themes.ThemeDesert;
 import org.ngs.bigx.minecraft.themes.ThemeIce;
 import org.ngs.bigx.minecraft.themes.ThemeNorman;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
+import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
+import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -67,6 +70,18 @@ public class Context {
 		
 		this.connectionStateManager = new BiGXConnectionStateManagerClass();
 		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
+		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
+			
+			@Override
+			public void onMessageReceive(Event event, BiGXNetPacket packet) {
+				BiGXPacketHandler.Handle(bigxclient, packet);
+			}
+			
+			@Override
+			public void onConnectedMessageReceive(Event event) {
+				System.out.println("This MC is connected to BiGX Game Controller");
+			}
+		});
 		
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);
