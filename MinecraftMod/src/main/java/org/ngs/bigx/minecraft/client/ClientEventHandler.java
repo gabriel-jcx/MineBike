@@ -61,7 +61,7 @@ public class ClientEventHandler {
 					buf.put((byte) 0x00);
 					buf.putFloat(context.resistance);
 					BiGXNetPacket packet = new BiGXNetPacket(BiGXPacketHandler.START, 0x0100, 0x2819, buf.array());
-					BiGXPacketHandler.sendPacket(packet);
+					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
 			}
 		}
