@@ -40,7 +40,14 @@ public class ClientEventHandler {
 					context.bump = !context.bump;
 				}
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-				context.setSpeed((float) Math.max(0,context.getSpeed()-0.01));
+				
+				if(context.getSpeed() >= 0){
+					context.setSpeed((float) Math.max(0,context.getSpeed()-0.01));
+				}
+				else{
+					context.setSpeed((float) Math.min(0,context.getSpeed()+0.01));
+					System.out.println("Negative Velocity: " + context.getSpeed());
+				}
 				float moveSpeed = context.getSpeed();
 				//getRotationYawHead() returns player's angle in degrees - 90
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;

@@ -44,7 +44,7 @@ public class BiGXPacketHandler {
 			break;
 			case org.ngs.bigx.dictionary.protocol.specification.dataType.MOVE_FORWARDBACKWARD:
 				if (Minecraft.getMinecraft().thePlayer!=null) {
-					int change = buf.getInt();
+					int change = packet.data[1] | (packet.data[2] << 8);
 					
 					if(change >= 512) {
 						change *= -1;
@@ -52,7 +52,12 @@ public class BiGXPacketHandler {
 					
 					System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
-					context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change), 0 ) ) );
+					if(context.getSpeed() + ((double)change) >= 0){
+						context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change), 0 ) ) );
+					}
+					else{
+						context.setSpeed( (float) Math.max( ItemBike.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change), 0 ) ) );
+					}
 				}
 				break;
 		}
