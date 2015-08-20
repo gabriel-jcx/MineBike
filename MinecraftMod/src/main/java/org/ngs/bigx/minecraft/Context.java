@@ -68,21 +68,6 @@ public class Context {
 	public Context(Main main) {
 		this.main = main;
 		
-		this.connectionStateManager = new BiGXConnectionStateManagerClass();
-		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
-		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
-			
-			@Override
-			public void onMessageReceive(Event event, BiGXNetPacket packet) {
-				BiGXPacketHandler.Handle(bigxclient, packet);
-			}
-			
-			@Override
-			public void onConnectedMessageReceive(Event event) {
-				System.out.println("This MC is connected to BiGX Game Controller");
-			}
-		});
-		
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);
 		resistances.put(Blocks.stone, Resistance.MLOW);
@@ -106,6 +91,23 @@ public class Context {
 		
 		structures.add(new StructureTower());
 		structures.add(new StructureGarden());
+	}
+	
+	public void initBigX() {
+		this.connectionStateManager = new BiGXConnectionStateManagerClass();
+		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
+		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
+			
+			@Override
+			public void onMessageReceive(Event event, BiGXNetPacket packet) {
+				BiGXPacketHandler.Handle(bigxclient, packet);
+			}
+			
+			@Override
+			public void onConnectedMessageReceive(Event event) {
+				System.out.println("This MC is connected to BiGX Game Controller");
+			}
+		});
 	}
 	
 	public Theme getTheme(BiomeGenBase biome,Random random) {

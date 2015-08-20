@@ -67,17 +67,6 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    @EventHandler
 	    public void postInit(FMLPostInitializationEvent e) {
 	    	proxy.postInit(e);
-	    	try {
-				BiGXPacketHandler.connect(context.bigxclient);
-			} catch (SocketException e1) {
-				e1.printStackTrace();
-			} catch (UnknownHostException e1) {
-				e1.printStackTrace();
-			} catch (BiGXNetException e1) {
-				e1.printStackTrace();
-			} catch (BiGXInternalGamePluginExcpetion e1) {
-				e1.printStackTrace();
-			}
 	    }
 	    
 	    public static Main instance() {
