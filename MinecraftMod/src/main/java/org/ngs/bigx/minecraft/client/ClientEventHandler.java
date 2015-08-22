@@ -70,6 +70,11 @@ public class ClientEventHandler {
 					BiGXNetPacket packet = new BiGXNetPacket(BiGXPacketHandler.START, 0x0100, 0x2819, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
+				if (context.hasQuestPopupShown()==false) {
+					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.getQuest());
+					Minecraft.getMinecraft().displayGuiScreen(gui);
+					context.showQuestPopup();
+				}
 			}
 		}
 		

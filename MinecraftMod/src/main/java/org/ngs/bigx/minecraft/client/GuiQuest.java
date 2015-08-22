@@ -8,8 +8,6 @@ import org.ngs.bigx.minecraft.BikeWorldData;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.structures.WorldStructure;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

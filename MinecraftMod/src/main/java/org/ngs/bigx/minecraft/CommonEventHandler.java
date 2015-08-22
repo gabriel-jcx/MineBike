@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ngs.bigx.minecraft.item.ModItems;
-import org.ngs.bigx.minecraft.structures.WorldStructure;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;

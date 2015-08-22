@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.networking;
 
+import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.client.GuiScreenQuest;
 import org.ngs.bigx.minecraft.quests.Quest;
 
@@ -24,14 +25,14 @@ public class ReceiveQuestMessage implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
-		quest = new Quest(compound.getString("name"),compound.getBoolean("complete"));
+		quest = Quest.makeQuest(compound.getString("type"),compound.getBoolean("complete"));
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		NBTTagCompound compound = new NBTTagCompound();
-		compound.setString("name", quest.getName());
 		compound.setBoolean("complete", quest.getCompleted());
+		compound.setString("type",quest.getType());
 		ByteBufUtils.writeTag(buf, compound);
 	}
 	
@@ -39,8 +40,7 @@ public class ReceiveQuestMessage implements IMessage {
 
 		@Override
 		public IMessage onMessage(ReceiveQuestMessage message, MessageContext ctx) {
-			//GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,message.quest);
-			//Minecraft.getMinecraft().displayGuiScreen(gui);
+			Main.instance().context.setQuest(message.quest);
 			System.out.println(message.quest.getName());
 			return null;
 		}

@@ -9,14 +9,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.structures.Structure;
-import org.ngs.bigx.minecraft.structures.StructureGarden;
-import org.ngs.bigx.minecraft.structures.StructureTower;
-import org.ngs.bigx.minecraft.structures.WorldStructure;
-import org.ngs.bigx.minecraft.themes.Theme;
-import org.ngs.bigx.minecraft.themes.ThemeDesert;
-import org.ngs.bigx.minecraft.themes.ThemeIce;
-import org.ngs.bigx.minecraft.themes.ThemeNorman;
+import org.ngs.bigx.minecraft.worldgen.structures.Structure;
+import org.ngs.bigx.minecraft.worldgen.structures.StructureGarden;
+import org.ngs.bigx.minecraft.worldgen.structures.StructureTower;
+import org.ngs.bigx.minecraft.worldgen.structures.WorldStructure;
+import org.ngs.bigx.minecraft.worldgen.themes.Theme;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeDesert;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeIce;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeNorman;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -34,7 +34,9 @@ public class Context {
 	public Block block = Blocks.air;
 	public int rotation = 0;
 	public Main main = null;
-	public Quest currentQuest = null;
+	private Quest currentQuest = null;
+	private boolean questPopupShown = true;
+	private int ID = 0;
 	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
@@ -165,10 +167,19 @@ public class Context {
 	
 	public void setQuest(Quest quest) {
 		this.currentQuest = quest;
+		questPopupShown = false;
 	}
 	
 	public Quest getQuest() {
 		return currentQuest;
+	}
+	
+	public Boolean hasQuestPopupShown() {
+		return questPopupShown;
+	}
+	
+	public void showQuestPopup() {
+		questPopupShown = true;
 	}
 	
 	
@@ -188,5 +199,14 @@ public class Context {
 			}
 		}
 		return null;
+	}
+
+	public WorldStructure getWorldStructure(Integer valueOf) {
+		return null;
+	}
+	
+	public int getID() {
+		ID++;
+		return ID;
 	}
 }

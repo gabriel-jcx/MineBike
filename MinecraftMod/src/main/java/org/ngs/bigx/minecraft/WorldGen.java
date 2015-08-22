@@ -5,12 +5,12 @@ import java.util.Random;
 
 import org.ngs.bigx.minecraft.networking.ReceiveQuestMessage;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.structures.Structure;
-import org.ngs.bigx.minecraft.structures.StructureTower;
-import org.ngs.bigx.minecraft.structures.WorldStructure;
-import org.ngs.bigx.minecraft.themes.Theme;
-import org.ngs.bigx.minecraft.themes.ThemeDesert;
-import org.ngs.bigx.minecraft.themes.ThemeNorman;
+import org.ngs.bigx.minecraft.worldgen.structures.Structure;
+import org.ngs.bigx.minecraft.worldgen.structures.StructureTower;
+import org.ngs.bigx.minecraft.worldgen.structures.WorldStructure;
+import org.ngs.bigx.minecraft.worldgen.themes.Theme;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeDesert;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeNorman;
 
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
@@ -105,13 +105,9 @@ public class WorldGen implements IWorldGenerator {
 				}
 				//Build it!
 				structure.generate(world, x, y, z, theme, random);
-				WorldStructure struct = new WorldStructure(structure.getFullName(theme),x,y,z,world,structure,theme);
+				WorldStructure struct = new WorldStructure(structure.getFullName(theme),x,y,z,world,structure,theme,context.getID());
 				//Keep track of it in our world data
 				BikeWorldData.get(world).addStructure(struct);
-				//Create a new quest and send it to the client - just a test for now
-				Quest quest = new Quest(StatCollector.translateToLocal("quest.type.explore")+" "+structure.getFullName(theme),false);
-				ReceiveQuestMessage message = new ReceiveQuestMessage(quest);
-				context.main.network.sendToAll(message);
 				//Deallocate memory
 				theme.deallocateMemory();
 				return;
