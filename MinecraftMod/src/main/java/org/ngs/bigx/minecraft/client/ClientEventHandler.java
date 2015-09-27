@@ -15,6 +15,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -55,6 +56,9 @@ public class ClientEventHandler {
 				p.setVelocity(xt, p.motionY, zt);
 				//p.capabilities.setPlayerWalkSpeed(1-(context.resistance/16));
 				Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
+				if (b==Blocks.air) {
+					b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
+				}
 				context.block= b;
 				float new_resistance = context.resistance;
 				if (b!=null) {

@@ -4,6 +4,7 @@ import java.awt.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,6 +23,7 @@ import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -37,6 +39,9 @@ public class Context {
 	private Quest currentQuest = null;
 	private boolean questPopupShown = true;
 	private int ID = 0;
+	private boolean structuresEnabled = false;
+	private boolean questsEnabled = false;
+	public Map<EntityPlayerMP,Quest> currentQuests;
 	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
@@ -208,5 +213,16 @@ public class Context {
 	public int getID() {
 		ID++;
 		return ID;
+	}
+	
+	public boolean checkStructuresEnabled() {
+		return structuresEnabled;
+	}
+	
+	public boolean checkQuestsEnabled() {
+		if (!checkStructuresEnabled()) {
+			return false;
+		}
+		return questsEnabled;
 	}
 }

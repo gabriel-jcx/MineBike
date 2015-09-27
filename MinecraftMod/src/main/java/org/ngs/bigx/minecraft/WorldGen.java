@@ -47,6 +47,9 @@ public class WorldGen implements IWorldGenerator {
 	private void generateSurface(World world, Random random, int chunkX, int chunkZ, Context context)
 	{
 		BiomeGenBase biome = world.getBiomeGenForCoords(chunkX, chunkZ);
+		if (!context.checkStructuresEnabled()) {
+			return;
+		}
 		int structure_separation = 5;
 		//We only want to generate in chunks that are multiples of a certain number, to prevent structures from being near each other
 		if (!(chunkX%structure_separation==0&&chunkZ%structure_separation==0)) {
