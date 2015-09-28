@@ -46,7 +46,7 @@ public class GuiStats extends Gui {
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
 	    	int WIDTH = 200;
-	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 2 + 2;
+	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
 	    	drawRect(0, 0, xPos + WIDTH , yPos + HEIGHT , 0xFF000000);
 	    	drawRect(1, 1, xPos + WIDTH - 1 , yPos + HEIGHT - 1, 0xFFAAAAAA);
 	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -59,8 +59,15 @@ public class GuiStats extends Gui {
 	        	drawTexturedModalRect(xPos + HEART_OFFSET, yPos, HEART_SIZE, 0, HEART_SIZE, HEART_SIZE);
 	        }
 	        mc.fontRenderer.drawString(context.heartrate+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
-	    	mc.fontRenderer.drawString(I18n.format("gui.stats.speed", new Object[0])+": "+(context.getSpeed()*20)+" meters per second"+" Rot: "+context.rotation,xPos,yPos+HEART_SIZE,0xFFFFFF);
-	    	mc.fontRenderer.drawString(I18n.format("gui.stats.resistance", new Object[0])+": "+(context.resistance),xPos,yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT,0xFFFFFF);
+	    	mc.fontRenderer.drawString(I18n.format("gui.stats.speed", new Object[0])+": "+(context.getSpeed()*20)+" meters per second",xPos,yPos+HEART_SIZE,0xFFFFFF);
+	    	double percentBig = context.timeSpent;
+	    	double percentSmall = context.timeSpentSmall;
+	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
+	    	drawRect(xPos,yy,xPos+180,yy+20, 0xFF000000);
+	    	drawGradientRect(xPos+1,yy+1,(int) (xPos+180*(percentBig/100)-1),yy+20-1, 0xFFFF0000, 0xFFAA0000);
+	    	String text = "Progress: "+((int) percentBig)+"."+((int) percentSmall)+"%";
+	    	mc.fontRenderer.drawString(text,xPos+180/2-mc.fontRenderer.getStringWidth(text)/2,yy+20/2-mc.fontRenderer.FONT_HEIGHT/2,0xFFFF00);
+	    	//mc.fontRenderer.drawString(I18n.format("gui.stats.resistance", new Object[0])+": "+(context.resistance),xPos,yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT,0xFFFFFF);
     	}
     }
 }

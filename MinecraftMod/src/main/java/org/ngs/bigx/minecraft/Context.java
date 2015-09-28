@@ -43,6 +43,9 @@ public class Context {
 	private boolean questsEnabled = false;
 	public Map<EntityPlayerMP,Quest> currentQuests;
 	
+	public int timeSpent = 0;
+	public int timeSpentSmall = 0;
+	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
 		
