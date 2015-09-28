@@ -4,24 +4,26 @@ import java.awt.Event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.structures.Structure;
-import org.ngs.bigx.minecraft.structures.StructureGarden;
-import org.ngs.bigx.minecraft.structures.StructureTower;
-import org.ngs.bigx.minecraft.structures.WorldStructure;
-import org.ngs.bigx.minecraft.themes.Theme;
-import org.ngs.bigx.minecraft.themes.ThemeDesert;
-import org.ngs.bigx.minecraft.themes.ThemeIce;
-import org.ngs.bigx.minecraft.themes.ThemeNorman;
+import org.ngs.bigx.minecraft.worldgen.structures.Structure;
+import org.ngs.bigx.minecraft.worldgen.structures.StructureGarden;
+import org.ngs.bigx.minecraft.worldgen.structures.StructureTower;
+import org.ngs.bigx.minecraft.worldgen.structures.WorldStructure;
+import org.ngs.bigx.minecraft.worldgen.themes.Theme;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeDesert;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeIce;
+import org.ngs.bigx.minecraft.worldgen.themes.ThemeNorman;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -34,7 +36,15 @@ public class Context {
 	public Block block = Blocks.air;
 	public int rotation = 0;
 	public Main main = null;
-	public Quest currentQuest = null;
+	private Quest currentQuest = null;
+	private boolean questPopupShown = true;
+	private int ID = 0;
+	private boolean structuresEnabled = false;
+	private boolean questsEnabled = false;
+	public Map<EntityPlayerMP,Quest> currentQuests;
+	
+	public int timeSpent = 0;
+	public int timeSpentSmall = 0;
 	
 	public enum Resistance {
 		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
@@ -68,21 +78,6 @@ public class Context {
 	public Context(Main main) {
 		this.main = main;
 		
-		this.connectionStateManager = new BiGXConnectionStateManagerClass();
-		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
-		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
-			
-			@Override
-			public void onMessageReceive(Event event, BiGXNetPacket packet) {
-				BiGXPacketHandler.Handle(bigxclient, packet);
-			}
-			
-			@Override
-			public void onConnectedMessageReceive(Event event) {
-				System.out.println("This MC is connected to BiGX Game Controller");
-			}
-		});
-		
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);
 		resistances.put(Blocks.stone, Resistance.MLOW);
@@ -106,6 +101,23 @@ public class Context {
 		
 		structures.add(new StructureTower());
 		structures.add(new StructureGarden());
+	}
+	
+	public void initBigX() {
+		this.connectionStateManager = new BiGXConnectionStateManagerClass();
+		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
+		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
+			
+			@Override
+			public void onMessageReceive(Event event, BiGXNetPacket packet) {
+				BiGXPacketHandler.Handle(bigxclient, packet);
+			}
+			
+			@Override
+			public void onConnectedMessageReceive(Event event) {
+				System.out.println("This MC is connected to BiGX Game Controller");
+			}
+		});
 	}
 	
 	public Theme getTheme(BiomeGenBase biome,Random random) {
@@ -163,10 +175,19 @@ public class Context {
 	
 	public void setQuest(Quest quest) {
 		this.currentQuest = quest;
+		questPopupShown = false;
 	}
 	
 	public Quest getQuest() {
 		return currentQuest;
+	}
+	
+	public Boolean hasQuestPopupShown() {
+		return questPopupShown;
+	}
+	
+	public void showQuestPopup() {
+		questPopupShown = true;
 	}
 	
 	
@@ -186,5 +207,25 @@ public class Context {
 			}
 		}
 		return null;
+	}
+
+	public WorldStructure getWorldStructure(Integer valueOf) {
+		return null;
+	}
+	
+	public int getID() {
+		ID++;
+		return ID;
+	}
+	
+	public boolean checkStructuresEnabled() {
+		return structuresEnabled;
+	}
+	
+	public boolean checkQuestsEnabled() {
+		if (!checkStructuresEnabled()) {
+			return false;
+		}
+		return questsEnabled;
 	}
 }

@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft.quests;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.ngs.bigx.minecraft.client.Textbox;
 
@@ -9,13 +10,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 
-public class Quest {
-	private String name;
+public abstract class Quest {
 	private boolean completed;
 	private List<String> players;
 	
-	public Quest(String name,boolean completed) {
-		this.name = name;
+	public Quest(boolean completed) {
 		this.completed = completed;
 		players = new ArrayList<String>();
 	}
@@ -36,17 +35,20 @@ public class Quest {
 		return completed;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
+	public abstract String getTypeName();
+	public abstract String getType();
+	public abstract void setProperties(Map<String,String> arguments);
+	public abstract Map<String, String> getProperties();
+	public abstract String getHint(EntityPlayer player);
+	public abstract String getName();
+		
 	public List<String> getPlayers() {
 		return players;
 	}
 	
 	public Textbox getFullDescription(int width,FontRenderer font) {
 		Textbox box = new Textbox(width);
-		box.addLine(EnumChatFormatting.BOLD+name,font);
+		box.addLine(EnumChatFormatting.BOLD+getName(),font);
 		if (completed) {
 			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
 		}
@@ -55,4 +57,12 @@ public class Quest {
 		}
 		return box;
 	}
+	
+	public static Quest makeQuest(String type,boolean completed) {
+		if (type.equals("explore")) {
+			return new QuestExplore(completed);
+		}
+		return null;
+	}
+
 }

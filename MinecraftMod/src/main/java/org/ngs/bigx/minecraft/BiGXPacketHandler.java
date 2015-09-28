@@ -47,7 +47,7 @@ public class BiGXPacketHandler {
 					int change = packet.data[1] | (packet.data[2] << 8);
 					
 					if(change >= 512) {
-						change ^= 512;
+						change -= 512;
 						change *= -1;
 					}
 					
@@ -60,7 +60,11 @@ public class BiGXPacketHandler {
 						context.setSpeed( (float) Math.max( ItemBike.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .1f), 0 ) ) );
 					}
 				}
-				break;
+			break;
+			case org.ngs.bigx.dictionary.protocol.specification.dataType.HEARTRATE_PROGRESS:
+				context.timeSpent = packet.data[1];
+				context.timeSpentSmall = packet.data[2];
+			break;
 		}
 		return true;
 	}

@@ -8,8 +8,6 @@ import org.ngs.bigx.minecraft.BikeWorldData;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.structures.WorldStructure;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -64,7 +62,7 @@ public class GuiQuest extends Gui {
 	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
     	int xPos = 0;
     	int yPos = sr.getScaledHeight()-QUESTBOX_HEIGHT;
-    	if (mc.thePlayer != null) {
+    	if (mc.thePlayer != null&&context.checkQuestsEnabled()) {
 	    	EntityPlayer player = mc.thePlayer;
 	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    	mc.renderEngine.bindTexture(QUESTBOX_TEXTURE);

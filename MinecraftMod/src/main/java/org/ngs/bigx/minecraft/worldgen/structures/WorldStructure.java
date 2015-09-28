@@ -12,8 +12,9 @@ public class WorldStructure {
 	private World world;
 	private Structure structure;
 	private Theme theme;
+	private int id;
 	
-	public WorldStructure(String name,int x,int y,int z,World world,Structure structure,Theme theme) {
+	public WorldStructure(String name,int x,int y,int z,World world,Structure structure,Theme theme,int id) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
@@ -21,6 +22,7 @@ public class WorldStructure {
 		this.world = world;
 		this.structure = structure;
 		this.theme = theme;
+		this.id = id;
 	}
 	
 	public String getName() {
@@ -49,5 +51,9 @@ public class WorldStructure {
 	
 	public Theme getTheme() {
 		return theme;
+	}
+	
+	public int getID() {
+		return id;
 	}
 }

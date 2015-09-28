@@ -42,6 +42,7 @@ public class specification {
 		public static final int MOVE_FORWARDBACKWARD = 0x181B; // Movement +: Forward -:Backward
 		public static final int MOVE_LEFTRIGHT = 0x181C; // Movement +: Right -:Left
 		public static final int ROTATE = 0x181D; // Rotation +: Clockwise -: Counter-Clockwise
+		public static final int HEARTRATE_PROGRESS = 0x181E; // Progress on heartrate goal
 		public static final int ENDOFENV = 0x1FFF; // The End of the Environment Sensing Category
 	
 		public static final int BEGINOFBIOSIG = 0x1000; // Beginning of the Human Body Sensing Category

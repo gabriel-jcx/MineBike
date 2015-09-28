@@ -19,7 +19,6 @@ public class ItemBike extends Item {
 	public ItemBike(Context con) {
 		context = con;
 		setUnlocalizedName("bike");
-		setCreativeTab(CreativeTabs.tabMisc);
 		setTextureName(Main.TEXTURE_PREFIX+":bike");
 		GameRegistry.registerItem(this, "bike");
 	}
