@@ -40,8 +40,8 @@ public class ReceiveQuestMessage implements IMessage {
 
 		@Override
 		public IMessage onMessage(ReceiveQuestMessage message, MessageContext ctx) {
-			GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,message.quest);
-			Minecraft.getMinecraft().displayGuiScreen(gui);
+			//GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,message.quest);
+			//Minecraft.getMinecraft().displayGuiScreen(gui);
 			System.out.println(message.quest.getName());
 			return null;
 		}

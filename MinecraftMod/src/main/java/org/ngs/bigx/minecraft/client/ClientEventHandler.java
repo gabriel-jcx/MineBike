@@ -41,11 +41,13 @@ public class ClientEventHandler {
 				}
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 				
+				float degradation = 0.05f;
+				
 				if(context.getSpeed() >= 0){
-					context.setSpeed((float) Math.max(0,context.getSpeed()-0.01));
+					context.setSpeed((float) Math.max(0,context.getSpeed()-degradation));
 				}
 				else{
-					context.setSpeed((float) Math.min(0,context.getSpeed()+0.01));
+					context.setSpeed((float) Math.min(0,context.getSpeed()+degradation));
 					System.out.println("Negative Velocity: " + context.getSpeed());
 				}
 				float moveSpeed = context.getSpeed();

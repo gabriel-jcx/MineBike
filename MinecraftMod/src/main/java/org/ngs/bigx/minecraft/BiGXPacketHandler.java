@@ -47,16 +47,17 @@ public class BiGXPacketHandler {
 					int change = packet.data[1] | (packet.data[2] << 8);
 					
 					if(change >= 512) {
+						change ^= 512;
 						change *= -1;
 					}
 					
 					System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
 					if(context.getSpeed() + ((double)change) >= 0){
-						context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change), 0 ) ) );
+						context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change * .1f), 0 ) ) );
 					}
 					else{
-						context.setSpeed( (float) Math.max( ItemBike.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change), 0 ) ) );
+						context.setSpeed( (float) Math.max( ItemBike.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .1f), 0 ) ) );
 					}
 				}
 				break;

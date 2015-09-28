@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class ItemBike extends Item {
 	Context context;
 	
-	public static final double MAXBIKESPEED = 0.4;
+	public static final double MAXBIKESPEED = 0.8;
 	
 	public ItemBike(Context con) {
 		context = con;
