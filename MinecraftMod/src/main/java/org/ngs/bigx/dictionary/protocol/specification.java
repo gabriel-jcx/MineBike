@@ -19,6 +19,10 @@ public class specification {
 		public static final int ACK_SET_USERNAME = 0x1108;
 		public static final int REQ_GET_USERNAME = 0x1109;
 		public static final int ACK_GET_USERNAME = 0x110A;
+		
+		/* System Command */
+		public static final int REQ_RESET_PARAM = 0x110B;
+		public static final int REQ_RESET_SYSTEM = 0x110C;
 	};
 
 	public class dataType{
