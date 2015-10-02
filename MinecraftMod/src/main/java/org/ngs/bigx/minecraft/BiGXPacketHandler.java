@@ -16,9 +16,6 @@ import net.minecraft.client.Minecraft;
 
 public class BiGXPacketHandler {
 	
-	public static final int START = 0x1101;
-	public static final int STOP = 0x1102;
-	
 	public static boolean Handle(BiGXNetClient client, BiGXNetPacket packet) {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
@@ -61,7 +58,7 @@ public class BiGXPacketHandler {
 					}
 				}
 			break;
-			case org.ngs.bigx.dictionary.protocol.specification.dataType.HEARTRATE_PROGRESS:
+			case org.ngs.bigx.dictionary.protocol.specification.dataType.TIMELAPSE_HEARTRATEREQUIREMENT:
 				context.timeSpent = packet.data[1];
 				context.timeSpentSmall = packet.data[2];
 			break;

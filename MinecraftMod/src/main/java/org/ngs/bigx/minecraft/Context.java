@@ -1,7 +1,9 @@
 package org.ngs.bigx.minecraft;
 
 import java.awt.Event;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +31,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class Context {
 	public BiGXNetClient bigxclient;
+	public String BiGXUserName;
 	public int heartrate = 80;
 	private float speed = 0;
 	public float resistance = 0;
@@ -77,6 +80,7 @@ public class Context {
 	
 	public Context(Main main) {
 		this.main = main;
+		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);

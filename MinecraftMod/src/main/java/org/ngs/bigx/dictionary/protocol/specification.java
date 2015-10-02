@@ -10,6 +10,15 @@ public class specification {
 		public static final int ACK_CONNECT = 0x1102;
 		public static final int ACK_ECHO = 0x1104;
 		
+		/* Typical data RX/TX */
+		public static final int REQ_SEND_DATA = 0x1105;
+		public static final int ACK_SEND_DATA = 0x1106;
+		
+		/* Extra Command */
+		public static final int REQ_SET_USERNAME = 0x1107;
+		public static final int ACK_SET_USERNAME = 0x1108;
+		public static final int REQ_GET_USERNAME = 0x1109;
+		public static final int ACK_GET_USERNAME = 0x110A;
 	};
 
 	public class dataType{
@@ -42,7 +51,7 @@ public class specification {
 		public static final int MOVE_FORWARDBACKWARD = 0x181B; // Movement +: Forward -:Backward
 		public static final int MOVE_LEFTRIGHT = 0x181C; // Movement +: Right -:Left
 		public static final int ROTATE = 0x181D; // Rotation +: Clockwise -: Counter-Clockwise
-		public static final int HEARTRATE_PROGRESS = 0x181E; // Progress on heartrate goal
+		public static final int TIMELAPSE_HEARTRATEREQUIREMENT = 0x181E; // The length of time where user's heart rate is in requirement range.
 		public static final int ENDOFENV = 0x1FFF; // The End of the Environment Sensing Category
 	
 		public static final int BEGINOFBIOSIG = 0x1000; // Beginning of the Human Body Sensing Category
