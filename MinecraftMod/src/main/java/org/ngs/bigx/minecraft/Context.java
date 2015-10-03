@@ -50,7 +50,7 @@ public class Context {
 	public int timeSpentSmall = 0;
 	
 	public enum Resistance {
-		NONE(0),LOW(4),MLOW(7),MID(10),MHIGH(13),HIGH(16);
+		NONE(0),LOW(2),MLOW(3),MID(4),MHIGH(5),HIGH(7);
 		
 		private float resistance;
 		
