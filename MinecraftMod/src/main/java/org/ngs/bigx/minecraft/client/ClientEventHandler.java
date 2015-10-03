@@ -70,6 +70,9 @@ public class ClientEventHandler {
 					if (context.resistances.containsKey(b)) {
 						new_resistance = context.resistances.get(b).getResistance();
 					}
+					else{
+						new_resistance = 1;
+					}
 				}
 				if (new_resistance!=context.resistance) {
 					System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
