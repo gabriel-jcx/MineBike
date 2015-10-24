@@ -8,11 +8,14 @@ import org.ngs.bigx.minecraft.client.Textbox;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 
 public abstract class Quest {
 	private boolean completed;
 	private List<String> players;
+	private boolean worldExists = false;
 	
 	public Quest(boolean completed) {
 		this.completed = completed;
@@ -21,6 +24,10 @@ public abstract class Quest {
 	
 	public void addPlayer(String player) {
 		players.add(player);
+		//Get EntityPlayer object for the player
+		//Teleport the player to the new world
+		EntityPlayer pl;
+		pl.setPosition(pl.po)
 	}
 	
 	public void addPlayers(List<String> players) {
@@ -35,7 +42,9 @@ public abstract class Quest {
 		return completed;
 	}
 	
-	public abstract String getTypeName();
+	public String getTypeName() {
+		return StatCollector.translateToLocal("quest.type.")+getType();
+	}
 	public abstract String getType();
 	public abstract void setProperties(Map<String,String> arguments);
 	public abstract Map<String, String> getProperties();
@@ -62,7 +71,11 @@ public abstract class Quest {
 		if (type.equals("explore")) {
 			return new QuestExplore(completed);
 		}
+		if (type.equals("run")) {
+			return new QuestRun(completed);
+		}
 		return null;
 	}
+	
 
 }

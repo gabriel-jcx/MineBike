@@ -43,7 +43,7 @@ public class Context {
 	private boolean questPopupShown = true;
 	private int ID = 0;
 	private boolean structuresEnabled = false;
-	private boolean questsEnabled = false;
+	private boolean questsEnabled = true;
 	public Map<EntityPlayerMP,Quest> currentQuests;
 	
 	public int timeSpent = 0;
@@ -227,9 +227,6 @@ public class Context {
 	}
 	
 	public boolean checkQuestsEnabled() {
-		if (!checkStructuresEnabled()) {
-			return false;
-		}
 		return questsEnabled;
 	}
 }

@@ -29,55 +29,8 @@ public class CommonEventHandler {
 	int server_tick = 0;
 	
 	@SubscribeEvent
-	public void onEntityJoin(EntityJoinWorldEvent event) {
-		if (event.entity instanceof EntityPlayer) {
-			EntityPlayer p = (EntityPlayer) event.entity;
-			p.inventory.clearInventory(ModItems.Bike,-1);
-			p.inventory.addItemStackToInventory(new ItemStack(ModItems.Bike));
-		}
-	}
-	
-	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		BikeWorldData data = BikeWorldData.get(event.world);
 	}
 	
-	@SubscribeEvent
-	public void onWorldUnload(WorldEvent.Unload event) {
-	}
-	 
-	 //Called when the server ticks. Usually 20 ticks a second. 
-	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event) {
-		if (MinecraftServer.getServer()!=null&&event.phase==TickEvent.Phase.END) {
-			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
-			server_tick++;
-			//20 ticks = 1 second
-			if (server_tick==20) {
-				server_tick = 0;
-			}
-			WorldServer[] ws = MinecraftServer.getServer().worldServers;
-			for (WorldServer w:ws) {
-					List<EntityPlayerMP> lp = w.playerEntities;
-					for (EntityPlayerMP p:lp) {
-						if (p.isRiding()) {
-							p.ridingEntity.setVelocity(p.motionX, p.ridingEntity.motionY, p.motionY);
-						}
-					}
-			}
-		}
-	}
-		
-	//Currently unused method, merely a reference for me to setup further reflection
-	public static void setFoodLevelReflection(EntityPlayer p,int food) {
-		try {
-			Class foodStats = net.minecraft.util.FoodStats.class;
-			Field foodLevel = foodStats.getDeclaredField("field_75127_a");
-			foodLevel.setAccessible(true);
-			foodLevel.set(p.getFoodStats(),food);
-		} 
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}	
 }

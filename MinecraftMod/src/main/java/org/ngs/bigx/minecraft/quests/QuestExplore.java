@@ -17,11 +17,6 @@ public class QuestExplore extends Quest {
 	public QuestExplore(boolean completed) {
 		super(completed);
 	}
-
-	@Override
-	public String getTypeName() {
-		return StatCollector.translateToLocal("quest.type.explore");
-	}
 	
 	@Override
 	public String getType() {
