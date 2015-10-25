@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 
 public class QuestRun extends Quest {
 	
@@ -38,6 +39,17 @@ public class QuestRun extends Quest {
 	@Override
 	public String getName() {
 		return getTypeName();
+	}
+
+	@Override
+	public Boolean checkComplete(String playerName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void generateWorld(World world,double posX, double posY, double posZ) {
+		// TODO Auto-generated method stub
 	}
 
 }

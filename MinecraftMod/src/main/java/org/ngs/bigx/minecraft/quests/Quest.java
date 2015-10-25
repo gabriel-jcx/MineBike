@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 
 public abstract class Quest {
 	private boolean completed;
@@ -26,8 +27,6 @@ public abstract class Quest {
 		players.add(player);
 		//Get EntityPlayer object for the player
 		//Teleport the player to the new world
-		EntityPlayer pl;
-		pl.setPosition(pl.po)
 	}
 	
 	public void addPlayers(List<String> players) {
@@ -50,6 +49,8 @@ public abstract class Quest {
 	public abstract Map<String, String> getProperties();
 	public abstract String getHint(EntityPlayer player);
 	public abstract String getName();
+	public abstract Boolean checkComplete(String playerName);
+	public abstract void generateWorld(World world,double posX,double posY,double posZ);
 		
 	public List<String> getPlayers() {
 		return players;
@@ -68,9 +69,6 @@ public abstract class Quest {
 	}
 	
 	public static Quest makeQuest(String type,boolean completed) {
-		if (type.equals("explore")) {
-			return new QuestExplore(completed);
-		}
 		if (type.equals("run")) {
 			return new QuestRun(completed);
 		}
