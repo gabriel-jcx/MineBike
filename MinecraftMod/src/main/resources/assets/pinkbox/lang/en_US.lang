@@ -19,5 +19,5 @@ world.theme.norman=Norman
 world.theme.desert=Desert
 world.theme.ice=Ice
 
-quest.type.explore=Explore
-quest.type.run=Run
+quest.type.run.name=Run
+quest.type.run.description=Run a Distance

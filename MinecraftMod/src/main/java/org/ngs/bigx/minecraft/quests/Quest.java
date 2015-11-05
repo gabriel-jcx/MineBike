@@ -17,6 +17,7 @@ public abstract class Quest {
 	private boolean completed;
 	private List<String> players;
 	private boolean worldExists = false;
+	private int timeLimit = 0;
 	
 	public Quest(boolean completed) {
 		this.completed = completed;
@@ -51,6 +52,7 @@ public abstract class Quest {
 	public abstract String getName();
 	public abstract Boolean checkComplete(String playerName);
 	public abstract void generateWorld(World world,double posX,double posY,double posZ);
+	public abstract void questTick();
 		
 	public List<String> getPlayers() {
 		return players;
@@ -75,5 +77,15 @@ public abstract class Quest {
 		return null;
 	}
 	
+	public Integer getTimeLimit() {
+		return timeLimit;
+	}
+	
+	private void tick() {
+		if (timeLimit>0) {
+			timeLimit--;
+		}
+		this.questTick();
+	}
 
 }

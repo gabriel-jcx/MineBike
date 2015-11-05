@@ -52,4 +52,9 @@ public class QuestRun extends Quest {
 		// TODO Auto-generated method stub
 	}
 
+	@Override
+	public void questTick() {
+		// TODO Auto-generated method stub
+	}
+
 }
