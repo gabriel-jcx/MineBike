@@ -18,6 +18,7 @@ public abstract class Quest {
 	private List<String> players;
 	private boolean worldExists = false;
 	private int timeLimit = 0;
+	private QuestStateManager stateManager;
 	
 	public Quest(boolean completed) {
 		this.completed = completed;
