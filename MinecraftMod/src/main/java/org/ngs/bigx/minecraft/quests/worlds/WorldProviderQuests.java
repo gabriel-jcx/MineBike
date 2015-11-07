@@ -9,20 +9,22 @@ import net.minecraft.world.chunk.IChunkProvider;
 
 public class WorldProviderQuests extends WorldProvider {
 
+	
+	public static int dimID = 20;
+
 	@Override
 	public String getDimensionName() {
 		return "Quest World";
 	}
 	
 	public void registerWorldChunkManager() {
-		this.dimensionId = 2;
+		this.dimensionId = dimID;
 		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(BiomeGenBase.hell, this.dimensionId);
 		this.hasNoSky = false;
 	}
 	
 	public IChunkProvider createChunkGenerator() {
-		return null;
-		//return new ChunkProviderTutorial(this.worldObj, this.worldObj.getSeed(), false);
+		return new ChunkProviderQuests(this.worldObj, this.worldObj.getSeed(), false);
 	}
 	
 	public int getAverageGroundLevel() {
