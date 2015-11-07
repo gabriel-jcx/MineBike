@@ -11,6 +11,7 @@ public class QuestStateManager
 		this.QuestStateMachine = new StateMachine<State, Trigger>(State.Inactive);
 		
 		this.QuestStateMachine.configure(State.Inactive)
+			.onEntry(this::stopCallTimer)
 			.permit(Trigger.AcceptQuestAndTeleport, State.QuestLoading);
 		
 		this.QuestStateMachine.configure(State.QuestLoading)
@@ -40,6 +41,16 @@ public class QuestStateManager
 			.permit(Trigger.NextgameRetryClick, State.QuestLoading)
 			.permit(Trigger.NextgameExitQuestClick, State.Inactive);
 	}
+	
+
+
+    private void stopCallTimer() {
+        // ...
+    }
+
+    private void startCallTimer() {
+        // ...
+    }
 	
 	private enum State {
         //Dead, Idle,
