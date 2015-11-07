@@ -13,16 +13,17 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public abstract class Quest {
+public abstract class Quest implements QuestStateManagerListener{
 	private boolean completed;
 	private List<String> players;
 	private boolean worldExists = false;
 	private int timeLimit = 0;
 	private QuestStateManager stateManager;
 	
-	public Quest(boolean completed) {
+	public Quest(boolean completed) throws Exception {
 		this.completed = completed;
 		players = new ArrayList<String>();
+		stateManager = new QuestStateManager(this);
 	}
 	
 	public void addPlayer(String player) {
@@ -73,7 +74,12 @@ public abstract class Quest {
 	
 	public static Quest makeQuest(String type,boolean completed) {
 		if (type.equals("run")) {
-			return new QuestRun(completed);
+			try {
+				return new QuestRun(completed);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return null;
 	}

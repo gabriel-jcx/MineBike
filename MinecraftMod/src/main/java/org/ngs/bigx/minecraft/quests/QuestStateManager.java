@@ -1,26 +1,55 @@
 package org.ngs.bigx.minecraft.quests;
 
 import com.github.oxo42.stateless4j.StateMachine;
+import com.github.oxo42.stateless4j.delegates.Action;
 
 public class QuestStateManager 
 {
 	private StateMachine<State, Trigger> QuestStateMachine;
+	private QuestStateManagerListener stateChangeListner;
 	
-	public QuestStateManager() throws Exception
+	public QuestStateManager(QuestStateManagerListener argStateChangeListner) throws Exception
 	{
+		if(argStateChangeListner == null)
+			throw new Exception("StateMachine Listener is null!");
+		
 		this.QuestStateMachine = new StateMachine<State, Trigger>(State.Inactive);
+		this.stateChangeListner = argStateChangeListner;
 		
 		this.QuestStateMachine.configure(State.Inactive)
-			.onEntry(this::stopCallTimer)
-			.permit(Trigger.AcceptQuestAndTeleport, State.QuestLoading);
+			.onEntry(new Action() {
+                @Override
+                public void doIt() {
+                	stateChangeListner.onQuestInactive();
+                }
+            })
+            .permit(Trigger.AcceptQuestAndTeleport, State.QuestLoading);
 		
 		this.QuestStateMachine.configure(State.QuestLoading)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onQuestLoading();
+	            }
+	        })
 			.permit(Trigger.TeleportDone, State.WaitToStart);
 		
 		this.QuestStateMachine.configure(State.WaitToStart)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onQuestWaitToStart();
+	            }
+	        })
 			.permit(Trigger.StartQuest, State.QuestInProgress);
 		
 		this.QuestStateMachine.configure(State.QuestInProgress)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onQuestInProgress();
+	            }
+	        })
 			.permit(Trigger.PauseQuest, State.QuestPaused)
 			.permit(Trigger.SuccessQuest, State.QuestAccomplished)
 			.permit(Trigger.FailureQuest, State.QuestFailed);
@@ -42,7 +71,7 @@ public class QuestStateManager
 			.permit(Trigger.NextgameExitQuestClick, State.Inactive);
 	}
 	
-
+	
 
     private void stopCallTimer() {
         // ...

@@ -10,7 +10,7 @@ public class QuestRun extends Quest {
 	
 	int distance = 200;
 
-	public QuestRun(boolean completed) {
+	public QuestRun(boolean completed) throws Exception {
 		super(completed);
 	}
 
@@ -55,6 +55,60 @@ public class QuestRun extends Quest {
 	@Override
 	public void questTick() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onQuestInactive() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQuestLoading() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQuestWaitToStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQuestInProgress() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQuestPaused() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQuestAccomplished() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQuestFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRewardSelection() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRetryOrEndTheQuest() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
