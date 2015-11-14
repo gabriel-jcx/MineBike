@@ -55,31 +55,51 @@ public class QuestStateManager
 			.permit(Trigger.FailureQuest, State.QuestFailed);
 		
 		this.QuestStateMachine.configure(State.QuestPaused)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onQuestPaused();
+	            }
+	        })
 			.permit(Trigger.ResumeQuest, State.QuestInProgress);
 		
 		this.QuestStateMachine.configure(State.QuestAccomplished)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onQuestAccomplished();
+	            }
+	        })
 			.permit(Trigger.ScoreDisplayClickOkay, State.RewardSelection);
 		
 		this.QuestStateMachine.configure(State.RewardSelection)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onRewardSelection();
+	            }
+	        })
 			.permit(Trigger.RewardSelect, State.RetryOrEndTheQuest);
 		
 		this.QuestStateMachine.configure(State.QuestFailed)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onQuestFailed();
+	            }
+	        })
 			.permit(Trigger.ScoreDisplayClickOkay, State.RetryOrEndTheQuest);
 		
 		this.QuestStateMachine.configure(State.RetryOrEndTheQuest)
+			.onEntry(new Action() {
+	            @Override
+	            public void doIt() {
+	            	stateChangeListner.onRetryOrEndTheQuest();
+	            }
+	        })
 			.permit(Trigger.NextgameRetryClick, State.QuestLoading)
 			.permit(Trigger.NextgameExitQuestClick, State.Inactive);
 	}
-	
-	
-
-    private void stopCallTimer() {
-        // ...
-    }
-
-    private void startCallTimer() {
-        // ...
-    }
 	
 	private enum State {
         //Dead, Idle,
