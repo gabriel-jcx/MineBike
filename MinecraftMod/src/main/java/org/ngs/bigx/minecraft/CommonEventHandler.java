@@ -60,11 +60,11 @@ public class CommonEventHandler {
 			}
 			WorldServer[] ws = MinecraftServer.getServer().worldServers;
 			for (WorldServer w:ws) {
-					if (w.provider.dimensionId==WorldProviderQuests.dimID) {
+					if (w.provider.dimensionId==WorldProviderQuests.dimID) { //check if this is a quest world
 						List<EntityPlayerMP> lp = w.playerEntities;
 						for (EntityPlayerMP p:lp) {
-							//Build stone wherever the player walks, when they're in a quest world
-							w.setBlock((int) p.posX, 64, (int)  p.posZ, Blocks.stone);
+							//Build stone wherever the player walks, at a certain y value (hardcoded)
+//							w.setBlock((int) p.posX, 64, (int)  p.posZ, Blocks.stone);
 						}
 					}
 			}

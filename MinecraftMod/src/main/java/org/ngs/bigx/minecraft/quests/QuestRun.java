@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 public class QuestRun extends Quest {
@@ -48,67 +49,19 @@ public class QuestRun extends Quest {
 	}
 
 	@Override
-	public void generateWorld(World world,double posX, double posY, double posZ) {
-		// TODO Auto-generated method stub
+	public void generateWorld(World world,int posX, int posY, int posZ) {
+		for (int i=-5;i<distance;i++) {
+			world.setBlock(posX+i,posY,posZ,Blocks.grass);
+			world.setBlock(posX+i,posY,posZ+1,Blocks.grass);
+		}
 	}
 
 	@Override
 	public void questTick() {
 		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onQuestInactive() {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void onQuestLoading() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onQuestWaitToStart() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onQuestInProgress() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onQuestPaused() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onQuestAccomplished() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onQuestFailed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onRewardSelection() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onRetryOrEndTheQuest() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }

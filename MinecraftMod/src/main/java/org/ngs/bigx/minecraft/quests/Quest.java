@@ -6,20 +6,26 @@ import java.util.Map;
 
 import org.ngs.bigx.minecraft.client.Textbox;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public abstract class Quest implements QuestStateManagerListener{
 	private List<String> players;
 	private boolean worldExists = false;
 	private int timeLimit = 0;
 	private QuestStateManager stateManager;
+	private WorldServer questWorld;
+	private int questWorldX=0,questWorldY=64,questWorldZ=0;
 	
 	public Quest() throws Exception {
 		players = new ArrayList<String>();
@@ -28,8 +34,6 @@ public abstract class Quest implements QuestStateManagerListener{
 	
 	public void addPlayer(String player) {
 		players.add(player);
-		//Get EntityPlayer object for the player
-		//Teleport the player to the new world
 	}
 	
 	public void addPlayers(List<String> players) {
@@ -52,6 +56,52 @@ public abstract class Quest implements QuestStateManagerListener{
 	{
 		return this.stateManager.getQuestState();
 	}
+
+	public void onQuestInactive() {
+		// TODO Auto-generated method stub
+	}
+
+	public void onQuestLoading() {
+		questWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
+		generateWorld(questWorld,questWorldX,questWorldY,questWorldZ);
+	}
+
+	public void onQuestWaitToStart() {
+		for (String playerName:players) {
+			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
+			new QuestTeleporter(questWorld).teleport(player, questWorld);
+		}
+	}
+
+	public void onQuestInProgress() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onQuestPaused() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onQuestAccomplished() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onQuestFailed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onRewardSelection() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onRetryOrEndTheQuest() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public String getTypeName() {
 		return StatCollector.translateToLocal("quest.type.")+getType();
@@ -62,7 +112,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	public abstract String getHint(EntityPlayer player);
 	public abstract String getName();
 	public abstract Boolean checkComplete(String playerName);
-	public abstract void generateWorld(World world,double posX,double posY,double posZ);
+	public abstract void generateWorld(World world,int posX,int posY,int posZ);
 	public abstract void questTick();
 		
 	public List<String> getPlayers() {
