@@ -65,7 +65,7 @@ public class CommonEventHandler {
 				List<EntityPlayerMP> playerList = world.playerEntities;
 				for (EntityPlayerMP player:playerList) {
 					if (server_tick==0) {
-						Quest q = new QuestRun(false);
+						Quest q = new QuestRun();
 						q.addPlayer(player.getCommandSenderName());
 					}
 				}
