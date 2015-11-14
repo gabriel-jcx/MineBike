@@ -106,18 +106,44 @@ public class QuestStateManager
 		return this.QuestStateMachine.getState();
 	}
 	
+	public void triggerQuestTransition(Trigger trigger) throws Exception
+	{
+		boolean triggerPossibility = this.QuestStateMachine.canFire(trigger);
+		
+		if(triggerPossibility)
+		{
+			this.QuestStateMachine.fire(trigger);
+		}
+		else
+		{
+			throw new Exception("The current trigger is not possible in this state.");
+		}
+	}
+	
 	public enum State {
         //Dead, Idle,
-		Inactive, 
-        QuestLoading, WaitToStart, QuestInProgress, 
-        QuestPaused, QuestAccomplished, QuestFailed, RewardSelection, 
-        RetryOrEndTheQuest
+		Inactive("Inactive"), 
+        QuestLoading("QuestLoading"), WaitToStart("WaitToStart"), QuestInProgress("QuestInProgress"), 
+        QuestPaused("QuestPaused"), QuestAccomplished("QuestAccomplished"), QuestFailed("QuestFailed"), RewardSelection("RewardSelection"), 
+        RetryOrEndTheQuest("RetryOrEndTheQuest");
+		
+		private String text;
+		
+		private State(final String text)
+		{
+			this.text = text;
+		}
 
+		@Override
+        public String toString()
+        {
+        	return this.text;
+        }
     }
 	public enum Trigger {
         //Die, Revive,
     	AcceptQuestAndTeleport, TeleportDone, StartQuest, 
         PauseQuest, StopQuest, ResumeQuest, SuccessQuest, FailureQuest, RewardSelect,
-        ScoreDisplayClickOkay, NextgameRetryClick, NextgameExitQuestClick
+        ScoreDisplayClickOkay, NextgameRetryClick, NextgameExitQuestClick;
     }
 }

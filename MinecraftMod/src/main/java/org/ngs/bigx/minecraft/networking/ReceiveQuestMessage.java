@@ -25,13 +25,12 @@ public class ReceiveQuestMessage implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
-		quest = Quest.makeQuest(compound.getString("type"),compound.getBoolean("complete"));
+		quest = Quest.makeQuest(compound.getString("type"));
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		NBTTagCompound compound = new NBTTagCompound();
-		compound.setBoolean("complete", quest.getCompleted());
 		compound.setString("type",quest.getType());
 		ByteBufUtils.writeTag(buf, compound);
 	}

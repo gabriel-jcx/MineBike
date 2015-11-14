@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.ngs.bigx.minecraft.client.Textbox;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
+import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	private int timeLimit = 0;
 	private QuestStateManager stateManager;
 	
-	public Quest(boolean completed) throws Exception {
+	public Quest() throws Exception {
 		players = new ArrayList<String>();
 		stateManager = new QuestStateManager(this);
 	}
@@ -35,7 +36,21 @@ public abstract class Quest implements QuestStateManagerListener{
 		this.players.addAll(players);
 	}
 	
+	/***
+	 * The function completes the current on going quest when the quest was done successfully.
+	 */
 	public void complete() {
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.SuccessQuest);
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
+	}
+	
+	public State getStateMachine()
+	{
+		return this.stateManager.getQuestState();
 	}
 	
 	public String getTypeName() {
@@ -76,23 +91,20 @@ public abstract class Quest implements QuestStateManagerListener{
 		case QuestPaused:
 			msg = "Quest Paused";
 			break;
+		default:
+			msg = "The Quest is in the middle of NO WHERE!!! Please check state machine!";
+			break;
 		}
 		
 		box.addLine(EnumChatFormatting.DARK_GREEN + msg,font);
 		
-		if (this.stateManager.getQuestState() == State.QuestAccomplished) {
-			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
-		}
-		else if (this.stateManager.getQuestState() == State.QuestAccomplished) {
-			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
-		}
 		return box;
 	}
 	
-	public static Quest makeQuest(String type,boolean completed) {
+	public static Quest makeQuest(String type) {
 		if (type.equals("run")) {
 			try {
-				return new QuestRun(completed);
+				return new QuestRun();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
