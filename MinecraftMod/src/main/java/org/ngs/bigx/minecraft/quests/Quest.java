@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ngs.bigx.minecraft.client.Textbox;
+import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,14 +15,12 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public abstract class Quest implements QuestStateManagerListener{
-	private boolean completed;
 	private List<String> players;
 	private boolean worldExists = false;
 	private int timeLimit = 0;
 	private QuestStateManager stateManager;
 	
 	public Quest(boolean completed) throws Exception {
-		this.completed = completed;
 		players = new ArrayList<String>();
 		stateManager = new QuestStateManager(this);
 	}
@@ -37,11 +36,6 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	public void complete() {
-		completed = true;
-	}
-	
-	public boolean getCompleted() {
-		return completed;
 	}
 	
 	public String getTypeName() {
@@ -61,13 +55,36 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	public Textbox getFullDescription(int width,FontRenderer font) {
+		String msg = "";
 		Textbox box = new Textbox(width);
 		box.addLine(EnumChatFormatting.BOLD+getName(),font);
-		if (completed) {
+		
+		switch(this.stateManager.getQuestState())
+		{
+		case QuestAccomplished:
+			msg = "Quest Accomplished";
+			break;
+		case QuestFailed:
+			msg = "Quest Failed";
+			break;
+		case QuestLoading:
+			msg = "Loading....";
+			break;
+		case QuestInProgress:
+			msg = "Quest in Progress";
+			break;
+		case QuestPaused:
+			msg = "Quest Paused";
+			break;
+		}
+		
+		box.addLine(EnumChatFormatting.DARK_GREEN + msg,font);
+		
+		if (this.stateManager.getQuestState() == State.QuestAccomplished) {
 			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
 		}
-		else {
-			box.addLine(EnumChatFormatting.YELLOW+"In Progress",font);
+		else if (this.stateManager.getQuestState() == State.QuestAccomplished) {
+			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
 		}
 		return box;
 	}

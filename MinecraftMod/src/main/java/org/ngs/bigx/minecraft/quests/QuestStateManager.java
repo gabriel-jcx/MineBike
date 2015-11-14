@@ -101,7 +101,12 @@ public class QuestStateManager
 			.permit(Trigger.NextgameExitQuestClick, State.Inactive);
 	}
 	
-	private enum State {
+	public State getQuestState()
+	{
+		return this.QuestStateMachine.getState();
+	}
+	
+	public enum State {
         //Dead, Idle,
 		Inactive, 
         QuestLoading, WaitToStart, QuestInProgress, 
@@ -109,7 +114,7 @@ public class QuestStateManager
         RetryOrEndTheQuest
 
     }
-    private enum Trigger {
+	public enum Trigger {
         //Die, Revive,
     	AcceptQuestAndTeleport, TeleportDone, StartQuest, 
         PauseQuest, StopQuest, ResumeQuest, SuccessQuest, FailureQuest, RewardSelect,
