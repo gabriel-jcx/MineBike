@@ -34,6 +34,8 @@ configurations {
 dependencies {
 	shade files('bigxController.jar')
 	shade files('stateless4j-2.5.2-SNAPSHOT.jar')
+	shade files('slf4j-api-1.7.12.jar')
+	shade files('slf4j-simple-1.7.12.jar')
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
