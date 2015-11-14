@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.ngs.bigx.minecraft.client.Textbox;
+import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -18,7 +20,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public abstract class Quest implements QuestStateManagerListener{
-	private boolean completed;
 	private List<String> players;
 	private boolean worldExists = false;
 	private int timeLimit = 0;
@@ -26,8 +27,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	private WorldServer questWorld;
 	private int questWorldX=0,questWorldY=64,questWorldZ=0;
 	
-	public Quest(boolean completed) throws Exception {
-		this.completed = completed;
+	public Quest() throws Exception {
 		players = new ArrayList<String>();
 		stateManager = new QuestStateManager(this);
 	}
@@ -40,12 +40,21 @@ public abstract class Quest implements QuestStateManagerListener{
 		this.players.addAll(players);
 	}
 	
+	/***
+	 * The function completes the current on going quest when the quest was done successfully.
+	 */
 	public void complete() {
-		completed = true;
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.SuccessQuest);
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
 	}
 	
-	public boolean getCompleted() {
-		return completed;
+	public State getStateMachine()
+	{
+		return this.stateManager.getQuestState();
 	}
 
 	public void onQuestInactive() {
@@ -111,21 +120,41 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	public Textbox getFullDescription(int width,FontRenderer font) {
+		String msg = "";
 		Textbox box = new Textbox(width);
 		box.addLine(EnumChatFormatting.BOLD+getName(),font);
-		if (completed) {
-			box.addLine(EnumChatFormatting.DARK_GREEN+"Completed",font);
+		
+		switch(this.stateManager.getQuestState())
+		{
+		case QuestAccomplished:
+			msg = "Quest Accomplished";
+			break;
+		case QuestFailed:
+			msg = "Quest Failed";
+			break;
+		case QuestLoading:
+			msg = "Loading....";
+			break;
+		case QuestInProgress:
+			msg = "Quest in Progress";
+			break;
+		case QuestPaused:
+			msg = "Quest Paused";
+			break;
+		default:
+			msg = "The Quest is in the middle of NO WHERE!!! Please check state machine!";
+			break;
 		}
-		else {
-			box.addLine(EnumChatFormatting.YELLOW+"In Progress",font);
-		}
+		
+		box.addLine(EnumChatFormatting.DARK_GREEN + msg,font);
+		
 		return box;
 	}
 	
-	public static Quest makeQuest(String type,boolean completed) {
+	public static Quest makeQuest(String type) {
 		if (type.equals("run")) {
 			try {
-				return new QuestRun(completed);
+				return new QuestRun();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

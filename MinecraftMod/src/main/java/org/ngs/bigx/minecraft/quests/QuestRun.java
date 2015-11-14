@@ -11,8 +11,8 @@ public class QuestRun extends Quest {
 	
 	int distance = 200;
 
-	public QuestRun(boolean completed) throws Exception {
-		super(completed);
+	public QuestRun() throws Exception {
+		super();
 	}
 
 	@Override
