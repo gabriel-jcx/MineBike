@@ -45,7 +45,17 @@ public abstract class Quest implements QuestStateManagerListener{
 	 */
 	public void complete() {
 		try {
-			this.stateManager.triggerQuestTransition(Trigger.SuccessQuest);
+			this.stateManager.triggerQuestTransition(Trigger.SuccessQuest);			
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
+	}
+	
+	public void load()
+	{
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.AcceptQuestAndTeleport);
 		} catch (Exception e) {
 			System.out.println("The quest state is not in a right state.");
 			e.printStackTrace();
@@ -63,7 +73,16 @@ public abstract class Quest implements QuestStateManagerListener{
 
 	public void onQuestLoading() {
 		questWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
-		generateWorld(questWorld,questWorldX,questWorldY,questWorldZ);
+		
+		new Thread()
+		{
+
+			@Override
+			public void run() {
+				generateWorld(questWorld,questWorldX,questWorldY,questWorldZ);
+			}
+			
+		}.start();
 	}
 
 	public void onQuestWaitToStart() {
@@ -112,7 +131,17 @@ public abstract class Quest implements QuestStateManagerListener{
 	public abstract String getHint(EntityPlayer player);
 	public abstract String getName();
 	public abstract Boolean checkComplete(String playerName);
-	public abstract void generateWorld(World world,int posX,int posY,int posZ);
+	public void generateWorld(World world,int posX,int posY,int posZ)
+	{
+		// TODO: Generate World &  teleport the user
+		
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.TeleportDone);			
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
+	}
 	public abstract void questTick();
 		
 	public List<String> getPlayers() {

@@ -54,6 +54,8 @@ public class QuestRun extends Quest {
 			world.setBlock(posX+i,posY,posZ,Blocks.grass);
 			world.setBlock(posX+i,posY,posZ+1,Blocks.grass);
 		}
+		
+		super.generateWorld(world, posX, posY, posZ);
 	}
 
 	@Override
