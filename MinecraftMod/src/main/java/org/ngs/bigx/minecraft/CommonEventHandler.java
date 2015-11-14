@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ngs.bigx.minecraft.item.ModItems;
+import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestRun;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
@@ -50,7 +52,7 @@ public class CommonEventHandler {
 	
 	 //Called when the server ticks. Usually 20 ticks a second. 
 	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event) {
+	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
 		if (MinecraftServer.getServer()!=null&&event.phase==TickEvent.Phase.END) {
 			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
 			server_tick++;
@@ -58,15 +60,15 @@ public class CommonEventHandler {
 			if (server_tick==20) {
 				server_tick = 0;
 			}
-			WorldServer[] ws = MinecraftServer.getServer().worldServers;
-			for (WorldServer w:ws) {
-					if (w.provider.dimensionId==WorldProviderQuests.dimID) { //check if this is a quest world
-						List<EntityPlayerMP> lp = w.playerEntities;
-						for (EntityPlayerMP p:lp) {
-							//Build stone wherever the player walks, at a certain y value (hardcoded)
-//							w.setBlock((int) p.posX, 64, (int)  p.posZ, Blocks.stone);
-						}
+			WorldServer[] worldServers = MinecraftServer.getServer().worldServers;
+			for (WorldServer world:worldServers) {
+				List<EntityPlayerMP> playerList = world.playerEntities;
+				for (EntityPlayerMP player:playerList) {
+					if (server_tick==0) {
+						Quest q = new QuestRun(false);
+						q.addPlayer(player.getCommandSenderName());
 					}
+				}
 			}
 		}
 	}

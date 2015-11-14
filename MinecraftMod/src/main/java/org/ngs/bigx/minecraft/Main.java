@@ -41,9 +41,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    public static final String TEXTURE_PREFIX = "pinkbox";
 	    
 	    private static Main instance;
-	    
-	    public static WorldGen worldGen = new WorldGen();
-	    
+	    	    
 	    public Context context;
 	    
 	    @SidedProxy(clientSide="org.ngs.bigx.minecraft.client.ClientProxy", serverSide="org.ngs.bigx.minecraft.server.ServerProxy")
@@ -62,7 +60,6 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    @EventHandler
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
-	    	GameRegistry.registerWorldGenerator(worldGen,10);
 	    }
 	        
 	    @EventHandler

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.worldgen.structures.WorldStructure;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,7 +16,6 @@ import net.minecraftforge.common.util.Constants;
 public class BikeWorldData extends WorldSavedData {
 	
 	private static final String IDENTIFIER = "bikemod";
-	private List<WorldStructure> structs = new ArrayList<WorldStructure>();
 	private List<Quest> quests = new ArrayList<Quest>();
 
 	public BikeWorldData(String identifier) {
@@ -30,17 +28,9 @@ public class BikeWorldData extends WorldSavedData {
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
-		NBTTagList list = nbt.getTagList("structures", Constants.NBT.TAG_COMPOUND);
-		Context context = Main.instance().context;
-		int i;
-		for (i=0;i<list.tagCount();i++) {
-			NBTTagCompound compound = list.getCompoundTagAt(i);
-			WorldStructure struct = new WorldStructure(compound.getString("name"), compound.getInteger("x"), compound.getInteger("y"), compound.getInteger("z"), DimensionManager.getWorld(compound.getInteger("world")), context.getStructure(compound.getString("structure")), context.getTheme(compound.getString("theme")),compound.getInteger("id"));
-			structs.add(struct);
-		}
 		NBTTagList questList = nbt.getTagList("quest",Constants.NBT.TAG_COMPOUND);
-		for(i=0;i<questList.tagCount();i++) {
-			NBTTagCompound compound = list.getCompoundTagAt(i);
+		for(int i=0;i<questList.tagCount();i++) {
+			NBTTagCompound compound = questList.getCompoundTagAt(i);
 			Quest quest = Quest.makeQuest(compound.getString("type"),compound.getBoolean("completed"));
 			NBTTagList players = compound.getTagList("players", Constants.NBT.TAG_STRING);
 			for (i=0;i<players.tagCount();i++) {
@@ -54,17 +44,6 @@ public class BikeWorldData extends WorldSavedData {
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		NBTTagList structList = new NBTTagList();
-		for (WorldStructure struct: structs) {
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setString("name", struct.getName());
-			tag.setInteger("x", struct.getX());
-			tag.setInteger("y", struct.getY());
-			tag.setInteger("z", struct.getZ());
-			tag.setString("structure", struct.getStructure().getName());
-			tag.setString("theme", struct.getTheme().getName());
-			tag.setInteger("world", struct.getWorld().provider.dimensionId);
-			structList.appendTag(tag);
-		}
 		nbt.setTag("structures", structList);
 		NBTTagList questList = new NBTTagList();
 		for (Quest quest: quests) {
@@ -89,20 +68,6 @@ public class BikeWorldData extends WorldSavedData {
 			world.mapStorage.setData(IDENTIFIER, data);
 		}
 		return data;
-	}
-	
-	public void updateStructures(List<WorldStructure> list) {
-		structs = new ArrayList<WorldStructure>(list);
-		markDirty();
-	}
-	
-	public List<WorldStructure> getStructures() {
-		return structs;
-	}
-	
-	public void addStructure(WorldStructure struct) {
-		structs.add(struct);
-		markDirty();
 	}
 	
 	public List<Quest> getQuests() {

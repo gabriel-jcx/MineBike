@@ -12,14 +12,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.worldgen.structures.Structure;
-import org.ngs.bigx.minecraft.worldgen.structures.StructureGarden;
-import org.ngs.bigx.minecraft.worldgen.structures.StructureTower;
-import org.ngs.bigx.minecraft.worldgen.structures.WorldStructure;
-import org.ngs.bigx.minecraft.worldgen.themes.Theme;
-import org.ngs.bigx.minecraft.worldgen.themes.ThemeDesert;
-import org.ngs.bigx.minecraft.worldgen.themes.ThemeIce;
-import org.ngs.bigx.minecraft.worldgen.themes.ThemeNorman;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -72,12 +64,6 @@ public class Context {
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
 	
-	public List<Block> canGenerateOn = new ArrayList<Block>();
-	
-	public List<Theme> themes = new ArrayList<Theme>();
-	
-	public List<Structure> structures = new ArrayList<Structure>();
-	
 	public Context(Main main) {
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -92,19 +78,6 @@ public class Context {
 		resistances.put(Blocks.gravel, Resistance.MHIGH);
 		resistances.put(Blocks.water, Resistance.HIGH);
 		
-		canGenerateOn.add(Blocks.grass);
-		canGenerateOn.add(Blocks.dirt);
-		canGenerateOn.add(Blocks.sand);
-		canGenerateOn.add(Blocks.stone);
-		canGenerateOn.add(Blocks.stained_hardened_clay);
-		canGenerateOn.add(Blocks.hardened_clay);
-		
-		themes.add(new ThemeDesert());
-		themes.add(new ThemeNorman());
-		themes.add(new ThemeIce());
-		
-		structures.add(new StructureTower());
-		structures.add(new StructureGarden());
 	}
 	
 	public void initBigX() {
@@ -122,51 +95,6 @@ public class Context {
 				System.out.println("This MC is connected to BiGX Game Controller");
 			}
 		});
-	}
-	
-	public Theme getTheme(BiomeGenBase biome,Random random) {
-		int i = random.nextInt(themes.size());
-		int j = 0;
-		int size = themes.size();
-		while(j<size) {
-			Theme th = themes.get(i);
-			if ( th.getBiomes().contains(biome) ) {
-				return th;
-			}
-			i++;
-			if (i>=themes.size()) {
-				i-=themes.size();
-			}
-			j++;
-		}
-		return null;
-	}
-	
-	public Structure getStructure(Theme theme, Random random) {
-		int i = random.nextInt(structures.size());
-		int j = 0;
-		int size = structures.size();
-		while(j<size) {
-			Structure struct = structures.get(i);
-			List<Class> themes = struct.getBannedThemes();
-			boolean can_use = true;
-			//Again this is probably the wrong way to do this! needs serious consideration tomorrow
-			for (Object cl:themes) {
-				if (theme.getClass().equals((Class) cl)) {
-					can_use = false;
-					break;
-				}
-			}
-			if (can_use) {
-				return struct;
-			}
-			i++;
-			if (i>=themes.size()) {
-				i-=themes.size();
-			}
-			j++;
-		}
-		return null;
 	}
 	
 	public void setSpeed(float speed) {
@@ -193,39 +121,12 @@ public class Context {
 	public void showQuestPopup() {
 		questPopupShown = true;
 	}
-	
-	
-	public Structure getStructure(String name) {
-		for (Structure structure:structures) {
-			if (structure.getName().equals(name)) {
-				return structure;
-			}
-		}
-		return null;
-	}
-	
-	public Theme getTheme(String name) {
-		for (Theme theme:themes) {
-			if (theme.getName().equals(name)) {
-				return theme;
-			}
-		}
-		return null;
-	}
-
-	public WorldStructure getWorldStructure(Integer valueOf) {
-		return null;
-	}
-	
+		
 	public int getID() {
 		ID++;
 		return ID;
 	}
-	
-	public boolean checkStructuresEnabled() {
-		return structuresEnabled;
-	}
-	
+		
 	public boolean checkQuestsEnabled() {
 		return questsEnabled;
 	}
