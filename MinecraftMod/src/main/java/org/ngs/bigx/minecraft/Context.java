@@ -34,12 +34,13 @@ public class Context {
 	private Quest currentQuest = null;
 	private boolean questPopupShown = true;
 	private int ID = 0;
-	private boolean structuresEnabled = false;
 	private boolean questsEnabled = true;
 	public Map<EntityPlayerMP,Quest> currentQuests;
 	
 	public int timeSpent = 0;
 	public int timeSpentSmall = 0;
+	
+	public boolean modEnabled = true;
 	
 	public enum Resistance {
 		NONE(0),LOW(2),MLOW(3),MID(4),MHIGH(5),HIGH(7);

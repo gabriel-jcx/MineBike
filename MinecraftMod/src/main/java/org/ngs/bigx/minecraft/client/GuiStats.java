@@ -36,7 +36,7 @@ public class GuiStats extends Gui {
 
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if(event.isCancelable() || event.type != event.type.TEXT)
+	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }

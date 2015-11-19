@@ -31,7 +31,7 @@ public class GuiMenu extends GuiMainMenu {
 	protected void actionPerformed(GuiButton button)
     {
 		super.actionPerformed(button);
-		if (button.id==13 && context!=null) {
+		if (button.id==13 && context!=null && context.modEnabled) {
 			this.mc.displayGuiScreen(new GuiConnection(context,this));
 		}
     }
