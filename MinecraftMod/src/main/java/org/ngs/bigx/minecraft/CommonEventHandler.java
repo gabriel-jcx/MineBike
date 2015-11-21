@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ngs.bigx.minecraft.item.ModItems;
+import org.ngs.bigx.minecraft.networking.ReceiveQuestMessage;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestRun;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -43,6 +44,12 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
+	public void onWorldUnload(WorldEvent.Unload event) {
+		Context context = Main.instance().context;
+		context.unloadWorld();
+	}
+	
+	@SubscribeEvent
 	public void onPlayerJoin(PlayerUseItemEvent.Start event) {
 		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
 		if (ws!=null&&event.entity instanceof EntityPlayerMP) {
@@ -64,9 +71,11 @@ public class CommonEventHandler {
 			for (WorldServer world:worldServers) {
 				List<EntityPlayerMP> playerList = world.playerEntities;
 				for (EntityPlayerMP player:playerList) {
-					if (server_tick==0) {
+					if (server_tick==0 && !Main.instance().context.currentQuests.containsKey(player.getDisplayName())) {
 						Quest q = new QuestRun();
-						q.addPlayer(player.getCommandSenderName());
+						ReceiveQuestMessage packet = new ReceiveQuestMessage(q);
+						q.addPlayer(player.getCommandSenderName(),Main.instance().context);
+						Main.network.sendTo(packet,player);
 					}
 				}
 			}

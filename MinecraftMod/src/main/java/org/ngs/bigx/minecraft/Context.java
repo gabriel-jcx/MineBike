@@ -32,10 +32,11 @@ public class Context {
 	public int rotation = 0;
 	public Main main = null;
 	private Quest currentQuest = null;
+	private Quest suggestedQuest = null;
 	private boolean questPopupShown = true;
 	private int ID = 0;
 	private boolean questsEnabled = true;
-	public Map<EntityPlayerMP,Quest> currentQuests;
+	public Map<String,Quest> currentQuests;
 	
 	public int timeSpent = 0;
 	public int timeSpentSmall = 0;
@@ -79,6 +80,7 @@ public class Context {
 		resistances.put(Blocks.gravel, Resistance.MHIGH);
 		resistances.put(Blocks.water, Resistance.HIGH);
 		
+		currentQuests = new HashMap<String,Quest>();
 	}
 	
 	public void initBigX() {
@@ -108,11 +110,19 @@ public class Context {
 	
 	public void setQuest(Quest quest) {
 		this.currentQuest = quest;
+	}
+	
+	public void setSuggestedQuest(Quest quest) {
+		this.suggestedQuest = quest;
 		questPopupShown = false;
 	}
 	
 	public Quest getQuest() {
 		return currentQuest;
+	}
+	
+	public Quest getSuggestedQuest() {
+		return suggestedQuest;
 	}
 	
 	public Boolean hasQuestPopupShown() {
@@ -130,5 +140,11 @@ public class Context {
 		
 	public boolean checkQuestsEnabled() {
 		return questsEnabled;
+	}
+	
+	public void unloadWorld() {
+		currentQuests.clear();
+		currentQuest = null;
+		suggestedQuest = null;
 	}
 }

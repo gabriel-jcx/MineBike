@@ -69,9 +69,7 @@ public class BiGXPacketHandler {
 	public static void sendPacket(BiGXNetClient client, BiGXNetPacket packet) {
 		try {
 			client.send(packet);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {}
 	}
 
 	public synchronized static void connect(BiGXNetClient client) throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion

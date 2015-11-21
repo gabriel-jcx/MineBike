@@ -43,7 +43,7 @@ public class ReceiveQuestMessage implements IMessage {
             //GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,message.quest);
 			//Minecraft.getMinecraft().displayGuiScreen(gui);
 			
-            Main.instance().context.setQuest(message.quest);
+            Main.instance().context.setSuggestedQuest(message.quest);
 
             System.out.println(message.quest.getName());
 			return null;

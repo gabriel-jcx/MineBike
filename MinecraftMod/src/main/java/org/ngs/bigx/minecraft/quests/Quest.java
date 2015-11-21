@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.Textbox;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -30,10 +31,12 @@ public abstract class Quest implements QuestStateManagerListener{
 	public Quest() throws Exception {
 		players = new ArrayList<String>();
 		stateManager = new QuestStateManager(this);
+		load();
 	}
 	
-	public void addPlayer(String player) {
-		players.add(player);
+	public void addPlayer(String playerName,Context context) {
+		players.add(playerName);
+		context.currentQuests.put(playerName,this);
 	}
 	
 	public void addPlayers(List<String> players) {
@@ -123,7 +126,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	public String getTypeName() {
-		return StatCollector.translateToLocal("quest.type.")+getType();
+		return StatCollector.translateToLocal("quest.type."+getType()+".name");
 	}
 	public abstract String getType();
 	public abstract void setProperties(Map<String,String> arguments);

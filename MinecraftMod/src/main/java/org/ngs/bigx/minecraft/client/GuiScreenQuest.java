@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.client;
 
 import org.lwjgl.opengl.GL11;
+import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.quests.Quest;
 
@@ -15,9 +16,11 @@ public class GuiScreenQuest extends GuiScreen {
 	private Quest quest;
 	private final int ButtonAccept = 0;
 	private ResourceLocation QUEST_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/quest.png");
+	private Context context;
 	
-	public GuiScreenQuest(EntityPlayer p_i1080_1_,Quest q) {
-		quest = q;
+	public GuiScreenQuest(EntityPlayer p_i1080_1_,Quest quest,Context context) {
+		this.quest = quest;
+		this.context = context;
 	}
 	
 	@Override
@@ -30,6 +33,7 @@ public class GuiScreenQuest extends GuiScreen {
 	protected void actionPerformed(GuiButton button)
     {
 		if (button.id==ButtonAccept) {
+			context.setQuest(context.getSuggestedQuest());
 			this.mc.displayGuiScreen((GuiScreen)null);
 		}
     }
