@@ -7,8 +7,8 @@ import java.util.Map;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.Textbox;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
-import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -31,16 +31,26 @@ public abstract class Quest implements QuestStateManagerListener{
 	public Quest() throws Exception {
 		players = new ArrayList<String>();
 		stateManager = new QuestStateManager(this);
-		load();
 	}
 	
 	public void addPlayer(String playerName,Context context) {
 		players.add(playerName);
 		context.currentQuests.put(playerName,this);
+		this.notification();
 	}
 	
 	public void addPlayers(List<String> players) {
 		this.players.addAll(players);
+	}
+	
+	private void notification()
+	{
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.NotifyQuest);			
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
 	}
 	
 	/***
@@ -68,6 +78,11 @@ public abstract class Quest implements QuestStateManagerListener{
 	public State getStateMachine()
 	{
 		return this.stateManager.getQuestState();
+	}
+
+	public void onQuestPending() {
+		load();
+		System.out.println("Quest loading...");
 	}
 
 	public void onQuestInactive() {
@@ -158,6 +173,9 @@ public abstract class Quest implements QuestStateManagerListener{
 		
 		switch(this.stateManager.getQuestState())
 		{
+		case QuestPending:
+			msg = "Quest Pending";
+			break;
 		case QuestAccomplished:
 			msg = "Quest Accomplished";
 			break;
@@ -174,7 +192,7 @@ public abstract class Quest implements QuestStateManagerListener{
 			msg = "Quest Paused";
 			break;
 		default:
-			msg = "The Quest is in the middle of NO WHERE!!! Please check state machine!";
+			msg = "[" + this.stateManager.getQuestState().toString() + "]The Quest is in the middle of NO WHERE!!! Please check state machine!";
 			break;
 		}
 		

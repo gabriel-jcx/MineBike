@@ -110,6 +110,7 @@ public class Context {
 	
 	public void setQuest(Quest quest) {
 		this.currentQuest = quest;
+		System.out.println("set Quest Called.");
 	}
 	
 	public void setSuggestedQuest(Quest quest) {

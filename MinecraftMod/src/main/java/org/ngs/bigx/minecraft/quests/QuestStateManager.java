@@ -23,6 +23,15 @@ public class QuestStateManager
                 	stateChangeListner.onQuestInactive();
                 }
             })
+            .permit(Trigger.NotifyQuest, State.QuestPending);
+		
+		this.QuestStateMachine.configure(State.QuestPending)
+			.onEntry(new Action() {
+                @Override
+                public void doIt() {
+                	stateChangeListner.onQuestPending();
+                }
+            })
             .permit(Trigger.AcceptQuestAndTeleport, State.QuestLoading);
 		
 		this.QuestStateMachine.configure(State.QuestLoading)
@@ -122,7 +131,7 @@ public class QuestStateManager
 	
 	public enum State {
         //Dead, Idle,
-		Inactive("Inactive"), 
+		Inactive("Inactive"), QuestPending("QuestPending"),
         QuestLoading("QuestLoading"), WaitToStart("WaitToStart"), QuestInProgress("QuestInProgress"), 
         QuestPaused("QuestPaused"), QuestAccomplished("QuestAccomplished"), QuestFailed("QuestFailed"), RewardSelection("RewardSelection"), 
         RetryOrEndTheQuest("RetryOrEndTheQuest");
@@ -142,6 +151,7 @@ public class QuestStateManager
     }
 	public enum Trigger {
         //Die, Revive,
+		NotifyQuest,
     	AcceptQuestAndTeleport, TeleportDone, StartQuest, 
         PauseQuest, StopQuest, ResumeQuest, SuccessQuest, FailureQuest, RewardSelect,
         ScoreDisplayClickOkay, NextgameRetryClick, NextgameExitQuestClick;

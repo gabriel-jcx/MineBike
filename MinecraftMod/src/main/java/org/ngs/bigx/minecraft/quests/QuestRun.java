@@ -51,8 +51,9 @@ public class QuestRun extends Quest {
 	@Override
 	public void generateWorld(World world,int posX, int posY, int posZ) {
 		for (int i=-5;i<distance;i++) {
-			world.setBlock(posX+i,posY,posZ,Blocks.grass);
-			world.setBlock(posX+i,posY,posZ+1,Blocks.grass);
+			for(int j=-2;j<+2;j++) {
+				world.setBlock(posX+i,posY,posZ+j,Blocks.grass);
+			}
 		}
 		
 		super.generateWorld(world, posX, posY, posZ);
@@ -63,7 +64,4 @@ public class QuestRun extends Quest {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-
 }

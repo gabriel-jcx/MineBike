@@ -26,6 +26,10 @@ public class ReceiveQuestMessage implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
 		quest = Quest.makeQuest(compound.getString("type"));
+		
+		// TODO: Need a logic to be synchronize player list.
+		quest.addPlayer(Minecraft.getMinecraft().thePlayer.getDisplayName(), Main.instance().context);
+        System.out.println("Quest Created on the client side. State[" + quest.getStateMachine().toString() + "]");
 	}
 
 	@Override

@@ -34,6 +34,7 @@ public class GuiScreenQuest extends GuiScreen {
     {
 		if (button.id==ButtonAccept) {
 			context.setQuest(context.getSuggestedQuest());
+			context.setSuggestedQuest(null);
 			this.mc.displayGuiScreen((GuiScreen)null);
 		}
     }

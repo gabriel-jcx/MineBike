@@ -86,7 +86,7 @@ public class ClientEventHandler {
 							org.ngs.bigx.dictionary.protocol.specification.dataType.RESISTANCE, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
-				if (context.hasQuestPopupShown()==false) {
+				if (context.hasQuestPopupShown()==false&&context.getSuggestedQuest()!=null) {
 					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.getSuggestedQuest(),context);
 					Minecraft.getMinecraft().displayGuiScreen(gui);
 					context.showQuestPopup();

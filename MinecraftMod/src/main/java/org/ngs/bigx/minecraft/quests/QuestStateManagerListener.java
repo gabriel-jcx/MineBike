@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.EventListener;
 
 public interface QuestStateManagerListener extends EventListener {
+	public void onQuestPending();
 	public void onQuestInactive();
 	public void onQuestLoading();
 	public void onQuestWaitToStart();
