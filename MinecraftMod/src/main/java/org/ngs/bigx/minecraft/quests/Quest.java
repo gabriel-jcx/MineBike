@@ -3,6 +3,8 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.Textbox;
@@ -23,14 +25,48 @@ import net.minecraft.world.WorldServer;
 public abstract class Quest implements QuestStateManagerListener{
 	private List<String> players;
 	private boolean worldExists = false;
-	private int timeLimit = 0;
 	private QuestStateManager stateManager;
 	private WorldServer questWorld;
 	private int questWorldX=0,questWorldY=64,questWorldZ=0;
+	private Timer questTimer;
+	private TimerTask questPeriodicTimerTask;
+	private TimerTask questCountdownTimerTask;
+	private TimerTask questAccomplishTimerTask;
+
+	protected int secondsRemainingToStart = 5;
+	protected int secondsRemainingToEnd;
+	protected int timeLimit;
+	
+	protected abstract void setRemainingToEndVar();
 	
 	public Quest() throws Exception {
 		players = new ArrayList<String>();
 		stateManager = new QuestStateManager(this);
+		questTimer = new Timer();
+		questPeriodicTimerTask = new TimerTask(){
+			@Override
+			public void run() {
+				if(stateManager.getQuestState() == State.WaitToStart)
+				{
+					secondsRemainingToStart--;
+					if (secondsRemainingToStart==0) {
+						start();
+					}
+				}
+				else if(stateManager.getQuestState() == State.QuestInProgress)
+				{
+					secondsRemainingToEnd --;
+					// TODO: Update the Quest Count Down for accomplishment
+				}
+			}
+		};
+		questAccomplishTimerTask = new TimerTask() {
+			@Override
+			public void run () {
+				// TODO: End the quest
+				
+			}
+		};
 	}
 	
 	public void addPlayer(String playerName,Context context) {
@@ -73,6 +109,17 @@ public abstract class Quest implements QuestStateManagerListener{
 			System.out.println("The quest state is not in a right state.");
 			e.printStackTrace();
 		}
+
+		setRemainingToEndVar();
+	}
+	
+	public void start() {
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.StartQuest);
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
 	}
 	
 	public State getStateMachine()
@@ -87,6 +134,7 @@ public abstract class Quest implements QuestStateManagerListener{
 
 	public void onQuestInactive() {
 		// TODO Auto-generated method stub
+		// TODO: Teleport Back to the default world.
 	}
 
 	public void onQuestLoading() {
@@ -108,11 +156,13 @@ public abstract class Quest implements QuestStateManagerListener{
 			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
 			new QuestTeleporter(questWorld).teleport(player, questWorld);
 		}
+		this.questTimer.schedule(questPeriodicTimerTask, 0, 1000);
 	}
 
 	public void onQuestInProgress() {
 		// TODO Auto-generated method stub
-		
+		this.secondsRemainingToEnd = timeLimit;
+		questTimer.schedule(questAccomplishTimerTask, timeLimit * 1000);
 	}
 
 	public void onQuestPaused() {
@@ -185,8 +235,12 @@ public abstract class Quest implements QuestStateManagerListener{
 		case QuestLoading:
 			msg = "Loading....";
 			break;
+		case WaitToStart:
+			// TODO: add quest description
+			msg = "Quest starting soon. Seconds left: "+secondsRemainingToStart;//+getHint();
+			break;
 		case QuestInProgress:
-			msg = "Quest in Progress";
+			msg = "Quest in Progress. Seconds left: "+secondsRemainingToEnd;//+getHint();
 			break;
 		case QuestPaused:
 			msg = "Quest Paused";

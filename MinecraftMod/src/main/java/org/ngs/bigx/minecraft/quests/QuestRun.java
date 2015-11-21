@@ -14,6 +14,12 @@ public class QuestRun extends Quest {
 	public QuestRun() throws Exception {
 		super();
 	}
+	
+	@Override
+	protected void setRemainingToEndVar()
+	{
+		this.timeLimit = 20;
+	}
 
 	@Override
 	public String getType() {
