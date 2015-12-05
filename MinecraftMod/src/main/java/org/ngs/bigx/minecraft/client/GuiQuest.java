@@ -44,7 +44,7 @@ public class GuiQuest extends Gui {
 	public void updateText() {
 		Quest quest = context.getQuest();
 		if (quest!=null) {
-        	text = quest.getFullDescription(99,mc.fontRenderer);
+        	text = quest.getFullDescription(99,mc.fontRenderer,mc.thePlayer);
 		}
 		else {
 			text = new Textbox(99);

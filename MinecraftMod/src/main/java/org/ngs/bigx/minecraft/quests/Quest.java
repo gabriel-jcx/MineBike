@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.quests;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -13,6 +14,7 @@ import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,7 +25,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public abstract class Quest implements QuestStateManagerListener{
-	private List<String> players;
+	private HashMap<String,QuestPlayer> players;
 	private boolean worldExists = false;
 	private QuestStateManager stateManager;
 	private WorldServer questWorld;
@@ -40,7 +42,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	protected abstract void setRemainingToEndVar();
 	
 	public Quest() throws Exception {
-		players = new ArrayList<String>();
+		players = new HashMap<String,QuestPlayer>();
 		stateManager = new QuestStateManager(this);
 		questTimer = new Timer();
 		questPeriodicTimerTask = new TimerTask(){
@@ -73,13 +75,22 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	public void addPlayer(String playerName,Context context) {
-		players.add(playerName);
+		QuestPlayer player = new QuestPlayer(playerName,getPlayerEntity(playerName));
+		players.put(playerName,player);
 		context.currentQuests.put(playerName,this);
 		this.notification();
 	}
 	
-	public void addPlayers(List<String> players) {
-		this.players.addAll(players);
+	public void addPlayers(List<String> players,Context context) {
+		for (String player:players) {
+			addPlayer(player,context);
+		}
+	}
+	
+	public void returnPlayer(String playerName) {
+		QuestPlayer player = players.get(playerName);
+		if (player==null) return;
+		new QuestTeleporter(questWorld).teleport(player.getEntity(), player.getWorld(),(int) player.posX,(int) player.posY,(int) player.posZ);
 	}
 	
 	private void notification()
@@ -164,17 +175,24 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 
 	public void onQuestWaitToStart() {
-		for (String playerName:players) {
-			EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
-			new QuestTeleporter(questWorld).teleport(player, questWorld);
+		for (QuestPlayer player:players.values()) {
+			player.getInfo();
+			if (isServerSide())
+			new QuestTeleporter(questWorld).teleport(player.getEntity(), questWorld);
 		}
 		this.questTimer.schedule(questPeriodicTimerTask, 0, 1000);
+	}
+
+	protected EntityPlayerMP getPlayerEntity(String playerName) {
+		return MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
 	}
 
 	public void onQuestInProgress() {
 		// TODO Auto-generated method stub
 		this.secondsRemainingToEnd = timeLimit;
 		questTimer.schedule(questAccomplishTimerTask, timeLimit * 1000);
+		if (isServerSide())
+		startQuest(questWorld,questWorldX,questWorldY,questWorldZ);
 	}
 
 	public void onQuestPaused() {
@@ -188,8 +206,10 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 
 	public void onQuestFailed() {
-		// TODO Auto-generated method stub
-		
+		for (QuestPlayer player:players.values()) {
+			if (isServerSide())
+			returnPlayer(player.getName());
+		}
 	}
 
 	public void onRewardSelection() {
@@ -223,12 +243,13 @@ public abstract class Quest implements QuestStateManagerListener{
 		}
 	}
 	public abstract void questTick();
+	public abstract void startQuest(World world,int posX,int posY,int posZ);
 		
 	public List<String> getPlayers() {
-		return players;
+		return (List<String>) players.keySet();
 	}
 	
-	public Textbox getFullDescription(int width,FontRenderer font) {
+	public Textbox getFullDescription(int width,FontRenderer font,EntityPlayer player) {
 		String msg = "";
 		Textbox box = new Textbox(width);
 		box.addLine(EnumChatFormatting.BOLD+getName(),font);
@@ -249,10 +270,10 @@ public abstract class Quest implements QuestStateManagerListener{
 			break;
 		case WaitToStart:
 			// TODO: add quest description
-			msg = "Quest starting soon. Seconds left: "+secondsRemainingToStart;//+getHint();
+			msg = "Quest starting soon. Seconds left: "+secondsRemainingToStart+" "+getHint(player);
 			break;
 		case QuestInProgress:
-			msg = "Quest in Progress. Seconds left: "+secondsRemainingToEnd;//+getHint();
+			msg = "Quest in Progress. Seconds left: "+secondsRemainingToEnd+" "+getHint(player);
 			break;
 		case QuestPaused:
 			msg = "Quest Paused";
@@ -288,6 +309,10 @@ public abstract class Quest implements QuestStateManagerListener{
 			timeLimit--;
 		}
 		this.questTick();
+	}
+	
+	private boolean isServerSide() {
+		return !questWorld.isRemote;
 	}
 
 }

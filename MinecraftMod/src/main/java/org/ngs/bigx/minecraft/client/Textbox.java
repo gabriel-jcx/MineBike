@@ -32,8 +32,8 @@ public class Textbox {
 			return;
 		}
 		//word wrap
-		int j = 0,k = 0;
-		for (int i=0;i<line.length();i++) {
+		int i=0,j=0,k=0;
+		while (i<line.length()) {
 			while (i<line.length()) {
 				while(i<line.length()&&line.charAt(i)!=' ') {
 					i++;
@@ -48,5 +48,6 @@ public class Textbox {
 			lines.add(line.substring(j,Math.min(i,line.length())));
 			j = i;
 		}
+		//lines.add(line.substring(j,line.length()));
 	}
 }

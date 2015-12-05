@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
@@ -18,7 +19,7 @@ public class QuestRun extends Quest {
 	@Override
 	protected void setRemainingToEndVar()
 	{
-		this.timeLimit = 20;
+		this.timeLimit = 30;
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class QuestRun extends Quest {
 
 	@Override
 	public String getHint(EntityPlayer player) {
-		return "Run: "+distance+"m";
+		return "Run: "+(distance-(int) player.posX)+"m";
 	}
 
 	@Override
@@ -50,19 +51,31 @@ public class QuestRun extends Quest {
 
 	@Override
 	public Boolean checkComplete(String playerName) {
-		// TODO Auto-generated method stub
-		return null;
+		EntityPlayerMP player = getPlayerEntity(playerName);
+		if (player.posX>distance) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
 	public void generateWorld(World world,int posX, int posY, int posZ) {
 		for (int i=-5;i<distance;i++) {
-			for(int j=-2;j<+2;j++) {
+			for(int j=-2;j<=+2;j++) {
 				world.setBlock(posX+i,posY,posZ+j,Blocks.grass);
 			}
 		}
-		
+		for(int j=-2;j<=+2;j++) {
+			world.setBlock(posX+2,posY+1,posZ+j,Blocks.fence);
+		}
 		super.generateWorld(world, posX, posY, posZ);
+	}
+	
+	@Override
+	public void startQuest(World world,int posX, int posY, int posZ) {
+		for(int j=-2;j<=+2;j++) {
+			world.setBlock(posX+2,posY+1,posZ+j,Blocks.air);
+		}
 	}
 
 	@Override

@@ -34,17 +34,21 @@ public class QuestTeleporter extends Teleporter {
         this.worldserver = worldserver;
         
     }
+    
+    public void teleport(Entity entity,World world) {
+    	teleport(entity,world,0,0,0);
+    }
 
     // Move the Entity to the portal
-    public void teleport(Entity entity, World world) {
+    public void teleport(Entity entity, World world,int x,int y,int z) {
        
         // Setup Variables
         EntityPlayerMP playerMP = (EntityPlayerMP) entity;
         
         // Set default location
-        double dx = 0;
-        double dy = 0;
-        double dz = 0;
+        double dx = x;
+        double dy = y;
+        double dz = z;
         
 
         // check for zeros
