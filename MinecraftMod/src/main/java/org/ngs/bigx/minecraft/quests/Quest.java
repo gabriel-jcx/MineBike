@@ -57,6 +57,9 @@ public abstract class Quest implements QuestStateManagerListener{
 				{
 					secondsRemainingToEnd --;
 					// TODO: Update the Quest Count Down for accomplishment
+					if (secondsRemainingToEnd==0) {
+						fail();
+					}
 				}
 			}
 		};
@@ -116,6 +119,15 @@ public abstract class Quest implements QuestStateManagerListener{
 	public void start() {
 		try {
 			this.stateManager.triggerQuestTransition(Trigger.StartQuest);
+		} catch (Exception e) {
+			System.out.println("The quest state is not in a right state.");
+			e.printStackTrace();
+		}
+	}
+	
+	public void fail() {
+		try {
+			this.stateManager.triggerQuestTransition(Trigger.FailureQuest);
 		} catch (Exception e) {
 			System.out.println("The quest state is not in a right state.");
 			e.printStackTrace();

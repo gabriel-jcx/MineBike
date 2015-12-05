@@ -3,6 +3,8 @@ package org.ngs.bigx.minecraft.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import net.minecraft.client.gui.FontRenderer;
 
 public class Textbox {
@@ -29,14 +31,22 @@ public class Textbox {
 			lines.add(line);
 			return;
 		}
-		String l = "";
+		//word wrap
+		int j = 0,k = 0;
 		for (int i=0;i<line.length();i++) {
-			l+=line.charAt(i);
-			if (font.getStringWidth(l)>=width) {
-				lines.add(l);
-				l = "";
+			while (i<line.length()) {
+				while(i<line.length()&&line.charAt(i)!=' ') {
+					i++;
+				}
+				if (font.getStringWidth(line.substring(j,i))>width) {
+					i = k;
+					break;
+				}
+				i++;
+				k = i;
 			}
+			lines.add(line.substring(j,Math.min(i,line.length())));
+			j = i;
 		}
-		lines.add(l);
 	}
 }
