@@ -25,7 +25,7 @@ public class ReceiveQuestMessage implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
-		quest = Quest.makeQuest(compound.getString("type"));
+		quest = Main.instance().context.questManager.makeQuest(compound.getString("type"),compound.getInteger("ID"));
 		
 		// TODO: Need a logic to be synchronize player list.
 		quest.addPlayer(Minecraft.getMinecraft().thePlayer.getDisplayName(), Main.instance().context);
@@ -35,7 +35,8 @@ public class ReceiveQuestMessage implements IMessage {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		NBTTagCompound compound = new NBTTagCompound();
-		compound.setString("type",quest.getType());
+		compound.setString("type", quest.getType());
+		compound.setInteger("ID", quest.getID());
 		ByteBufUtils.writeTag(buf, compound);
 	}
 	
@@ -43,13 +44,9 @@ public class ReceiveQuestMessage implements IMessage {
 
 		@Override
 		public IMessage onMessage(ReceiveQuestMessage message, MessageContext ctx) {
-
-            //GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,message.quest);
-			//Minecraft.getMinecraft().displayGuiScreen(gui);
 			
-            Main.instance().context.setSuggestedQuest(message.quest);
+            Main.instance().context.questManager.setSuggestedQuest(message.quest);
 
-            System.out.println(message.quest.getName());
 			return null;
 		}
 

@@ -42,7 +42,7 @@ public class GuiQuest extends Gui {
 	}
 	
 	public void updateText() {
-		Quest quest = context.getQuest();
+		Quest quest = context.questManager.getQuest();
 		if (quest!=null) {
         	text = quest.getFullDescription(99,mc.fontRenderer,mc.thePlayer);
 		}

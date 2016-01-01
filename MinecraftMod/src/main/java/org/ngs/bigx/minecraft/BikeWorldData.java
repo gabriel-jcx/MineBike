@@ -31,7 +31,7 @@ public class BikeWorldData extends WorldSavedData {
 		NBTTagList questList = nbt.getTagList("quest",Constants.NBT.TAG_COMPOUND);
 		for(int i=0;i<questList.tagCount();i++) {
 			NBTTagCompound compound = questList.getCompoundTagAt(i);
-			Quest quest = Quest.makeQuest(compound.getString("type"));
+			Quest quest = Quest.makeQuest(compound.getString("type"),compound.getInteger("ID"));
 			NBTTagList players = compound.getTagList("players", Constants.NBT.TAG_STRING);
 			for (i=0;i<players.tagCount();i++) {
 				String player = players.getStringTagAt(i);
@@ -56,6 +56,8 @@ public class BikeWorldData extends WorldSavedData {
 			}
 			tag.setTag("players", playerList);
 			tag.setString("state", quest.getStateMachine().toString());
+			tag.setInteger("ID", quest.getID());
+			tag.setString("type", quest.getType());
 			questList.appendTag(tag);
 		}
 		nbt.setTag("quests",questList);

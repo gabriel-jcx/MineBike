@@ -14,6 +14,7 @@ public class QuestPlayer {
 	public QuestPlayer(String playerName, EntityPlayerMP playerEntity) {
 		this.name = playerName;
 		this.entity = playerEntity;
+		getInfo();
 	}
 	
 	public void getInfo() {

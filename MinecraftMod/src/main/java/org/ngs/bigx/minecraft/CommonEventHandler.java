@@ -40,13 +40,19 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
+		
 		BikeWorldData data = BikeWorldData.get(event.world);
 	}
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
 		Context context = Main.instance().context;
-		context.unloadWorld();
+		
+		//TODO: Implement proper cleanup when the game is exited
+		//The event which is called by the server shutting down needs to be located and used
+		//instead of this event which is called whenever the game is paused.
+		
+		//context.unloadWorld();
 	}
 	
 	@SubscribeEvent
@@ -71,10 +77,10 @@ public class CommonEventHandler {
 			for (WorldServer world:worldServers) {
 				List<EntityPlayerMP> playerList = world.playerEntities;
 				for (EntityPlayerMP player:playerList) {
-					if (server_tick==0 && !Main.instance().context.currentQuests.containsKey(player.getDisplayName())) {
-						Quest q = new QuestRun();
+					if (server_tick==0 && !Main.instance().context.questManager.currentQuests.containsKey(player.getDisplayName())) {
+						Quest q = Main.instance().context.questManager.makeQuest("run");
+						q.addPlayer(player.getDisplayName(),Main.instance().context);
 						ReceiveQuestMessage packet = new ReceiveQuestMessage(q);
-						q.addPlayer(player.getCommandSenderName(),Main.instance().context);
 						Main.network.sendTo(packet,player);
 					}
 				}

@@ -41,7 +41,10 @@ public abstract class Quest implements QuestStateManagerListener{
 	
 	protected abstract void setRemainingToEndVar();
 	
-	public Quest() throws Exception {
+	private int ID;
+	
+	public Quest(int ID) throws Exception {
+		this.ID = ID;
 		players = new HashMap<String,QuestPlayer>();
 		stateManager = new QuestStateManager(this);
 		questTimer = new Timer();
@@ -77,7 +80,8 @@ public abstract class Quest implements QuestStateManagerListener{
 	public void addPlayer(String playerName,Context context) {
 		QuestPlayer player = new QuestPlayer(playerName,getPlayerEntity(playerName));
 		players.put(playerName,player);
-		context.currentQuests.put(playerName,this);
+		context.questManager.currentQuests.put(playerName,this);
+		System.out.println("Quest count: "+context.questManager.currentQuests.size());
 		this.notification();
 	}
 	
@@ -117,8 +121,9 @@ public abstract class Quest implements QuestStateManagerListener{
 	
 	public void load()
 	{
+		System.out.println("load()");
 		try {
-			this.stateManager.triggerQuestTransition(Trigger.AcceptQuestAndTeleport);
+			//this.stateManager.triggerQuestTransition(Trigger.AcceptQuestAndTeleport);
 		} catch (Exception e) {
 			System.out.println("The quest state is not in a right state.");
 			e.printStackTrace();
@@ -151,7 +156,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 
 	public void onQuestPending() {
-		load();
+		//load();
 		System.out.println("Quest loading...");
 	}
 
@@ -161,6 +166,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 
 	public void onQuestLoading() {
+		if (!isServerSide()) return;
 		questWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
 		
 		new Thread()
@@ -175,6 +181,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 
 	public void onQuestWaitToStart() {
+		if (!isServerSide()) return;
 		for (QuestPlayer player:players.values()) {
 			player.getInfo();
 			if (isServerSide())
@@ -288,10 +295,10 @@ public abstract class Quest implements QuestStateManagerListener{
 		return box;
 	}
 	
-	public static Quest makeQuest(String type) {
+	public static Quest makeQuest(String type,int ID) {
 		if (type.equals("run")) {
 			try {
-				return new QuestRun();
+				return new QuestRun(ID);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -312,7 +319,27 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	private boolean isServerSide() {
+		if (questWorld==null) {
+			for (QuestPlayer p:players.values()) {
+				if (p.getWorld().isRemote) {
+					return false;
+				}
+			}
+			return true;
+		}
 		return !questWorld.isRemote;
+	}
+	
+	public int getID() {
+		return ID;
+	}
+
+	public void triggerStateChange(Trigger trigger) {
+		try {
+			stateManager.triggerQuestTransition(trigger);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

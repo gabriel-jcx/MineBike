@@ -12,6 +12,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -31,17 +32,15 @@ public class Context {
 	public Block block = Blocks.air;
 	public int rotation = 0;
 	public Main main = null;
-	private Quest currentQuest = null;
-	private Quest suggestedQuest = null;
-	private boolean questPopupShown = true;
 	private int ID = 0;
 	private boolean questsEnabled = true;
-	public Map<String,Quest> currentQuests;
 	
 	public int timeSpent = 0;
 	public int timeSpentSmall = 0;
 	
 	public boolean modEnabled = true;
+	
+	public QuestManager questManager;
 	
 	public enum Resistance {
 		NONE(0),LOW(2),MLOW(3),MID(4),MHIGH(5),HIGH(7);
@@ -80,7 +79,7 @@ public class Context {
 		resistances.put(Blocks.gravel, Resistance.MHIGH);
 		resistances.put(Blocks.water, Resistance.HIGH);
 		
-		currentQuests = new HashMap<String,Quest>();
+		questManager = new QuestManager();
 	}
 	
 	public void initBigX() {
@@ -108,31 +107,7 @@ public class Context {
 		return speed;
 	}
 	
-	public void setQuest(Quest quest) {
-		this.currentQuest = quest;
-		System.out.println("set Quest Called.");
-	}
 	
-	public void setSuggestedQuest(Quest quest) {
-		this.suggestedQuest = quest;
-		questPopupShown = false;
-	}
-	
-	public Quest getQuest() {
-		return currentQuest;
-	}
-	
-	public Quest getSuggestedQuest() {
-		return suggestedQuest;
-	}
-	
-	public Boolean hasQuestPopupShown() {
-		return questPopupShown;
-	}
-	
-	public void showQuestPopup() {
-		questPopupShown = true;
-	}
 		
 	public int getID() {
 		ID++;
@@ -144,8 +119,6 @@ public class Context {
 	}
 	
 	public void unloadWorld() {
-		currentQuests.clear();
-		currentQuest = null;
-		suggestedQuest = null;
+		questManager.unloadWorld();
 	}
 }
