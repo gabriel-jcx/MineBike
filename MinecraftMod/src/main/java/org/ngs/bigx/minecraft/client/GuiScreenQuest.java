@@ -18,6 +18,7 @@ public class GuiScreenQuest extends GuiScreen {
 	
 	private Quest quest;
 	private final int ButtonAccept = 0;
+	private final int ButtonDecline = 1;
 	private ResourceLocation QUEST_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/quest.png");
 	private Context context;
 	
@@ -29,7 +30,8 @@ public class GuiScreenQuest extends GuiScreen {
 	@Override
 	public void initGui()
     {
-		buttonList.add(new GuiButton(ButtonAccept, width/2-50, height/2+height/4, 100, 20, "Accept"));
+		buttonList.add(new GuiButton(ButtonAccept, width/2-175/2+10, height/2+height/4, 70, 20, "Accept"));
+		buttonList.add(new GuiButton(ButtonDecline, width/2+175/2-70-10, height/2+height/4, 70, 20, "Decline"));
     }
 	
 	@Override
@@ -42,6 +44,9 @@ public class GuiScreenQuest extends GuiScreen {
 			quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
 			UpdateQuestMessage packet = new UpdateQuestMessage(quest,Trigger.AcceptQuestAndTeleport);
 			Main.network.sendToServer(packet);
+		}
+		if (button.id==ButtonDecline) {
+			this.mc.displayGuiScreen((GuiScreen)null);
 		}
     }
 	
