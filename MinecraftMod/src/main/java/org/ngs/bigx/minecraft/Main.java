@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft;
 	
 import java.awt.Event;
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -19,6 +20,7 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
+import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.minecraft.networking.ReceiveQuestMessage;
 import org.ngs.bigx.minecraft.networking.UpdateHungerMessage;
 import org.ngs.bigx.minecraft.networking.UpdateQuestMessage;
@@ -57,6 +59,18 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	network.registerMessage(UpdateHungerMessage.Handler.class,UpdateHungerMessage.class,0,Side.SERVER);
 	    	network.registerMessage(ReceiveQuestMessage.Handler.class, ReceiveQuestMessage.class, 1, Side.CLIENT);
 	    	network.registerMessage(UpdateQuestMessage.Handler.class, UpdateQuestMessage.class, 2, Side.SERVER);
+	    	
+	    	try {
+				eyeTracker eTracker = new eyeTracker();
+				eTracker.start();
+				eTracker.connect();
+			} catch (SocketException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	    }
 	        
 	    @EventHandler
