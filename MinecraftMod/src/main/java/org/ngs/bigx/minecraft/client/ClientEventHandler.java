@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client;
 
+import java.io.Console;
 import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
@@ -58,6 +59,30 @@ public class ClientEventHandler {
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 				p.setVelocity(xt, p.motionY, zt);
+				
+				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
+				else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
+				else {
+					p.rotationPitch += context.getRotationY();
+				}
+				context.setRotationY(0);
+				
+				//p.rotationYawHead += context.getRotationX() / (150f);
+				System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
+				if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
+					p.rotationYaw += context.getRotationX() / 8;
+				}
+				else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
+					p.rotationYaw += context.getRotationX() / 4;
+				}
+				else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
+					p.rotationYaw += context.getRotationX() / 2;
+				}
+				else {
+					p.rotationYaw += context.getRotationX();
+				}
+				
+				context.setRotationX(0);
 				
 				// Obtain the block under the main character and set the resistance
 				Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);

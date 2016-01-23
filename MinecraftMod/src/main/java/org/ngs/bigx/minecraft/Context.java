@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft;
 
 import java.awt.Event;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,6 +12,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.input.tobiieyex.eyeTracker;
+import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
+import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
@@ -22,7 +26,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class Context {
+public class Context implements eyeTrackerListner {
 	public BiGXNetClient bigxclient;
 	public String BiGXUserName;
 	public int heartrate = 80;
@@ -34,6 +38,25 @@ public class Context {
 	public Main main = null;
 	private int ID = 0;
 	private boolean questsEnabled = true;
+	private float rotationX;
+	
+	public float getRotationX() {
+		return rotationX;
+	}
+
+	public void setRotationX(float rotationX) {
+		this.rotationX = rotationX;
+	}
+
+	public float getRotationY() {
+		return rotationY;
+	}
+
+	public void setRotationY(float rotationY) {
+		this.rotationY = rotationY;
+	}
+
+	private float rotationY;
 	
 	public int timeSpent = 0;
 	public int timeSpentSmall = 0;
@@ -64,6 +87,7 @@ public class Context {
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
+	public eyeTracker eTracker;
 	
 	public Context(Main main) {
 		this.main = main;
@@ -80,6 +104,14 @@ public class Context {
 		resistances.put(Blocks.water, Resistance.HIGH);
 		
 		questManager = new QuestManager();
+		
+		try {
+			this.eTracker = new eyeTracker();
+			this.eTracker.addEyeTrackerListener(this);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void initBigX() {
@@ -120,5 +152,11 @@ public class Context {
 	
 	public void unloadWorld() {
 		questManager.unloadWorld();
+	}
+
+	@Override
+	public void onMessageReceive(Event event, eyeTrackerUDPData trackerData) {
+		this.rotationX = (float) trackerData.X;
+		this.rotationY = (float) trackerData.Y;
 	}
 }

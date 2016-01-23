@@ -15,7 +15,7 @@ public class eyeTracker extends Thread{
 	private DatagramSocket socket;
 	private Vector<eyeTrackerListner> eyetrackerlistners;
 	
-	private final String EYEXUDPSERVER_IP = "localhost";
+	private final String EYEXUDPSERVER_IP = "127.0.0.1";
 	private final int EYEXUDPSERVER_PORT = 30000;
 	
 	private final int EYEXUDPCLINET_PORT = 30001;
@@ -23,6 +23,7 @@ public class eyeTracker extends Thread{
 	public eyeTracker() throws SocketException
 	{
 		this.socket = new DatagramSocket(EYEXUDPCLINET_PORT);
+		this.eyetrackerlistners = new Vector<eyeTrackerListner>();
 	}
 	
 	public void connect() throws IOException
@@ -56,12 +57,21 @@ public class eyeTracker extends Thread{
 				
 				for (eyeTrackerListner listner : this.eyetrackerlistners) {
 					listner.onMessageReceive(null, trackerData);
-					System.out.println("x[" + trackerData.X + "] y[" + trackerData.Y + "]");
+					//System.out.println("x[" + trackerData.X + "] y[" + trackerData.Y + "]");
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
+	}
+	
+	public void addEyeTrackerListener(eyeTrackerListner listner)
+	{
+		this.eyetrackerlistners.add(listner);
+	}
+	
+	public void removeEyeTrackerListener(eyeTrackerListner listner)
+	{
+		this.eyetrackerlistners.remove(listner);
 	}
 }

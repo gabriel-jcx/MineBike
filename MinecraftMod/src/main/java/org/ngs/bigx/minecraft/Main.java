@@ -61,9 +61,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	network.registerMessage(UpdateQuestMessage.Handler.class, UpdateQuestMessage.class, 2, Side.SERVER);
 	    	
 	    	try {
-				eyeTracker eTracker = new eyeTracker();
-				eTracker.start();
-				eTracker.connect();
+				context.eTracker.start();
+				context.eTracker.connect();
 			} catch (SocketException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
