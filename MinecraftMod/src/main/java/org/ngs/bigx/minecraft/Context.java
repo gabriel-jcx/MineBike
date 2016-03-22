@@ -5,17 +5,26 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Spliterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -39,6 +48,7 @@ public class Context implements eyeTrackerListner {
 	private int ID = 0;
 	private boolean questsEnabled = true;
 	private float rotationX;
+	public Queue<QuestEvent> questEventQueue;
 	
 	public float getRotationX() {
 		return rotationX;
@@ -92,7 +102,8 @@ public class Context implements eyeTrackerListner {
 	public Context(Main main) {
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		
+		this.questEventQueue = new LinkedList<QuestEvent>(); 
+				
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.ice, Resistance.LOW);
 		resistances.put(Blocks.stone, Resistance.MLOW);

@@ -6,7 +6,10 @@ import java.util.Map;
 
 public class QuestManager {
 	private int questID;
-	public Map<String,Quest> currentQuests;
+	// Server side
+	public Map<String,Quest> playerQuestsMapping;
+	
+	// Client side
 	private Quest currentQuest;
 	private Quest suggestedQuest;
 	private boolean questPopupShown;
@@ -16,7 +19,7 @@ public class QuestManager {
 		currentQuest = null;
 		suggestedQuest = null;
 		questPopupShown = true;
-		currentQuests = new HashMap<String,Quest>();
+		playerQuestsMapping = new HashMap<String,Quest>();
 	}
 	
 	public Quest makeQuest(String type) {
@@ -57,13 +60,13 @@ public class QuestManager {
 	}
 	
 	public void unloadWorld() {
-		currentQuests.clear();
+		playerQuestsMapping.clear();
 		currentQuest = null;
 		suggestedQuest = null;
 	}
 	
-	public Quest getQuest(int ID) {
-		for (Quest q:currentQuests.values()) {
+	public Quest getQuestFromPlayerQuestMap(int ID) {
+		for (Quest q:playerQuestsMapping.values()) {
 			if (q.getID()==ID) {
 				return q;
 			}

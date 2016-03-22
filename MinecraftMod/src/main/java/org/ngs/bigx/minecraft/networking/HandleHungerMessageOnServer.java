@@ -11,15 +11,15 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ChatComponentText;
 
-public class UpdateHungerMessage implements IMessage {
+public class HandleHungerMessageOnServer implements IMessage {
 	
 	private int hunger;
 	
-	public UpdateHungerMessage() {
+	public HandleHungerMessageOnServer() {
 		
 	}
 	
-	public UpdateHungerMessage(int hunger) {
+	public HandleHungerMessageOnServer(int hunger) {
 		this.hunger = hunger;
 	}
 
@@ -33,10 +33,10 @@ public class UpdateHungerMessage implements IMessage {
 		ByteBufUtils.writeVarInt(buf,hunger, 2);
 	}
 	
-	public static class Handler implements IMessageHandler<UpdateHungerMessage,IMessage> {
+	public static class Handler implements IMessageHandler<HandleHungerMessageOnServer,IMessage> {
 
 		@Override
-		public IMessage onMessage(UpdateHungerMessage message, MessageContext ctx) {
+		public IMessage onMessage(HandleHungerMessageOnServer message, MessageContext ctx) {
 			return null;
 		}
 

@@ -27,6 +27,7 @@ public class QuestStateManager
     }
 	public enum Trigger {
         //Die, Revive,
+		MakeQuest, MakeQuestACK,
 		NotifyQuest,
     	AcceptQuestAndTeleport, TeleportDone,
     	StartQuest, PauseQuest, StopQuest, ResumeQuest, 

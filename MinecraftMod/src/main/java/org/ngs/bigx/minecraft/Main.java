@@ -21,9 +21,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
-import org.ngs.bigx.minecraft.networking.ReceiveQuestMessage;
-import org.ngs.bigx.minecraft.networking.UpdateHungerMessage;
-import org.ngs.bigx.minecraft.networking.UpdateQuestMessage;
+import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
+import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
+import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -56,9 +56,9 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	context = new Context(this);
 	    	proxy.preInit(e);
 	    	network = NetworkRegistry.INSTANCE.newSimpleChannel("BikeChannel");
-	    	network.registerMessage(UpdateHungerMessage.Handler.class,UpdateHungerMessage.class,0,Side.SERVER);
-	    	network.registerMessage(ReceiveQuestMessage.Handler.class, ReceiveQuestMessage.class, 1, Side.CLIENT);
-	    	network.registerMessage(UpdateQuestMessage.Handler.class, UpdateQuestMessage.class, 2, Side.SERVER);
+	    	network.registerMessage(HandleHungerMessageOnServer.Handler.class,HandleHungerMessageOnServer.class,0,Side.SERVER);
+	    	network.registerMessage(HandleQuestMessageOnClient.Handler.class, HandleQuestMessageOnClient.class, 1, Side.CLIENT);
+	    	network.registerMessage(HandleQuestMessageOnServer.Handler.class, HandleQuestMessageOnServer.class, 2, Side.SERVER);
 	    	
 	    	try {
 				context.eTracker.start();

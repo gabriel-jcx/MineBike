@@ -8,7 +8,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.client.Textbox;
+import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -27,7 +29,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public abstract class Quest implements QuestStateManagerListener{
-	private HashMap<String,QuestPlayer> players;
+	public HashMap<String,QuestPlayer> players;
 	private boolean worldExists = false;
 	private QuestStateManager stateManager;
 	private WorldServer questWorld;
@@ -91,9 +93,9 @@ public abstract class Quest implements QuestStateManagerListener{
 	public void addPlayer(String playerName,Context context) {
 		QuestPlayer player = new QuestPlayer(playerName,getPlayerEntity(playerName));
 		players.put(playerName,player);
-		context.questManager.currentQuests.put(playerName,this);
-		System.out.println("Quest count: "+context.questManager.currentQuests.size());
-		this.notification();
+		context.questManager.playerQuestsMapping.put(playerName,this);
+		System.out.println("Quest count: "+context.questManager.playerQuestsMapping.size());
+//		this.notification();
 	}
 	
 	public void addPlayers(List<String> players,Context context) {
@@ -111,10 +113,17 @@ public abstract class Quest implements QuestStateManagerListener{
 		new QuestTeleporter(questWorld).teleport(player.getEntity(), player.getWorld(),(int) player.posX,(int) player.posY,(int) player.posZ);
 	}
 	
-	private void notification()
+	public void notification()
 	{
 		try {
-			this.stateManager.triggerQuestTransition(Trigger.NotifyQuest);			
+			this.stateManager.triggerQuestTransition(Trigger.NotifyQuest);
+			
+			if(this.isServerSide())
+			{
+				// TODO: SEND A NOTIFICATION TO CLIENTS!
+				System.out.println("[BIGX] NotifyQuestPlayers");
+				Main.instance().context.questEventQueue.add(new QuestEvent(this, eventType.NotifyQuestPlayers));
+			}
 		} catch (Exception e) {
 			System.out.println("The quest state is not in a right state.");
 			e.printStackTrace();
@@ -171,16 +180,20 @@ public abstract class Quest implements QuestStateManagerListener{
 
 	public void onQuestPending() {
 		//load();
-		System.out.println("Quest loading...");
+		System.out.println("Quest Pending...");
 	}
 
 	public void onQuestInactive() {
 		// TODO Auto-generated method stub
 		// TODO: Teleport Back to the default world.
+		System.out.println("Quest went into inactive...");
 	}
 
 	public void onQuestLoading() {
+		System.out.println("Quest Loading...");
+		
 		if (!isServerSide()) return;
+		
 		questWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
 		
 		new Thread()

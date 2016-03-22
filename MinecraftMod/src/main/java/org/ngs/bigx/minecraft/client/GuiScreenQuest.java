@@ -3,8 +3,7 @@ package org.ngs.bigx.minecraft.client;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
-import org.ngs.bigx.minecraft.networking.ReceiveQuestMessage;
-import org.ngs.bigx.minecraft.networking.UpdateQuestMessage;
+import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestTileEntity;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
@@ -38,13 +37,14 @@ public class GuiScreenQuest extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button)
-    {
+    {	
 		if (button.id==ButtonAccept) {
+			// TODO: Need to revise the code to make quest
 			context.questManager.setQuest(context.questManager.getSuggestedQuest());
 			context.questManager.setSuggestedQuest(null);
 			this.mc.displayGuiScreen((GuiScreen)null);
 			quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
-			UpdateQuestMessage packet = new UpdateQuestMessage(quest,Trigger.AcceptQuestAndTeleport);
+			HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
 			Main.network.sendToServer(packet);
 		}
 		if (button.id==ButtonDecline) {
