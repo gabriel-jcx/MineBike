@@ -5,6 +5,35 @@ import com.github.oxo42.stateless4j.delegates.Action;
 
 public class QuestStateManager 
 {
+	public enum State {
+        //Dead, Idle,
+		Inactive("Inactive"), QuestPending("QuestPending"),
+        QuestLoading("QuestLoading"), WaitToStart("WaitToStart"), QuestInProgress("QuestInProgress"), 
+        QuestPaused("QuestPaused"), QuestAccomplished("QuestAccomplished"), QuestFailed("QuestFailed"), RewardSelection("RewardSelection"), 
+        RetryOrEndTheQuest("RetryOrEndTheQuest");
+		
+		private String text;
+		
+		private State(final String text)
+		{
+			this.text = text;
+		}
+
+		@Override
+        public String toString()
+        {
+        	return this.text;
+        }
+    }
+	public enum Trigger {
+        //Die, Revive,
+		NotifyQuest,
+    	AcceptQuestAndTeleport, TeleportDone,
+    	StartQuest, PauseQuest, StopQuest, ResumeQuest, 
+    	SuccessQuest, FailureQuest, RewardSelect,
+        ScoreDisplayClickOkay, NextgameRetryClick, NextgameExitQuestClick;
+    }
+	
 	private StateMachine<State, Trigger> QuestStateMachine;
 	private QuestStateManagerListener stateChangeListner;
 	
@@ -128,32 +157,4 @@ public class QuestStateManager
 			throw new Exception("The current trigger is not possible in this state.");
 		}
 	}
-	
-	public enum State {
-        //Dead, Idle,
-		Inactive("Inactive"), QuestPending("QuestPending"),
-        QuestLoading("QuestLoading"), WaitToStart("WaitToStart"), QuestInProgress("QuestInProgress"), 
-        QuestPaused("QuestPaused"), QuestAccomplished("QuestAccomplished"), QuestFailed("QuestFailed"), RewardSelection("RewardSelection"), 
-        RetryOrEndTheQuest("RetryOrEndTheQuest");
-		
-		private String text;
-		
-		private State(final String text)
-		{
-			this.text = text;
-		}
-
-		@Override
-        public String toString()
-        {
-        	return this.text;
-        }
-    }
-	public enum Trigger {
-        //Die, Revive,
-		NotifyQuest,
-    	AcceptQuestAndTeleport, TeleportDone, StartQuest, 
-        PauseQuest, StopQuest, ResumeQuest, SuccessQuest, FailureQuest, RewardSelect,
-        ScoreDisplayClickOkay, NextgameRetryClick, NextgameExitQuestClick;
-    }
 }

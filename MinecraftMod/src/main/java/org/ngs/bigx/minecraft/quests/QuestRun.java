@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -76,6 +77,9 @@ public class QuestRun extends Quest {
 		for(int j=-2;j<=+2;j++) {
 			world.setBlock(posX+2,posY+1,posZ+j,Blocks.air);
 		}
+		QuestTileEntity QuestMessage = new QuestTileEntity();
+		QuestMessage.setLines("String1", "String2", "String3", "String4", "String5", "String6", "String7", "String8");
+		world.setTileEntity(posX, posY, posZ, QuestMessage);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.networking;
 import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.client.GuiScreenQuest;
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestTileEntity;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

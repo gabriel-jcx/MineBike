@@ -14,10 +14,12 @@ import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
@@ -34,6 +36,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	private TimerTask questPeriodicTimerTask;
 	private TimerTask questCountdownTimerTask;
 	private TimerTask questAccomplishTimerTask;
+	private boolean teleportRequired = false;
 
 	protected int secondsRemainingToStart = 5;
 	protected int secondsRemainingToEnd;
@@ -42,6 +45,14 @@ public abstract class Quest implements QuestStateManagerListener{
 	protected abstract void setRemainingToEndVar();
 	
 	private int ID;
+
+	public boolean isTeleportRequired() {
+		return teleportRequired;
+	}
+
+	public void setTeleportRequired(boolean teleportRequired) {
+		this.teleportRequired = teleportRequired;
+	}
 	
 	public Quest(int ID) throws Exception {
 		this.ID = ID;
@@ -93,7 +104,10 @@ public abstract class Quest implements QuestStateManagerListener{
 	
 	public void returnPlayer(String playerName) {
 		QuestPlayer player = players.get(playerName);
+		
 		if (player==null) return;
+		if (!this.isTeleportRequired()) return;
+		
 		new QuestTeleporter(questWorld).teleport(player.getEntity(), player.getWorld(),(int) player.posX,(int) player.posY,(int) player.posZ);
 	}
 	
@@ -184,8 +198,10 @@ public abstract class Quest implements QuestStateManagerListener{
 		if (!isServerSide()) return;
 		for (QuestPlayer player:players.values()) {
 			player.getInfo();
-			if (isServerSide())
-			new QuestTeleporter(questWorld).teleport(player.getEntity(), questWorld);
+			if (isServerSide()){
+				if(this.isTeleportRequired())
+					new QuestTeleporter(questWorld).teleport(player.getEntity(), questWorld);
+			}
 		}
 		this.questTimer.schedule(questPeriodicTimerTask, 0, 1000);
 	}
@@ -298,7 +314,9 @@ public abstract class Quest implements QuestStateManagerListener{
 	public static Quest makeQuest(String type,int ID) {
 		if (type.equals("run")) {
 			try {
-				return new QuestRun(ID);
+				Quest returnQuest = new QuestRun(ID);
+				returnQuest.setTeleportRequired(false);
+				return returnQuest;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

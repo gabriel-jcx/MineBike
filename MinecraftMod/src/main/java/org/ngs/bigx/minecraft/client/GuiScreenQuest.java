@@ -6,8 +6,10 @@ import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.networking.ReceiveQuestMessage;
 import org.ngs.bigx.minecraft.networking.UpdateQuestMessage;
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestTileEntity;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;

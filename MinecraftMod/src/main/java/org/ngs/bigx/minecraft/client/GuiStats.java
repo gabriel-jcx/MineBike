@@ -7,6 +7,7 @@ import org.ngs.bigx.minecraft.Main;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -45,10 +46,13 @@ public class GuiStats extends Gui {
 
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
+		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int WIDTH = 200;
 	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
-	    	drawRect(0, 0, xPos + WIDTH , yPos + HEIGHT , 0xFF000000);
-	    	drawRect(1, 1, xPos + WIDTH - 1 , yPos + HEIGHT - 1, 0xFFAAAAAA);
+	    	int mcWidth = sr.getScaledWidth();
+	    	drawRect(mcWidth - WIDTH, 0, mcWidth , HEIGHT , 0xFF000000);
+	    	drawRect(mcWidth - WIDTH + 1, 1, mcWidth - 1 , HEIGHT - 1, 0xFFAAAAAA);
+	    	xPos = mcWidth - WIDTH + 2;
 	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    	mc.fontRenderer.drawString(I18n.format("gui.stats.heartrate", new Object[0])+": ",xPos,yPos+3,0xFFFFFF);
 	    	mc.renderEngine.bindTexture(HEART_TEXTURE);
@@ -58,7 +62,9 @@ public class GuiStats extends Gui {
 	        else {
 	        	drawTexturedModalRect(xPos + HEART_OFFSET, yPos, HEART_SIZE, 0, HEART_SIZE, HEART_SIZE);
 	        }
-	        mc.fontRenderer.drawString(context.heartrate+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
+	        if(mc.currentScreen != null)
+	        mc.fontRenderer.drawString(mc.currentScreen.width+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
+//	        mc.fontRenderer.drawString(context.heartrate+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
 	    	mc.fontRenderer.drawString(I18n.format("gui.stats.speed", new Object[0])+": "+(context.getSpeed()*20)+" meters per second",xPos,yPos+HEART_SIZE,0xFFFFFF);
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;

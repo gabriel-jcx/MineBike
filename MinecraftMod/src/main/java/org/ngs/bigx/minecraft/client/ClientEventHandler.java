@@ -56,8 +56,8 @@ public class ClientEventHandler {
 				}
 				float moveSpeed = context.getSpeed();
 				//getRotationYawHead() returns player's angle in degrees - 90
-				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
+				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
 				p.setVelocity(xt, p.motionY, zt);
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
@@ -67,8 +67,8 @@ public class ClientEventHandler {
 				}
 				context.setRotationY(0);
 				
-				//p.rotationYawHead += context.getRotationX() / (150f);
-				System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
+				//* EYE TRACKING *//
+				//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
 				if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
 					p.rotationYaw += context.getRotationX() / 8;
 				}
