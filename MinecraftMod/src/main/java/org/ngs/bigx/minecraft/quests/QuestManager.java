@@ -40,6 +40,11 @@ public class QuestManager {
 	
 	public void setSuggestedQuest(Quest quest) {
 		this.suggestedQuest = quest;
+//		questPopupShown = false;
+	}
+	
+	public void unsetQuestPopupShown()
+	{
 		questPopupShown = false;
 	}
 	

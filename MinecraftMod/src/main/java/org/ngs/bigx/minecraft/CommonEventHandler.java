@@ -44,7 +44,7 @@ public class CommonEventHandler {
 	
 	int server_tick = 0;
 	boolean serverQuestTest = true;
-	int serverQuestTestTickCount = 13;
+	int serverQuestTestTickCount = 10;
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {

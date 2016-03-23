@@ -87,4 +87,12 @@ public class QuestRun extends Quest {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void onQuestInProgress() {
+		this.secondsRemainingToEnd = timeLimit;
+		questTimer.schedule(questAccomplishTimerTask, timeLimit * 1000);
+		if (isServerSide())
+		startQuest(questWorld,questWorldX,questWorldY,questWorldZ);
+	}
 }

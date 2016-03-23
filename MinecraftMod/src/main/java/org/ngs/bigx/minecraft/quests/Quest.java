@@ -32,12 +32,14 @@ public abstract class Quest implements QuestStateManagerListener{
 	public HashMap<String,QuestPlayer> players;
 	private boolean worldExists = false;
 	private QuestStateManager stateManager;
-	private WorldServer questWorld;
-	private int questWorldX=0,questWorldY=64,questWorldZ=0;
-	private Timer questTimer;
+	protected WorldServer questWorld;
+	protected int questWorldX=0;
+	protected int questWorldY=64;
+	protected int questWorldZ=0;
+	protected Timer questTimer;
 	private TimerTask questPeriodicTimerTask;
 	private TimerTask questCountdownTimerTask;
-	private TimerTask questAccomplishTimerTask;
+	protected TimerTask questAccomplishTimerTask;
 	private boolean teleportRequired = false;
 
 	protected int secondsRemainingToStart = 5;
@@ -75,7 +77,7 @@ public abstract class Quest implements QuestStateManagerListener{
 				{
 					secondsRemainingToEnd --;
 					// TODO: Update the Quest Count Down for accomplishment
-					if (secondsRemainingToEnd==0) {
+					if (secondsRemainingToEnd<=0) {
 						fail();
 					}
 				}
@@ -179,7 +181,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 
 	public void onQuestPending() {
-		//load();
+		load();
 		System.out.println("Quest Pending...");
 	}
 
@@ -349,7 +351,7 @@ public abstract class Quest implements QuestStateManagerListener{
 		this.questTick();
 	}
 	
-	private boolean isServerSide() {
+	protected boolean isServerSide() {
 		if (questWorld==null) {
 			for (QuestPlayer p:players.values()) {
 				if (p.getWorld().isRemote) {

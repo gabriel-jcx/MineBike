@@ -58,7 +58,7 @@ public class HandleQuestMessageOnClient implements IMessage {
 				message.quest = Main.instance().context.questManager.makeQuest(message.questType,message.questId);
 	    		
 	    		// TODO: Need a logic to be synchronize player list.
-				message.quest.addPlayer(Minecraft.getMinecraft().thePlayer.getDisplayName(), Main.instance().context);
+				//message.quest.addPlayer(Minecraft.getMinecraft().thePlayer.getDisplayName(), Main.instance().context);
 	            System.out.println("Quest Created on the client side. State[" + message.quest.getStateMachine().toString() + "]");
 				
 	            Main.instance().context.questManager.setSuggestedQuest(message.quest);
@@ -66,8 +66,15 @@ public class HandleQuestMessageOnClient implements IMessage {
 	            HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(message.quest, Trigger.MakeQuestACK);
 				Main.network.sendToServer(packet);
 				break;
+			case NotifyQuest:
+				Main.instance().context.questManager.unsetQuestPopupShown();
+				message.quest = Main.instance().context.questManager.getSuggestedQuest();
+				message.quest.triggerStateChange(message.trigger);
+	            System.out.println("Quest Suggested State[" + message.quest.getStateMachine().toString() + "]");
+				break;
 			default:
 				message.quest = Main.instance().context.questManager.getQuest();
+				message.quest.triggerStateChange(message.trigger);
 	            System.out.println("Quest State[" + message.quest.getStateMachine().toString() + "]");
 				break;
 			}

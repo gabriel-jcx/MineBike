@@ -50,6 +50,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
                 @Override
                 public void doIt() {
+                	System.out.println("onQuestInactive");
                 	stateChangeListner.onQuestInactive();
                 }
             })
@@ -59,6 +60,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
                 @Override
                 public void doIt() {
+                	System.out.println("onQuestPending");
                 	stateChangeListner.onQuestPending();
                 }
             })
@@ -68,6 +70,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onQuestLoading");
 	            	stateChangeListner.onQuestLoading();
 	            }
 	        })
@@ -77,6 +80,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onQuestWaitToStart");
 	            	stateChangeListner.onQuestWaitToStart();
 	            }
 	        })
@@ -86,6 +90,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onQuestInProgress");
 	            	stateChangeListner.onQuestInProgress();
 	            }
 	        })
@@ -97,6 +102,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onQuestPaused");
 	            	stateChangeListner.onQuestPaused();
 	            }
 	        })
@@ -106,6 +112,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onQuestAccomplished");
 	            	stateChangeListner.onQuestAccomplished();
 	            }
 	        })
@@ -115,6 +122,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onRewardSelection");
 	            	stateChangeListner.onRewardSelection();
 	            }
 	        })
@@ -124,6 +132,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onQuestFailed");
 	            	stateChangeListner.onQuestFailed();
 	            }
 	        })
@@ -133,6 +142,7 @@ public class QuestStateManager
 			.onEntry(new Action() {
 	            @Override
 	            public void doIt() {
+                	System.out.println("onRetryOrEndTheQuest");
 	            	stateChangeListner.onRetryOrEndTheQuest();
 	            }
 	        })
@@ -155,7 +165,9 @@ public class QuestStateManager
 		}
 		else
 		{
-			throw new Exception("The current trigger is not possible in this state.");
+			throw new Exception("State[" + this.QuestStateMachine.getState().toString() + "] "
+					+ "Trigger[" + trigger.toString() + "] "
+					+ "msg[The current trigger is not possible in this state]");
 		}
 	}
 }
