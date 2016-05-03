@@ -22,6 +22,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
+import org.ngs.bigx.minecraft.entity.item.EntityMinecar;
+import org.ngs.bigx.minecraft.item.ItemMineCar;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
@@ -30,6 +32,7 @@ import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
+
 
 
 @Mod(modid = Main.MODID, name = Main.MODNAME, version = Main.VERSION)
@@ -47,11 +50,18 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	    
 	    public Context context;
 	    
+	    @Instance(Main.MODID)
+	    public static Main modInstance;
+	    
+	    
 	    @SidedProxy(clientSide="org.ngs.bigx.minecraft.client.ClientProxy", serverSide="org.ngs.bigx.minecraft.server.ServerProxy")
 		public static CommonProxy proxy;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
+	    	ItemMineCar.mainRegistry();
+	    	EntityMinecar.mainRegistry();
+	    	
 	    	instance = this;
 	    	context = new Context(this);
 	    	proxy.preInit(e);

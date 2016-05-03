@@ -8,6 +8,9 @@ import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonProxy;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.entity.item.EntityTutMob;
+import org.ngs.bigx.minecraft.entity.item.MineTank;
+import org.ngs.bigx.minecraft.entity.item.RenderMineCar;
 import org.ngs.bigx.minecraft.item.ModItems;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -15,6 +18,7 @@ import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -35,6 +39,9 @@ public class ClientProxy extends CommonProxy{
     	MinecraftForge.EVENT_BUS.register(new GuiQuest(context,Minecraft.getMinecraft()));
     	
     	context.initBigX();
+    	
+    	
+    	RenderingRegistry.registerEntityRenderingHandler(EntityTutMob.class, new RenderMineCar(new MineTank(), 0));
     }
 	
 	public void postInit(FMLPostInitializationEvent e) {
