@@ -18,7 +18,6 @@ public class EntityTutMob extends EntityAnimal{//extends EntityAnimal
 	/** AI task for player control. */
     private final EntityAIControlledByPlayer aiControlledByPlayer;
 	
-	public boolean stationary;
 	
 	public EntityTutMob(World p_i1712_1_)
     {
@@ -45,7 +44,7 @@ public class EntityTutMob extends EntityAnimal{//extends EntityAnimal
 	
 	@Override
 	public EntityAgeable createChild(EntityAgeable p_90011_1_) {
-		return new EntityTutMob(worldObj);
+		return new EntityTutMob(this.worldObj);
 	}
 	
 	/**
@@ -53,11 +52,7 @@ public class EntityTutMob extends EntityAnimal{//extends EntityAnimal
      */
     public boolean interact(EntityPlayer p_70085_1_)
     {
-        if (super.interact(p_70085_1_))
-        {
-            return true;
-        }
-        else if (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)
+        if (this.riddenByEntity == null || this.riddenByEntity == p_70085_1_)
         {
             p_70085_1_.mountEntity(this);
             return true;
@@ -68,42 +63,7 @@ public class EntityTutMob extends EntityAnimal{//extends EntityAnimal
         }
     }
 	
-	 protected boolean isMovementCeased()
-	 {
-	    return stationary;
-	 }
 
-	 
-	  public void moveEntity(double d, double d1, double d2)
-	  {
-	    if (riddenByEntity != null)
-	    {
-	      this.prevRotationYaw = this.rotationYaw = this.riddenByEntity.rotationYaw;
-	      this.rotationPitch = this.riddenByEntity.rotationPitch * 0.5F;
-	      this.setRotation(this.rotationYaw, this.rotationPitch);
-	      this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
-	      stationary = true;
-	      motionX += riddenByEntity.motionX * 10; // * 0.20000000000000001D;
-	      motionZ += riddenByEntity.motionZ * 10; // * 0.20000000000000001D;
-	      
-	      super.moveEntity(motionX, motionY, motionZ);
-	    }
-	    else
-	    {
-	      stationary = false;
-	      super.moveEntity(d, d1, d2);
-	    }
-	  }
-	  public void onUpdate()
-	  {
-	    super.onUpdate();
-	    if (riddenByEntity != null) //check if there is a rider
-	    {
-	      //currentTarget = this;
-	      this.randomYawVelocity = 0; //try not to let the horse control where to look.
-	      this.rotationYaw = riddenByEntity.rotationYaw;
-	    }
-	  }
 	  
 
 	  /**
