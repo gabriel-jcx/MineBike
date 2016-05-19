@@ -14,6 +14,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -29,6 +30,8 @@ public class ClientEventHandler {
 		}
 		
 		int client_tick = 0;
+		int hazard_tick = 0; 
+		
 		//Called whenever the client ticks
 		@SubscribeEvent
 		public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -115,6 +118,41 @@ public class ClientEventHandler {
 					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
 					Minecraft.getMinecraft().displayGuiScreen(gui);
 					context.questManager.showQuestPopup();
+				}
+
+				/// TODO: Challenge 1: Pushing the player to the lava
+				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+				if((player.posX >= 1511)
+					&& (player.posX <= 1519)
+					&& (player.posY >= 60)
+					&& (player.posY <= 70)
+					&& (player.posZ >= 1533)
+					&& (player.posZ <= 1543))
+				{
+					System.out.println("Player Location [" + player.posX + "][" + player.posY + "][" + player.posZ + "]");
+					player.setPosition(player.posX - 0.025, player.posY, player.posZ);
+				}
+				
+				/// Hazard Attack!
+				if(client_tick == 0)
+				{
+					int clear_tick = 0;
+					hazard_tick ++;
+					clear_tick = hazard_tick - 8;
+					
+					player.getEntityWorld().setBlock(1511 + hazard_tick, 68, 1536, Blocks.lava);
+					
+					if(clear_tick < 0)
+					{
+						clear_tick += 16;
+					}
+					
+					player.getEntityWorld().setBlock(1511 + clear_tick, 68, 1536, Blocks.air);
+				}
+				
+				if(hazard_tick == 16)
+				{
+					hazard_tick = 0;
 				}
 			}
 		}

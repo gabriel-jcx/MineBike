@@ -126,4 +126,16 @@ public class GuiStats extends Gui {
 	    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();
     	}
     }
+	
+	private float calculateLocationIconPositions(Vec3 vLook, ChunkCoordinates playerLocation, ChunkCoordinates questLocation)
+	{
+		float scaleFactorLookVector;
+		float scaleFactorQuestVector;
+		
+		Vec3 perpVector = Vec3.createVectorHelper(vLook.yCoord, vLook.xCoord * -1f, vLook.zCoord);
+		
+		
+		
+		return 0f;
+	}
 }
