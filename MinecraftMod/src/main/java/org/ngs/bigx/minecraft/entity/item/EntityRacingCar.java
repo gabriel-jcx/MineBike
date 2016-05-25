@@ -13,17 +13,18 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class EntityTank extends EntityMob 
+public class EntityRacingCar extends EntityMob 
 {
 	public final float MaxSpeed   = 10f;
-	public final float SpeedRatio = 5f; 
+	public final float SpeedRatio = 20f; 
 	
 	boolean stationary;
 	
-	public EntityTank(World p_i1712_1_)
+	public EntityRacingCar(World p_i1712_1_)
     {
         super(p_i1712_1_);
         this.setSize(1.0F, .5F);
+        
     }
 	
 	public boolean isMovementCeased(){
@@ -40,7 +41,7 @@ public class EntityTank extends EntityMob
 	}
 	
 	public static void registerEntity(){
-		createEntity(EntityTank.class, "Tank", 0xFF000D, 0x001EFF);
+		createEntity(EntityRacingCar.class, "RacingCar", 0xFF000D, 0x001EFF);
 	}
 	
 	public static void createEntity(Class entityClass, String entityName, int solidColor, int spotColor){

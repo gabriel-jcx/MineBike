@@ -23,6 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
+import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
 import org.ngs.bigx.minecraft.entity.item.ModelTank;
 import org.ngs.bigx.minecraft.entity.item.RenderTank;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
@@ -60,8 +61,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
-	    	//ItemMineCar.mainRegistry();
-	    	EntityTank.mainRegistry();
+	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
 	    	
 	    	instance = this;
 	    	context = new Context(this);
