@@ -18,7 +18,7 @@ public class EntityTank extends EntityMob
 	public final float MaxSpeed   = 10f;
 	public final float SpeedRatio = 5f; 
 	
-	boolean stationary;
+	private boolean stationary = false;
 	
 	public EntityTank(World p_i1712_1_)
     {

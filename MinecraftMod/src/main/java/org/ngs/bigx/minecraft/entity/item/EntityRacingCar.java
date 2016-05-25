@@ -17,8 +17,8 @@ public class EntityRacingCar extends EntityMob
 {
 	public final float MaxSpeed   = 10f;
 	public final float SpeedRatio = 20f; 
-	
-	boolean stationary;
+
+	private boolean stationary = false;
 	
 	public EntityRacingCar(World p_i1712_1_)
     {
