@@ -2,7 +2,6 @@ package org.ngs.bigx.minecraft;
 
 import java.awt.Event;
 
-import org.ngs.bigx.minecraft.item.ModItems;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -21,7 +20,6 @@ public class CommonProxy {
 	CommonEventHandler events = new CommonEventHandler();
 	
 	public void preInit(FMLPreInitializationEvent e) {
-		ModItems.init(Main.instance().context);
 		DimensionManager.registerProviderType(WorldProviderQuests.dimID, WorldProviderQuests.class, true);
 		DimensionManager.registerDimension(WorldProviderQuests.dimID, WorldProviderQuests.dimID);
 		FMLCommonHandler.instance().bus().register(events);

@@ -129,7 +129,7 @@ public class ClientEventHandler {
 					&& (player.posZ >= 1533)
 					&& (player.posZ <= 1543))
 				{
-					System.out.println("Player Location [" + player.posX + "][" + player.posY + "][" + player.posZ + "]");
+					// System.out.println("Player Location [" + player.posX + "][" + player.posY + "][" + player.posZ + "]");
 					player.setPosition(player.posX - 0.025, player.posY, player.posZ);
 				}
 				

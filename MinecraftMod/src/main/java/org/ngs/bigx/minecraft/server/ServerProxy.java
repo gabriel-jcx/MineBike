@@ -1,7 +1,6 @@
 package org.ngs.bigx.minecraft.server;
 
 import org.ngs.bigx.minecraft.CommonProxy;
-import org.ngs.bigx.minecraft.item.ModItems;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;

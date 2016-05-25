@@ -22,8 +22,9 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
-import org.ngs.bigx.minecraft.entity.item.EntityMinecar;
-import org.ngs.bigx.minecraft.item.ItemMineCar;
+import org.ngs.bigx.minecraft.entity.item.EntityTank;
+import org.ngs.bigx.minecraft.entity.item.ModelTank;
+import org.ngs.bigx.minecraft.entity.item.RenderTank;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
@@ -44,7 +45,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    
 	    public static SimpleNetworkWrapper network;
 	    
-	    public static final String TEXTURE_PREFIX = "pinkbox";
+	    public static final String TEXTURE_PREFIX = "minebike";
 	    
 	    private static Main instance;
 	    	    
@@ -59,8 +60,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
-	    	ItemMineCar.mainRegistry();
-	    	EntityMinecar.mainRegistry();
+	    	//ItemMineCar.mainRegistry();
+	    	EntityTank.mainRegistry();
 	    	
 	    	instance = this;
 	    	context = new Context(this);

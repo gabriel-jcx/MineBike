@@ -6,7 +6,6 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.client.ClientProxy;
-import org.ngs.bigx.minecraft.item.ItemBike;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -32,7 +31,7 @@ public class BiGXPacketHandler {
 						}
 						double change = (new_rotation-old_rotation);
 
-						context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + change / 1000 , 0 ) ) );
+						context.setSpeed( (float) Math.min( BiGXConstants.MAXBIKESPEED, Math.max( context.getSpeed() + change / 1000 , 0 ) ) );
 					} 
 				}
 			break;
@@ -51,10 +50,10 @@ public class BiGXPacketHandler {
 					System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
 					if(context.getSpeed() + ((double)change) >= 0){
-						context.setSpeed( (float) Math.min( ItemBike.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change * .1f), 0 ) ) );
+						context.setSpeed( (float) Math.min( BiGXConstants.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change * .1f), 0 ) ) );
 					}
 					else{
-						context.setSpeed( (float) Math.max( ItemBike.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .1f), 0 ) ) );
+						context.setSpeed( (float) Math.max( BiGXConstants.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .1f), 0 ) ) );
 					}
 				}
 			break;
