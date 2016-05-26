@@ -61,6 +61,37 @@ public class QuestRun extends Quest {
 
 	@Override
 	public void generateWorld(World world,int posX, int posY, int posZ) {
+		int bottomZ = 1466;
+        int topZ = 1628;
+        int leftX = 1624;
+        int rightX = 1421;
+        int width = topZ-bottomZ;
+        int length = leftX-rightX;
+        int groundLevel = 65;
+        System.out.println("INSIDE GENERATE WORLD");
+        //left wall
+        for (int x = 0; x <= width; x++){
+                for (int i = 0; i <= 35; i++)
+                        this.originalWorld.setBlock(leftX, groundLevel+i, bottomZ+x, Blocks.bedrock);
+        }
+        //right wall
+        for (int x = 0; x <= width; x++){
+                for (int i = 0; i <= 35; i++)
+                	this.originalWorld.setBlock(rightX, groundLevel+i, bottomZ+x, Blocks.bedrock);
+        }
+        //bottom wall
+        for (int x = 0; x <= length; x++){
+                for (int i = 0; i <= 35; i++)
+                	this.originalWorld.setBlock(rightX+x, groundLevel+i, bottomZ, Blocks.bedrock);
+        }
+        //top wall
+        for (int x = 0; x <= length; x++){
+                for (int i = 0; i <= 35; i++)
+                	this.originalWorld.setBlock(rightX+x, groundLevel+i, topZ, Blocks.bedrock);
+        }
+
+		
+		
 		for (int i=-5;i<distance;i++) {
 			for(int j=-2;j<=+2;j++) {
 				world.setBlock(posX+i,posY,posZ+j,Blocks.grass);

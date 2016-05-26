@@ -125,6 +125,7 @@ public class CommonEventHandler {
 				for (QuestPlayer player : players)
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
+					quest.setOriginalWorld(player.getWorld());
 					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;

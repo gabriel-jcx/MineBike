@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+
 public class QuestManager {
 	private int questID;
 	// Server side
