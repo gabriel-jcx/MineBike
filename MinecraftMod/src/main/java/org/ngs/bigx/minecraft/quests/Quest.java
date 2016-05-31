@@ -37,6 +37,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	protected int questWorldY=64;
 	protected int questWorldZ=0;
 	protected Timer questTimer;
+	protected World originalWorld = null;
 	private TimerTask questPeriodicTimerTask;
 	private TimerTask questCountdownTimerTask;
 	protected TimerTask questAccomplishTimerTask;
@@ -337,6 +338,16 @@ public abstract class Quest implements QuestStateManagerListener{
 				e.printStackTrace();
 			}
 		}
+		else if (type.equals("runFromMummy")) {
+			try {
+				Quest returnQuest = new QuestRunFromMummy(ID);
+				returnQuest.setTeleportRequired(false);
+				return returnQuest;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 	
@@ -375,4 +386,8 @@ public abstract class Quest implements QuestStateManagerListener{
 		}
 	}
 
+	public void setOriginalWorld(World orgWorld)
+	{
+		this.originalWorld = orgWorld;
+	}
 }

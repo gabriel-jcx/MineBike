@@ -16,12 +16,16 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
+import org.ngs.bigx.minecraft.entity.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.ModelTank;
 import org.ngs.bigx.minecraft.entity.item.RenderTank;
@@ -48,6 +52,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    public static final String TEXTURE_PREFIX = "minebike";
 	    
 	    private static Main instance;
+	    
+	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Material.ground)).setBlockName("QuestRFMLucky");
 	    	    
 	    public Context context;
 	    
@@ -86,6 +92,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    @EventHandler
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
+			GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
 	    }
 	        
 	    @EventHandler

@@ -94,7 +94,7 @@ public class CommonEventHandler {
 				else{
 					this.serverQuestTest = false;
 					
-					Quest q = Main.instance().context.questManager.makeQuest("run");
+					Quest q = Main.instance().context.questManager.makeQuest("runFromMummy");
 					
 					for (WorldServer world:MinecraftServer.getServer().worldServers) {
 						List<EntityPlayerMP> playerList = world.playerEntities;
@@ -125,6 +125,7 @@ public class CommonEventHandler {
 				for (QuestPlayer player : players)
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
+					quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
 					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;

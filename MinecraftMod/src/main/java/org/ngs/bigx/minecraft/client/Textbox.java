@@ -31,23 +31,23 @@ public class Textbox {
 			lines.add(line);
 			return;
 		}
-		//word wrap
-		int i=0,j=0,k=0;
-		while (i<line.length()) {
-			while (i<line.length()) {
-				while(i<line.length()&&line.charAt(i)!=' ') {
-					i++;
-				}
-				if (font.getStringWidth(line.substring(j,i))>width) {
-					i = k;
-					break;
-				}
-				i++;
-				k = i;
-			}
-			lines.add(line.substring(j,Math.min(i,line.length())));
-			j = i;
-		}
-		//lines.add(line.substring(j,line.length()));
+//		//word wrap
+//		int i=0,j=0,k=0;
+//		while (i<line.length()) {
+//			while (i<line.length()) {
+//				while(i<line.length()&&line.charAt(i)!=' ') {
+//					i++;
+//				}
+//				if (font.getStringWidth(line.substring(j,i))>width) {
+//					i = k;
+//					break;
+//				}
+//				i++;
+//				k = i;
+//			}
+//			lines.add(line.substring(j,Math.min(i,line.length())));
+//			j = i;
+//		}
+		lines.add(line.substring(0,line.length()));
 	}
 }
