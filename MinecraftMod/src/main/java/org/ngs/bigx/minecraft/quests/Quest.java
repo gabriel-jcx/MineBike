@@ -34,7 +34,6 @@ public abstract class Quest implements QuestStateManagerListener{
 	private boolean worldExists = false;
 	private QuestStateManager stateManager;
 	protected WorldServer questWorld;
-	protected World originalWorld;
 	protected int questWorldX=0;
 	protected int questWorldY=64;
 	protected int questWorldZ=0;
@@ -396,10 +395,5 @@ public abstract class Quest implements QuestStateManagerListener{
 	public World getOriginalWorld()
 	{
 		return this.originalWorld;
-	}
-
-	public void setOriginalWorld(World orgWorld)
-	{
-		this.originalWorld = orgWorld;
 	}
 }
