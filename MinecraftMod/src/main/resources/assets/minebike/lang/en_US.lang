@@ -1,5 +1,5 @@
-item.bike.name=Bike
-item.mineCar.name=Mine Car
+entity.RacingCar.name=Racing Car
+entity.Tank.name=Tank
 
 gui.connection.title=Connection
 gui.connection.connect=Connect

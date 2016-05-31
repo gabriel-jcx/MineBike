@@ -1,8 +1,8 @@
 [
 {
-  "modid": "pinkbox",
-  "name": "Pinkbox Mod",
-  "description": "Example placeholder mod.",
+  "modid": "minebike",
+  "name": "MineBike Mod",
+  "description": "",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

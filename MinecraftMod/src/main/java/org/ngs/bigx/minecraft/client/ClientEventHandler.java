@@ -132,6 +132,8 @@ public class ClientEventHandler {
 					// System.out.println("Player Location [" + player.posX + "][" + player.posY + "][" + player.posZ + "]");
 					player.setPosition(player.posX - 0.025, player.posY, player.posZ);
 				}
+
+				GuiStats.tick++;
 				
 				/// Hazard Attack!
 				if(client_tick == 0)

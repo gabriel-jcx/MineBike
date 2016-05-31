@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 
+import scala.reflect.internal.Trees.This;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
@@ -33,6 +34,7 @@ public abstract class Quest implements QuestStateManagerListener{
 	private boolean worldExists = false;
 	private QuestStateManager stateManager;
 	protected WorldServer questWorld;
+	protected World originalWorld;
 	protected int questWorldX=0;
 	protected int questWorldY=64;
 	protected int questWorldZ=0;
@@ -384,6 +386,16 @@ public abstract class Quest implements QuestStateManagerListener{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setOriginalWorld(World orgWorld)
+	{
+		this.originalWorld = orgWorld;
+	}
+	
+	public World getOriginalWorld()
+	{
+		return this.originalWorld;
 	}
 
 	public void setOriginalWorld(World orgWorld)

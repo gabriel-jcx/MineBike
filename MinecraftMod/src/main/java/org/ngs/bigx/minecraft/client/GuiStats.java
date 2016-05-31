@@ -20,12 +20,18 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class GuiStats extends Gui {
 	
+	public static int tick = 0;
+	
 	private Minecraft mc;
 	
+	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
 	private ResourceLocation HEART_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/heart.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
+	
+	public static float gauge_01_percentile = 0;
+	public static float gauge_02_percentile = 0;
 	
 	private Context context;
 	
@@ -95,32 +101,49 @@ public class GuiStats extends Gui {
 	    	int WIDTH = 200;
 	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
 	    	int mcWidth = sr.getScaledWidth();
-	    	
-	    	drawRect(mcWidth - WIDTH, 0, mcWidth , HEIGHT , 0x8F000000);
-	    	drawRect(mcWidth - WIDTH + 1, 1, mcWidth - 1 , HEIGHT - 1, 0x00AAAAAA);
-	    	
 	    	xPos = mcWidth - WIDTH + 2;
-	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	    	mc.fontRenderer.drawString(I18n.format("gui.stats.heartrate", new Object[0])+": ",xPos,yPos+3,0xFFFFFF);
-	    	mc.renderEngine.bindTexture(HEART_TEXTURE);
-	        if (context.bump == false) {
-	        	drawTexturedModalRect(xPos + HEART_OFFSET, yPos, 0, 0, HEART_SIZE , HEART_SIZE);
-	        }
-	        else {
-	        	drawTexturedModalRect(xPos + HEART_OFFSET, yPos, HEART_SIZE, 0, HEART_SIZE, HEART_SIZE);
-	        }
-	        if(mc.currentScreen != null)
-	        mc.fontRenderer.drawString(mc.currentScreen.width+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
-//	        mc.fontRenderer.drawString(context.heartrate+" "+I18n.format("gui.stats.bpm", new Object[0]),xPos + HEART_OFFSET + HEART_SIZE + 2,yPos+3,0xFFFFFF);
-	    	mc.fontRenderer.drawString(I18n.format("gui.stats.speed", new Object[0])+": "+(context.getSpeed()*20)+" meters per second",xPos,yPos+HEART_SIZE,0xFFFFFF);
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
-	    	drawRect(xPos,yy,xPos+180,yy+20, 0xFF000000);
-	    	drawGradientRect(xPos+1,yy+1,(int) (xPos+180*(percentBig/100)-1),yy+20-1, 0xFFFF0000, 0xFFAA0000);
-	    	String text = "Progress: "+((int) percentBig)+"."+((int) percentSmall)+"%";
-	    	mc.fontRenderer.drawString(text,xPos+180/2-mc.fontRenderer.getStringWidth(text)/2,yy+20/2-mc.fontRenderer.FONT_HEIGHT/2,0xFFFF00);
-	    	//mc.fontRenderer.drawString(I18n.format("gui.stats.resistance", new Object[0])+": "+(context.resistance),xPos,yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT,0xFFFFFF);
+	    	float speedometerAngle = 54 * context.getSpeed();
+	    	gauge_01_percentile = (GuiStats.tick%20)/20f;
+	    	gauge_02_percentile = (GuiStats.tick%20)/20f;
+
+	    	GL11.glPushMatrix();
+	    	
+			    GL11.glTranslatef(mcWidth/2, 27f, 0); 
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			    GL11.glEnable(GL11.GL_BLEND);
+			    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+		        drawTexturedModalRect(-25, -25, 0, 0, 50 , 50);
+	        	
+		    	GL11.glPushMatrix();
+			    	GL11.glTranslatef(1f, 1f, 0); 
+			    	GL11.glRotatef(speedometerAngle, 0, 0, 1);
+			    	GL11.glEnable(GL11.GL_BLEND);
+				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+		        	drawTexturedModalRect(-25, -25, 51, 0, 50 , 50);
+	        	GL11.glPopMatrix();
+	        	
+		    	GL11.glPushMatrix();
+			    	GL11.glTranslatef(-35f, 0, 0); 
+				    GL11.glColor4f(1.0F, 1.0f - gauge_01_percentile, 0F, 1.0F);
+			    	GL11.glEnable(GL11.GL_BLEND);
+				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+		        	drawTexturedModalRect(-10, -26, 101, 0, 20 , (int)(gauge_01_percentile*50));
+//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 101, (int)(50f-gauge_01_percentile*50), 20 , (int)(gauge_01_percentile*50));
+	        	GL11.glPopMatrix();
+	        	
+		    	GL11.glPushMatrix();
+			    	GL11.glTranslatef(37f, 0, 0); 
+				    GL11.glColor4f(1.0F, 1.0f - gauge_02_percentile, 0F, 1.0F);
+			    	GL11.glEnable(GL11.GL_BLEND);
+				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+		        	drawTexturedModalRect(-10, -26, 130, 0, 20 , (int)(gauge_02_percentile*50));
+//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 130, (int)(50f-gauge_02_percentile*50), 20 , (int)(gauge_02_percentile*50));
+	        	GL11.glPopMatrix();
+        	
+        	GL11.glPopMatrix();
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();
 	    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();

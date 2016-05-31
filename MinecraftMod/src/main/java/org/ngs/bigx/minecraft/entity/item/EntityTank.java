@@ -15,12 +15,25 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityTank extends EntityMob 
 {
+	public final float MaxSpeed   = 10f;
+	public final float SpeedRatio = 5f; 
+	
+	private boolean stationary = false;
+	
 	public EntityTank(World p_i1712_1_)
     {
         super(p_i1712_1_);
-        this.setSize(1.0F, 1.0F);
-        
+        this.setSize(1.0F, .5F);
     }
+	
+	public boolean isMovementCeased(){
+		return stationary;
+		
+	}
+	
+	public boolean isAIEnabled(){
+		return true;
+	}
 	
 	public static void mainRegistry(){
 		registerEntity();
@@ -70,7 +83,9 @@ public class EntityTank extends EntityMob
 			this.setRotation(this.rotationYaw, this.rotationPitch);
 			this.rotationYawHead = this.renderYawOffset = this.rotationYaw;
 			p_70612_1_ = ((EntityLivingBase)this.riddenByEntity).moveStrafing * 0.1F; //initial value 0.5F
-			p_70612_2_ = ((EntityLivingBase)this.riddenByEntity).moveForward * 0.50F; //Forward move speed
+			p_70612_2_ = ((EntityLivingBase)this.riddenByEntity).moveForward * SpeedRatio; //Forward move speed
+			
+			stationary = true;
 			if (p_70612_2_ <= 0.0F)
 			{
 				p_70612_2_ *= 0.25F; //Reverse move speed
@@ -97,6 +112,7 @@ public class EntityTank extends EntityMob
 		{
 			this.stepHeight = 0.5F;
 			this.jumpMovementFactor = 0.02F;
+			stationary = false;
 			super.moveEntityWithHeading(p_70612_1_, p_70612_2_);
 		}
 	}

@@ -64,7 +64,7 @@ public class HandleQuestMessageOnClient implements IMessage {
 				
 	            Main.instance().context.questManager.setSuggestedQuest(message.quest);
 
-	            HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(message.quest, Trigger.MakeQuestACK);
+	            HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(message.quest, Trigger.MakeQuestACK);  
 				Main.network.sendToServer(packet);
 				break;
 			case NotifyQuest:
