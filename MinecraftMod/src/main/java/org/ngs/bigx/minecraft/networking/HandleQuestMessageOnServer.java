@@ -69,6 +69,8 @@ public class HandleQuestMessageOnServer implements IMessage {
 					worldd.spawnEntityInWorld(creeper);
 				}
 				break;
+			case AcceptQuestAndTeleport:
+				message.quest.removeQuestInitiator(1524, 65, 411);
 			default:
 				System.out.println(message.quest.getStateMachine().toString()+" trigger->"+message.trigger.toString());
 	            message.quest.triggerStateChange(message.trigger);

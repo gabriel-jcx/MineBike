@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.entity.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.quests.maze.Maze;
@@ -17,6 +18,7 @@ import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class QuestRunFromMummy extends Quest {
@@ -34,6 +36,7 @@ public class QuestRunFromMummy extends Quest {
 	protected void setRemainingToEndVar()
 	{
 		this.timeLimit = 420;
+//		this.timeLimit = 2;
 	}
 
 	@Override
@@ -106,7 +109,7 @@ public class QuestRunFromMummy extends Quest {
 		if(this.originalWorld == null)
 			return;
 		
-		if(isServerSide())
+		if(isServerSide() && (this.originalWorld != null))
 		{
 			generateMaze();
 			this.countDeadend = this.maze.getCountDeadend();
@@ -134,7 +137,20 @@ public class QuestRunFromMummy extends Quest {
 			}
 		}
 	}
+
+	@Override
+	public void onQuestFailed() {
+		super.onQuestFailed();
+
+		if(this.originalWorld == null)
+			return;
+		
+		this.addQuestInitiator(1524, 65, 411);
+		
+		CommonEventHandler.makeQuestOnServer();
+	}
 	
+	@Override
 	public void onQuestAccomplished()
 	{
 		super.onQuestAccomplished();
@@ -154,6 +170,10 @@ public class QuestRunFromMummy extends Quest {
 		}
 		
 		this.countDeadend = 0;
+		
+		this.addQuestInitiator(1524, 65, 411);
+		
+		CommonEventHandler.makeQuestOnServer();
 	}
 	
 	public void generateMaze()
@@ -166,6 +186,17 @@ public class QuestRunFromMummy extends Quest {
 	}
 	
 	public void createHeightOfWall(int locationX, int floorheight, int locationY, Block wall)
+	{	
+		int i=0;
+		this.originalWorld.setBlock(locationX, floorheight+i, locationY, wall);
+		
+		this.originalWorld.setBlock(locationX, floorheight+1, locationY, Blocks.glass);
+		
+		for(i=3; i<5; i++)
+			this.originalWorld.setBlock(locationX, floorheight+i, locationY, wall);
+	}
+	
+	public void createHeightOfBlocks(int locationX, int floorheight, int locationY, Block wall)
 	{	
 		int i=0;
 		for(i=0; i<5; i++)
@@ -182,8 +213,8 @@ public class QuestRunFromMummy extends Quest {
 		{
 			for(j=0; j<this.sizeMaze*3; j++)
 			{
-				createHeightOfWall(locationX + i, height, locationY + j, Blocks.lava);
-				createHeightOfWall(locationX + i, height, locationY + j, Blocks.air);
+				createHeightOfBlocks(locationX + i, height, locationY + j, Blocks.lava);
+				createHeightOfBlocks(locationX + i, height, locationY + j, Blocks.air);
 			}
 		}
 		
@@ -220,23 +251,23 @@ public class QuestRunFromMummy extends Quest {
 			{
 				if(!this.maze.south[i][j])
 				{
-					createHeightOfWall(locationX + 3*i - 2, height, locationY + 3*(j-1), Blocks.air);
-					createHeightOfWall(locationX + 3*i - 1, height, locationY + 3*(j-1), Blocks.air);
+					createHeightOfBlocks(locationX + 3*i - 2, height, locationY + 3*(j-1), Blocks.air);
+					createHeightOfBlocks(locationX + 3*i - 1, height, locationY + 3*(j-1), Blocks.air);
 				}
 				if(!this.maze.north[i][j])
 				{
-					createHeightOfWall(locationX + 3*i - 2, height, locationY + 3*j, Blocks.air);
-					createHeightOfWall(locationX + 3*i - 1, height, locationY + 3*j, Blocks.air);
+					createHeightOfBlocks(locationX + 3*i - 2, height, locationY + 3*j, Blocks.air);
+					createHeightOfBlocks(locationX + 3*i - 1, height, locationY + 3*j, Blocks.air);
 				}
 				if(!this.maze.east[i][j])
 				{
-					createHeightOfWall(locationX + 3*i, height, locationY + 3*j - 2, Blocks.air);
-					createHeightOfWall(locationX + 3*i, height, locationY + 3*j - 1, Blocks.air);
+					createHeightOfBlocks(locationX + 3*i, height, locationY + 3*j - 2, Blocks.air);
+					createHeightOfBlocks(locationX + 3*i, height, locationY + 3*j - 1, Blocks.air);
 				}
 				if(!this.maze.west[i][j])
 				{
-					createHeightOfWall(locationX + 3*(i-1), height, locationY + 3*j - 2, Blocks.air);
-					createHeightOfWall(locationX + 3*(i-1), height, locationY + 3*j - 1, Blocks.air);
+					createHeightOfBlocks(locationX + 3*(i-1), height, locationY + 3*j - 2, Blocks.air);
+					createHeightOfBlocks(locationX + 3*(i-1), height, locationY + 3*j - 1, Blocks.air);
 				}
 			}
 		}
@@ -273,7 +304,8 @@ public class QuestRunFromMummy extends Quest {
 //					this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Main.BlockQuestFRMCheck);
 					World worldd = this.originalWorld;
 					
-					if(isServerSide()){
+					if(isServerSide() && (this.originalWorld != null))
+					{
 						/// TREASRUE
 						this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Main.BlockQuestFRMCheck);
 						this.countDeadend++;
@@ -292,12 +324,28 @@ public class QuestRunFromMummy extends Quest {
 		{
 			for(j=0; j<12; j++)
 			{
-				createHeightOfWall(locationX + 2 - j, height, locationY + 1 - i, Blocks.air);
+				createHeightOfBlocks(locationX + 2 - j, height, locationY + 1 - i, Blocks.air);
 			}
 		}
 		
 		/// WIND BLOWING REASON SETUP
 		
 		/// MARK THE VISITED AREA
+	}
+	
+	public void addQuestInitiator(int locationX, int height, int locationY)
+	{
+		createHeightOfBlocks(locationX, height, locationY - 1, Blocks.glass);
+		createHeightOfBlocks(locationX, height, locationY + 1, Blocks.glass);
+		createHeightOfBlocks(locationX, height, locationY, Blocks.glass);
+		this.originalWorld.setBlock(locationX-1, height, locationY, Main.BlockQuestFRMCheck);
+	}
+
+	@Override
+	public void removeQuestInitiator(int locationX, int height, int locationY) {
+		createHeightOfBlocks(locationX, height, locationY - 1, Blocks.air);
+		createHeightOfBlocks(locationX, height, locationY + 1, Blocks.air);
+		createHeightOfBlocks(locationX, height, locationY, Blocks.air);
+		this.originalWorld.setBlock(locationX-1, height, locationY, Blocks.air);
 	}
 }

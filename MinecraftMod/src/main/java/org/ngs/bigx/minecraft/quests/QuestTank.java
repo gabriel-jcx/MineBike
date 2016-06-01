@@ -64,4 +64,16 @@ public class QuestTank extends Quest {
 		
 	}
 
+	@Override
+	public void addQuestInitiator(int locationX, int height, int locationY) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeQuestInitiator(int locationX, int height, int locationY) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

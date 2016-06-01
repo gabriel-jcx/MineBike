@@ -15,8 +15,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityTank extends EntityMob 
 {
-	public final float MaxSpeed   = 10f;
-	public final float SpeedRatio = 5f; 
+	public final float MaxSpeed   = 2f;
+	public final float SpeedRatio = .5f; 
 	
 	private boolean stationary = false;
 	

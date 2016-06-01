@@ -63,19 +63,19 @@ public class GuiQuest extends Gui {
     	int xPos = 0;
     	int yPos = sr.getScaledHeight()-QUESTBOX_HEIGHT;
     	if (mc.thePlayer != null&&context.checkQuestsEnabled()) {
-	    	EntityPlayer player = mc.thePlayer;
-	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	    	mc.renderEngine.bindTexture(QUESTBOX_TEXTURE);
-	    	int WIDTH = 200;
-	    	int HEIGHT = QUESTBOX_HEIGHT;
-	        drawTexturedModalRect(0, yPos, 0, 0, QUESTBOX_WIDTH , QUESTBOX_HEIGHT);
-	        updateText();
-	        List<String> desc = text.getLines();
-	        int i = 0;
-	        for (String s:desc) {
-	        	mc.fontRenderer.drawString(s, xPos+2, yPos+2+mc.fontRenderer.FONT_HEIGHT*i, 0x000000);
-	        	i++;
-	        }
+//	    	EntityPlayer player = mc.thePlayer;
+//	    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+//	    	mc.renderEngine.bindTexture(QUESTBOX_TEXTURE);
+//	    	int WIDTH = 200;
+//	    	int HEIGHT = QUESTBOX_HEIGHT;
+//	        drawTexturedModalRect(0, yPos, 0, 0, QUESTBOX_WIDTH , QUESTBOX_HEIGHT);
+//	        updateText();
+//	        List<String> desc = text.getLines();
+//	        int i = 0;
+//	        for (String s:desc) {
+//	        	mc.fontRenderer.drawString(s, xPos+2, yPos+2+mc.fontRenderer.FONT_HEIGHT*i, 0x000000);
+//	        	i++;
+//	        }
 	    }
     }
 }

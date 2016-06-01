@@ -8,6 +8,7 @@ import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
+import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
@@ -122,14 +123,26 @@ public class ClientEventHandler {
 							org.ngs.bigx.dictionary.protocol.specification.dataType.RESISTANCE, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
+				
+				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 				if (context.questManager.hasQuestPopupShown()==false&&context.questManager.getSuggestedQuest()!=null) {
-					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
-					Minecraft.getMinecraft().displayGuiScreen(gui);
-					context.questManager.showQuestPopup();
+//					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
+//					Minecraft.getMinecraft().displayGuiScreen(gui);
+//					context.questManager.showQuestPopup();
 				}
 
 				/// TODO: Challenge 1: Pushing the player to the lava
-				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+				if((player.getEntityWorld().getBlock(1523, 65, 411).getClass()!=Main.BlockQuestFRMCheck.getClass()) && ((client_tick%10) == 0) && (context.questManager.getSuggestedQuest()!=null))
+				{
+					// TODO: Need to revise the code to make quest
+					context.questManager.setQuest(context.questManager.getSuggestedQuest());
+					context.questManager.setSuggestedQuest(null);
+					Quest quest = context.questManager.getQuest();
+					quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
+					HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
+					Main.network.sendToServer(packet);
+				}
+
 				if((player.posX >= 1511)
 					&& (player.posX <= 1519)
 					&& (player.posY >= 60)

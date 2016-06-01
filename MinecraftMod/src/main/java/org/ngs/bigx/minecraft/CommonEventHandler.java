@@ -72,6 +72,26 @@ public class CommonEventHandler {
 		}
 	}
 	
+	public static void makeQuestOnServer()
+	{
+		Quest q = Main.instance().context.questManager.makeQuest("runFromMummy");
+		
+		for (WorldServer world:MinecraftServer.getServer().worldServers) {
+			List<EntityPlayerMP> playerList = world.playerEntities;
+			
+			for (EntityPlayerMP player:playerList) {
+				q.addPlayer(player.getDisplayName(),Main.instance().context);
+				World worldd = player.getEntityWorld();
+				q.setOriginalWorld(worldd);
+			}
+			
+			q.addQuestInitiator(1524, 65, 411);
+		}
+		
+		System.out.println("[BIGX] CREATE QUEST QUEUEING");
+		Main.instance().context.questEventQueue.add(new QuestEvent(q, eventType.CreateQuest));
+	}
+	
 	 //Called when the server ticks. Usually 20 ticks a second. 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
@@ -96,26 +116,7 @@ public class CommonEventHandler {
 				else{
 					this.serverQuestTest = false;
 					
-					Quest q = Main.instance().context.questManager.makeQuest("runFromMummy");
-					
-					for (WorldServer world:MinecraftServer.getServer().worldServers) {
-						List<EntityPlayerMP> playerList = world.playerEntities;
-						
-						for (EntityPlayerMP player:playerList) {
-							q.addPlayer(player.getDisplayName(),Main.instance().context);
-							World worldd = player.getEntityWorld();
-							q.setOriginalWorld(worldd);
-
-//							if(!worldd.isRemote){
-//								EntityCreeper creeper = new EntityCreeper(worldd);
-//								creeper.setPosition(998, 66, 998);
-//								worldd.spawnEntityInWorld(creeper);
-//							}
-						}
-					}
-					
-					System.out.println("[BIGX] CREATE QUEST QUEUEING");
-					Main.instance().context.questEventQueue.add(new QuestEvent(q, eventType.CreateQuest));
+					makeQuestOnServer();
 				}
 			}
 			
@@ -135,7 +136,6 @@ public class CommonEventHandler {
 				for (QuestPlayer player : players)
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
-//					quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
 					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;
@@ -143,6 +143,7 @@ public class CommonEventHandler {
 				for (QuestPlayer player : players)
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.NotifyQuest);
+//					quest.removeQuestInitiator(1524, 65, 411);
 					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;

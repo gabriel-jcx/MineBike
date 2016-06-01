@@ -3,6 +3,8 @@ package org.ngs.bigx.minecraft.client;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -105,45 +107,54 @@ public class GuiStats extends Gui {
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
-	    	float speedometerAngle = 54 * context.getSpeed();
-	    	gauge_01_percentile = (GuiStats.tick%20)/20f;
-	    	gauge_02_percentile = (GuiStats.tick%20)/20f;
 
-	    	GL11.glPushMatrix();
+	    	Quest quest = context.questManager.getQuest();
 	    	
-			    GL11.glTranslatef(mcWidth/2, 27f, 0); 
-			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			    GL11.glEnable(GL11.GL_BLEND);
-			    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-		        drawTexturedModalRect(-25, -25, 0, 0, 50 , 50);
-	        	
+	    	if(quest != null)
+	    	{
+	//	    	float speedometerAngle = 36 * context.getSpeed();
+	    		float completeRate = (float)(quest.getTimeLimit()-quest.getSecondsRemainingToEnd()) / (float)quest.getTimeLimit();
+		    	float speedometerAngle = 180f + 360f * completeRate;
+		    	
+		    	gauge_01_percentile = (float)QuestRunFromMummy.itemsCollected/(float)QuestRunFromMummy.countDeadend;
+		    	gauge_02_percentile = (float)QuestRunFromMummy.itemsCollected/(float)QuestRunFromMummy.countDeadend;
+	
 		    	GL11.glPushMatrix();
-			    	GL11.glTranslatef(1f, 1f, 0); 
-			    	GL11.glRotatef(speedometerAngle, 0, 0, 1);
-			    	GL11.glEnable(GL11.GL_BLEND);
+		    	
+				    GL11.glTranslatef(mcWidth/2, 27f, 0); 
+				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				    GL11.glEnable(GL11.GL_BLEND);
 				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-		        	drawTexturedModalRect(-25, -25, 51, 0, 50 , 50);
-	        	GL11.glPopMatrix();
+			        drawTexturedModalRect(-25, -25, 0, 0, 50 , 50);
+		        	
+			    	GL11.glPushMatrix();
+				    	GL11.glTranslatef(1f, 1f, 0); 
+				    	GL11.glRotatef(speedometerAngle, 0, 0, 1);
+				    	GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+			        	drawTexturedModalRect(-25, -25, 51, 0, 50 , 50);
+		        	GL11.glPopMatrix();
+		        	
+			    	GL11.glPushMatrix();
+				    	GL11.glTranslatef(-35f, 0, 0); 
+					    GL11.glColor4f(1.0F, 1.0f - gauge_01_percentile, 0F, 1.0F);
+				    	GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+			        	drawTexturedModalRect(-10, -26, 101, 0, 20 , (int)(gauge_01_percentile*50));
+	//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 101, (int)(50f-gauge_01_percentile*50), 20 , (int)(gauge_01_percentile*50));
+		        	GL11.glPopMatrix();
+		        	
+			    	GL11.glPushMatrix();
+				    	GL11.glTranslatef(37f, 0, 0); 
+					    GL11.glColor4f(1.0F, 1.0f - gauge_02_percentile, 0F, 1.0F);
+				    	GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
+			        	drawTexturedModalRect(-10, -26, 130, 0, 20 , (int)(gauge_02_percentile*50));
+	//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 130, (int)(50f-gauge_02_percentile*50), 20 , (int)(gauge_02_percentile*50));
+		        	GL11.glPopMatrix();
 	        	
-		    	GL11.glPushMatrix();
-			    	GL11.glTranslatef(-35f, 0, 0); 
-				    GL11.glColor4f(1.0F, 1.0f - gauge_01_percentile, 0F, 1.0F);
-			    	GL11.glEnable(GL11.GL_BLEND);
-				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-		        	drawTexturedModalRect(-10, -26, 101, 0, 20 , (int)(gauge_01_percentile*50));
-//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 101, (int)(50f-gauge_01_percentile*50), 20 , (int)(gauge_01_percentile*50));
 	        	GL11.glPopMatrix();
-	        	
-		    	GL11.glPushMatrix();
-			    	GL11.glTranslatef(37f, 0, 0); 
-				    GL11.glColor4f(1.0F, 1.0f - gauge_02_percentile, 0F, 1.0F);
-			    	GL11.glEnable(GL11.GL_BLEND);
-				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-		        	drawTexturedModalRect(-10, -26, 130, 0, 20 , (int)(gauge_02_percentile*50));
-//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 130, (int)(50f-gauge_02_percentile*50), 20 , (int)(gauge_02_percentile*50));
-	        	GL11.glPopMatrix();
-        	
-        	GL11.glPopMatrix();
+	    	}
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();
 	    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();

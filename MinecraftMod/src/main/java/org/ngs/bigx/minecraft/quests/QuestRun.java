@@ -126,4 +126,16 @@ public class QuestRun extends Quest {
 		if (isServerSide())
 		startQuest(questWorld,questWorldX,questWorldY,questWorldZ);
 	}
+
+	@Override
+	public void addQuestInitiator(int locationX, int height, int locationY) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeQuestInitiator(int locationX, int height, int locationY) {
+		// TODO Auto-generated method stub
+		
+	}
 }

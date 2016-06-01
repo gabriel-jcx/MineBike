@@ -49,6 +49,8 @@ public abstract class Quest implements QuestStateManagerListener{
 	protected int timeLimit;
 	
 	protected abstract void setRemainingToEndVar();
+	public abstract void addQuestInitiator(int locationX, int height, int locationY);
+	public abstract void removeQuestInitiator(int locationX, int height, int locationY);
 	
 	private int ID;
 
@@ -396,5 +398,10 @@ public abstract class Quest implements QuestStateManagerListener{
 	public World getOriginalWorld()
 	{
 		return this.originalWorld;
+	}
+	
+	public int getSecondsRemainingToEnd()
+	{
+		return this.secondsRemainingToEnd;
 	}
 }

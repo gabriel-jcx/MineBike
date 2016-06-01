@@ -14,7 +14,7 @@ public class QuestManager {
 	// Client side
 	private Quest currentQuest;
 	private Quest suggestedQuest;
-	private boolean questPopupShown;
+	private boolean questPopupShown=false;
 	
 	public QuestManager() {
 		questID = 0;
