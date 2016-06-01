@@ -54,7 +54,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    
 	    private static Main instance;
 	    
-	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Material.ground)).setBlockName("QuestRFMLucky");
+	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(538)).setBlockName("QuestRFMLucky");
 	    	    
 	    public Context context;
 	    

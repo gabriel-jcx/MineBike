@@ -7,6 +7,10 @@ import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
+import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
+import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
+import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -16,6 +20,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -134,6 +139,38 @@ public class ClientEventHandler {
 				{
 					// System.out.println("Player Location [" + player.posX + "][" + player.posY + "][" + player.posZ + "]");
 					player.setPosition(player.posX - 0.025, player.posY, player.posZ);
+				}
+				
+				if((player.getEntityWorld().isRemote) && ((client_tick%10) == 0))
+				{
+					if(this.context.questManager.getQuest() != null)
+					{
+						if(this.context.questManager.getQuest().getStateMachine() == State.QuestInProgress)
+						{
+							int i,j=0;
+							int count=0;
+							
+							/// CHECK THE TREASURE
+							for(i=0; i<30; i++)
+							{
+								for(j=0; j<30; j++)
+								{
+									if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == Main.BlockQuestFRMCheck.getClass())
+									{
+										count++;
+									}
+								}
+							}
+							QuestRunFromMummy.itemsCollected = QuestRunFromMummy.countDeadend - count;
+							boolean isQuestDone = this.context.questManager.getQuest().checkComplete(player.getDisplayName());
+							if(isQuestDone)
+							{
+								System.out.println("Quest is Done.");
+								HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
+								Main.network.sendToServer(packet);
+							}
+						}
+					}
 				}
 
 				GuiStats.tick++;

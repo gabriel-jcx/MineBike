@@ -13,10 +13,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
-public class QuestRFMChest extends Block {
+public class QuestRFMChest extends BlockChest {
 
-	public QuestRFMChest(Material p_i45394_1_) {
-		super(Material.ground);
+	public QuestRFMChest(int p_i45397_1_) {
+		super(p_i45397_1_);
+		// TODO Auto-generated constructor stub
 	}
 
 	public int idDropped(int i, Random random)

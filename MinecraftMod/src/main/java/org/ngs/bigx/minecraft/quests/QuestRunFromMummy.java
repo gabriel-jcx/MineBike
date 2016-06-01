@@ -9,8 +9,10 @@ import org.ngs.bigx.minecraft.quests.maze.Maze;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,8 +21,8 @@ import net.minecraft.world.World;
 
 public class QuestRunFromMummy extends Quest {
 
-	private int itemsCollected = 0;
-	private int countDeadend = 0;
+	public static int itemsCollected = 0;
+	public static int countDeadend = 0;
 	private Maze maze;
 	private int sizeMaze = 10;
 
@@ -31,7 +33,7 @@ public class QuestRunFromMummy extends Quest {
 	@Override
 	protected void setRemainingToEndVar()
 	{
-		this.timeLimit = 180;
+		this.timeLimit = 420;
 	}
 
 	@Override
@@ -100,6 +102,9 @@ public class QuestRunFromMummy extends Quest {
 	@Override
 	public void onQuestLoading() {
 		super.onQuestLoading();
+
+		if(this.originalWorld == null)
+			return;
 		
 		if(isServerSide())
 		{
@@ -108,14 +113,60 @@ public class QuestRunFromMummy extends Quest {
 		}
 	}
 	
+	@Override
+	public void onQuestWaitToStart()
+	{
+		super.onQuestWaitToStart();
+
+		{
+			int i,j=0;
+			
+			/// CHECK THE TREASURE
+			for(i=0; i<30; i++)
+			{
+				for(j=0; j<30; j++)
+				{
+					if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == Main.BlockQuestFRMCheck.getClass())
+					{
+						this.countDeadend++;
+					}
+				}
+			}
+		}
+	}
+	
+	public void onQuestAccomplished()
+	{
+		super.onQuestAccomplished();
+		
+		if(this.originalWorld == null)
+			return;
+
+		int i,j=0;
+		
+		for(i=0; i<this.sizeMaze*3-1; i++)
+		{
+			for(j=0; j<this.sizeMaze*3-1; j++)
+			{
+				createHeightOfWall(1525 + i, 65, 412 + j, Blocks.lava);
+				createHeightOfWall(1525 + i, 65, 412 + j, Blocks.air);
+			}
+		}
+		
+		this.countDeadend = 0;
+	}
+	
 	public void generateMaze()
 	{
+		if(this.originalWorld == null)
+			return;
+		
 		this.maze = new Maze(10);
-		this.createMapOnWorld(1000, 65, 1000);
+		this.createMapOnWorld(1524, 65, 411);
 	}
 	
 	public void createHeightOfWall(int locationX, int floorheight, int locationY, Block wall)
-	{
+	{	
 		int i=0;
 		for(i=0; i<5; i++)
 			this.originalWorld.setBlock(locationX, floorheight+i, locationY, wall);
@@ -124,7 +175,17 @@ public class QuestRunFromMummy extends Quest {
 	public void createMapOnWorld(int locationX, int height, int locationY)
 	{
 		int i,j=0;
-		Block wall = Blocks.sandstone.setBlockUnbreakable();
+		Block wall = Blocks.sandstone;
+		
+		/// Clean up the previous shape
+		for(i=0; i<this.sizeMaze*3; i++)
+		{
+			for(j=0; j<this.sizeMaze*3; j++)
+			{
+				createHeightOfWall(locationX + i, height, locationY + j, Blocks.lava);
+				createHeightOfWall(locationX + i, height, locationY + j, Blocks.air);
+			}
+		}
 		
 		/// WALL
 		for(i=1; i<=this.sizeMaze; i++)
@@ -186,7 +247,13 @@ public class QuestRunFromMummy extends Quest {
 			for(j=0; j<this.sizeMaze*3; j++)
 			{
 				/// COVER
-				this.originalWorld.setBlock(locationX+i, height+5, locationY+j, Blocks.glass);
+				this.originalWorld.setBlock(locationX+i, height+5, locationY+j, wall);
+				
+				if( ((j%3)==1) && ((i%3)==1) )
+				{
+					/// LIGHT
+					this.originalWorld.setBlock(locationX+i, height+5, locationY+j, Blocks.glowstone);
+				}
 				
 				/// FLOOR
 				this.originalWorld.setBlock(locationX+i, height-1, locationY+j, wall);
@@ -207,8 +274,12 @@ public class QuestRunFromMummy extends Quest {
 					World worldd = this.originalWorld;
 					
 					if(isServerSide()){
-						this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Blocks.glowstone);
-						EntitySpider monster = new EntitySpider(worldd);
+						/// TREASRUE
+						this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Main.BlockQuestFRMCheck);
+						this.countDeadend++;
+						
+						/// MONSTERS
+						EntitySlime monster = new EntitySlime(worldd);
 						monster.setPosition(locationX + 3*i - 2, height+1, locationY + 3*j - 2);
 						worldd.spawnEntityInWorld(monster);
 					}
@@ -216,6 +287,14 @@ public class QuestRunFromMummy extends Quest {
 			}
 		}
 		
+		/// MAKE A DOOR
+		for(i=0; i<2; i++)
+		{
+			for(j=0; j<12; j++)
+			{
+				createHeightOfWall(locationX + 2 - j, height, locationY + 1 - i, Blocks.air);
+			}
+		}
 		
 		/// WIND BLOWING REASON SETUP
 		
