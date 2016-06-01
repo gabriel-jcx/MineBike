@@ -11,7 +11,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class HandleQuestMessageOnServer implements IMessage {
 	Quest quest;
@@ -60,6 +62,12 @@ public class HandleQuestMessageOnServer implements IMessage {
 			{
 			case MakeQuestACK:
 				message.quest.notification();
+				World worldd = message.quest.getOriginalWorld();
+				if(!worldd.isRemote){
+					EntityCreeper creeper = new EntityCreeper(worldd);
+					creeper.setPosition(67, 64, 250);
+					worldd.spawnEntityInWorld(creeper);
+				}
 				break;
 			default:
 				System.out.println(message.quest.getStateMachine().toString()+" trigger->"+message.trigger.toString());

@@ -16,6 +16,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -138,6 +141,11 @@ public class ClientEventHandler {
 				/// Hazard Attack!
 				if(client_tick == 0)
 				{
+//					if(!player.getEntityWorld().isRemote){
+//						EntityCreeper creeper = new EntityCreeper(player.getEntityWorld());
+//						creeper.setPosition(67+hazard_tick, 64, 250+hazard_tick);
+//						player.getEntityWorld().spawnEntityInWorld(creeper);
+//					}
 					int clear_tick = 0;
 					hazard_tick ++;
 					clear_tick = hazard_tick - 8;

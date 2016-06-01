@@ -23,6 +23,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -32,6 +33,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -43,7 +45,7 @@ public class CommonEventHandler {
 	
 	int server_tick = 0;
 	boolean serverQuestTest = true;
-	int serverQuestTestTickCount = 10000000;
+	int serverQuestTestTickCount = 10;
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -101,6 +103,14 @@ public class CommonEventHandler {
 						
 						for (EntityPlayerMP player:playerList) {
 							q.addPlayer(player.getDisplayName(),Main.instance().context);
+							World worldd = player.getEntityWorld();
+							q.setOriginalWorld(worldd);
+
+//							if(!worldd.isRemote){
+//								EntityCreeper creeper = new EntityCreeper(worldd);
+//								creeper.setPosition(998, 66, 998);
+//								worldd.spawnEntityInWorld(creeper);
+//							}
 						}
 					}
 					
@@ -125,7 +135,7 @@ public class CommonEventHandler {
 				for (QuestPlayer player : players)
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
-					quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
+//					quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
 					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;
@@ -147,19 +157,7 @@ public class CommonEventHandler {
 				break;
 			}
 					
-//					if (server_tick==0 && !Main.instance().context.questManager.playerQuestsMapping.containsKey(player.getDisplayName())) {
-//						// TODO: Need to revise the code to make a quest (DETECT A FREE GAMER!!!!)
-//						if(this.serverQuestTest && (this.serverQuestTestTickCount <0))
-//						{
-//							this.serverQuestTest = false;
-//							
-//							Quest q = Main.instance().context.questManager.makeQuest("run");
-//							q.addPlayer(player.getDisplayName(),Main.instance().context);
-//							
-//							HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(q, Trigger.MakeQuest);
-//							Main.network.sendTo(packet,player);
-//						}
-//					}
+
 		}
 	}
 		

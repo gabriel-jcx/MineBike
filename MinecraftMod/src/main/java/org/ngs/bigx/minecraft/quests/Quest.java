@@ -389,7 +389,8 @@ public abstract class Quest implements QuestStateManagerListener{
 	
 	public void setOriginalWorld(World orgWorld)
 	{
-		this.originalWorld = orgWorld;
+		if(isServerSide())
+			this.originalWorld = orgWorld;
 	}
 	
 	public World getOriginalWorld()

@@ -9,6 +9,9 @@ import org.ngs.bigx.minecraft.quests.maze.Maze;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -97,14 +100,18 @@ public class QuestRunFromMummy extends Quest {
 	@Override
 	public void onQuestLoading() {
 		super.onQuestLoading();
-		generateMaze();
-		this.countDeadend = this.maze.getCountDeadend();
+		
+		if(isServerSide())
+		{
+			generateMaze();
+			this.countDeadend = this.maze.getCountDeadend();
+		}
 	}
 	
 	public void generateMaze()
 	{
 		this.maze = new Maze(10);
-		this.createMapOnWorld(1000, 1000, 65);
+		this.createMapOnWorld(1000, 65, 1000);
 	}
 	
 	public void createHeightOfWall(int locationX, int floorheight, int locationY, Block wall)
@@ -114,7 +121,7 @@ public class QuestRunFromMummy extends Quest {
 			this.originalWorld.setBlock(locationX, floorheight+i, locationY, wall);
 	}
 
-	public void createMapOnWorld(int locationX, int locationY, int height)
+	public void createMapOnWorld(int locationX, int height, int locationY)
 	{
 		int i,j=0;
 		Block wall = Blocks.sandstone.setBlockUnbreakable();
@@ -132,8 +139,10 @@ public class QuestRunFromMummy extends Quest {
 				createHeightOfWall(locationX + 3*i, height, locationY + 3*(j) -1, wall);
 				createHeightOfWall(locationX + 3*(i-1), height, locationY + 3*(j) -2, wall);
 				createHeightOfWall(locationX + 3*(i-1), height, locationY + 3*(j) -1, wall);
-				
+
 				createHeightOfWall(locationX + 3*i, height, locationY + 3*j, wall);
+				
+				this.originalWorld.setBlock(locationX + 3*i -1 , height+5, locationY + 3*j -1, Blocks.glowstone);
 				
 				if(i==1 || j==1 || i==this.sizeMaze || j==this.sizeMaze)
 				{
@@ -177,7 +186,7 @@ public class QuestRunFromMummy extends Quest {
 			for(j=0; j<this.sizeMaze*3; j++)
 			{
 				/// COVER
-				this.originalWorld.setBlock(locationX+i, height+5, locationY+j, Blocks.glass_pane);
+				this.originalWorld.setBlock(locationX+i, height+5, locationY+j, Blocks.glass);
 				
 				/// FLOOR
 				this.originalWorld.setBlock(locationX+i, height-1, locationY+j, wall);
@@ -193,9 +202,16 @@ public class QuestRunFromMummy extends Quest {
 				if(deadendspots[i][j])
 				{
 					/// PLACE THE TREASURE TO DEADENDS
-					this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Main.BlockQuestFRMCheck);
-					
 					/// PLACE MONSTERS
+//					this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Main.BlockQuestFRMCheck);
+					World worldd = this.originalWorld;
+					
+					if(isServerSide()){
+						this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Blocks.glowstone);
+						EntitySpider monster = new EntitySpider(worldd);
+						monster.setPosition(locationX + 3*i - 2, height+1, locationY + 3*j - 2);
+						worldd.spawnEntityInWorld(monster);
+					}
 				}
 			}
 		}

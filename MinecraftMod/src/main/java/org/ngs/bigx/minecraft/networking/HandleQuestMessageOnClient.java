@@ -56,7 +56,7 @@ public class HandleQuestMessageOnClient implements IMessage {
 			{
 			case MakeQuest:
 				message.quest = Main.instance().context.questManager.makeQuest(message.questType,message.questId);
-				message.quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
+//				message.quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
 	    		
 	    		// TODO: Need a logic to be synchronize player list.
 				//message.quest.addPlayer(Minecraft.getMinecraft().thePlayer.getDisplayName(), Main.instance().context);
