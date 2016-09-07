@@ -30,6 +30,9 @@ import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
 import org.ngs.bigx.minecraft.entity.item.ModelTank;
 import org.ngs.bigx.minecraft.entity.item.RenderTank;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
+import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
@@ -76,6 +79,9 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	network.registerMessage(HandleHungerMessageOnServer.Handler.class,HandleHungerMessageOnServer.class,0,Side.SERVER);
 	    	network.registerMessage(HandleQuestMessageOnClient.Handler.class, HandleQuestMessageOnClient.class, 1, Side.CLIENT);
 	    	network.registerMessage(HandleQuestMessageOnServer.Handler.class, HandleQuestMessageOnServer.class, 2, Side.SERVER);
+
+	    	network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
+	    	network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
 	    	
 	    	try {
 				context.eTracker.start();
