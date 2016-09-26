@@ -93,8 +93,8 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		return this.totalWeight - this.strength*6;
 	}
 
-	// @TODO Need to find a way to steam the class
     public String getValue() {
+    	// @TODO Need to find a way to steam the class
         return "";
     }
     
