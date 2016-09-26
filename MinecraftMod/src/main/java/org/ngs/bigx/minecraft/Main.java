@@ -18,6 +18,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.entity.Entity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.server.MinecraftServer;
@@ -31,8 +32,10 @@ import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
 import org.ngs.bigx.minecraft.entity.item.ModelTank;
 import org.ngs.bigx.minecraft.entity.item.RenderTank;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
+import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
@@ -110,4 +113,15 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	return instance;
 	    }
 	    
+	    public static void requestStatUpdate(ISyncedStat stat, Entity entity) {
+	        network.sendToServer(new StatPacket(stat, entity));
+	    }
+
+	    public static void sendStatUpdate(ISyncedStat stat, Entity entity) {
+	    	network.sendToDimension(new StatPacket(stat, entity), entity.worldObj.provider.dimensionId);
+	    }
+
+	    private void registerHooks() {
+	        MinecraftForge.EVENT_BUS.register(new StatRegistry());
+	    }
 	}

@@ -1,8 +1,14 @@
 package org.ngs.bigx.minecraft.entity.lotom;
 
-import org.ngs.bigx.minecraft.entity.lotom.BackpackProperty.backpackReturnCode;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
-public class CharacterProperty {
+import org.ngs.bigx.minecraft.entity.lotom.BackpackProperty.backpackReturnCode;
+import org.ngs.bigx.minecraft.entity.lotom.stat.EntityStat;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
+
+public class CharacterProperty extends EntityStat implements ISyncedStat {
 	public static enum characterReturnCode {
 		success, failure, bagIsFull, bagIsNotActive
 	};
@@ -17,6 +23,12 @@ public class CharacterProperty {
 	private int skill = 10;						// Abstracted skill: Skill to craft items
 	private int luck = 10;						// Abstracted luck: Luck to mine minerals
 	private BackpackProperty[] backpacks = new BackpackProperty[2];	// Two backpacks per character at most
+	
+
+	public CharacterProperty(String name) {
+		super(name);
+		this.initProperty();
+	}
 	
 	public void initProperty()
 	{
@@ -79,5 +91,35 @@ public class CharacterProperty {
 	public double getResistanceSettings()
 	{
 		return this.totalWeight - this.strength*6;
+	}
+
+	// @TODO Need to find a way to steam the class
+    public String getValue() {
+        return "";
+    }
+    
+    public void setValue(String value)
+    {
+    	// @TODO Need to find a way to unstream a string to this class
+    }
+
+	@Override
+    public boolean isDataSynced(NBTTagCompound compound) {
+        return this.getValue() == compound.getString("Value");
+    }
+
+    @Override
+    public EntityStat init(Entity entity, World world) {
+        return new CharacterProperty(this.getName());
+    }
+
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		this.setValue(compound.getString("Value"));
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound compound) {
+        compound.setString("Value", this.getValue());
 	}
 }
