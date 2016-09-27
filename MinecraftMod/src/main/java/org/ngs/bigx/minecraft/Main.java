@@ -19,6 +19,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.server.MinecraftServer;
@@ -31,6 +32,7 @@ import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
 import org.ngs.bigx.minecraft.entity.item.ModelTank;
 import org.ngs.bigx.minecraft.entity.item.RenderTank;
+import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
@@ -61,6 +63,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    private static Main instance;
 	    
 	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(538)).setBlockName("QuestRFMLucky");
+	    
+	    public static CharacterProperty characterProperty;
 	    	    
 	    public Context context;
 	    
@@ -107,6 +111,10 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    @EventHandler
 	    public void postInit(FMLPostInitializationEvent e) {
 	    	proxy.postInit(e);
+	    	
+	    	characterProperty = new CharacterProperty("currentPlayerLoTomPropery");
+	    	StatRegistry.registerStat(characterProperty, EntityPlayer.class);
+	    	System.out.println("[BiGX] Character Property Init Done");
 	    }
 	    
 	    public static Main instance() {

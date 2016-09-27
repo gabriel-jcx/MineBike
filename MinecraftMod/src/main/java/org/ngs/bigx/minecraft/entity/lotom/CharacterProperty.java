@@ -27,6 +27,8 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 
 	public CharacterProperty(String name) {
 		super(name);
+		this.backpacks[0] = new BackpackProperty();
+		this.backpacks[1] = new BackpackProperty();
 		this.initProperty();
 	}
 	
@@ -95,12 +97,42 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 
     public String getValue() {
     	// @TODO Need to find a way to steam the class
+    	String rVal = "" + oxygenLevel + "\t"
+    			+ oxygenCosumptionRate + "\t"
+    			+ oxygenLevelMax + "\t"
+    			+ weight + "\t"
+    			+ totalWeight + "\t"
+    			+ speedRate + "\t"
+    			+ strength + "\t"
+    			+ skill + "\t"
+    			+ luck + "\t"
+    			;
+    	
+    	System.out.println("[BiGX] GET VALUE CHAR PROPERTY");
+    	
         return "";
     }
     
     public void setValue(String value)
     {
     	// @TODO Need to find a way to unstream a string to this class
+    	String[] arrayOfValue = value.split("\t");
+    	
+    	if(arrayOfValue.length < 9)
+    	{
+    		System.out.println("[BiGX] Character Property is Empty");
+    		return;
+    	}
+
+    	this.oxygenLevel = Double.parseDouble(arrayOfValue[0]);
+    	this.oxygenCosumptionRate = Double.parseDouble(arrayOfValue[1]);
+    	this.oxygenLevelMax = Double.parseDouble(arrayOfValue[2]);
+    	this.weight = Integer.parseInt(arrayOfValue[3]);
+    	this.totalWeight = Integer.parseInt(arrayOfValue[4]);
+    	this.speedRate = Double.parseDouble(arrayOfValue[5]);
+    	this.strength = Integer.parseInt(arrayOfValue[6]);
+    	this.skill = Integer.parseInt(arrayOfValue[7]);
+    	this.luck = Integer.parseInt(arrayOfValue[8]);
     }
 
 	@Override
