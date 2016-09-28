@@ -50,12 +50,18 @@ public class BackpackProperty extends ItemLotom {
 	public void initToSize(backpackType type)
 	{
 		int typeInInt = type.getValue();
+		int szitems = this.items.size();
+		int i=0;
 		
 		this.backpackSize = type;
 		this.volumeMax = backpackMaxVolumeByType[typeInInt];
 		this.weight = backpackWeightByType[typeInInt];
 		this.totalWeight = this.weight;
-		this.items.removeAll(null);
+		
+		for(i=0; i<szitems; i++)
+		{
+			this.items.remove(0);
+		}
 	}
 	
 	public int getTotalWeight() {
