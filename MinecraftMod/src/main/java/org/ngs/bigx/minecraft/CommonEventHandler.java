@@ -116,7 +116,7 @@ public class CommonEventHandler {
 				else{
 					this.serverQuestTest = false;
 					
-					makeQuestOnServer();
+					//makeQuestOnServer();
 				}
 			}
 			

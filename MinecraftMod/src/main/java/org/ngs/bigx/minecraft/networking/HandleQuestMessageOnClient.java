@@ -52,6 +52,7 @@ public class HandleQuestMessageOnClient implements IMessage {
 		public IMessage onMessage(HandleQuestMessageOnClient message, MessageContext ctx) {
 			System.out.println("Recevied Trigger[" + message.trigger.toString() + "]");
 			
+			// TODO: Need to separate bigx client context with bigx server context
 			switch(message.trigger)
 			{
 			case MakeQuest:
