@@ -39,7 +39,6 @@ public class ClientEventHandler {
 		}
 		
 		int client_tick = 0;
-		int hazard_tick = 0; 
 		
 		//Called whenever the client ticks
 		@SubscribeEvent
@@ -142,17 +141,6 @@ public class ClientEventHandler {
 					HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
 					Main.network.sendToServer(packet);
 				}
-
-				if((player.posX >= 1511)
-					&& (player.posX <= 1519)
-					&& (player.posY >= 60)
-					&& (player.posY <= 70)
-					&& (player.posZ >= 1533)
-					&& (player.posZ <= 1543))
-				{
-					// System.out.println("Player Location [" + player.posX + "][" + player.posY + "][" + player.posZ + "]");
-					player.setPosition(player.posX - 0.025, player.posY, player.posZ);
-				}
 				
 				if((player.getEntityWorld().isRemote) && ((client_tick%10) == 0))
 				{
@@ -187,33 +175,6 @@ public class ClientEventHandler {
 				}
 
 				GuiStats.tick++;
-				
-				/// Hazard Attack!
-				if(client_tick == 0)
-				{
-//					if(!player.getEntityWorld().isRemote){
-//						EntityCreeper creeper = new EntityCreeper(player.getEntityWorld());
-//						creeper.setPosition(67+hazard_tick, 64, 250+hazard_tick);
-//						player.getEntityWorld().spawnEntityInWorld(creeper);
-//					}
-					int clear_tick = 0;
-					hazard_tick ++;
-					clear_tick = hazard_tick - 8;
-					
-					player.getEntityWorld().setBlock(1511 + hazard_tick, 68, 1536, Blocks.lava);
-					
-					if(clear_tick < 0)
-					{
-						clear_tick += 16;
-					}
-					
-					player.getEntityWorld().setBlock(1511 + clear_tick, 68, 1536, Blocks.air);
-				}
-				
-				if(hazard_tick == 16)
-				{
-					hazard_tick = 0;
-				}
 			}
 		}
 		
