@@ -6,7 +6,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BikeWorldData;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.quests.Quest;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,7 @@ public class GuiQuest extends Gui {
 	
 	private Minecraft mc;
 	
-	private ResourceLocation QUESTBOX_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/questbox.png");
+	private ResourceLocation QUESTBOX_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/questbox.png");
 	private int QUESTBOX_WIDTH = 101;
 	private int QUESTBOX_HEIGHT = 50;
 	

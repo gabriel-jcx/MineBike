@@ -44,7 +44,7 @@ public class Context implements eyeTrackerListner {
 	public boolean bump = false;
 	public Block block = Blocks.air;
 	public int rotation = 0;
-	public Main main = null;
+	public BiGX main = null;
 	private int ID = 0;
 	private boolean questsEnabled = true;
 	private float rotationX;
@@ -99,7 +99,7 @@ public class Context implements eyeTrackerListner {
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
 	public eyeTracker eTracker;
 	
-	public Context(Main main) {
+	public Context(BiGX main) {
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		this.questEventQueue = new LinkedList<QuestEvent>(); 

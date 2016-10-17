@@ -18,7 +18,7 @@ public class BiGXPacketHandler {
 	public static boolean Handle(BiGXNetClient client, BiGXNetPacket packet) {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
-		Context context = Main.instance().context;
+		Context context = BiGX.instance().context;
 		switch (packet.deviceEvent) {
 			case org.ngs.bigx.dictionary.protocol.specification.dataType.ROTATIONSTATE:
 				if (Minecraft.getMinecraft().thePlayer!=null) {

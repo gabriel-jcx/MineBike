@@ -9,7 +9,7 @@
 
 package org.ngs.bigx.minecraft.entity.item;
 
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.client.model.ModelBase;

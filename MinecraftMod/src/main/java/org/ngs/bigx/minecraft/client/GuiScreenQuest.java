@@ -2,7 +2,7 @@ package org.ngs.bigx.minecraft.client;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestTileEntity;
@@ -20,7 +20,7 @@ public class GuiScreenQuest extends GuiScreen {
 	private Quest quest;
 	private final int ButtonAccept = 0;
 	private final int ButtonDecline = 1;
-	private ResourceLocation QUEST_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/quest.png");
+	private ResourceLocation QUEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/quest.png");
 	private Context context;
 	
 	public GuiScreenQuest(EntityPlayer p_i1080_1_,Quest quest,Context context) {
@@ -45,7 +45,7 @@ public class GuiScreenQuest extends GuiScreen {
 			this.mc.displayGuiScreen((GuiScreen)null);
 			quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
 			HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
-			Main.network.sendToServer(packet);
+			BiGX.network.sendToServer(packet);
 		}
 		if (button.id==ButtonDecline) {
 			this.mc.displayGuiScreen((GuiScreen)null);

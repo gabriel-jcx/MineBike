@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.networking;
 
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.GuiScreenQuest;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
@@ -31,8 +31,8 @@ public class HandleQuestMessageOnServer implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
-		System.out.println("Quest count: "+Main.instance().context.questManager.playerQuestsMapping.size());
-		quest = Main.instance().context.questManager.getQuestFromPlayerQuestMap(compound.getInteger("ID"));
+		System.out.println("Quest count: "+BiGX.instance().context.questManager.playerQuestsMapping.size());
+		quest = BiGX.instance().context.questManager.getQuestFromPlayerQuestMap(compound.getInteger("ID"));
 		trigger = Trigger.valueOf(compound.getString("trigger"));
 		questType = compound.getString("type");
 		questId = compound.getInteger("ID");

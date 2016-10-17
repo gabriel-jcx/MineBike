@@ -2,7 +2,7 @@ package org.ngs.bigx.minecraft.client;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 
@@ -26,9 +26,9 @@ public class GuiStats extends Gui {
 	
 	private Minecraft mc;
 	
-	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
-	private ResourceLocation HEART_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX,"textures/GUI/heart.png");
-	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(Main.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
+	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
+	private ResourceLocation HEART_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/heart.png");
+	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	

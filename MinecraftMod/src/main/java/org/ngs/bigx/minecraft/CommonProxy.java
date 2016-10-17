@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft;
 
 import java.awt.Event;
 
+import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -11,6 +12,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,10 +29,12 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
-
+    	NetworkRegistry.INSTANCE.registerGuiHandler(BiGX.modInstance, new BiGXGuiHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {
     	
     }
+    
+    
 }

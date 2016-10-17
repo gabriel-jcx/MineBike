@@ -55,7 +55,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
-		Context context = Main.instance().context;
+		Context context = BiGX.instance().context;
 		
 		//TODO: Implement proper cleanup when the game is exited
 		//The event which is called by the server shutting down needs to be located and used
@@ -74,13 +74,13 @@ public class CommonEventHandler {
 	
 	public static void makeQuestOnServer()
 	{
-		Quest q = Main.instance().context.questManager.makeQuest("runFromMummy");
+		Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
 		
 		for (WorldServer world:MinecraftServer.getServer().worldServers) {
 			List<EntityPlayerMP> playerList = world.playerEntities;
 			
 			for (EntityPlayerMP player:playerList) {
-				q.addPlayer(player.getDisplayName(),Main.instance().context);
+				q.addPlayer(player.getDisplayName(),BiGX.instance().context);
 				World worldd = player.getEntityWorld();
 				q.setOriginalWorld(worldd);
 			}
@@ -89,7 +89,7 @@ public class CommonEventHandler {
 		}
 		
 		System.out.println("[BIGX] CREATE QUEST QUEUEING");
-		Main.instance().context.questEventQueue.add(new QuestEvent(q, eventType.CreateQuest));
+		BiGX.instance().context.questEventQueue.add(new QuestEvent(q, eventType.CreateQuest));
 	}
 	
 	 //Called when the server ticks. Usually 20 ticks a second. 
@@ -120,12 +120,12 @@ public class CommonEventHandler {
 				}
 			}
 			
-			if(Main.instance().context.questEventQueue.size() == 0)
+			if(BiGX.instance().context.questEventQueue.size() == 0)
 			{
 				return;
 			}
 			
-			QuestEvent questevent = Main.instance().context.questEventQueue.remove();
+			QuestEvent questevent = BiGX.instance().context.questEventQueue.remove();
 			Quest quest = questevent.quest;
 			eventType type = questevent.type; 
 			Collection<QuestPlayer> players = quest.players.values();
@@ -136,7 +136,7 @@ public class CommonEventHandler {
 				for (QuestPlayer player : players)
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
-					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
+					BiGX.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;
 			case NotifyQuestPlayers:
@@ -144,7 +144,7 @@ public class CommonEventHandler {
 				{
 					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.NotifyQuest);
 //					quest.removeQuestInitiator(1524, 65, 411);
-					Main.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
+					BiGX.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
 				}
 				break;
 			default:

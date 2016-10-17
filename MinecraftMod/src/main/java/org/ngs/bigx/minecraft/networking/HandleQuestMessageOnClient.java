@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.networking;
 
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.GuiScreenQuest;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestTileEntity;
@@ -31,7 +31,7 @@ public class HandleQuestMessageOnClient implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound compound = ByteBufUtils.readTag(buf);
-		System.out.println("Quest count: "+Main.instance().context.questManager.playerQuestsMapping.size());
+		System.out.println("Quest count: "+BiGX.instance().context.questManager.playerQuestsMapping.size());
 		trigger = Trigger.valueOf(compound.getString("trigger"));
 		questType = compound.getString("type");
 		questId = compound.getInteger("ID");
@@ -56,26 +56,26 @@ public class HandleQuestMessageOnClient implements IMessage {
 			switch(message.trigger)
 			{
 			case MakeQuest:
-				message.quest = Main.instance().context.questManager.makeQuest(message.questType,message.questId);
+				message.quest = BiGX.instance().context.questManager.makeQuest(message.questType,message.questId);
 //				message.quest.setOriginalWorld(Minecraft.getMinecraft().thePlayer.getEntityWorld());
 	    		
 	    		// TODO: Need a logic to be synchronize player list.
 				//message.quest.addPlayer(Minecraft.getMinecraft().thePlayer.getDisplayName(), Main.instance().context);
 	            System.out.println("Quest Created on the client side. State[" + message.quest.getStateMachine().toString() + "]");
 				
-	            Main.instance().context.questManager.setSuggestedQuest(message.quest);
+	            BiGX.instance().context.questManager.setSuggestedQuest(message.quest);
 
 	            HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(message.quest, Trigger.MakeQuestACK);  
-				Main.network.sendToServer(packet);
+				BiGX.network.sendToServer(packet);
 				break;
 			case NotifyQuest:
-				Main.instance().context.questManager.unsetQuestPopupShown();
-				message.quest = Main.instance().context.questManager.getSuggestedQuest();
+				BiGX.instance().context.questManager.unsetQuestPopupShown();
+				message.quest = BiGX.instance().context.questManager.getSuggestedQuest();
 				message.quest.triggerStateChange(message.trigger);
 	            System.out.println("Quest Suggested State[" + message.quest.getStateMachine().toString() + "]");
 				break;
 			default:
-				message.quest = Main.instance().context.questManager.getQuest();
+				message.quest = BiGX.instance().context.questManager.getQuest();
 				message.quest.triggerStateChange(message.trigger);
 	            System.out.println("Quest State[" + message.quest.getStateMachine().toString() + "]");
 				break;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.entity.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.quests.maze.Maze;
 
@@ -129,7 +129,7 @@ public class QuestRunFromMummy extends Quest {
 			{
 				for(j=0; j<30; j++)
 				{
-					if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == Main.BlockQuestFRMCheck.getClass())
+					if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == BiGX.BlockQuestFRMCheck.getClass())
 					{
 						this.countDeadend++;
 					}
@@ -307,7 +307,7 @@ public class QuestRunFromMummy extends Quest {
 					if(isServerSide() && (this.originalWorld != null))
 					{
 						/// TREASRUE
-						this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, Main.BlockQuestFRMCheck);
+						this.originalWorld.setBlock(locationX + 3*i - 2, height, locationY + 3*j - 2, BiGX.BlockQuestFRMCheck);
 						this.countDeadend++;
 						
 						/// MONSTERS
@@ -338,7 +338,7 @@ public class QuestRunFromMummy extends Quest {
 		createHeightOfBlocks(locationX, height, locationY - 1, Blocks.glass);
 		createHeightOfBlocks(locationX, height, locationY + 1, Blocks.glass);
 		createHeightOfBlocks(locationX, height, locationY, Blocks.glass);
-		this.originalWorld.setBlock(locationX-1, height, locationY, Main.BlockQuestFRMCheck);
+		this.originalWorld.setBlock(locationX-1, height, locationY, BiGX.BlockQuestFRMCheck);
 	}
 
 	@Override

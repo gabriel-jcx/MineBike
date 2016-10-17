@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
@@ -131,7 +131,7 @@ public class ClientEventHandler {
 				}
 
 				/// TODO: Challenge 1: Pushing the player to the lava
-				if((player.getEntityWorld().getBlock(1523, 65, 411).getClass()!=Main.BlockQuestFRMCheck.getClass()) && ((client_tick%10) == 0) && (context.questManager.getSuggestedQuest()!=null))
+				if((player.getEntityWorld().getBlock(1523, 65, 411).getClass()!=BiGX.BlockQuestFRMCheck.getClass()) && ((client_tick%10) == 0) && (context.questManager.getSuggestedQuest()!=null))
 				{
 					// TODO: Need to revise the code to make quest
 					context.questManager.setQuest(context.questManager.getSuggestedQuest());
@@ -139,7 +139,7 @@ public class ClientEventHandler {
 					Quest quest = context.questManager.getQuest();
 					quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
 					HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
-					Main.network.sendToServer(packet);
+					BiGX.network.sendToServer(packet);
 				}
 				
 				if((player.getEntityWorld().isRemote) && ((client_tick%10) == 0))
@@ -156,7 +156,7 @@ public class ClientEventHandler {
 							{
 								for(j=0; j<30; j++)
 								{
-									if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == Main.BlockQuestFRMCheck.getClass())
+									if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == BiGX.BlockQuestFRMCheck.getClass())
 									{
 										count++;
 									}
@@ -168,7 +168,7 @@ public class ClientEventHandler {
 							{
 								System.out.println("Quest is Done.");
 								HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
-								Main.network.sendToServer(packet);
+								BiGX.network.sendToServer(packet);
 							}
 						}
 					}

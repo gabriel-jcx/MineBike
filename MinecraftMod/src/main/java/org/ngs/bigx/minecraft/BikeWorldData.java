@@ -35,7 +35,7 @@ public class BikeWorldData extends WorldSavedData {
 			NBTTagList players = compound.getTagList("players", Constants.NBT.TAG_STRING);
 			for (i=0;i<players.tagCount();i++) {
 				String player = players.getStringTagAt(i);
-				quest.addPlayer(player,Main.instance().context);
+				quest.addPlayer(player,BiGX.instance().context);
 			}
 			quests.add(quest);
 		}

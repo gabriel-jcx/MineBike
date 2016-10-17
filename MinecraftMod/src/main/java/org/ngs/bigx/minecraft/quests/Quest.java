@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.Textbox;
 import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
@@ -128,7 +128,7 @@ public abstract class Quest implements QuestStateManagerListener{
 			{
 				// TODO: SEND A NOTIFICATION TO CLIENTS!
 				System.out.println("[BIGX] NotifyQuestPlayers");
-				Main.instance().context.questEventQueue.add(new QuestEvent(this, eventType.NotifyQuestPlayers));
+				BiGX.instance().context.questEventQueue.add(new QuestEvent(this, eventType.NotifyQuestPlayers));
 			}
 		} catch (Exception e) {
 			System.out.println("The quest state is not in a right state.");

@@ -22,3 +22,5 @@ world.theme.ice=Ice
 
 quest.type.run.name=Run
 quest.type.run.description=Run a Distance
+
+tile.QuestChest.name=Quest Chest

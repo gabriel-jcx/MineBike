@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.entity.item;
 
-import org.ngs.bigx.minecraft.Main;
+import org.ngs.bigx.minecraft.BiGX;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EntityList;
@@ -47,7 +47,7 @@ public class EntityTank extends EntityMob
 		int randId = EntityRegistry.findGlobalUniqueEntityId();
 		
 		EntityRegistry.registerGlobalEntityID(entityClass, entityName, randId);
-		EntityRegistry.registerModEntity(entityClass, entityName, randId, Main.modInstance, 64, 1, true);
+		EntityRegistry.registerModEntity(entityClass, entityName, randId, BiGX.modInstance, 64, 1, true);
 		EntityRegistry.addSpawn(entityClass, 2, 0, 1, EnumCreatureType.creature, BiomeGenBase.forest);
 		createEgg(randId, solidColor, spotColor);
 	
