@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.entity.block.QuestRFMChest;
+import org.ngs.bigx.minecraft.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.quests.maze.Maze;
 
 import net.minecraft.block.Block;
