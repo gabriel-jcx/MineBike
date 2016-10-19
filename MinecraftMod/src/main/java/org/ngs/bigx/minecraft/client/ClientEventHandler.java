@@ -55,12 +55,12 @@ public class ClientEventHandler {
 					context.bump = !context.bump;
 				}
 
-				// Degrade the current player's speed
+				// Handling Player Skills
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 				// Degrade the current player's speed
 				BiGX.characterProperty.decreaseSpeedByTime();
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
-				float moveSpeed = 0;
+				float moveSpeed = 0; 
 				
 				
 				//getRotationYawHead() returns player's angle in degrees - 90

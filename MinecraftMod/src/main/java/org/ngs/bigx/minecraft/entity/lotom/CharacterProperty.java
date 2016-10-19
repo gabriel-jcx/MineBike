@@ -12,7 +12,7 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 	public static enum characterReturnCode {
 		success, failure, bagIsFull, bagIsNotActive
 	};
-	
+	//add something for going too fast
 	private int weight; 					// The unit is Kg
 	private int totalWeight;
 	private float speedRate;				// Current speed of the player

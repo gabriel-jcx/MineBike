@@ -140,7 +140,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
 	    	System.out.println("[BiGX] Bike Property Init Done");
 	    }
-	    
+	     
 	    public static BiGX instance() {
 	    	return instance;
 	    }
