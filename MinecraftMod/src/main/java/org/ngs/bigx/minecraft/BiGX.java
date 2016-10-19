@@ -37,6 +37,7 @@ import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.ItemQuestChest;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.entity.lotom.BikeProperty;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
@@ -70,7 +71,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
 	    
 	    public static CharacterProperty characterProperty;
-	    	    
+	    public static BikeProperty bikeProperty;	
+	    
 	    public Context context;
 	    
 	    /*
@@ -133,6 +135,10 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    	characterProperty = new CharacterProperty("currentPlayerLoTomPropery");
 	    	StatRegistry.registerStat(characterProperty, EntityPlayer.class);
 	    	System.out.println("[BiGX] Character Property Init Done");
+	    	
+	    	bikeProperty = new BikeProperty("currentBikeLoTomProperty");
+	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
+	    	System.out.println("[BiGX] Bike Property Init Done");
 	    }
 	    
 	    public static BiGX instance() {

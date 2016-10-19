@@ -13,16 +13,15 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		success, failure, bagIsFull, bagIsNotActive
 	};
 	
-	private double oxygenLevel = 100;
-	private double oxygenCosumptionRate = 0.1;	// Oxygen consumption rate per 50 milliseconds
-	private double oxygenLevelMax = 100;		// Default amount of oxgygen a player can hold without any equipment
-	private int weight = 60; 					// The unit is Kg
+	private int weight; 					// The unit is Kg
 	private int totalWeight;
-	private double speedRate = 10;
-	private int strength = 10;					// Abstracted strength: Pedaling Resistance down
-	private int skill = 10;						// Abstracted skill: Skill to craft items
-	private int luck = 10;						// Abstracted luck: Luck to mine minerals
-	private BackpackProperty[] backpacks = new BackpackProperty[2];	// Two backpacks per character at most
+	private float speedRate;				// Current speed of the player
+	private float speedDecreaseRate;		// The rate at which the speed of the player is decreased
+	private int strength;					// Abstracted strength: Pedaling Resistance down
+	private int skill;						// Abstracted skill: Skill to craft items
+	private int luck;						// Abstracted luck: Luck to mine minerals
+	private BackpackProperty[] backpacks = new BackpackProperty[2];	// Two backpacks per character at most (OPTIONAL)
+	private int exp;						
 	
 
 	public CharacterProperty(String name) {
@@ -34,29 +33,20 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 	
 	public void initProperty()
 	{
-		this.oxygenLevel = 100;
-		this.oxygenCosumptionRate = .1;
-		this.oxygenLevelMax = 100;
 		this.weight = 60;
-		this.speedRate = 1.0;
+		this.speedRate = 0.0f;
+		this.speedDecreaseRate = 0.05f;
 		this.strength = 10;
 		this.skill = 10;
 		this.luck = 10;
 		this.backpacks[0].activateBackpack();
 		this.backpacks[1].deactivateBackpack();
 		this.totalWeight = this.weight;
+		this.exp = 0;
 	}
+
 	
-	public void recoverOxygenLevel()
-	{
-		this.oxygenLevel = this.oxygenLevelMax;
-	}
-	
-	public void decreaseOxygenByTick()
-	{
-		this.oxygenLevel -= this.oxygenCosumptionRate;
-	}
-	
+	//Handling Weight and Backpacks
 	public int getMaxWeightCharCanHandle()
 	{
 		return this.strength * 6;
@@ -85,27 +75,51 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		return characterReturnCode.failure; 
 	}
 	
-	public double getSpeedRate()
+	
+	//Handling Speed
+	public float getSpeedRate()
 	{
 		return this.speedRate;
 	}
 	
+	public void setSpeedRate(float newSpeedRate)
+	{
+		this.speedRate = newSpeedRate;
+	}
+	
+	public void decreaseSpeedByTime()
+	{
+		if (this.speedRate > 0){
+			this.speedRate -= this.speedDecreaseRate;
+		}
+		if (this.speedRate < 0){
+			this.speedRate = 0;
+		}
+	}
+	
+	public void increaseEXPby(int awardedEXP)
+	{
+		this.exp += awardedEXP;
+	}
+	
+	//Handling Resistance
 	public double getResistanceSettings()
 	{
 		return this.totalWeight - this.strength*6;
 	}
 
+	
+	//Other important methods
     public String getValue() {
     	// @TODO Need to find a way to steam the class
-    	String rVal = "" + oxygenLevel + "\t"
-    			+ oxygenCosumptionRate + "\t"
-    			+ oxygenLevelMax + "\t"
-    			+ weight + "\t"
+    	String rVal = "" + weight + "\t"
     			+ totalWeight + "\t"
     			+ speedRate + "\t"
+    			+ speedDecreaseRate + "\t"
     			+ strength + "\t"
     			+ skill + "\t"
     			+ luck + "\t"
+    			+ exp + "\t"
     			;
     	
     	System.out.println("[BiGX] GET VALUE CHAR PROPERTY");
@@ -118,21 +132,19 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
     	// @TODO Need to find a way to unstream a string to this class
     	String[] arrayOfValue = value.split("\t");
     	
-    	if(arrayOfValue.length < 9)
+    	if(arrayOfValue.length < 8)
     	{
     		System.out.println("[BiGX] Character Property is Empty");
     		return;
     	}
-
-    	this.oxygenLevel = Double.parseDouble(arrayOfValue[0]);
-    	this.oxygenCosumptionRate = Double.parseDouble(arrayOfValue[1]);
-    	this.oxygenLevelMax = Double.parseDouble(arrayOfValue[2]);
-    	this.weight = Integer.parseInt(arrayOfValue[3]);
-    	this.totalWeight = Integer.parseInt(arrayOfValue[4]);
-    	this.speedRate = Double.parseDouble(arrayOfValue[5]);
-    	this.strength = Integer.parseInt(arrayOfValue[6]);
-    	this.skill = Integer.parseInt(arrayOfValue[7]);
-    	this.luck = Integer.parseInt(arrayOfValue[8]);
+    	this.weight = Integer.parseInt(arrayOfValue[0]);
+    	this.totalWeight = Integer.parseInt(arrayOfValue[1]);
+    	this.speedRate = Float.parseFloat(arrayOfValue[2]);
+    	this.speedDecreaseRate = Float.parseFloat(arrayOfValue[3]);
+    	this.strength = Integer.parseInt(arrayOfValue[4]);
+    	this.skill = Integer.parseInt(arrayOfValue[5]);
+    	this.luck = Integer.parseInt(arrayOfValue[6]);
+    	this.exp = Integer.parseInt(arrayOfValue[7]);
     }
 
 	@Override

@@ -57,15 +57,12 @@ public class ClientEventHandler {
 
 				// Degrade the current player's speed
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-				float degradation = 0.05f;
-                if(context.getSpeed() >= 0){
-					context.setSpeed((float) Math.max(0,context.getSpeed()-degradation));
-				}
-				else{
-					context.setSpeed((float) Math.min(0,context.getSpeed()+degradation));
-					System.out.println("Negative Velocity: " + context.getSpeed());
-				}
-				float moveSpeed = context.getSpeed();
+				// Degrade the current player's speed
+				BiGX.characterProperty.decreaseSpeedByTime();
+				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+				float moveSpeed = 0;
+				
+				
 				//getRotationYawHead() returns player's angle in degrees - 90
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
 				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
