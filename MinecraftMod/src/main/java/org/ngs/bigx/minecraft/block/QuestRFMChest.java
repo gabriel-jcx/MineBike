@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft.entity.block;
+package org.ngs.bigx.minecraft.block;
 
 import java.util.Random;
 
