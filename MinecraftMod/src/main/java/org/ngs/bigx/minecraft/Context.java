@@ -49,6 +49,7 @@ public class Context implements eyeTrackerListner {
 	private boolean questsEnabled = true;
 	private float rotationX;
 	public Queue<QuestEvent> questEventQueue;
+	public int shoeEnergy = 0;
 	
 	public float getRotationX() {
 		return rotationX;
@@ -144,6 +145,12 @@ public class Context implements eyeTrackerListner {
 	
 	public void setSpeed(float speed) {
 		this.speed = speed;
+		this.shoeEnergy += speed;
+		
+		if( (this.shoeEnergy < 0) || (this.shoeEnergy > 500) )
+		{
+			this.shoeEnergy = 500;
+		}
 	}
 	
 	public float getSpeed() {

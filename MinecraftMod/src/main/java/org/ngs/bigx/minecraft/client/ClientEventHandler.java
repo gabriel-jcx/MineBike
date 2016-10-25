@@ -64,9 +64,25 @@ public class ClientEventHandler {
 				
 				
 				//getRotationYawHead() returns player's angle in degrees - 90
-				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
-				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
-				p.setVelocity(xt, p.motionY, zt);
+//				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
+//				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
+//				p.setVelocity(xt, p.motionY, zt);
+				
+				/*
+				 * TODO: TEST SHOE ENERGY IDEA (OPTION 3)
+				 */
+				if(context.shoeEnergy < 10)
+				{
+					p.setVelocity(0, p.motionY, 0);
+				}
+				else
+				{
+					context.shoeEnergy -= 10;
+					System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
+					
+					if(context.shoeEnergy < 0)
+						context.shoeEnergy = 0;
+				} ////// END OF "TEST SHOE ENERGY IDEA"
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
 				else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
@@ -121,23 +137,6 @@ public class ClientEventHandler {
 				}
 				
 				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-				if (context.questManager.hasQuestPopupShown()==false&&context.questManager.getSuggestedQuest()!=null) {
-//					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
-//					Minecraft.getMinecraft().displayGuiScreen(gui);
-//					context.questManager.showQuestPopup();
-				}
-
-				/// TODO: Challenge 1: Pushing the player to the lava
-				if((player.getEntityWorld().getBlock(1523, 65, 411).getClass()!=BiGX.BlockQuestFRMCheck.getClass()) && ((client_tick%10) == 0) && (context.questManager.getSuggestedQuest()!=null))
-				{
-					// TODO: Need to revise the code to make quest
-					context.questManager.setQuest(context.questManager.getSuggestedQuest());
-					context.questManager.setSuggestedQuest(null);
-					Quest quest = context.questManager.getQuest();
-					quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
-					HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
-					BiGX.network.sendToServer(packet);
-				}
 				
 				if((player.getEntityWorld().isRemote) && ((client_tick%10) == 0))
 				{
