@@ -71,18 +71,25 @@ public class ClientEventHandler {
 				/*
 				 * TODO: TEST SHOE ENERGY IDEA (OPTION 3)
 				 */
-				if(context.shoeEnergy < 10)
+				if(p.moveForward > 0.9f)
 				{
-					p.setVelocity(0, p.motionY, 0);
-				}
-				else
-				{
-					context.shoeEnergy -= 10;
-					System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
-					
-					if(context.shoeEnergy < 0)
-						context.shoeEnergy = 0;
-				} ////// END OF "TEST SHOE ENERGY IDEA"
+					if(context.shoeEnergy < 0.2f)
+					{
+						p.setVelocity(0, p.motionY, 0);
+					}
+					else
+					{
+						context.shoeEnergy -= 0.2f;
+						System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
+						
+						if(context.shoeEnergy < 0)
+							context.shoeEnergy = 0;
+					}
+				}  ////// END OF "TEST SHOE ENERGY IDEA"
+				
+				
+				
+				
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
 				else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}

@@ -49,7 +49,7 @@ public class Context implements eyeTrackerListner {
 	private boolean questsEnabled = true;
 	private float rotationX;
 	public Queue<QuestEvent> questEventQueue;
-	public int shoeEnergy = 0;
+	public float shoeEnergy = 0;
 	
 	public float getRotationX() {
 		return rotationX;
@@ -132,12 +132,12 @@ public class Context implements eyeTrackerListner {
 		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
 			
 			@Override
-			public void onMessageReceive(Event event, BiGXNetPacket packet) {
+			public void onMessageReceive(BiGXNetPacket packet) {
 				BiGXPacketHandler.Handle(bigxclient, packet);
 			}
 			
 			@Override
-			public void onConnectedMessageReceive(Event event) {
+			public void onConnectedMessageReceive() {
 				System.out.println("This MC is connected to BiGX Game Controller");
 			}
 		});
@@ -151,6 +151,8 @@ public class Context implements eyeTrackerListner {
 		{
 			this.shoeEnergy = 500;
 		}
+		
+		System.out.println("this.shoeEnergy[" + this.shoeEnergy + "] speed[" + speed + "]");
 	}
 	
 	public float getSpeed() {
