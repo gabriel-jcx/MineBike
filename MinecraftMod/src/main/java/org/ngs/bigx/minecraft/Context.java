@@ -49,7 +49,13 @@ public class Context implements eyeTrackerListner {
 	private boolean questsEnabled = true;
 	private float rotationX;
 	public Queue<QuestEvent> questEventQueue;
+	
+	/* TODO: Need to be removed before production
+	 * SHOE TESTING
+	 */
 	public float shoeEnergy = 0;
+	public boolean isSubtleModeOn = false;
+	///// END OF SHOE TESTING
 	
 	public float getRotationX() {
 		return rotationX;

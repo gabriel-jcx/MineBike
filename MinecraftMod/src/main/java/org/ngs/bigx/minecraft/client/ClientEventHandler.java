@@ -60,31 +60,33 @@ public class ClientEventHandler {
 				// Degrade the current player's speed
 				BiGX.characterProperty.decreaseSpeedByTime();
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
-				float moveSpeed = 0;
-				
-				
-				//getRotationYawHead() returns player's angle in degrees - 90
-//				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
-//				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
-//				p.setVelocity(xt, p.motionY, zt);
 				
 				/*
 				 * TODO: TEST SHOE ENERGY IDEA (OPTION 3)
 				 */
-				if(p.moveForward > 0.9f)
+				if(context.isSubtleModeOn)
 				{
-					if(context.shoeEnergy < 0.2f)
+					if(p.moveForward > 0.9f)
 					{
-						p.setVelocity(0, p.motionY, 0);
+						if(context.shoeEnergy < 0.2f)
+						{
+							p.setVelocity(0, p.motionY, 0);
+						}
+						else
+						{
+							context.shoeEnergy -= 0.2f;
+							System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
+							
+							if(context.shoeEnergy < 0)
+								context.shoeEnergy = 0;
+						}
 					}
-					else
-					{
-						context.shoeEnergy -= 0.2f;
-						System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
-						
-						if(context.shoeEnergy < 0)
-							context.shoeEnergy = 0;
-					}
+				}
+				else {
+					float moveSpeed = 0;
+					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
+					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
+					p.setVelocity(xt, p.motionY, zt);
 				}  ////// END OF "TEST SHOE ENERGY IDEA"
 				
 				
