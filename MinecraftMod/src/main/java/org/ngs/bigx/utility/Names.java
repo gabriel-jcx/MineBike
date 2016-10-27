@@ -10,4 +10,8 @@ public class Names {
 	public static class TileEntities {
 		public static final String QUEST_CHEST = BiGX.MODID + ":questChest";
 	}
+	
+	public static class Items {
+		public static final String SHOES = BiGX.MODID + ":shoes";
+	}
 }
