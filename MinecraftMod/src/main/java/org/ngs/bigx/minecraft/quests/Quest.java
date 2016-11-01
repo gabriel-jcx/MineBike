@@ -137,8 +137,8 @@ public abstract class Quest implements QuestStateManagerListener{
 	}
 	
 	/***
-	 * The function completes the current on going quest when the quest was done successfully.
-	 */
+	* The function completes the current on going quest when the quest was done successfully.
+	***/
 	public void complete() {
 		try {
 			this.stateManager.triggerQuestTransition(Trigger.SuccessQuest);			

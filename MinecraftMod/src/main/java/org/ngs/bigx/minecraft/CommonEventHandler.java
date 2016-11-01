@@ -74,7 +74,9 @@ public class CommonEventHandler {
 	
 	public static void makeQuestOnServer()
 	{
-		Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
+		//Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
+		Quest q = BiGX.instance().context.questManager.makeQuest("timedTrack");
+		makeQuestOnServer();
 		
 		for (WorldServer world:MinecraftServer.getServer().worldServers) {
 			List<EntityPlayerMP> playerList = world.playerEntities;

@@ -132,7 +132,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 	    public void postInit(FMLPostInitializationEvent e) {
 	    	proxy.postInit(e);
 	    	
-	    	characterProperty = new CharacterProperty("currentPlayerLoTomPropery");
+	    	characterProperty = new CharacterProperty("currentPlayerLoTomProperty");
 	    	StatRegistry.registerStat(characterProperty, EntityPlayer.class);
 	    	System.out.println("[BiGX] Character Property Init Done");
 	    	
