@@ -21,7 +21,8 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 	private int skill;						// Abstracted skill: Skill to craft items
 	private int luck;						// Abstracted luck: Luck to mine minerals
 	private BackpackProperty[] backpacks = new BackpackProperty[2];	// Two backpacks per character at most (OPTIONAL)
-	private int exp;						
+	private int exp;
+	private int coins;
 	
 
 	public CharacterProperty(String name) {
@@ -43,6 +44,7 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		this.backpacks[1].deactivateBackpack();
 		this.totalWeight = this.weight;
 		this.exp = 0;
+		this.coins = 0;
 	}
 
 	
@@ -102,6 +104,21 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		this.exp += awardedEXP;
 	}
 	
+	public int getCoinAmount()
+	{
+		return this.coins;
+	}
+	
+	public void addCoins(int addedCoins)
+	{
+		this.coins += addedCoins;
+	}
+	
+	public void subCoins(int subtractedCoins)
+	{
+		this.coins -= subtractedCoins;
+	}
+	
 	//Handling Resistance
 	public double getResistanceSettings()
 	{
@@ -120,6 +137,7 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
     			+ skill + "\t"
     			+ luck + "\t"
     			+ exp + "\t"
+    			+ coins + "\t"
     			;
     	
     	System.out.println("[BiGX] GET VALUE CHAR PROPERTY");
@@ -132,7 +150,7 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
     	// @TODO Need to find a way to unstream a string to this class
     	String[] arrayOfValue = value.split("\t");
     	
-    	if(arrayOfValue.length < 8)
+    	if(arrayOfValue.length < 9)
     	{
     		System.out.println("[BiGX] Character Property is Empty");
     		return;
@@ -145,6 +163,7 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
     	this.skill = Integer.parseInt(arrayOfValue[5]);
     	this.luck = Integer.parseInt(arrayOfValue[6]);
     	this.exp = Integer.parseInt(arrayOfValue[7]);
+    	this.coins = Integer.parseInt(arrayOfValue[8]);
     }
 
 	@Override

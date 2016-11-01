@@ -9,6 +9,8 @@ import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestLoot;
+import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
 import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
@@ -27,6 +29,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
@@ -39,6 +42,7 @@ public class ClientEventHandler {
 		}
 		
 		int client_tick = 0;
+		QuestLootDatabase lootDatabase = new QuestLootDatabase();
 		
 		//Called whenever the client ticks
 		@SubscribeEvent
@@ -120,13 +124,38 @@ public class ClientEventHandler {
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
 				
+				//Quest Code
+
 				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 				if (context.questManager.hasQuestPopupShown()==false&&context.questManager.getSuggestedQuest()!=null) {
-//					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
-//					Minecraft.getMinecraft().displayGuiScreen(gui);
-//					context.questManager.showQuestPopup();
+					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
+					Minecraft.getMinecraft().displayGuiScreen(gui);
+					context.questManager.showQuestPopup();
 				}
-
+				
+				if(this.context.questManager.getQuest() != null)
+				{
+					if(this.context.questManager.getQuest().getStateMachine() == State.QuestInProgress)
+					{
+						boolean isQuestComplete = this.context.questManager.getQuest().checkComplete(player.getDisplayName());
+						if(isQuestComplete)
+						{
+							System.out.println("Quest is Complete.");
+							//Handle the reward
+							QuestLoot sampleLoot = lootDatabase.GetReward("SampleQuest1");
+							BiGX.characterProperty.addCoins(sampleLoot.GetCoins());
+							BiGX.characterProperty.increaseEXPby(sampleLoot.GetExperience());
+							ItemStack[] loot = sampleLoot.GetLoot();
+							for (int i = 0; loot[i]!=null; i++)
+								player.inventory.addItemStackToInventory(loot[i]);
+							
+							HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
+							BiGX.network.sendToServer(packet);
+						}
+					}
+				}
+				
+/*
 				/// TODO: Challenge 1: Pushing the player to the lava
 				if((player.getEntityWorld().getBlock(1523, 65, 411).getClass()!=BiGX.BlockQuestFRMCheck.getClass()) && ((client_tick%10) == 0) && (context.questManager.getSuggestedQuest()!=null))
 				{
@@ -172,6 +201,7 @@ public class ClientEventHandler {
 				}
 
 				GuiStats.tick++;
+*/			
 			}
 		}
 		
