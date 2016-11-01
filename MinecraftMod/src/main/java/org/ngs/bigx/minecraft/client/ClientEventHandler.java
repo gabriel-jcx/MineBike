@@ -16,12 +16,14 @@ import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -33,12 +35,22 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 public class ClientEventHandler {
 	
 		private Context context;
+		public static KeyBinding keyBindingTogglePedalingMode;
 		
 		public ClientEventHandler(Context con) {
 			context = con;
 		}
 		
 		int client_tick = 0;
+		
+		@SubscribeEvent
+		public void onKeyInput(KeyInputEvent event) {
+			if (keyBindingTogglePedalingMode.isPressed()) {
+//				PacketDispatcher.sendToServer(new OpenGuiMessage(TutorialMain.GUI_CUSTOM_INV));
+				System.out.println("BiGX Shoe Toggle Key Pressed");
+				context.isSubtleModeOn ^= true;
+			}
+		}
 		
 		//Called whenever the client ticks
 		@SubscribeEvent
@@ -83,7 +95,7 @@ public class ClientEventHandler {
 					}
 				}
 				else {
-					float moveSpeed = 0;
+					float moveSpeed = context.getSpeed()/2;
 					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
 					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
 					p.setVelocity(xt, p.motionY, zt);

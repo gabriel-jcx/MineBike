@@ -4,6 +4,7 @@ import java.awt.Event;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonProxy;
 import org.ngs.bigx.minecraft.Context;
@@ -24,8 +25,11 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -42,6 +46,9 @@ public class ClientProxy extends CommonProxy {
     	MinecraftForge.EVENT_BUS.register(new GuiQuest(context,Minecraft.getMinecraft()));
     	
     	context.initBigX();
+    	
+    	ClientEventHandler.keyBindingTogglePedalingMode = new KeyBinding("key.togglebigxshoe", Keyboard.KEY_K, "bigx.key.togglebigxshoe");
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingTogglePedalingMode);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());
@@ -61,5 +68,8 @@ public class ClientProxy extends CommonProxy {
 			e1.printStackTrace();
 		}
 	}
-
+	
+	
+	
+	
 }
