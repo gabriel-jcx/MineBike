@@ -47,7 +47,7 @@ public class BiGXPacketHandler {
 						change *= -1;
 					}
 					
-					// System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
+//					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
 					if(context.getSpeed() + ((double)change) >= 0){
 						context.setSpeed( (float) Math.min( BiGXConstants.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change * .1f), 0 ) ) );
@@ -55,6 +55,8 @@ public class BiGXPacketHandler {
 					else{
 						context.setSpeed( (float) Math.max( BiGXConstants.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .1f), 0 ) ) );
 					}
+					
+					context.increaseShoeEnergy(context.getSpeed());
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.specification.dataType.TIMELAPSE_HEARTRATEREQUIREMENT:

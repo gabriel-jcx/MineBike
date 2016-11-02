@@ -151,22 +151,21 @@ public class Context implements eyeTrackerListner {
 	
 	public void setSpeed(float speed) {
 		this.speed = speed;
-		this.shoeEnergy += speed;
-		
-		if( (this.shoeEnergy < 0) || (this.shoeEnergy > 500) )
-		{
-			this.shoeEnergy = 500;
-		}
-		
-		System.out.println("this.shoeEnergy[" + this.shoeEnergy + "] speed[" + speed + "]");
 	}
 	
 	public float getSpeed() {
 		return speed;
 	}
-	
-	
+
+	public void increaseShoeEnergy(float shoeEnergy) {
+		this.shoeEnergy += shoeEnergy;
 		
+		if( (this.shoeEnergy > 500) )
+		{
+			this.shoeEnergy = 500;
+		}
+	}
+
 	public int getID() {
 		ID++;
 		return ID;

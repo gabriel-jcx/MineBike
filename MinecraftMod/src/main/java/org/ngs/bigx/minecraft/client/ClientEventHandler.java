@@ -80,25 +80,44 @@ public class ClientEventHandler {
 				{
 					if(p.moveForward > 0.9f)
 					{
-						if(context.shoeEnergy < 0.2f)
+						if(context.shoeEnergy < 0.9f)
 						{
+							context.shoeEnergy = 0;
 							p.setVelocity(0, p.motionY, 0);
 						}
 						else
 						{
-							context.shoeEnergy -= 0.2f;
-							System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
+							context.shoeEnergy -= 0.8f;
 							
 							if(context.shoeEnergy < 0)
 								context.shoeEnergy = 0;
+							
+							System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
 						}
+					}
+					else{
+						context.shoeEnergy -= 0.6f;
 					}
 				}
 				else {
-					float moveSpeed = context.getSpeed()/2;
-					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
-					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed * 4;
+					float moveSpeed = context.getSpeed()/4;
+					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 					p.setVelocity(xt, p.motionY, zt);
+					
+//					float degradation = 0.05f;
+//	                if(context.getSpeed() >= 0){
+//						context.setSpeed((float) Math.max(0,context.getSpeed()-degradation));
+//					}
+//					else{
+//						context.setSpeed((float) Math.min(0,context.getSpeed()+degradation));
+//						System.out.println("Negative Velocity: " + context.getSpeed());
+//					}
+//					float moveSpeed = context.getSpeed()/4;
+//					//getRotationYawHead() returns player's angle in degrees - 90
+//					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+//					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+//					p.setVelocity(xt, p.motionY, zt);
 				}  ////// END OF "TEST SHOE ENERGY IDEA"
 				
 				
