@@ -175,8 +175,8 @@ public class ClientEventHandler {
 					buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
 					buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
 //					buf.putFloat(context.resistance);
-					BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.specification.command.REQ_SEND_DATA, 0x0100, 
-							org.ngs.bigx.dictionary.protocol.specification.dataType.RESISTANCE, buf.array());
+					BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
+							org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
 				

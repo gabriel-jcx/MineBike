@@ -20,7 +20,7 @@ public class BiGXPacketHandler {
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
 		Context context = BiGX.instance().context;
 		switch (packet.deviceEvent) {
-			case org.ngs.bigx.dictionary.protocol.specification.dataType.ROTATIONSTATE:
+			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATIONSTATE:
 				if (Minecraft.getMinecraft().thePlayer!=null) {
 					int old_rotation = context.rotation;
 					int new_rotation = buf.getInt();
@@ -35,10 +35,10 @@ public class BiGXPacketHandler {
 					} 
 				}
 			break;
-			case org.ngs.bigx.dictionary.protocol.specification.dataType.HEART:
+			case org.ngs.bigx.dictionary.protocol.Specification.DataType.HEART:
 				context.heartrate = buf.getInt();
 			break;
-			case org.ngs.bigx.dictionary.protocol.specification.dataType.MOVE_FORWARDBACKWARD:
+			case org.ngs.bigx.dictionary.protocol.Specification.DataType.MOVE_FORWARDBACKWARD:
 				if (Minecraft.getMinecraft().thePlayer!=null) {
 					int change = packet.data[1] | (packet.data[2] << 8);
 					
@@ -59,7 +59,7 @@ public class BiGXPacketHandler {
 					context.increaseShoeEnergy(context.getSpeed());
 				}
 			break;
-			case org.ngs.bigx.dictionary.protocol.specification.dataType.TIMELAPSE_HEARTRATEREQUIREMENT:
+			case org.ngs.bigx.dictionary.protocol.Specification.DataType.TIMELAPSE_HEARTRATEREQUIREMENT:
 				context.timeSpent = packet.data[1];
 				context.timeSpentSmall = packet.data[2];
 			break;

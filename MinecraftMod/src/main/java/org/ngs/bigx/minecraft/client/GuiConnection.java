@@ -82,7 +82,7 @@ public class GuiConnection extends GuiScreen {
 			case 2:
 				break;
 			case 3:
-				this.context.bigxclient.send(new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.specification.command.REQ_SET_USERNAME, 
+				this.context.bigxclient.send(new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SET_USERNAME, 
 						0, 0, this.context.BiGXUserName.getBytes()));
 				this.mc.displayGuiScreen(this.back);
 				break;
