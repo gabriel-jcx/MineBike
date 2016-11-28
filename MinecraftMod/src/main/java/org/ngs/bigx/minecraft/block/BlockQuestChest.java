@@ -68,6 +68,7 @@ public class BlockQuestChest extends BlockContainer {
     @Override
     public void breakBlock(World world, int i, int j, int k, Block block, int n)
     {
+    	/*
     	TileEntityQuestChest te = (TileEntityQuestChest) world.getTileEntity(i, j, k);
     	if (te != null)
     	{
@@ -105,7 +106,7 @@ public class BlockQuestChest extends BlockContainer {
                 }
     		}
     	}
-    	
+    	*/
     	super.breakBlock(world, i, j, k, block, n);
     }
     
@@ -154,9 +155,11 @@ public class BlockQuestChest extends BlockContainer {
     @Override
     public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int i1, float f1, float f2, float f3)
     {
+    	TileEntity tE = world.getTileEntity(i, j, k);
+    	
     	if (!world.isRemote)
     	{
-    		player.openGui(BiGX.instance(), BiGX.GUI_ENUM.QUEST_COMPLETE.ordinal(), world, i, j, k);
+    		return ((TileEntityQuestChest) tE).activate(world, i, j, k, player);
     	}
     	return true;
     }

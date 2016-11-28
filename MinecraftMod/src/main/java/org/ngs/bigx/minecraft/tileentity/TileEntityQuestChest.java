@@ -1,5 +1,8 @@
 package org.ngs.bigx.minecraft.tileentity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.ngs.bigx.minecraft.BiGX;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
 public class TileEntityQuestChest extends TileEntity implements IInventory {
 	
@@ -17,12 +21,29 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 	private int facing;
 	private int playerUsing;
 	
+	String userName;
+	
+	public Map<String, ItemStack[]> playerContents;
 	public ItemStack[] chestContents;
 	private String customName;
 	
 	public TileEntityQuestChest()
 	{
 		chestContents = new ItemStack[getSizeInventory()];
+		playerContents = new HashMap<String, ItemStack[]>();
+		
+		playerContents.put("", chestContents);
+	}
+	
+	public boolean activate(World world, int x, int y, int z, EntityPlayer player) {
+		
+		if (this.isUseableByPlayer(player)) {
+			if (playerContents.get(player.getDisplayName()) == null) {
+				playerContents.put(player.getDisplayName(), new ItemStack[getSizeInventory()]);
+			}
+			player.openGui(BiGX.instance(), BiGX.GUI_ENUM.QUEST_COMPLETE.ordinal(), world, x, y, z);
+		}
+		return true;
 	}
 	
 	public String getCustomName()
@@ -42,15 +63,30 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int i) {
-		if (i < 0 || i >= getSizeInventory())
+		return getStackInSlot("", i);
+		/*
+		if (!indexInInventory(i))
 		{
 			return null;
 		}
 		return chestContents[i];
+		*/
+	}
+	
+	public ItemStack getStackInSlot(String p, int i) {
+		// TODO figure out method of using p to access player-specific inventories
+		// (currently defaults to blank string for default inventory)
+		if (!indexInInventory(i))
+		{
+			return null;
+		}
+		return playerContents.get(p)[i];
 	}
 	
 	@Override
 	public ItemStack decrStackSize(int index, int count) {
+		return decrStackSize("", index, count);
+		/*
 	    if (getStackInSlot(index) != null) {
 	        ItemStack itemStack;
 
@@ -75,17 +111,56 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 	    } else {
 	        return null;
 	    }
+	    */
 	}
+	
+	public ItemStack decrStackSize(String p, int i, int count) {
+		if (getStackInSlot(p, i) != null) {
+			ItemStack itemStack;
+			
+			if (getStackInSlot(p, i).stackSize <= count) {
+				itemStack = getStackInSlot(p, i);
+				setInventorySlotContents(p, i, null);
+				markDirty();
+				return itemStack;
+			} else {
+				itemStack = getStackInSlot(p, i).splitStack(count);
+				
+				if (getStackInSlot(p, i).stackSize <= 0) {
+					setInventorySlotContents(p, i, null);
+				} else {
+					setInventorySlotContents(p, i, this.getStackInSlot(p, i));
+				}
+				
+				markDirty();
+				return itemStack;
+			}
+		} else {
+			return null;
+		}
+	}
+	
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
+		return getStackInSlotOnClosing("", i);
+		/*
 		ItemStack itemStack = getStackInSlot(i);
 		setInventorySlotContents(i, null);
 		return itemStack;
+		*/
 	}
-
+	
+	public ItemStack getStackInSlotOnClosing(String p, int i) {
+		ItemStack itemStack = getStackInSlot(p, i);
+		setInventorySlotContents(p, i, null);
+		return itemStack;
+	}
+	
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemStack) {
-		if (i < 0 || i >= getSizeInventory())
+		setInventorySlotContents("", i, itemStack);
+		/*
+		if (indexInInventory(i))
 		{
 			return;
 		}
@@ -100,8 +175,26 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		}
 		chestContents[i] = itemStack;
 		markDirty();
+		*/
 	}
 
+	public void setInventorySlotContents(String p, int i, ItemStack itemStack) {
+		if (indexInInventory(i))
+		{
+			return;
+		}
+		if (itemStack != null && itemStack.stackSize > getInventoryStackLimit())
+		{
+			itemStack.stackSize = getInventoryStackLimit();
+		}
+		if (itemStack != null && itemStack.stackSize == 0)
+		{
+			itemStack = null;
+		}
+		playerContents.get(p)[i] = itemStack;
+		markDirty();
+	}
+	
 	@Override
 	public String getInventoryName() {
 		if (hasCustomInventoryName())
@@ -210,5 +303,9 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 	    if (nbt.hasKey("CustomName", 8)) {
 	        this.setCustomName(nbt.getString("CustomName"));
 	    }
+	}
+	
+	public boolean indexInInventory(int i) {
+		return (i > 0 || i <= getSizeInventory());
 	}
 }
