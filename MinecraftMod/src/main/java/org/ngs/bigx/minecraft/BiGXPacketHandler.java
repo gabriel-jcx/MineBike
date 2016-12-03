@@ -19,6 +19,9 @@ public class BiGXPacketHandler {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
 		Context context = BiGX.instance().context;
+		
+		
+		
 		switch (packet.deviceEvent) {
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATIONSTATE:
 				if (Minecraft.getMinecraft().thePlayer!=null) {

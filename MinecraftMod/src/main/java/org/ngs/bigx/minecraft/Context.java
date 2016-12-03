@@ -48,6 +48,10 @@ public class Context implements eyeTrackerListner {
 	private int ID = 0;
 	private boolean questsEnabled = true;
 	private float rotationX;
+	
+	// TODO: Buffer instance to add the packet data in.
+	public ArrayList<byte[]>
+	
 	public Queue<QuestEvent> questEventQueue;
 	
 	/* TODO: Need to be removed before production
@@ -145,6 +149,17 @@ public class Context implements eyeTrackerListner {
 			@Override
 			public void onConnectedMessageReceive() {
 				System.out.println("This MC is connected to BiGX Game Controller");
+				
+				// TODO: Prepare the Vector to cache the received data
+				
+				
+				// Request Quest Design
+				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_GAME_DESIGN_HANDSHAKE, 
+						0, 0, new byte[9]);
+				BiGXPacketHandler.sendPacket(bigxclient, packet);
+				
+				
+				asdfa
 			}
 		});
 	}
