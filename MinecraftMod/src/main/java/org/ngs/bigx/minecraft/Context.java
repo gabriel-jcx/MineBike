@@ -4,9 +4,11 @@ import java.awt.Event;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
+import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
@@ -29,6 +33,9 @@ import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
+import org.ngs.bigx.dictionary.protocol.Specification.Command;
+
+import com.google.gson.Gson;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -50,7 +57,11 @@ public class Context implements eyeTrackerListner {
 	private float rotationX;
 	
 	// TODO: Buffer instance to add the packet data in.
-	public ArrayList<byte[]>
+	private Hashtable<Integer, byte[]> bufferQuestDesign = new Hashtable<Integer, byte[]>();
+	private int bufferQuestDesignFragmentationNumber = 0;
+	private int bufferQuestDesignChunkNumber = 0;
+	private BiGXSuggestedGameProperties suggestedGameProperties = null;
+	private boolean suggestedGamePropertiesReady = false;
 	
 	public Queue<QuestEvent> questEventQueue;
 	
@@ -143,23 +154,101 @@ public class Context implements eyeTrackerListner {
 			
 			@Override
 			public void onMessageReceive(BiGXNetPacket packet) {
-				BiGXPacketHandler.Handle(bigxclient, packet);
+				int index = 0;
+				
+				if(packet.commandId == Command.TX_GAME_DESIGN)
+				{
+					int fragmentationIndex = packet.sourceDevice; 
+					int chunkIndex = packet.deviceEvent;
+
+					// Calculate the index of the received quest design String
+					index = fragmentationIndex * 256 + chunkIndex;
+					
+					// Push the packet data to the bufferQuestDesign
+					bufferQuestDesign.put(index, Arrays.copyOfRange(packet.data, 2, packet.data.length-1));
+				}
+				else if(packet.commandId == Command.ACK_GAME_DESIGN_HANDSHAKE)
+				{
+					// Assign the  bufferQuestDesignFragmentationNumber, bufferQuestDesignChunkNumber
+					bufferQuestDesignFragmentationNumber = packet.sourceDevice;
+					bufferQuestDesignChunkNumber = packet.deviceEvent;
+				}
+				else if(packet.commandId == Command.REQ_GAME_DESIGN_DOWNLOAD_VALIDATE)
+				{
+					int i,j,idx=0;
+					boolean downloadedQuestDesignSuccess = true;
+					
+					for(j=0; j<bufferQuestDesignFragmentationNumber; j++)
+					{
+						for(i=0; i<bufferQuestDesignChunkNumber; i++)
+						{
+							idx = j*256 + i;
+							
+							if(!bufferQuestDesign.containsKey(idx))
+							{
+								downloadedQuestDesignSuccess = false;
+							}
+						}
+					}
+					
+					// ACK to download game design download validate
+					bufferQuestDesign.clear();
+					bufferQuestDesignFragmentationNumber = 0;
+					bufferQuestDesignChunkNumber = 0;
+					
+					byte[] tempDataRef = new byte[9];
+					
+					if(downloadedQuestDesignSuccess)
+					{
+						String questDesignString = "";
+						
+						tempDataRef[0] = 0x1;
+						
+						for(idx = 0; idx<bufferQuestDesign.size(); idx++)
+						{
+							questDesignString += Arrays.toString(bufferQuestDesign.get(idx));
+						}
+						
+						try{
+							Gson gson = new Gson();
+							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
+							suggestedGamePropertiesReady = true;
+						}
+						catch (Exception ee){
+							suggestedGameProperties = null;
+							suggestedGamePropertiesReady = false;
+							ee.printStackTrace();
+						}
+					}
+					else
+					{
+						tempDataRef[0] = 0x0;
+						suggestedGamePropertiesReady = false;
+					}
+					
+					packet = new BiGXNetPacket(Command.ACK_GAME_DESIGN_DOWNLOAD_VALIDATE, 
+							0, 0, tempDataRef);
+					BiGXPacketHandler.sendPacket(bigxclient, packet);
+				}
+				else
+				{
+					BiGXPacketHandler.Handle(bigxclient, packet);
+				}
 			}
 			
 			@Override
 			public void onConnectedMessageReceive() {
 				System.out.println("This MC is connected to BiGX Game Controller");
 				
-				// TODO: Prepare the Vector to cache the received data
-				
+				// Prepare & Initialize the buffer to cache the received quest data
+				bufferQuestDesign.clear();
+				bufferQuestDesignFragmentationNumber = 0;
+				bufferQuestDesignChunkNumber = 0;
 				
 				// Request Quest Design
 				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_GAME_DESIGN_HANDSHAKE, 
 						0, 0, new byte[9]);
 				BiGXPacketHandler.sendPacket(bigxclient, packet);
-				
-				
-				asdfa
 			}
 		});
 	}
