@@ -165,7 +165,7 @@ public class Context implements eyeTrackerListner {
 					index = fragmentationIndex * 256 + chunkIndex;
 					
 					// Push the packet data to the bufferQuestDesign
-					bufferQuestDesign.put(index, Arrays.copyOfRange(packet.data, 2, packet.data.length-1));
+					bufferQuestDesign.put(index, Arrays.copyOfRange(packet.data, 2, packet.data.length));
 				}
 				else if(packet.commandId == Command.ACK_GAME_DESIGN_HANDSHAKE)
 				{
@@ -192,7 +192,6 @@ public class Context implements eyeTrackerListner {
 					}
 					
 					// ACK to download game design download validate
-					bufferQuestDesign.clear();
 					bufferQuestDesignFragmentationNumber = 0;
 					bufferQuestDesignChunkNumber = 0;
 					
@@ -206,8 +205,13 @@ public class Context implements eyeTrackerListner {
 						
 						for(idx = 0; idx<bufferQuestDesign.size(); idx++)
 						{
-							questDesignString += Arrays.toString(bufferQuestDesign.get(idx));
+							questDesignString += new String(bufferQuestDesign.get(idx));
+//							System.out.println(Arrays.toString(bufferQuestDesign.get(idx)));
 						}
+						
+						questDesignString = questDesignString.trim();
+						
+						System.out.println(questDesignString);
 						
 						try{
 							Gson gson = new Gson();
@@ -229,6 +233,8 @@ public class Context implements eyeTrackerListner {
 					packet = new BiGXNetPacket(Command.ACK_GAME_DESIGN_DOWNLOAD_VALIDATE, 
 							0, 0, tempDataRef);
 					BiGXPacketHandler.sendPacket(bigxclient, packet);
+					
+					bufferQuestDesign.clear();
 				}
 				else
 				{
