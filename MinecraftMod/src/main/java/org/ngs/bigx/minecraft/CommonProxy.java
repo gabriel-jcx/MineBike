@@ -3,7 +3,7 @@ package org.ngs.bigx.minecraft;
 import java.awt.Event;
 
 import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -22,10 +22,11 @@ public class CommonProxy {
 	CommonEventHandler events = new CommonEventHandler();
 	
 	public void preInit(FMLPreInitializationEvent e) {
-		DimensionManager.registerProviderType(WorldProviderQuests.dimID, WorldProviderQuests.class, true);
-		DimensionManager.registerDimension(WorldProviderQuests.dimID, WorldProviderQuests.dimID);
+		DimensionManager.registerProviderType(WorldProviderFlats.dimID, WorldProviderFlats.class, true);
+		DimensionManager.registerDimension(WorldProviderFlats.dimID, WorldProviderFlats.dimID);
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);
+    	MinecraftForge.TERRAIN_GEN_BUS.register(events);
     }
 
     public void init(FMLInitializationEvent e) {

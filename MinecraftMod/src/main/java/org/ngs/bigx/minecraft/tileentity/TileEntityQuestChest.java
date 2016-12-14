@@ -38,8 +38,11 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 	public boolean activate(World world, int x, int y, int z, EntityPlayer player) {
 		
 		if (this.isUseableByPlayer(player)) {
-			if (playerContents.get(player.getDisplayName()) == null) {
+			if (playerContents.get(player.getDisplayName()) == null)
+			{
 				playerContents.put(player.getDisplayName(), new ItemStack[getSizeInventory()]);
+			} else {
+				// playerContents.put(player.getDisplayName(), );
 			}
 			player.openGui(BiGX.instance(), BiGX.GUI_ENUM.QUEST_COMPLETE.ordinal(), world, x, y, z);
 		}

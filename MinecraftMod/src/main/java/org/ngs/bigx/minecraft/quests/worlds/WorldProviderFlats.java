@@ -4,27 +4,33 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderFlat;
 
-public class WorldProviderQuests extends WorldProvider {
-
+public class WorldProviderFlats extends WorldProvider {
 	
-	public static int dimID = 20;
-
+	public static int dimID = 100;
+	public static int flatBiomeID = 50;
+	public static String dimName = "Quest World";
+	private static String flatGenPreset = "2;7,5x1,3x3,2;" + Integer.toString(flatBiomeID) + ";decoration";
+	
 	@Override
 	public String getDimensionName() {
-		return "Quest World";
+		return dimName;
 	}
 	
 	public void registerWorldChunkManager() {
 		this.dimensionId = dimID;
-		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(BiomeGenBase.hell, this.dimensionId);
+		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(50), 0F);
 		this.hasNoSky = false;
+		this.terrainType = WorldType.FLAT;
+		
 	}
 	
 	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderQuests(this.worldObj, this.worldObj.getSeed(), false);
+		return new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), false, flatGenPreset);
 	}
 	
 	public int getAverageGroundLevel() {
@@ -81,5 +87,15 @@ public class WorldProviderQuests extends WorldProvider {
 	public float getCloudHeight() {
 		return 128.0F;
 	}
-
+	
+	@Override
+	public float calculateCelestialAngle(long var1, float var2) {
+		// Day is perpetual
+		return 0.9F;
+	}
+	
+	@Override
+	public double getHorizon() {
+		return 0.0D;
+	}
 }

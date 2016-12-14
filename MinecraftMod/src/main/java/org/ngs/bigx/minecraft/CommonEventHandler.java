@@ -1,44 +1,26 @@
 package org.ngs.bigx.minecraft;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
-import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
-import org.ngs.bigx.minecraft.quests.QuestRun;
+import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class CommonEventHandler {
@@ -64,11 +46,22 @@ public class CommonEventHandler {
 		//context.unloadWorld();
 	}
 	
+	// TODO BUG: Player transports to Quest World when items are used (leaving in for testing purposes)
 	@SubscribeEvent
 	public void onPlayerJoin(PlayerUseItemEvent.Start event) {
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
+		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		if (ws!=null&&event.entity instanceof EntityPlayerMP) {
 			new QuestTeleporter(ws).teleport(event.entity, ws);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {
+		if (event.world.provider.getDimensionName() == WorldProviderFlats.dimName) {
+			if (event.type == DecorateBiomeEvent.Decorate.EventType.PUMPKIN) {
+				// Stops the specified EventType from decorating during chunk generation
+				event.setResult(Result.DENY);
+			}
 		}
 	}
 	

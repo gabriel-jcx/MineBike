@@ -14,7 +14,7 @@ import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderQuests;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
 import scala.reflect.internal.Trees.This;
 import net.minecraft.client.Minecraft;
@@ -200,7 +200,7 @@ public abstract class Quest implements QuestStateManagerListener{
 		
 		if (!isServerSide()) return;
 		
-		questWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderQuests.dimID);
+		questWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		
 		new Thread()
 		{

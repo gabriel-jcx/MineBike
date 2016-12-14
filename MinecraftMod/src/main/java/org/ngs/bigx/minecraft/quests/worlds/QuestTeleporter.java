@@ -50,7 +50,7 @@ public class QuestTeleporter extends Teleporter {
         double dy = y;
         double dz = z;
         
-
+        System.out.println("RUNNING FROM TELEPORT METHOD");
         // check for zeros
         if (dx == 0 && dy == 0 && dz == 0) {
            
