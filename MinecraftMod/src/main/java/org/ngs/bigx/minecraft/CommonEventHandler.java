@@ -3,6 +3,9 @@ package org.ngs.bigx.minecraft;
 import java.util.Collection;
 import java.util.List;
 
+import org.ngs.bigx.minecraft.entity.lotom.EntityCommandPlayer;
+import org.ngs.bigx.minecraft.entity.lotom.EntityCommandPlayerFactory;
+import org.ngs.bigx.minecraft.networking.CommandMessage;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
@@ -12,9 +15,9 @@ import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -22,6 +25,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
+
 
 public class CommonEventHandler {
 	
@@ -46,12 +50,21 @@ public class CommonEventHandler {
 		//context.unloadWorld();
 	}
 	
-	// TODO BUG: Player transports to Quest World when items are used (leaving in for testing purposes)
+	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
-	public void onPlayerJoin(PlayerUseItemEvent.Start event) {
+	public void onItemUse(PlayerUseItemEvent.Start event) {
 		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
-		if (ws!=null&&event.entity instanceof EntityPlayerMP) {
-			new QuestTeleporter(ws).teleport(event.entity, ws);
+		if (ws != null && event.entity instanceof EntityPlayerMP) {
+			QuestTeleporter teleporter = new QuestTeleporter(ws);
+			teleporter.teleport(event.entity, ws);
+			EntityCommandPlayer command = EntityCommandPlayerFactory.get(ws);
+			if (command.dimension != WorldProviderFlats.dimID) {
+				teleporter.teleport(command, ws);
+			}
+			command.setPosition(10D, 15D, 0D);
+			BiGX.network.sendToServer(new CommandMessage("/noppes npc Thief create"));
+			//command.sendCommand("/ping");
+			//command.sendCommand("/noppes npc Thief create");
 		}
 	}
 	

@@ -1,13 +1,27 @@
 package org.ngs.bigx.minecraft;
 	
-import org.ngs.bigx.utility.Names;
-
-import java.awt.Event;
 import java.io.IOException;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import org.ngs.bigx.minecraft.block.BlockQuestChest;
+import org.ngs.bigx.minecraft.block.QuestRFMChest;
+import org.ngs.bigx.minecraft.entity.item.EntityTank;
+import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
+import org.ngs.bigx.minecraft.entity.lotom.BikeProperty;
+import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
+import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
+import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
+import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
+import org.ngs.bigx.minecraft.networking.CommandMessage;
+import org.ngs.bigx.minecraft.networking.CommandMessageHandler;
+import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
+import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
+import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
+import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
+import org.ngs.bigx.utility.Names;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -18,40 +32,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.ngs.bigx.input.tobiieyex.eyeTracker;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
-import org.ngs.bigx.minecraft.block.BlockQuestChest;
-import org.ngs.bigx.minecraft.block.QuestRFMChest;
-import org.ngs.bigx.minecraft.entity.item.EntityTank;
-import org.ngs.bigx.minecraft.entity.item.ItemQuestChest;
-import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
-import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
-import org.ngs.bigx.minecraft.entity.lotom.BikeProperty;
-import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
-import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
-import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
-import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
-import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
-import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
-import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
-import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
-import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 
 @Mod (modid = BiGX.MODID, name = BiGX.MODNAME, version = BiGX.VERSION)
 
@@ -105,6 +90,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetNullPointerException;
 
 	    	network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
 	    	network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
+	    	
+	    	network.registerMessage(CommandMessageHandler.class, CommandMessage.class, 5, Side.SERVER);
 	    	
 	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
 	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
