@@ -1,19 +1,5 @@
 package foxz.command;
 
-import foxz.command.CmdClone;
-import foxz.command.CmdConfig;
-import foxz.command.CmdDialog;
-import foxz.command.CmdFaction;
-import foxz.command.CmdNpc;
-import foxz.command.CmdQuest;
-import foxz.command.CmdScript;
-import foxz.commandhelper.ChMcLogger;
-import foxz.commandhelper.annotations.Command;
-import foxz.commandhelper.annotations.SubCommand;
-import foxz.commandhelper.permissions.OpOnly;
-import foxz.commandhelper.permissions.ParamCheck;
-import foxz.commandhelper.permissions.PlayerOnly;
-import foxz.utils.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +7,16 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import foxz.commandhelper.ChMcLogger;
+import foxz.commandhelper.annotations.Command;
+import foxz.commandhelper.annotations.SubCommand;
+import foxz.commandhelper.permissions.OpOnly;
+import foxz.commandhelper.permissions.ParamCheck;
+import foxz.commandhelper.permissions.PlayerOnly;
+import foxz.utils.Utils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;

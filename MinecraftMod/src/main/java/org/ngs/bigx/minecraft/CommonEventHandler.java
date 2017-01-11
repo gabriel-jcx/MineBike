@@ -14,17 +14,23 @@ import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import foxz.command.CmdNpc;
+import foxz.command.CommandNoppes;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import noppes.npcs.entity.EntityCustomNpc;
 
 
 public class CommonEventHandler {
@@ -57,14 +63,8 @@ public class CommonEventHandler {
 		if (ws != null && event.entity instanceof EntityPlayerMP) {
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
 			teleporter.teleport(event.entity, ws);
-			EntityCommandPlayer command = EntityCommandPlayerFactory.get(ws);
-			if (command.dimension != WorldProviderFlats.dimID) {
-				teleporter.teleport(command, ws);
-			}
-			command.setPosition(10D, 15D, 0D);
-			BiGX.network.sendToServer(new CommandMessage("/noppes npc Thief create"));
-			//command.sendCommand("/ping");
-			//command.sendCommand("/noppes npc Thief create");
+			EntityPlayerMP player = (EntityPlayerMP)event.entity;
+			NpcCommand.spawnNpc(0f, 5f, 10f, ws, "Thief");
 		}
 	}
 	

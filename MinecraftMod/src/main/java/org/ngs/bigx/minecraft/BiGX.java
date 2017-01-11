@@ -29,10 +29,12 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import foxz.command.CommandNoppes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -127,7 +129,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
 	    	System.out.println("[BiGX] Bike Property Init Done");
 	    }
-	     
+	    
 	    public static BiGX instance() {
 	    	return instance;
 	    }
