@@ -6,7 +6,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -15,17 +21,21 @@ import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.roles.RoleTransporter;
 
 public class NpcCommand {
 	
 	private EntityCustomNpc npc;
+	private int role; //0=no role, 1=transporter
 	
 	public NpcCommand(EntityCustomNpc npc) {
 		this.npc = npc;
+		this.role = 0;
 	}
 	
 	public void setNPC(EntityCustomNpc npc) {
 		this.npc = npc;
+		this.role = 0;
 	}
 	
 	public static EntityCustomNpc spawnNpc(float x, float y, float z, World w, String name) {
@@ -183,5 +193,24 @@ public class NpcCommand {
 			npc.ai.canSprint = false;
 			npc.ai.movingPause = true;
 		}
+	}
+	
+	public void makeTransporter(boolean enable){
+		if (enable){
+			role = 1;
+		}
+	}
+	
+	public void transportPlayer(){
+		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+		if (ws != null) {
+			QuestTeleporter teleporter = new QuestTeleporter(ws);
+			teleporter.teleport(player, ws);
+		}
+	}
+	
+	public boolean isInteracting(){
+		return npc.isInteracting();
 	}
 }

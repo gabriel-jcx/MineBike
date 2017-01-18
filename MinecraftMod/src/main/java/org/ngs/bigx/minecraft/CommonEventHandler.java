@@ -12,10 +12,13 @@ import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.utility.NpcCommand;
+import org.ngs.bigx.utility.StaticNpcs;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -32,11 +35,38 @@ public class CommonEventHandler {
 	int server_tick = 0;
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
+	EntityCustomNpc activenpc;
+	NpcCommand activecommand;
+	
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
-		
 		BikeWorldData data = BikeWorldData.get(event.world);
+		System.out.println(event.world.provider.dimensionId);
+		if (event.world.provider.dimensionId == 0){
+			System.out.println("DIMENSION ID == 0");
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
+			EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
+			NpcCommand teleportercommand = new NpcCommand(teleporternpc);
+			teleportercommand.enableMoving(false);
+			teleportercommand.makeTransporter(true);
+			
+			activenpc = teleporternpc;
+			activecommand = teleportercommand;
+			//allNPCS.SetQuestNPCS();
+		}
+		if (event.world.provider.dimensionId == 100){
+			System.out.println("DIMENSION ID == 100");
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(100);
+			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
+			EntityCustomNpc thiefnpc = NpcCommand.spawnNpc(0f, 10f, 10f, event.world, "Thief");
+			NpcCommand thiefcommand = new NpcCommand(thiefnpc);
+			thiefcommand.enableMoving(true);
+			thiefcommand.setSpeed(10);
+			thiefcommand.runInDirection(ForgeDirection.EAST);
+			//allNPCS.SetChaseNPC();
+		}
 	}
 	
 	@SubscribeEvent
@@ -50,6 +80,8 @@ public class CommonEventHandler {
 		//context.unloadWorld();
 	}
 	
+	
+	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(PlayerUseItemEvent.Start event) {
@@ -58,12 +90,7 @@ public class CommonEventHandler {
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
 			teleporter.teleport(event.entity, ws);
 			EntityPlayerMP player = (EntityPlayerMP)event.entity;
-			EntityCustomNpc npc = NpcCommand.spawnNpc(0f, 10f, 10f, ws, "Thief");
-			//NpcCommand.addPathPoint(npc, 0, 10, 20);
-			NpcCommand command = new NpcCommand(npc);
-			command.enableMoving(true);
-			command.setSpeed(10);
-			command.runInDirection(ForgeDirection.EAST);
+			///
 		}
 	}
 	
@@ -109,6 +136,7 @@ public class CommonEventHandler {
 			if (server_tick==20) {
 				server_tick = 0;
 			}
+			
 			
 			// Test Purpose Code
 			if(this.serverQuestTest)
