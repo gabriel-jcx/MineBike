@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
@@ -123,6 +128,105 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
          public int compare(PlayerMail o1, PlayerMail o2) {
             return o1.time == o2.time?0:(o1.time > o2.time?-1:1);
          }
+
+		public <T, U extends Comparable<? super U>> Comparator<T> comparing(
+				Function<? super T, ? extends U> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public <T, U> Comparator<T> comparing(
+				Function<? super T, ? extends U> arg0,
+				Comparator<? super U> arg1) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T> Comparator<T> comparingDouble(
+				ToDoubleFunction<? super T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T> Comparator<T> comparingInt(
+				ToIntFunction<? super T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T> Comparator<T> comparingLong(
+				ToLongFunction<? super T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T extends Comparable<? super T>> Comparator<T> naturalOrder() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T> Comparator<T> nullsFirst(Comparator<? super T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T> Comparator<T> nullsLast(Comparator<? super T> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public  <T extends Comparable<? super T>> Comparator<T> reverseOrder() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		public Comparator<PlayerMail> reversed() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Comparator<PlayerMail> thenComparing(
+				Comparator<? super PlayerMail> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <U extends Comparable<? super U>> Comparator<PlayerMail> thenComparing(
+				Function<? super PlayerMail, ? extends U> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public <U> Comparator<PlayerMail> thenComparing(
+				Function<? super PlayerMail, ? extends U> arg0,
+				Comparator<? super U> arg1) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Comparator<PlayerMail> thenComparingDouble(
+				ToDoubleFunction<? super PlayerMail> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Comparator<PlayerMail> thenComparingInt(
+				ToIntFunction<? super PlayerMail> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Comparator<PlayerMail> thenComparingLong(
+				ToLongFunction<? super PlayerMail> arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
       });
       Iterator var4 = data.playermail.iterator();
 

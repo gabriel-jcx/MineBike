@@ -115,6 +115,7 @@ public class Context implements eyeTrackerListner {
 	 * BiGX Related Members
 	 */
 	public BiGXConnectionStateManagerClass connectionStateManager;
+//	public static String ipAddress = "128.195.55.213";
 	public static String ipAddress = "localhost";
 	public static int port = 1331;
 	
@@ -156,8 +157,11 @@ public class Context implements eyeTrackerListner {
 			public void onMessageReceive(BiGXNetPacket packet) {
 				int index = 0;
 				
+				System.out.print("packet.commandId[");
+				
 				if(packet.commandId == Command.TX_GAME_DESIGN)
 				{
+					System.out.print("TX_GAME_DESIGN");
 					int fragmentationIndex = packet.sourceDevice; 
 					int chunkIndex = packet.deviceEvent;
 
@@ -165,26 +169,44 @@ public class Context implements eyeTrackerListner {
 					index = fragmentationIndex * 256 + chunkIndex;
 					
 					// Push the packet data to the bufferQuestDesign
-					bufferQuestDesign.put(index, Arrays.copyOfRange(packet.data, 2, packet.data.length));
+					byte[] temp = Arrays.copyOfRange(packet.data, 2, packet.data.length);
+					
+					if(temp == null)
+					{
+						System.out.println("TEMP BUFFER IS NULL");
+					}
+					bufferQuestDesign.put(index, temp);
 				}
 				else if(packet.commandId == Command.ACK_GAME_DESIGN_HANDSHAKE)
 				{
+					System.out.print("ACK_GAME_DESIGN_HANDSHAKE");
 					// Assign the  bufferQuestDesignFragmentationNumber, bufferQuestDesignChunkNumber
 					bufferQuestDesignFragmentationNumber = packet.sourceDevice;
 					bufferQuestDesignChunkNumber = packet.deviceEvent;
 				}
 				else if(packet.commandId == Command.REQ_GAME_DESIGN_DOWNLOAD_VALIDATE)
 				{
+					System.out.print("REQ_GAME_DESIGN_DOWNLOAD_VALIDATE");
 					int i,j,idx=0;
 					boolean downloadedQuestDesignSuccess = true;
 					
 					for(j=0; j<bufferQuestDesignFragmentationNumber; j++)
 					{
-						for(i=0; i<bufferQuestDesignChunkNumber; i++)
+						int chunknumberToIterate = 256;
+						
+						if((bufferQuestDesignFragmentationNumber-1) == j)
+						{
+							chunknumberToIterate = bufferQuestDesignChunkNumber;
+						}
+						for(i=0; i<chunknumberToIterate; i++)
 						{
 							idx = j*256 + i;
 							
 							if(!bufferQuestDesign.containsKey(idx))
+							{
+								downloadedQuestDesignSuccess = false;
+							}
+							if(bufferQuestDesign.get(idx) == null)
 							{
 								downloadedQuestDesignSuccess = false;
 							}
@@ -206,15 +228,15 @@ public class Context implements eyeTrackerListner {
 						for(idx = 0; idx<bufferQuestDesign.size(); idx++)
 						{
 							questDesignString += new String(bufferQuestDesign.get(idx));
-//							System.out.println(Arrays.toString(bufferQuestDesign.get(idx)));
 						}
 						
 						questDesignString = questDesignString.trim();
 						
-						System.out.println(questDesignString);
+//						System.out.println(questDesignString);
 						
 						try{
 							Gson gson = new Gson();
+							System.out.println(questDesignString);
 							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 							suggestedGamePropertiesReady = true;
 						}
@@ -238,8 +260,12 @@ public class Context implements eyeTrackerListner {
 				}
 				else
 				{
+					System.out.print("else");
 					BiGXPacketHandler.Handle(bigxclient, packet);
 				}
+				
+
+				System.out.println("]");
 			}
 			
 			@Override

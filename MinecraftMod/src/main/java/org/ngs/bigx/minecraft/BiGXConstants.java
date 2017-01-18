@@ -1,5 +1,5 @@
 package org.ngs.bigx.minecraft;
 
 public class BiGXConstants {
-	public static final double MAXBIKESPEED = 1.6;
+	public static final double MAXBIKESPEED = 2.0f;
 }
