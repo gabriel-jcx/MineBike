@@ -29,24 +29,24 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public abstract class Quest implements QuestStateManagerListener{
+public abstract class Quest implements QuestStateManagerListener {
 	public HashMap<String,QuestPlayer> players;
-	private boolean worldExists = false;
-	private QuestStateManager stateManager;
 	protected WorldServer questWorld;
-	protected int questWorldX=0;
-	protected int questWorldY=64;
-	protected int questWorldZ=0;
-	protected Timer questTimer;
 	protected World originalWorld = null;
+	private QuestStateManager stateManager;
+	
 	private TimerTask questPeriodicTimerTask;
 	private TimerTask questCountdownTimerTask;
 	protected TimerTask questAccomplishTimerTask;
-	private boolean teleportRequired = false;
-
+	protected Timer questTimer;
+	protected int questWorldX=0;
+	protected int questWorldY=64;
+	protected int questWorldZ=0;
 	protected int secondsRemainingToStart = 5;
 	protected int secondsRemainingToEnd;
 	protected int timeLimit;
+	private boolean worldExists = false;
+	private boolean teleportRequired = false;
 	
 	protected abstract void setRemainingToEndVar();
 	public abstract void addQuestInitiator(int locationX, int height, int locationY);
@@ -62,7 +62,7 @@ public abstract class Quest implements QuestStateManagerListener{
 		this.teleportRequired = teleportRequired;
 	}
 	
-	public Quest(int ID) throws Exception {
+	public Quest(int ID) {
 		this.ID = ID;
 		players = new HashMap<String,QuestPlayer>();
 		stateManager = new QuestStateManager(this);

@@ -2,9 +2,12 @@ package org.ngs.bigx.minecraft;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestChasing;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
@@ -32,6 +35,8 @@ public class CommonEventHandler {
 	int server_tick = 0;
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
+	int countdown = 10;
+	int time = 30;
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -52,18 +57,53 @@ public class CommonEventHandler {
 	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
-	public void onItemUse(PlayerUseItemEvent.Start event) {
+	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		if (ws != null && event.entity instanceof EntityPlayerMP) {
+			try {
+				QuestChasing questChasing = new QuestChasing(0);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
 			teleporter.teleport(event.entity, ws);
-			EntityPlayerMP player = (EntityPlayerMP)event.entity;
-			EntityCustomNpc npc = NpcCommand.spawnNpc(0f, 10f, 10f, ws, "Thief");
-			//NpcCommand.addPathPoint(npc, 0, 10, 20);
-			NpcCommand command = new NpcCommand(npc);
-			command.enableMoving(true);
+			EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
+			final NpcCommand command = new NpcCommand(npc);
 			command.setSpeed(10);
-			command.runInDirection(ForgeDirection.EAST);
+			command.enableMoving(false);
+			command.runInDirection(ForgeDirection.SOUTH);
+			final Timer t = new Timer();
+			final Timer t2 = new Timer();
+			final TimerTask t2Task = new TimerTask() {
+				@Override
+				public void run() {
+					System.out.println(time);
+					if (BiGX.instance().context.getSpeed() < 2f) {
+						BiGX.instance().context.setSpeed(2f);
+					}
+					if (time-- <= 0) {
+						t2.cancel();
+						time = 30;
+						BiGX.instance().context.setSpeed(0);
+					}
+				}
+			};
+			
+			final TimerTask tTask = new TimerTask() {
+				@Override
+				public void run() {
+					if (countdown > 0) {
+						System.out.println(countdown-- + "...");
+					} else {
+						System.out.println("GO!");
+						command.enableMoving(true);
+						countdown = 10;
+						t.cancel();
+						t2.scheduleAtFixedRate(t2Task, 0, 1000);
+					}
+				}
+			};
+			t.scheduleAtFixedRate(tTask, 0, 1000);
 		}
 	}
 	

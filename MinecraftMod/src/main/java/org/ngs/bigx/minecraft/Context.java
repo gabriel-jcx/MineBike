@@ -98,7 +98,7 @@ public class Context implements eyeTrackerListner {
 	public QuestManager questManager;
 	
 	public enum Resistance {
-		NONE(0),LOW(2),MLOW(3),MID(4),MHIGH(5),HIGH(7);
+		NONE(0),LOW(1),MLOW(2),MID(3),MHIGH(4),HIGH(5);
 		
 		private float resistance;
 		
