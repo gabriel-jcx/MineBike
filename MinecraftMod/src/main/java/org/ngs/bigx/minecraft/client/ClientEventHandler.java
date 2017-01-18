@@ -3,10 +3,10 @@ package org.ngs.bigx.minecraft.client;
 import java.io.Console;
 import java.nio.ByteBuffer;
 
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestLoot;

@@ -1,12 +1,12 @@
 package org.ngs.bigx.minecraft.entity.lotom;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
-
 import org.ngs.bigx.minecraft.entity.lotom.BackpackProperty.backpackReturnCode;
 import org.ngs.bigx.minecraft.entity.lotom.stat.EntityStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class CharacterProperty extends EntityStat implements ISyncedStat {
 	public static enum characterReturnCode {

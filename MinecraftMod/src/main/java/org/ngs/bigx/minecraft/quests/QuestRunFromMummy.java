@@ -3,8 +3,8 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.quests.maze.Maze;
 

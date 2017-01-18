@@ -7,9 +7,9 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;

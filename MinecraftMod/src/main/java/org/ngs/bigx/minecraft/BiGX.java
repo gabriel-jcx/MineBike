@@ -14,8 +14,6 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
-import org.ngs.bigx.minecraft.networking.CommandMessage;
-import org.ngs.bigx.minecraft.networking.CommandMessageHandler;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
@@ -92,8 +90,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 	    	network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
 	    	network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
-	    	
-	    	network.registerMessage(CommandMessageHandler.class, CommandMessage.class, 5, Side.SERVER);
 	    	
 	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
 	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);

@@ -5,10 +5,10 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.lwjgl.input.Keyboard;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonProxy;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.renderer.TileEntityQuestChestRenderer;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;

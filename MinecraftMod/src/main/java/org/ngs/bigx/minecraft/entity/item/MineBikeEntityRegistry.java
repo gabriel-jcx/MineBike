@@ -1,8 +1,9 @@
 package org.ngs.bigx.minecraft.entity.item;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import org.ngs.bigx.minecraft.client.renderer.EntityTankRenderer;
 import org.ngs.bigx.minecraft.client.renderer.EntityRacingCarRenderer;
+import org.ngs.bigx.minecraft.client.renderer.EntityTankRenderer;
+
+import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class MineBikeEntityRegistry {
 	public static void RegisterMineBikeEntities()

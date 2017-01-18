@@ -24,16 +24,16 @@ import java.util.stream.Stream;
 
 import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
 import org.ngs.bigx.dictionary.protocol.Specification;
+import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
+import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
+import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
+import org.ngs.bigx.dictionary.protocol.Specification.Command;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
-import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
-import org.ngs.bigx.dictionary.protocol.Specification.Command;
 
 import com.google.gson.Gson;
 

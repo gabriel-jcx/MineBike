@@ -1,11 +1,12 @@
 package org.ngs.bigx.minecraft.networking;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+
 import org.ngs.bigx.minecraft.BiGXContainerTileEntity;
 import org.ngs.bigx.minecraft.client.gui.BiGXGuiTileEntity;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class BiGXGuiHandler implements IGuiHandler {

@@ -154,7 +154,7 @@ public class DataAI {
       if(this.movingPath.isEmpty() && this.startPos != null) {
          this.movingPath.add(this.startPos);
       }
-
+      
       return this.movingPath;
    }
 
