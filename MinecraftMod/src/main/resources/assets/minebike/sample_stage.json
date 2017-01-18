@@ -1,0 +1,121 @@
+"stages": [
+          {
+            "duration": 15,
+            "exerciseSettings": 128,
+            "questSettings": 128
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 256,
+            "questSettings": 256
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 384,
+            "questSettings": 384
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 512,
+            "questSettings": 512
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 576,
+            "questSettings": 576
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 640,
+            "questSettings": 640
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 704,
+            "questSettings": 704
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 768,
+            "questSettings": 768
+          },
+          {
+            "duration": 20,
+            "exerciseSettings": 1024,
+            "questSettings": 1024
+          },
+          {
+            "duration": 10,
+            "exerciseSettings": 512,
+            "questSettings": 512
+          },
+          {
+            "duration": 20,
+            "exerciseSettings": 1024,
+            "questSettings": 1024
+          },
+          {
+            "duration": 10,
+            "exerciseSettings": 512,
+            "questSettings": 512
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 576,
+            "questSettings": 576
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 640,
+            "questSettings": 640
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 704,
+            "questSettings": 704
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 768,
+            "questSettings": 768
+          },
+          {
+            "duration": 20,
+            "exerciseSettings": 1024,
+            "questSettings": 1024
+          },
+          {
+            "duration": 10,
+            "exerciseSettings": 512,
+            "questSettings": 512
+          },
+          {
+            "duration": 20,
+            "exerciseSettings": 1024,
+            "questSettings": 1024
+          },
+          {
+            "duration": 10,
+            "exerciseSettings": 512,
+            "questSettings": 512
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 192,
+            "questSettings": 192
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 128,
+            "questSettings": 128
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 64,
+            "questSettings": 64
+          },
+          {
+            "duration": 15,
+            "exerciseSettings": 0,
+            "questSettings": 0
+          }

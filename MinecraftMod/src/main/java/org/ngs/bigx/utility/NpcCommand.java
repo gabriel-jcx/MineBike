@@ -113,10 +113,13 @@ public class NpcCommand {
 	}
 	
 	public void runInDirection(final ForgeDirection direction) {
-		Timer timer = new Timer();
+		final Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
+				if (npc.hasDied) {
+					timer.cancel();
+				}
 				int yy = (int)npc.posY;
 				npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
 				npc.ai.setMovingPath(new ArrayList());
@@ -193,6 +196,7 @@ public class NpcCommand {
 			npc.ai.canSprint = false;
 			npc.ai.movingPause = true;
 		}
+		npc.updateTasks();
 	}
 	
 	public void makeTransporter(boolean enable){

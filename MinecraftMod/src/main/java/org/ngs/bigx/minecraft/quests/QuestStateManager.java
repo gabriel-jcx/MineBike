@@ -38,10 +38,9 @@ public class QuestStateManager
 	private StateMachine<State, Trigger> QuestStateMachine;
 	private QuestStateManagerListener stateChangeListner;
 	
-	public QuestStateManager(QuestStateManagerListener argStateChangeListner) throws Exception
-	{
-		if(argStateChangeListner == null)
-			throw new Exception("StateMachine Listener is null!");
+	public QuestStateManager(QuestStateManagerListener argStateChangeListner) {
+		//if(argStateChangeListner == null)
+		//	throw new Exception("StateMachine Listener is null!");
 		
 		this.QuestStateMachine = new StateMachine<State, Trigger>(State.Inactive);
 		this.stateChangeListner = argStateChangeListner;
