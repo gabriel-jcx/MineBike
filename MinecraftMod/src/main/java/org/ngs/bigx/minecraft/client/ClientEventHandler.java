@@ -39,6 +39,8 @@ public class ClientEventHandler {
 	
 		private Context context;
 		public static KeyBinding keyBindingTogglePedalingMode;
+		public static KeyBinding keyBindingMoveForward;
+		public static KeyBinding keyBindingMoveBackward;
 		
 		public ClientEventHandler(Context con) {
 			context = con;
@@ -50,9 +52,14 @@ public class ClientEventHandler {
 		@SubscribeEvent
 		public void onKeyInput(KeyInputEvent event) {
 			if (keyBindingTogglePedalingMode.isPressed()) {
-//				PacketDispatcher.sendToServer(new OpenGuiMessage(TutorialMain.GUI_CUSTOM_INV));
 				System.out.println("BiGX Shoe Toggle Key Pressed");
 				context.isSubtleModeOn ^= true;
+			}
+			else if (keyBindingMoveForward.isPressed()) {
+				System.out.println("BiGX Forward");
+			}
+			else if (keyBindingMoveBackward.isPressed()) {
+				System.out.println("BiGX Backward");
 			}
 		}
 		

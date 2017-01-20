@@ -25,6 +25,8 @@ SOFTWARE.
 */
 
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * This provides static methods to convert an XML text into a JSONObject, and to
@@ -97,8 +99,26 @@ public class XML {
                     public void remove() {
                         throw new UnsupportedOperationException();
                     }
+
+					@Override
+					public void forEachRemaining(Consumer<? super Integer> arg0) {
+						// TODO Auto-generated method stub
+						
+					}
                 };
             }
+
+			@Override
+			public void forEach(Consumer<? super Integer> arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public Spliterator<Integer> spliterator() {
+				// TODO Auto-generated method stub
+				return null;
+			}
         };
     }
 

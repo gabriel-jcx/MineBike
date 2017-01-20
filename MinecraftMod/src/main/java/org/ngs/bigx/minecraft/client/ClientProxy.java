@@ -46,9 +46,13 @@ public class ClientProxy extends CommonProxy {
     	MinecraftForge.EVENT_BUS.register(new GuiQuest(context,Minecraft.getMinecraft()));
     	
     	context.initBigX();
-    	
+
     	ClientEventHandler.keyBindingTogglePedalingMode = new KeyBinding("key.togglebigxshoe", Keyboard.KEY_K, "bigx.key.togglebigxshoe");
+    	ClientEventHandler.keyBindingMoveForward = new KeyBinding("key.keyforward", Keyboard.KEY_W, "bigx.key.keyforward");
+    	ClientEventHandler.keyBindingMoveBackward = new KeyBinding("key.keybackward", Keyboard.KEY_S, "bigx.key.keybackward");
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingTogglePedalingMode);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingMoveForward);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingMoveBackward);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());
