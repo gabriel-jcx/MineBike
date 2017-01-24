@@ -15,12 +15,12 @@ import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.utility.NpcCommand;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -40,6 +40,8 @@ public class CommonEventHandler {
 	int time = 30;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
+	float initialDist, dist;
+	boolean doMakeBlocks;
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -58,17 +60,18 @@ public class CommonEventHandler {
 			activecommand = teleportercommand;
 			//allNPCS.SetQuestNPCS();
 		}
-		if (event.world.provider.dimensionId == 100){
-			System.out.println("DIMENSION ID == 100");
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(100);
-			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
-			EntityCustomNpc thiefnpc = NpcCommand.spawnNpc(0f, 10f, 10f, event.world, "Thief");
-			NpcCommand thiefcommand = new NpcCommand(thiefnpc);
-			thiefcommand.enableMoving(true);
-			thiefcommand.setSpeed(10);
-			thiefcommand.runInDirection(ForgeDirection.EAST);
-			//allNPCS.SetChaseNPC();
-		}
+//		if (event.world.provider.dimensionId == 100){
+//			System.out.println("DIMENSION ID == 100");
+//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(100);
+//			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
+//			EntityCustomNpc thiefnpc = NpcCommand.spawnNpc(0f, 10f, 10f, event.world, "Thief");
+//			NpcCommand thiefcommand = new NpcCommand(thiefnpc);
+//			thiefcommand.enableMoving(true);
+//			thiefcommand.setSpeed(10);
+//			thiefcommand.runInDirection(ForgeDirection.EAST);
+//			//allNPCS.SetChaseNPC();
+//			Timer questTimer = new Timer();
+//		}
 	}
 	
 	@SubscribeEvent
@@ -87,7 +90,7 @@ public class CommonEventHandler {
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		if (ws != null && event.entity instanceof EntityPlayerMP) {
 			try {
 				QuestChasing questChasing = new QuestChasing(0);
@@ -97,19 +100,44 @@ public class CommonEventHandler {
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
 			teleporter.teleport(event.entity, ws);
 
-			EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
+			final EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
 			final NpcCommand command = new NpcCommand(npc);
 			command.setSpeed(10);
 			command.enableMoving(false);
 			command.runInDirection(ForgeDirection.SOUTH);
 			final Timer t = new Timer();
 			final Timer t2 = new Timer();
+			final Timer t3 = new Timer();
+			final TimerTask t3Task = new TimerTask() {
+				@Override
+				public void run() {
+					for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
+						for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+							ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
+							ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+						}
+					}
+				}
+			};
 			final TimerTask t2Task = new TimerTask() {
 				@Override
 				public void run() {
 					System.out.println(time);
-					if (BiGX.instance().context.getSpeed() < 2f) {
-						BiGX.instance().context.setSpeed(2f);
+					dist = event.entity.getDistanceToEntity(npc);
+					float ratio = (initialDist-dist)/initialDist;
+					if (BiGX.instance().context.getSpeed() < 2.2f) {
+						BiGX.instance().context.setSpeed(2.2f);
+					}
+					if (ratio > 0.5) {
+						if (!doMakeBlocks) {
+							doMakeBlocks = true;
+							t3.scheduleAtFixedRate(t3Task, 0, 1000);
+						}
+					} else {
+						if (doMakeBlocks) {
+							doMakeBlocks = false;
+							t3.cancel();
+						}
 					}
 					if (time-- <= 0) {
 						t2.cancel();
@@ -129,6 +157,7 @@ public class CommonEventHandler {
 						command.enableMoving(true);
 						countdown = 10;
 						t.cancel();
+						initialDist = event.entity.getDistanceToEntity(npc);
 						t2.scheduleAtFixedRate(t2Task, 0, 1000);
 					}
 				}

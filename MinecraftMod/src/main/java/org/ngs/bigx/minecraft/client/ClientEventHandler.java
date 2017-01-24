@@ -14,6 +14,7 @@ import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
 import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -28,6 +29,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -44,6 +46,7 @@ public class ClientEventHandler {
 		
 		public ClientEventHandler(Context con) {
 			context = con;
+			//movementSpeed = Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue();
 		}
 		
 		int client_tick = 0;
@@ -51,16 +54,32 @@ public class ClientEventHandler {
 		
 		@SubscribeEvent
 		public void onKeyInput(KeyInputEvent event) {
-			if (keyBindingTogglePedalingMode.isPressed()) {
-				System.out.println("BiGX Shoe Toggle Key Pressed");
-				context.isSubtleModeOn ^= true;
-			}
-			else if (keyBindingMoveForward.isPressed()) {
+			if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
+				if (Minecraft.getMinecraft().thePlayer.dimension == WorldProviderFlats.dimID) {
+					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+				} else {
+					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.10000000149011612D);
+				}
 				System.out.println("BiGX Forward");
 			}
-			else if (keyBindingMoveBackward.isPressed()) {
-				System.out.println("BiGX Backward");
+			if (Minecraft.getMinecraft().gameSettings.keyBindBack.isPressed()) {
+				if (Minecraft.getMinecraft().thePlayer.dimension == WorldProviderFlats.dimID) {
+					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+				} else {
+					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.10000000149011612D);
+				}
+				System.out.println("BiGX Forward");
 			}
+//			if (keyBindingTogglePedalingMode.isPressed()) {
+//				System.out.println("BiGX Shoe Toggle Key Pressed");
+//				context.isSubtleModeOn ^= true;
+//			}
+//			else if (keyBindingMoveForward.isPressed()) {
+//				System.out.println("BiGX Forward");
+//			}
+//			else if (keyBindingMoveBackward.isPressed()) {
+//				System.out.println("BiGX Backward");
+//			}
 		}
 		
 		//Called whenever the client ticks
