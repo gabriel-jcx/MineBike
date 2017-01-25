@@ -47,9 +47,11 @@ public class ClientProxy extends CommonProxy {
     	
     	context.initBigX();
 
+    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("", Keyboard.KEY_P, "bigx.key.togglemouse");
 //    	ClientEventHandler.keyBindingTogglePedalingMode = new KeyBinding("key.togglebigxshoe", Keyboard.KEY_K, "bigx.key.togglebigxshoe");
 //    	ClientEventHandler.keyBindingMoveForward = new KeyBinding("key.keyforward", Keyboard.KEY_W, "bigx.key.keyforward");
 //    	ClientEventHandler.keyBindingMoveBackward = new KeyBinding("key.keybackward", Keyboard.KEY_S, "bigx.key.keybackward");
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
 //    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingTogglePedalingMode);
 //    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingMoveForward);
 //    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingMoveBackward);

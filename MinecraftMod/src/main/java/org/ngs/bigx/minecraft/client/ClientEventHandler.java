@@ -1,41 +1,33 @@
 package org.ngs.bigx.minecraft.client;
 
-import java.io.Console;
 import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
-import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
 import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
-import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ClientEventHandler {
 	
@@ -43,32 +35,27 @@ public class ClientEventHandler {
 		public static KeyBinding keyBindingTogglePedalingMode;
 		public static KeyBinding keyBindingMoveForward;
 		public static KeyBinding keyBindingMoveBackward;
+		public static KeyBinding keyBindingToggleMouse;
+		
+		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
+		private static final MouseHelper defaultMouseHelper = new MouseHelper();
 		
 		public ClientEventHandler(Context con) {
 			context = con;
-			//movementSpeed = Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue();
 		}
 		
 		int client_tick = 0;
 		QuestLootDatabase lootDatabase = new QuestLootDatabase();
+		boolean enableLock = false;
 		
 		@SubscribeEvent
 		public void onKeyInput(KeyInputEvent event) {
 			if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
-				if (Minecraft.getMinecraft().thePlayer.dimension == WorldProviderFlats.dimID) {
-					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-				} else {
-					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.10000000149011612D);
-				}
-				System.out.println("BiGX Forward");
+				Minecraft.getMinecraft().thePlayer.setSprinting(false);
 			}
-			if (Minecraft.getMinecraft().gameSettings.keyBindBack.isPressed()) {
-				if (Minecraft.getMinecraft().thePlayer.dimension == WorldProviderFlats.dimID) {
-					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-				} else {
-					Minecraft.getMinecraft().thePlayer.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.10000000149011612D);
-				}
-				System.out.println("BiGX Forward");
+			if (keyBindingToggleMouse.isPressed()) {
+				enableLock = !enableLock;
+				System.out.println("Movement/Look lock: " + enableLock);
 			}
 //			if (keyBindingTogglePedalingMode.isPressed()) {
 //				System.out.println("BiGX Shoe Toggle Key Pressed");
@@ -84,6 +71,7 @@ public class ClientEventHandler {
 		
 		//Called whenever the client ticks
 		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
 		public void onClientTick(TickEvent.ClientTickEvent event) {
 			if ((Minecraft.getMinecraft().thePlayer!=null) 
 					&& (event.phase==TickEvent.Phase.END)) {
@@ -103,6 +91,19 @@ public class ClientEventHandler {
 				BiGX.characterProperty.decreaseSpeedByTime();
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 				
+				
+				if (enableLock) {
+					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+					Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
+					p.jumpMovementFactor = 0f;
+					p.capabilities.setPlayerWalkSpeed(0f);
+					p.capabilities.setFlySpeed(0f);
+					p.motionX = 0; p.motionZ = 0;
+					p.setSprinting(false);
+				} else {
+					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
+					Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
+				}
 				/*
 				 * TODO: TEST SHOE ENERGY IDEA (OPTION 3)
 				 */

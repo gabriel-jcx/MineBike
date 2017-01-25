@@ -27,15 +27,14 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import foxz.command.CommandNoppes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MouseHelper;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mod (modid = BiGX.MODID, name = BiGX.MODNAME, version = BiGX.VERSION)
@@ -59,6 +58,8 @@ import net.minecraftforge.common.MinecraftForge;
 	    public static BikeProperty bikeProperty;	
 	    
 	    public Context context;
+	    
+	    public static MouseHelper disableMouseHelper;
 	    
 	    /*
 	     * Instead of using magic numbers, an enum will differentiate our GUIs when
@@ -124,6 +125,14 @@ import net.minecraftforge.common.MinecraftForge;
 	    	bikeProperty = new BikeProperty("currentBikeLoTomProperty");
 	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
 	    	System.out.println("[BiGX] Bike Property Init Done");
+	    	
+	    	disableMouseHelper = new MouseHelper() {
+	    		@Override
+	    		public void mouseXYChange() {
+	    			deltaX = 0;
+	    			deltaY = 0;
+	    		}
+	    	};
 	    }
 	    
 	    public static BiGX instance() {

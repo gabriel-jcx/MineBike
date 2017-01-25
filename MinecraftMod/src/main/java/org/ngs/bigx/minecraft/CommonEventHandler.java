@@ -16,14 +16,19 @@ import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.utility.NpcCommand;
 
+import com.sun.glass.events.MouseEvent;
+
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
@@ -32,6 +37,8 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 
 public class CommonEventHandler {
+
+	static float playerQuestPitch, playerQuestYaw;
 	
 	int server_tick = 0;
 	boolean serverQuestTest = true;
@@ -85,8 +92,6 @@ public class CommonEventHandler {
 		//context.unloadWorld();
 	}
 	
-	
-	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
@@ -99,6 +104,8 @@ public class CommonEventHandler {
 			}
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
 			teleporter.teleport(event.entity, ws);
+			playerQuestPitch = event.entity.rotationPitch;
+			playerQuestYaw = 0f;
 
 			final EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
 			final NpcCommand command = new NpcCommand(npc);
@@ -269,6 +276,11 @@ public class CommonEventHandler {
 		}
 	}
 		
-
+	public static float getPlayerPitch() {
+		return playerQuestPitch;
+	}
+	public static float getPlayerYaw() {
+		return playerQuestYaw;
+	}
 	
 }
