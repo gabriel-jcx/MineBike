@@ -60,8 +60,8 @@ public class Context implements eyeTrackerListner {
 	private Hashtable<Integer, byte[]> bufferQuestDesign = new Hashtable<Integer, byte[]>();
 	private int bufferQuestDesignFragmentationNumber = 0;
 	private int bufferQuestDesignChunkNumber = 0;
-	private BiGXSuggestedGameProperties suggestedGameProperties = null;
-	private boolean suggestedGamePropertiesReady = false;
+	public BiGXSuggestedGameProperties suggestedGameProperties = null;
+	public boolean suggestedGamePropertiesReady = false;
 	
 	public Queue<QuestEvent> questEventQueue;
 	

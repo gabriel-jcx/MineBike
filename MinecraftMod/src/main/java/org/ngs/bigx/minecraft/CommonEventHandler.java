@@ -67,18 +67,6 @@ public class CommonEventHandler {
 			activecommand = teleportercommand;
 			//allNPCS.SetQuestNPCS();
 		}
-//		if (event.world.provider.dimensionId == 100){
-//			System.out.println("DIMENSION ID == 100");
-//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(100);
-//			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
-//			EntityCustomNpc thiefnpc = NpcCommand.spawnNpc(0f, 10f, 10f, event.world, "Thief");
-//			NpcCommand thiefcommand = new NpcCommand(thiefnpc);
-//			thiefcommand.enableMoving(true);
-//			thiefcommand.setSpeed(10);
-//			thiefcommand.runInDirection(ForgeDirection.EAST);
-//			//allNPCS.SetChaseNPC();
-//			Timer questTimer = new Timer();
-//		}
 	}
 	
 	@SubscribeEvent
@@ -96,80 +84,82 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
-		if (ws != null && event.entity instanceof EntityPlayerMP) {
-			try {
-				QuestChasing questChasing = new QuestChasing(0);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			QuestTeleporter teleporter = new QuestTeleporter(ws);
-			teleporter.teleport(event.entity, ws);
-			playerQuestPitch = event.entity.rotationPitch;
-			playerQuestYaw = 0f;
+		if (event.item.getDisplayName().contains("Diamond Sword")){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {
+				try {
+					QuestChasing questChasing = new QuestChasing(0);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				QuestTeleporter teleporter = new QuestTeleporter(ws);
+				teleporter.teleport(event.entity, ws);
+				playerQuestPitch = event.entity.rotationPitch;
+				playerQuestYaw = 0f;
 
-			final EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
-			final NpcCommand command = new NpcCommand(npc);
-			command.setSpeed(10);
-			command.enableMoving(false);
-			command.runInDirection(ForgeDirection.SOUTH);
-			final Timer t = new Timer();
-			final Timer t2 = new Timer();
-			final Timer t3 = new Timer();
-			final TimerTask t3Task = new TimerTask() {
-				@Override
-				public void run() {
-					for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
-						for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-							ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
-							ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+				final EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
+				final NpcCommand command = new NpcCommand(npc);
+				command.setSpeed(10);
+				command.enableMoving(false);
+				command.runInDirection(ForgeDirection.SOUTH);
+				final Timer t = new Timer();
+				final Timer t2 = new Timer();
+				final Timer t3 = new Timer();
+				final TimerTask t3Task = new TimerTask() {
+					@Override
+					public void run() {
+						for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
+							for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+								ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
+								ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+							}
 						}
 					}
-				}
-			};
-			final TimerTask t2Task = new TimerTask() {
-				@Override
-				public void run() {
-					System.out.println(time);
-					dist = event.entity.getDistanceToEntity(npc);
-					float ratio = (initialDist-dist)/initialDist;
-					if (BiGX.instance().context.getSpeed() < 2.2f) {
-						BiGX.instance().context.setSpeed(2.2f);
-					}
-					if (ratio > 0.5) {
-						if (!doMakeBlocks) {
-							doMakeBlocks = true;
-							t3.scheduleAtFixedRate(t3Task, 0, 1000);
+				};
+				final TimerTask t2Task = new TimerTask() {
+					@Override
+					public void run() {
+						System.out.println(time);
+						dist = event.entity.getDistanceToEntity(npc);
+						float ratio = (initialDist-dist)/initialDist;
+						if (BiGX.instance().context.getSpeed() < 2.2f) {
+							BiGX.instance().context.setSpeed(2.2f);
 						}
-					} else {
-						if (doMakeBlocks) {
-							doMakeBlocks = false;
-							t3.cancel();
+						if (ratio > 0.5) {
+							if (!doMakeBlocks) {
+								doMakeBlocks = true;
+								t3.scheduleAtFixedRate(t3Task, 0, 1000);
+							}
+						} else {
+							if (doMakeBlocks) {
+								doMakeBlocks = false;
+								t3.cancel();
+							}
+						}
+						if (time-- <= 0) {
+							t2.cancel();
+							time = 30;
+							BiGX.instance().context.setSpeed(0);
 						}
 					}
-					if (time-- <= 0) {
-						t2.cancel();
-						time = 30;
-						BiGX.instance().context.setSpeed(0);
+				};
+
+				final TimerTask tTask = new TimerTask() {
+					@Override
+					public void run() {
+						if (countdown > 0) {
+							System.out.println(countdown-- + "...");
+						} else {
+							System.out.println("GO!");
+							command.enableMoving(true);
+							countdown = 10;
+							t.cancel();
+							initialDist = event.entity.getDistanceToEntity(npc);
+							t2.scheduleAtFixedRate(t2Task, 0, 1000);
+						}
 					}
-				}
-			};
-			
-			final TimerTask tTask = new TimerTask() {
-				@Override
-				public void run() {
-					if (countdown > 0) {
-						System.out.println(countdown-- + "...");
-					} else {
-						System.out.println("GO!");
-						command.enableMoving(true);
-						countdown = 10;
-						t.cancel();
-						initialDist = event.entity.getDistanceToEntity(npc);
-						t2.scheduleAtFixedRate(t2Task, 0, 1000);
-					}
-				}
-			};
-			t.scheduleAtFixedRate(tTask, 0, 1000);
+				};
+				t.scheduleAtFixedRate(tTask, 0, 1000);
+			}
 		}
 	}
 	
