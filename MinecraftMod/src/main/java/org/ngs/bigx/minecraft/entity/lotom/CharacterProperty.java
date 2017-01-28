@@ -99,6 +99,10 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		}
 	}
 	
+	public void changeSpeedRateby(float numofincrease){
+		this.speedRate += numofincrease;
+	}
+	
 	public void increaseEXPby(int awardedEXP)
 	{
 		this.exp += awardedEXP;

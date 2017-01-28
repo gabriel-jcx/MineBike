@@ -2,8 +2,10 @@ package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
 
+import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
@@ -100,6 +102,7 @@ public class ClientEventHandler {
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 				
 				
+				//Dealing with locking keys
 				if (enableLock) {
 					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
 					Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
@@ -115,6 +118,21 @@ public class ClientEventHandler {
 					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
 					Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
 				}
+				
+				// Handling Player heart rate and rpm as mechanics for Chase Quest
+				if (context.suggestedGamePropertiesReady){
+					if (context.questManager.getQuest().getName() == "Chase Quest"){
+						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+							BiGX.characterProperty.changeSpeedRateby(-10);
+						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+							BiGX.characterProperty.changeSpeedRateby(10);
+						else if (playerperscription.getTargetMax() < context.heartrate)
+							BiGX.characterProperty.changeSpeedRateby(-5);
+					}
+				}
+				
+				
 				/*
 				 * TODO: TEST SHOE ENERGY IDEA (OPTION 3)
 				 */
