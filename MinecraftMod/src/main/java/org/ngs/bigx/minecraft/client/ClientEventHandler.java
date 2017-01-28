@@ -28,6 +28,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 
 public class ClientEventHandler {
 	
@@ -47,6 +48,13 @@ public class ClientEventHandler {
 		int client_tick = 0;
 		QuestLootDatabase lootDatabase = new QuestLootDatabase();
 		boolean enableLock = false;
+		
+		@SubscribeEvent
+		public void onLivingJump(LivingJumpEvent event) {
+			// FOR NOW, disable jumping
+			if (enableLock)
+				event.entity.motionY = 0;
+		}
 		
 		@SubscribeEvent
 		public void onKeyInput(KeyInputEvent event) {
@@ -98,8 +106,11 @@ public class ClientEventHandler {
 					p.jumpMovementFactor = 0f;
 					p.capabilities.setPlayerWalkSpeed(0f);
 					p.capabilities.setFlySpeed(0f);
+					p.setJumping(false);
 					p.motionX = 0; p.motionZ = 0;
 					p.setSprinting(false);
+					p.rotationPitch = 0f;
+					p.rotationYaw = 0f;
 				} else {
 					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
 					Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;

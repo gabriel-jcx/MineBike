@@ -49,7 +49,7 @@ public class NpcCommand {
 	    		MathHelper.floor_double(z)};
 		
 		w.spawnEntityInWorld(npc);
-	    npc.setHealth(npc.getMaxHealth());
+	    npc.setHealth(999999999f);;
 	    
 	    return npc;
 	}
@@ -120,6 +120,7 @@ public class NpcCommand {
 				if (npc.hasDied) {
 					timer.cancel();
 				}
+				System.out.println("AI : " + npc.motionX + " " + npc.motionZ);
 				int yy = (int)npc.posY;
 				npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
 				npc.ai.setMovingPath(new ArrayList());

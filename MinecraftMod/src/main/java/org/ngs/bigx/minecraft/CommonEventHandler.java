@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Timer;
@@ -16,24 +17,21 @@ import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.utility.NpcCommand;
 
-import com.sun.glass.events.MouseEvent;
-
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
+import scala.collection.concurrent.Debug;
 
 
 public class CommonEventHandler {
@@ -104,10 +102,9 @@ public class CommonEventHandler {
 			}
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
 			teleporter.teleport(event.entity, ws);
-			playerQuestPitch = event.entity.rotationPitch;
-			playerQuestYaw = 0f;
-
+			
 			final EntityCustomNpc npc = NpcCommand.spawnNpc(0, 10, 20, ws, "Thief");
+			//teleporter.teleport(npc, ws);
 			final NpcCommand command = new NpcCommand(npc);
 			command.setSpeed(10);
 			command.enableMoving(false);
@@ -115,12 +112,14 @@ public class CommonEventHandler {
 			final Timer t = new Timer();
 			final Timer t2 = new Timer();
 			final Timer t3 = new Timer();
+			final List<Vec3> blocks = new ArrayList<Vec3>();
 			final TimerTask t3Task = new TimerTask() {
 				@Override
 				public void run() {
 					for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
 						for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
 							ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
+							blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
 							ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
 						}
 					}
@@ -134,6 +133,7 @@ public class CommonEventHandler {
 					float ratio = (initialDist-dist)/initialDist;
 					if (BiGX.instance().context.getSpeed() < 2.2f) {
 						BiGX.instance().context.setSpeed(2.2f);
+						System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
 					}
 					if (ratio > 0.5) {
 						if (!doMakeBlocks) {
@@ -150,6 +150,9 @@ public class CommonEventHandler {
 						t2.cancel();
 						time = 30;
 						BiGX.instance().context.setSpeed(0);
+						for (Vec3 v : blocks) {
+							ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+						}
 					}
 				}
 			};
