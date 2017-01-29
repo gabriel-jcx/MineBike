@@ -54,7 +54,7 @@ public class QuestChasing extends Quest {
 
 	@Override
 	public String getName() {
-		return null;
+		return "Chase Quest";
 	}
 
 	@Override
