@@ -31,7 +31,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import scala.collection.concurrent.Debug;
 
 public class ClientEventHandler {
 	
@@ -100,7 +99,7 @@ public class ClientEventHandler {
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 				// Degrade the current player's speed
 				BiGX.characterProperty.decreaseSpeedByTime();
-				//p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 				
 				
 				//Dealing with locking keys
@@ -121,17 +120,20 @@ public class ClientEventHandler {
 				}
 				
 				// Handling Player heart rate and rpm as mechanics for Chase Quest
-//				if (context.suggestedGamePropertiesReady){
-//					if (context.questManager.getQuest().getName() == "Chase Quest"){
-//						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
-//						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
-//							BiGX.characterProperty.changeSpeedRateby(-10);
-//						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
-//							BiGX.characterProperty.changeSpeedRateby(10);
-//						else if (playerperscription.getTargetMax() < context.heartrate)
-//							BiGX.characterProperty.changeSpeedRateby(-5);
-//					}
-//				}
+				if (context.suggestedGamePropertiesReady){
+					if (context.questManager.getQuest() != null)
+					{
+						if (context.questManager.getQuest().getName() == "Chase Quest"){
+							BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+							if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+								BiGX.characterProperty.changeSpeedRateby(-10);
+							else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+								BiGX.characterProperty.changeSpeedRateby(10);
+							else if (playerperscription.getTargetMax() < context.heartrate)
+								BiGX.characterProperty.changeSpeedRateby(-5);
+						}
+					}
+				}
 				
 				
 				/*
@@ -144,7 +146,7 @@ public class ClientEventHandler {
 						if(context.shoeEnergy < 0.9f)
 						{
 							context.shoeEnergy = 0;
-							//p.setVelocity(0, p.motionY, 0);
+							p.setVelocity(0, p.motionY, 0);
 						}
 						else
 						{
@@ -164,10 +166,8 @@ public class ClientEventHandler {
 					float moveSpeed = context.getSpeed()/4;
 					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-					System.out.println(moveSpeed + " " + xt + " " + zt);
-					System.out.println("BEFORE: " + p.motionX + " " + p.motionY + " " + p.motionZ);
 					p.setVelocity(xt, p.motionY, zt);
-					System.out.println("AFTER: " + p.motionX + " " + p.motionY + " " + p.motionZ);
+					
 //					float degradation = 0.05f;
 //	                if(context.getSpeed() >= 0){
 //						context.setSpeed((float) Math.max(0,context.getSpeed()-degradation));

@@ -115,8 +115,8 @@ public class Context implements eyeTrackerListner {
 	 * BiGX Related Members
 	 */
 	public BiGXConnectionStateManagerClass connectionStateManager;
-//	public static String ipAddress = "128.195.55.213";
-	public static String ipAddress = "localhost";
+	public static String ipAddress = "128.195.55.188";
+//	public static String ipAddress = "localhost";
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
@@ -157,11 +157,8 @@ public class Context implements eyeTrackerListner {
 			public void onMessageReceive(BiGXNetPacket packet) {
 				int index = 0;
 				
-				System.out.print("packet.commandId[");
-				
 				if(packet.commandId == Command.TX_GAME_DESIGN)
 				{
-					System.out.print("TX_GAME_DESIGN");
 					int fragmentationIndex = packet.sourceDevice; 
 					int chunkIndex = packet.deviceEvent;
 
@@ -179,14 +176,12 @@ public class Context implements eyeTrackerListner {
 				}
 				else if(packet.commandId == Command.ACK_GAME_DESIGN_HANDSHAKE)
 				{
-					System.out.print("ACK_GAME_DESIGN_HANDSHAKE");
 					// Assign the  bufferQuestDesignFragmentationNumber, bufferQuestDesignChunkNumber
 					bufferQuestDesignFragmentationNumber = packet.sourceDevice;
 					bufferQuestDesignChunkNumber = packet.deviceEvent;
 				}
 				else if(packet.commandId == Command.REQ_GAME_DESIGN_DOWNLOAD_VALIDATE)
 				{
-					System.out.print("REQ_GAME_DESIGN_DOWNLOAD_VALIDATE");
 					int i,j,idx=0;
 					boolean downloadedQuestDesignSuccess = true;
 					
@@ -232,11 +227,8 @@ public class Context implements eyeTrackerListner {
 						
 						questDesignString = questDesignString.trim();
 						
-//						System.out.println(questDesignString);
-						
 						try{
 							Gson gson = new Gson();
-							System.out.println(questDesignString);
 							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 							suggestedGamePropertiesReady = true;
 						}
@@ -260,12 +252,8 @@ public class Context implements eyeTrackerListner {
 				}
 				else
 				{
-					System.out.print("else");
 					BiGXPacketHandler.Handle(bigxclient, packet);
 				}
-				
-
-				System.out.println("]");
 			}
 			
 			@Override
