@@ -131,9 +131,8 @@ public class CommonEventHandler {
 					System.out.println(time);
 					dist = event.entity.getDistanceToEntity(npc);
 					float ratio = (initialDist-dist)/initialDist;
-					if (BiGX.instance().context.getSpeed() < 2.2f) {
-						BiGX.instance().context.setSpeed(2.2f);
-						System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
+					if (BiGX.instance().context.getSpeed() < 2f) {
+						BiGX.instance().context.setSpeed(2f);
 					}
 					if (ratio > 0.5) {
 						if (!doMakeBlocks) {
