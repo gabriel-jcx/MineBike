@@ -15,6 +15,7 @@ public class WorldProviderFlats extends WorldProvider {
 	public static int flatBiomeID = 50;
 	public static String dimName = "Quest World";
 	private static String flatGenPreset = "2;7,5x1,3x3,2;" + Integer.toString(flatBiomeID) + ";decoration";
+	public static int groundHeight = 11;
 	
 	@Override
 	public String getDimensionName() {

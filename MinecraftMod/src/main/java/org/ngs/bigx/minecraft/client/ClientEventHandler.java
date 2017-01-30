@@ -39,6 +39,7 @@ public class ClientEventHandler {
 		public static KeyBinding keyBindingMoveForward;
 		public static KeyBinding keyBindingMoveBackward;
 		public static KeyBinding keyBindingToggleMouse;
+		public static KeyBinding keyBindingToggleBike;
 		
 		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
@@ -49,7 +50,7 @@ public class ClientEventHandler {
 		
 		int client_tick = 0;
 		QuestLootDatabase lootDatabase = new QuestLootDatabase();
-		boolean enableLock = false;
+		boolean enableLock = false, enableBike = true;
 		
 		@SubscribeEvent
 		public void onLivingJump(LivingJumpEvent event) {
@@ -66,6 +67,10 @@ public class ClientEventHandler {
 			if (keyBindingToggleMouse.isPressed()) {
 				enableLock = !enableLock;
 				System.out.println("Movement/Look lock: " + enableLock);
+			}
+			if (keyBindingToggleBike.isPressed()) {
+				enableBike = !enableBike;
+				System.out.println("Toggle Bike Movement: " + enableBike);
 			}
 //			if (keyBindingTogglePedalingMode.isPressed()) {
 //				System.out.println("BiGX Shoe Toggle Key Pressed");
@@ -117,6 +122,8 @@ public class ClientEventHandler {
 				} else {
 					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
 					Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
+					p.capabilities.setFlySpeed(0.05F);
+					p.capabilities.setPlayerWalkSpeed(0.1F);
 				}
 				
 				// Handling Player heart rate and rpm as mechanics for Chase Quest
@@ -166,7 +173,8 @@ public class ClientEventHandler {
 					float moveSpeed = context.getSpeed()/4;
 					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-					p.setVelocity(xt, p.motionY, zt);
+					if (enableBike)
+						p.setVelocity(xt, p.motionY, zt);
 					
 //					float degradation = 0.05f;
 //	                if(context.getSpeed() >= 0){

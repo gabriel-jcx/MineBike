@@ -179,6 +179,15 @@ public class NpcCommand {
 		return list;
 	}
 	
+	public static void removeNpc(String name, int dimension) {
+		for (Object obj : getCustomNpcsInDimension(dimension)) {
+			if (obj instanceof EntityNPCInterface) {
+				if (((EntityNPCInterface)obj).display.name == name)
+					((EntityNPCInterface)obj).setDead();
+			}
+		}
+	}
+	
 	public void setSpeed(int speed) {
 		npc.ai.setWalkingSpeed(speed);
 	}

@@ -59,14 +59,14 @@ public class BiGXPacketHandler {
 //						context.setSpeed( (float) Math.max( BiGXConstants.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .00125f), 0 ) ) );
 //					}
 					
-					context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+					//context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
 					
 					context.increaseShoeEnergy(context.getSpeed());
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:
 				int change = packet.data[1] | (packet.data[2] << 8);
-				if(change == 0){context.setSpeed(0);}
+				//if(change == 0){context.setSpeed(0);}
 				break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.TIMELAPSE_HEARTRATEREQUIREMENT:
 				context.timeSpent = packet.data[1];
