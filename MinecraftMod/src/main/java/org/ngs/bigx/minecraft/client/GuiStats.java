@@ -2,13 +2,16 @@ package org.ngs.bigx.minecraft.client;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
@@ -20,13 +23,14 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-public class GuiStats extends Gui {
+public class GuiStats extends GuiScreen {
 	
 	public static int tick = 0;
 	
 	private Minecraft mc;
-	
+
 	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
+	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/timer.png");
 	private ResourceLocation HEART_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/heart.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private int HEART_OFFSET = 54;
@@ -107,53 +111,23 @@ public class GuiStats extends Gui {
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
-
-	    	Quest quest = context.questManager.getQuest();
 	    	
-	    	if(quest != null)
+	    	if(CommonEventHandler.chasingQuestOnGoing)
 	    	{
-	//	    	float speedometerAngle = 36 * context.getSpeed();
-	    		float completeRate = (float)(quest.getTimeLimit()-quest.getSecondsRemainingToEnd()) / (float)quest.getTimeLimit();
-		    	float speedometerAngle = 180f + 360f * completeRate;
-		    	
-		    	gauge_01_percentile = (float)QuestRunFromMummy.itemsCollected/(float)QuestRunFromMummy.countDeadend;
-		    	gauge_02_percentile = (float)QuestRunFromMummy.itemsCollected/(float)QuestRunFromMummy.countDeadend;
-	
 		    	GL11.glPushMatrix();
 		    	
-				    GL11.glTranslatef(mcWidth/2, 27f, 0); 
+				    GL11.glTranslatef(mcWidth/2, 12f, 0); 
 				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				    GL11.glEnable(GL11.GL_BLEND);
-				    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-			        drawTexturedModalRect(-25, -25, 0, 0, 50 , 50);
-		        	
-			    	GL11.glPushMatrix();
-				    	GL11.glTranslatef(1f, 1f, 0); 
-				    	GL11.glRotatef(speedometerAngle, 0, 0, 1);
-				    	GL11.glEnable(GL11.GL_BLEND);
-					    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-			        	drawTexturedModalRect(-25, -25, 51, 0, 50 , 50);
-		        	GL11.glPopMatrix();
-		        	
-			    	GL11.glPushMatrix();
-				    	GL11.glTranslatef(-35f, 0, 0); 
-					    GL11.glColor4f(1.0F, 1.0f - gauge_01_percentile, 0F, 1.0F);
-				    	GL11.glEnable(GL11.GL_BLEND);
-					    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-			        	drawTexturedModalRect(-10, -26, 101, 0, 20 , (int)(gauge_01_percentile*50));
-	//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 101, (int)(50f-gauge_01_percentile*50), 20 , (int)(gauge_01_percentile*50));
-		        	GL11.glPopMatrix();
-		        	
-			    	GL11.glPushMatrix();
-				    	GL11.glTranslatef(37f, 0, 0); 
-					    GL11.glColor4f(1.0F, 1.0f - gauge_02_percentile, 0F, 1.0F);
-				    	GL11.glEnable(GL11.GL_BLEND);
-					    mc.renderEngine.bindTexture(SPEEDOMETER_TEXTURE);
-			        	drawTexturedModalRect(-10, -26, 130, 0, 20 , (int)(gauge_02_percentile*50));
-	//		        	drawTexturedModalRect(-10, (int)(25f-gauge_02_percentile*50), 130, (int)(50f-gauge_02_percentile*50), 20 , (int)(gauge_02_percentile*50));
-		        	GL11.glPopMatrix();
+				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
+			        drawTexturedModalRect(-6, -6, 0, 0, 12 , 12);
 	        	
 	        	GL11.glPopMatrix();
+	        	
+	        	String text = CommonEventHandler.chainsgQuestTimeLeft;
+
+	        	FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 18, 0);
 	    	}
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();

@@ -95,16 +95,16 @@ import net.minecraftforge.common.MinecraftForge;
 	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
 	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
 	    	
-	    	try {
-				context.eTracker.start();
-				context.eTracker.connect();
-			} catch (SocketException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+//	    	try {
+//				context.eTracker.start();
+//				context.eTracker.connect();
+//			} catch (SocketException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
 	    }
 	        
 	    @EventHandler

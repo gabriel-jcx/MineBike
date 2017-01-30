@@ -55,6 +55,8 @@ public class CommonEventHandler {
 	private Context context;
 	
 	private final float chaseRunSpeed = 2.2f;
+	public static boolean chasingQuestOnGoing = false;
+	public static String chainsgQuestTimeLeft = "";
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -204,6 +206,7 @@ public class CommonEventHandler {
 							t2.cancel();
 						}
 						if (time <= 0) {
+							chasingQuestOnGoing = false;
 							t2.cancel();
 							time = 30;
 							BiGX.instance().context.setSpeed(0);
@@ -222,6 +225,16 @@ public class CommonEventHandler {
 					@Override
 					public void run() {
 						if (countdown > 0) {
+							chasingQuestOnGoing = true;
+							
+							chainsgQuestTimeLeft = "";
+							
+							if(time<10)
+							{
+								chainsgQuestTimeLeft = "0";
+							}
+							
+							chainsgQuestTimeLeft += time + ":00";
 							System.out.println(countdown-- + "...");
 						} else {
 							System.out.println("GO!");
