@@ -60,7 +60,9 @@ public class CommonEventHandler {
 	private final float chaseRunSpeed = 2.2f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
-	public static String chainsgQuestTimeLeft = "";
+
+	private static int chasingQuestInitialPosX = 0;
+	private static int chasingQuestInitialPosY = 0;
 	
 	public static int getTime()
 	{
@@ -138,6 +140,9 @@ public class CommonEventHandler {
 				final QuestTeleporter teleporter = new QuestTeleporter(ws);
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
+
+				chasingQuestInitialPosX = (int)event.entity.posX;
+				chasingQuestInitialPosY = 10;
 				
 				//context.questManager.setQuest(QuestChasing.makeQuest("First Chase Quest", 100));
 
@@ -149,11 +154,12 @@ public class CommonEventHandler {
 				final TimerTask t3Task = new TimerTask() {
 					@Override
 					public void run() {
+						// Timer for the case where the main char is close enough to catch the bad guy
 						if (!Minecraft.getMinecraft().isGamePaused()) {
-							for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
+							for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-									ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
-									blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
+									ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+									blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
 									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
 								}
 							}
@@ -168,20 +174,18 @@ public class CommonEventHandler {
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
 							
-//							System.out.println(time);
-							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
-								ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY, z, Blocks.fence);
-								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY, z));
-								ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY, z, Blocks.fence);
-								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY, z));
+								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY, z));
+								ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, chasingQuestInitialPosY, z));
 							}
 							if (ratio > 0.4) {
-								for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
+								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-										ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
-										blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
-										ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+										ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+										ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
 									}
 								}
 							}
@@ -201,7 +205,11 @@ public class CommonEventHandler {
 //								t3.cancel();
 //							}
 //						}
+						
+						// Quest Success!
 						if (ratio > 0.8f) {
+							chasingQuestOnGoing = false;
+							chasingQuestOnCountDown = false;
 							System.out.println("You got me!");
 							time = 30;
 //							if (doMakeBlocks)
@@ -219,6 +227,8 @@ public class CommonEventHandler {
 							t2.cancel();
 							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
+
+						// Quest Failure!
 						if (time <= 0) {
 							chasingQuestOnGoing = false;
 							chasingQuestOnCountDown = false;
@@ -234,6 +244,9 @@ public class CommonEventHandler {
 //									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
 //								}
 //							}
+							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+							t2.cancel();
+							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 					}
 				};
@@ -265,10 +278,10 @@ public class CommonEventHandler {
 				};
 				
 				for (int z = (int)event.entity.posZ; z < (int)event.entity.posZ+64; ++z) {
-					ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY-2, z, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY-2, z));
-					ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY-2, z, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY-2, z));
+					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY-2, z));
+					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, chasingQuestInitialPosY-2, z));
 				}
 				
 				t.scheduleAtFixedRate(tTask, 0, 1000);
