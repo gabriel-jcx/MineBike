@@ -44,7 +44,7 @@ public class CommonEventHandler {
 	int server_tick = 0;
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
-	int countdown = 10;
+	private static int countdown = 10;
 	private static int time = 30;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
@@ -59,7 +59,19 @@ public class CommonEventHandler {
 	
 	private final float chaseRunSpeed = 2.2f;
 	public static boolean chasingQuestOnGoing = false;
+	public static boolean chasingQuestOnCountDown = false;
 	public static String chainsgQuestTimeLeft = "";
+	
+	public static int getTime()
+	{
+		return time;
+	}
+	
+	public static int getCountdown()
+	{
+		return countdown;
+	}
+	
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -156,15 +168,6 @@ public class CommonEventHandler {
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
 							
-							chainsgQuestTimeLeft = "";
-							
-							if(time<10)
-							{
-								chainsgQuestTimeLeft = "0";
-							}
-							
-							chainsgQuestTimeLeft += time + ":00";
-							
 //							System.out.println(time);
 							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
@@ -218,6 +221,7 @@ public class CommonEventHandler {
 						}
 						if (time <= 0) {
 							chasingQuestOnGoing = false;
+							chasingQuestOnCountDown = false;
 							t2.cancel();
 							System.out.println("TIME UP -- FAIL");
 							time = 30;
@@ -239,6 +243,7 @@ public class CommonEventHandler {
 					public void run() {
 						if (countdown > 0) {
 							chasingQuestOnGoing = true;
+							chasingQuestOnCountDown = true;
 							System.out.println(countdown-- + "...");
 							if (countdown == 5) {
 								npc = NpcCommand.spawnNpc(0.5f, 11, 20, ws, "Thief");
@@ -248,6 +253,7 @@ public class CommonEventHandler {
 								command.runInDirection(ForgeDirection.SOUTH);
 							}
 						} else {
+							chasingQuestOnCountDown = false;
 							System.out.println("GO!");
 							command.enableMoving(true);
 							countdown = 10;
@@ -255,15 +261,6 @@ public class CommonEventHandler {
 							initialDist = event.entity.getDistanceToEntity(npc);
 							t2.scheduleAtFixedRate(t2Task, 0, 1000);
 						}
-						
-						chainsgQuestTimeLeft = "";
-						
-						if(time<10)
-						{
-							chainsgQuestTimeLeft = "0";
-						}
-						
-						chainsgQuestTimeLeft += time + ":00";
 					}
 				};
 				

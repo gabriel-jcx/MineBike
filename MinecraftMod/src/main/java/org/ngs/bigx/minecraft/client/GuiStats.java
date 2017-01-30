@@ -120,14 +120,44 @@ public class GuiStats extends GuiScreen {
 				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				    GL11.glEnable(GL11.GL_BLEND);
 				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
-			        drawTexturedModalRect(-6, -6, 0, 0, 12 , 12);
+			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
 	        	
 	        	GL11.glPopMatrix();
 	        	
-	        	String text = CommonEventHandler.chainsgQuestTimeLeft;
+	        	int time = 0;
+	        	
+	        	if(CommonEventHandler.chasingQuestOnCountDown)
+	        	{
+	        		time = CommonEventHandler.getCountdown();
+	        	}
+	        	else
+	        	{
+	        		time = CommonEventHandler.getTime();
+	        	}
+	        	
+	        	int minuteLeft = time/60;
+				int secondLeft = time%60;
+				
+				String chainsgQuestTimeLeft = "";
+				
+				if(minuteLeft<10)
+				{
+					chainsgQuestTimeLeft = "0";
+				}
+				
+				chainsgQuestTimeLeft += minuteLeft + ":";
+				
+				if(secondLeft<10)
+				{
+					chainsgQuestTimeLeft += "0";
+				}
+				
+				chainsgQuestTimeLeft += secondLeft;
+	        	
+	        	String text = chainsgQuestTimeLeft;
 
 	        	FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 18, 0);
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
 	    	}
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();
