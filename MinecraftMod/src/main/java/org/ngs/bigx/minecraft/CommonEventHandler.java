@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.dictionary.objects.game.properties.Stage;
+import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestChasing;
@@ -22,6 +25,7 @@ import org.ngs.bigx.utility.NpcCommand;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -53,16 +57,20 @@ public class CommonEventHandler {
 	float ratio;
 	Vec3 returnLocation;
 	
-	private Context context;
+	private static Context context;
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
-	private final float chaseRunSpeed = 2.2f;
+	private final float chaseRunSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
+	
+	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
 	private static int chasingQuestInitialPosY = 0;
+	private static int chasingQuestInitialPosZ = 0;
 	
 	public static int getTime()
 	{
@@ -125,10 +133,32 @@ public class CommonEventHandler {
 		return false;
 	}
 	
+	public Block getBlockByDifficulty(int difficultyLevel)
+	{
+		int category = difficultyLevel/205;
+		
+		switch(category)
+		{
+		case 0:
+			return Blocks.air;
+		case 1:
+			return Blocks.stone;
+		case 2:
+			return Blocks.grass;
+		case 3:
+			return Blocks.gravel;
+		case 4:
+			return Blocks.water;
+		default:
+			return null;
+		}
+	}
+	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Diamond Sword") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
 				|| event.entity.dimension == WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
@@ -137,12 +167,134 @@ public class CommonEventHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				// INIT questSettings ArrayList if there is any
+				if(context.suggestedGamePropertiesReady)
+				{
+					time = 300; 
+					questSettings = new ArrayList<Integer>();
+//					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+//					List<Stage> stageList = stagesettings.stages;
+					
+					List<Stage> stageList = new ArrayList<Stage>();
+					
+					// TODO: NEED TO DOWNLOAD THIS FROM THE WEB: FOR THE DEMO
+					Stage stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=128;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=256;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=384;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=512;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=576;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=640;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=704;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=768;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 20;
+					stage.exerciseSettings=1024;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 10;
+					stage.exerciseSettings=512;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 20;
+					stage.exerciseSettings=1024;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=512;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=576;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=640;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=704;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=768;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 20;
+					stage.exerciseSettings=1024;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 10;
+					stage.exerciseSettings=512;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration =20;
+					stage.exerciseSettings=1024;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 10;
+					stage.exerciseSettings=512;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=192;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=128;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=64;
+					stageList.add(stage);
+					stage = new Stage();
+					stage.duration = 15;
+					stage.exerciseSettings=0;
+					stageList.add(stage);
+					
+					for(int i=0; i<stageList.size();i++)
+					{
+						for(int j=0; j<stageList.get(i).duration; j++)
+						{
+							questSettings.add(stageList.get(i).exerciseSettings);
+						}
+					}
+				}
+				else{
+					time = 30;
+				}
+				
 				final QuestTeleporter teleporter = new QuestTeleporter(ws);
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 
 				chasingQuestInitialPosX = (int)event.entity.posX;
 				chasingQuestInitialPosY = 10;
+				chasingQuestInitialPosZ = (int)event.entity.posZ;
 				
 				//context.questManager.setQuest(QuestChasing.makeQuest("First Chase Quest", 100));
 
@@ -174,37 +326,51 @@ public class CommonEventHandler {
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
 							
+							System.out.println("time["+time+"] positionZ["+(int)event.entity.posZ+"]");
+							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
 								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY, z));
 								ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, chasingQuestInitialPosY, z));
 							}
-							if (ratio > 0.4) {
+							
+							if(context.suggestedGamePropertiesReady)
+							{
+								System.out.println("Floor Change Based on the Quest Design");
+								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
+								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
+								
+								if(currentRelativeTime > questSettings.size())
+								{
+									currentRelativeTime = questSettings.size() -1;
+								}
+								
+								int currentQuestDifficulty = questSettings.get(currentRelativeTime);
+								Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
+								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-										ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+										ws.setBlock(x, chasingQuestInitialPosY-1, z, blockByDifficulty);
 										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-										ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+									}
+								}
+							}
+							else{
+								if (ratio > 0.4) {
+									for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+										for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+											ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+											blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+											ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+										}
 									}
 								}
 							}
 						}
 						if (BiGX.instance().context.getSpeed() < chaseRunSpeed) {
 							BiGX.instance().context.setSpeed(chaseRunSpeed);
-//							System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
 						}
-//						if (ratio > 0.5) {
-//							if (!doMakeBlocks) {
-//								doMakeBlocks = true;
-//								t3.scheduleAtFixedRate(t3Task, 0, 1000);
-//							}
-//						} else {
-//							if (doMakeBlocks) {
-//								doMakeBlocks = false;
-//								t3.cancel();
-//							}
-//						}
 						
 						// Quest Success!
 						if (ratio > 0.8f) {
@@ -212,8 +378,7 @@ public class CommonEventHandler {
 							chasingQuestOnCountDown = false;
 							System.out.println("You got me!");
 							time = 30;
-//							if (doMakeBlocks)
-								//t3.cancel();
+
 							BiGX.instance().context.setSpeed(0);
 							for (Vec3 v : blocks) {
 								// Cleanup - change all blocks back to grass/air
