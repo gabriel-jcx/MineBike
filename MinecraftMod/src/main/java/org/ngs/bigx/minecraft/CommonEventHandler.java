@@ -54,6 +54,8 @@ public class CommonEventHandler {
 	Vec3 returnLocation;
 	
 	private Context context;
+	EntityCustomNpc npc;
+	NpcCommand command;
 	
 	private final float chaseRunSpeed = 2.2f;
 	
@@ -120,17 +122,11 @@ public class CommonEventHandler {
 					e.printStackTrace();
 				}
 				final QuestTeleporter teleporter = new QuestTeleporter(ws);
-				returnLocation = Vec3.createVectorHelper(event.entity.posX, event.entity.posY, event.entity.posZ);
+				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 				
 				//context.questManager.setQuest(QuestChasing.makeQuest("First Chase Quest", 100));
 
-				final EntityCustomNpc npc = NpcCommand.spawnNpc(1, 11, 20, ws, "Thief");
-				//teleporter.teleport(npc, ws);
-				final NpcCommand command = new NpcCommand(npc);
-				command.setSpeed(10);
-				command.enableMoving(false);
-				command.runInDirection(ForgeDirection.SOUTH);
 				final Timer t = new Timer();
 				final Timer t2 = new Timer();
 				final Timer t3 = new Timer();
@@ -144,7 +140,7 @@ public class CommonEventHandler {
 								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
 									ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
 									blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
-									ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
 								}
 							}
 						}
@@ -157,7 +153,7 @@ public class CommonEventHandler {
 						ratio = (initialDist-dist)/initialDist;
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
-							System.out.println(time);
+//							System.out.println(time);
 							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
 								ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY, z, Blocks.fence);
@@ -165,7 +161,7 @@ public class CommonEventHandler {
 								ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY, z));
 							}
-							if (ratio > 0.5) {
+							if (ratio > 0.4) {
 								for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
 									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
 										ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
@@ -177,7 +173,7 @@ public class CommonEventHandler {
 						}
 						if (BiGX.instance().context.getSpeed() < chaseRunSpeed) {
 							BiGX.instance().context.setSpeed(chaseRunSpeed);
-							System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
+//							System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
 						}
 //						if (ratio > 0.5) {
 //							if (!doMakeBlocks) {
@@ -190,18 +186,19 @@ public class CommonEventHandler {
 //								t3.cancel();
 //							}
 //						}
-						if (ratio > 0.9f) {
+						if (ratio > 0.8f) {
 							System.out.println("You got me!");
+							time = 30;
 //							if (doMakeBlocks)
 								//t3.cancel();
 							BiGX.instance().context.setSpeed(0);
 							for (Vec3 v : blocks) {
 								// Cleanup - change all blocks back to grass/air
-								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-								} else {
-									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-								}
+//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
+//								} else {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+//								}
 							}
 							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 							t2.cancel();
@@ -209,16 +206,17 @@ public class CommonEventHandler {
 						}
 						if (time <= 0) {
 							t2.cancel();
+							System.out.println("TIME UP -- FAIL");
 							time = 30;
 							BiGX.instance().context.setSpeed(0);
-							for (Vec3 v : blocks) {
-								// Cleanup - change all blocks back to grass/air
-								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-								} else {
-									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-								}
-							}
+//							for (Vec3 v : blocks) {
+//								// Cleanup - change all blocks back to grass/air
+//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
+//								} else {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+//								}
+//							}
 						}
 					}
 				};
@@ -228,6 +226,13 @@ public class CommonEventHandler {
 					public void run() {
 						if (countdown > 0) {
 							System.out.println(countdown-- + "...");
+							if (countdown == 5) {
+								npc = NpcCommand.spawnNpc(0.5f, 11, 20, ws, "Thief");
+								command = new NpcCommand(npc);
+								command.setSpeed(10);
+								command.enableMoving(false);
+								command.runInDirection(ForgeDirection.SOUTH);
+							}
 						} else {
 							System.out.println("GO!");
 							command.enableMoving(true);

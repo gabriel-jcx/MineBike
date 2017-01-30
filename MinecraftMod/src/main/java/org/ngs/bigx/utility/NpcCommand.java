@@ -120,7 +120,7 @@ public class NpcCommand {
 				if (npc.hasDied) {
 					timer.cancel();
 				}
-				System.out.println("AI : " + npc.motionX + " " + npc.motionZ);
+				//System.out.println("AI : " + npc.motionX + " " + npc.motionZ);
 				int yy = (int)npc.posY;
 				npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
 				npc.ai.setMovingPath(new ArrayList());
@@ -182,8 +182,10 @@ public class NpcCommand {
 	public static void removeNpc(String name, int dimension) {
 		for (Object obj : getCustomNpcsInDimension(dimension)) {
 			if (obj instanceof EntityNPCInterface) {
-				if (((EntityNPCInterface)obj).display.name == name)
-					((EntityNPCInterface)obj).setDead();
+				if (((EntityNPCInterface)obj).display.name == name) {
+					((EntityNPCInterface)obj).spawnExplosionParticle();
+					((EntityNPCInterface)obj).delete();
+				}
 			}
 		}
 	}
