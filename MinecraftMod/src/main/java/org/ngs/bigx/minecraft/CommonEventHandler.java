@@ -51,6 +51,7 @@ public class CommonEventHandler {
 	float initialDist, dist;
 	boolean doMakeBlocks;
 	float ratio;
+	Vec3 returnLocation;
 	
 	private Context context;
 	
@@ -118,7 +119,8 @@ public class CommonEventHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				QuestTeleporter teleporter = new QuestTeleporter(ws);
+				final QuestTeleporter teleporter = new QuestTeleporter(ws);
+				returnLocation = Vec3.createVectorHelper(event.entity.posX, event.entity.posY, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 				
 				//context.questManager.setQuest(QuestChasing.makeQuest("First Chase Quest", 100));
@@ -159,9 +161,9 @@ public class CommonEventHandler {
 							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
 								ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY, z, Blocks.fence);
-								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY-1, z));
+								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY, z));
 								ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY, z, Blocks.fence);
-								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY-1, z));
+								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY, z));
 							}
 							if (ratio > 0.5) {
 								for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
@@ -177,31 +179,33 @@ public class CommonEventHandler {
 							BiGX.instance().context.setSpeed(chaseRunSpeed);
 							System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
 						}
-						if (ratio > 0.5) {
-							if (!doMakeBlocks) {
-								doMakeBlocks = true;
-								t3.scheduleAtFixedRate(t3Task, 0, 1000);
-							}
-						} else {
-							if (doMakeBlocks) {
-								doMakeBlocks = false;
-								t3.cancel();
-							}
-						}
-						if (ratio > 0.95f) {
+//						if (ratio > 0.5) {
+//							if (!doMakeBlocks) {
+//								doMakeBlocks = true;
+//								t3.scheduleAtFixedRate(t3Task, 0, 1000);
+//							}
+//						} else {
+//							if (doMakeBlocks) {
+//								doMakeBlocks = false;
+//								t3.cancel();
+//							}
+//						}
+						if (ratio > 0.9f) {
 							System.out.println("You got me!");
-							if (doMakeBlocks)
+//							if (doMakeBlocks)
 								//t3.cancel();
 							BiGX.instance().context.setSpeed(0);
 							for (Vec3 v : blocks) {
 								// Cleanup - change all blocks back to grass/air
-								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence)
+								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
 									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-								else
+								} else {
 									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+								}
 							}
 							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 							t2.cancel();
+							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 						if (time <= 0) {
 							t2.cancel();
@@ -209,10 +213,11 @@ public class CommonEventHandler {
 							BiGX.instance().context.setSpeed(0);
 							for (Vec3 v : blocks) {
 								// Cleanup - change all blocks back to grass/air
-								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence)
+								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
 									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-								else
+								} else {
 									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+								}
 							}
 						}
 					}
