@@ -45,7 +45,7 @@ public class CommonEventHandler {
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
 	int countdown = 10;
-	int time = 30;
+	private static int time = 30;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
 	float initialDist, dist;
@@ -155,6 +155,16 @@ public class CommonEventHandler {
 						ratio = (initialDist-dist)/initialDist;
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
+							
+							chainsgQuestTimeLeft = "";
+							
+							if(time<10)
+							{
+								chainsgQuestTimeLeft = "0";
+							}
+							
+							chainsgQuestTimeLeft += time + ":00";
+							
 //							System.out.println(time);
 							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
@@ -229,15 +239,6 @@ public class CommonEventHandler {
 					public void run() {
 						if (countdown > 0) {
 							chasingQuestOnGoing = true;
-							
-							chainsgQuestTimeLeft = "";
-							
-							if(time<10)
-							{
-								chainsgQuestTimeLeft = "0";
-							}
-							
-							chainsgQuestTimeLeft += time + ":00";
 							System.out.println(countdown-- + "...");
 							if (countdown == 5) {
 								npc = NpcCommand.spawnNpc(0.5f, 11, 20, ws, "Thief");
@@ -254,6 +255,15 @@ public class CommonEventHandler {
 							initialDist = event.entity.getDistanceToEntity(npc);
 							t2.scheduleAtFixedRate(t2Task, 0, 1000);
 						}
+						
+						chainsgQuestTimeLeft = "";
+						
+						if(time<10)
+						{
+							chainsgQuestTimeLeft = "0";
+						}
+						
+						chainsgQuestTimeLeft += time + ":00";
 					}
 				};
 				
