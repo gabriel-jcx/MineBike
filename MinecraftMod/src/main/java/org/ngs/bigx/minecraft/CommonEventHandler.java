@@ -133,87 +133,87 @@ public class CommonEventHandler {
 				final Timer t2 = new Timer();
 				final Timer t3 = new Timer();
 				// Clean up placed blocks when the quest ends
-				//final List<Vec3> blocks = new ArrayList<Vec3>();
+				final List<Vec3> blocks = new ArrayList<Vec3>();
 				final TimerTask t3Task = new TimerTask() {
 					@Override
 					public void run() {
-//						if (!Minecraft.getMinecraft().isGamePaused()) {
-//							for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
-//								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-//									ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
-//									//blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
-//									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
-//								}
-//							}
-//						}
+						if (!Minecraft.getMinecraft().isGamePaused()) {
+							for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
+								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+									ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
+									blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
+									ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+								}
+							}
+						}
 					}
 				};
 				final TimerTask t2Task = new TimerTask() {
 					@Override
 					public void run() {
-						//dist = event.entity.getDistanceToEntity(npc);
-						//ratio = (initialDist-dist)/initialDist;
-//						if (!Minecraft.getMinecraft().isGamePaused()) {
-//							time--;
-//							System.out.println(time);
-//							
-//							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
-//								ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY, z, Blocks.fence);
-//								//blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY-1, z));
-//								ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY, z, Blocks.fence);
-//								//blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY-1, z));
-//							}
-//							if (ratio > 0.5) {
-//								for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
-//									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-//										ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
-//										//blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
-//										//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
-//									}
-//								}
-//							}
-//						}
+						dist = event.entity.getDistanceToEntity(npc);
+						ratio = (initialDist-dist)/initialDist;
+						if (!Minecraft.getMinecraft().isGamePaused()) {
+							time--;
+							System.out.println(time);
+							
+							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
+								ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY, z, Blocks.fence);
+								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY-1, z));
+								ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY, z, Blocks.fence);
+								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY-1, z));
+							}
+							if (ratio > 0.5) {
+								for (int x = (int)event.entity.posX-16; x < (int)event.entity.posX+16; ++x) {
+									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+										ws.setBlock(x, (int)event.entity.posY-1, z, Blocks.gravel);
+										blocks.add(Vec3.createVectorHelper(x, (int)event.entity.posY-1, z));
+										ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+									}
+								}
+							}
+						}
 						if (BiGX.instance().context.getSpeed() < chaseRunSpeed) {
 							BiGX.instance().context.setSpeed(chaseRunSpeed);
 							System.out.println("PLAYER: " + event.entity.motionX + " " + event.entity.motionZ);
 						}
-//						if (ratio > 0.5) {
-//							if (!doMakeBlocks) {
-//								doMakeBlocks = true;
-//								t3.scheduleAtFixedRate(t3Task, 0, 1000);
-//							}
-//						} else {
-//							if (doMakeBlocks) {
-//								doMakeBlocks = false;
-//								t3.cancel();
-//							}
-//						}
-//						if (ratio > 0.98) {
-//							System.out.println("You got me!");
-//							if (doMakeBlocks)
-//								//t3.cancel();
-//							BiGX.instance().context.setSpeed(0);
-////							for (Vec3 v : blocks) {
-////								// Cleanup - change all blocks back to grass/air
-////								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence)
-////									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-////								else
-////									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-////							}
-//							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-//							t2.cancel();
-//						}
+						if (ratio > 0.5) {
+							if (!doMakeBlocks) {
+								doMakeBlocks = true;
+								t3.scheduleAtFixedRate(t3Task, 0, 1000);
+							}
+						} else {
+							if (doMakeBlocks) {
+								doMakeBlocks = false;
+								t3.cancel();
+							}
+						}
+						if (ratio > 0.95f) {
+							System.out.println("You got me!");
+							if (doMakeBlocks)
+								//t3.cancel();
+							BiGX.instance().context.setSpeed(0);
+							for (Vec3 v : blocks) {
+								// Cleanup - change all blocks back to grass/air
+								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence)
+									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
+								else
+									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+							}
+							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+							t2.cancel();
+						}
 						if (time <= 0) {
 							t2.cancel();
 							time = 30;
 							BiGX.instance().context.setSpeed(0);
-//							for (Vec3 v : blocks) {
-//								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence)
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								else
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//							}
+							for (Vec3 v : blocks) {
+								// Cleanup - change all blocks back to grass/air
+								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence)
+									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
+								else
+									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+							}
 						}
 					}
 				};
@@ -234,12 +234,12 @@ public class CommonEventHandler {
 					}
 				};
 				
-//				for (int z = (int)event.entity.posZ; z < (int)event.entity.posZ+64; ++z) {
-//					ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY-1, z, Blocks.fence);
-//					//blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY-1, z));
-//					ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY-1, z, Blocks.fence);
-//					//blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY-1, z));
-//				}
+				for (int z = (int)event.entity.posZ; z < (int)event.entity.posZ+64; ++z) {
+					ws.setBlock((int)event.entity.posX-16, (int)event.entity.posY-2, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, (int)event.entity.posY-2, z));
+					ws.setBlock((int)event.entity.posX+16, (int)event.entity.posY-2, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, (int)event.entity.posY-2, z));
+				}
 				
 				t.scheduleAtFixedRate(tTask, 0, 1000);
 			}
