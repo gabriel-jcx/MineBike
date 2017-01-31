@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.minecraft.Context;
@@ -62,7 +63,7 @@ public class CommonEventHandler {
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
-	private final float chaseRunSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	private final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
@@ -265,8 +266,22 @@ public class CommonEventHandler {
 								}
 							}
 						}
-						if (BiGX.instance().context.getSpeed() < chaseRunSpeed) {
-							BiGX.instance().context.setSpeed(chaseRunSpeed);
+						
+						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
+						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
+							float speedchange = 0f;
+							// Handling Player heart rate and rpm as mechanics for Chase Quest
+							BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+							if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+								speedchange += .2f;
+							else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+								speedchange += .2f;
+							else if (playerperscription.getTargetMax() < context.heartrate)
+								speedchange += -.1f;
+							
+//							if(BiGX.)
+
+							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
 						}
 						
 						// Quest Success!
