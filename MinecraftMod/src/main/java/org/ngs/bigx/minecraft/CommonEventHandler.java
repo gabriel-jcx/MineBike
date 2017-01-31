@@ -62,7 +62,7 @@ public class CommonEventHandler {
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
-	private final float chaseRunSpeed = 2f; // 157 blocks per 15 seconds!!
+	private final float chaseRunSpeed = 2.1f; // 157 blocks per 15 seconds!!
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
@@ -174,108 +174,8 @@ public class CommonEventHandler {
 				{
 					time = 300; 
 					questSettings = new ArrayList<Integer>();
-//					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
-//					List<Stage> stageList = stagesettings.stages;
-					
-					List<Stage> stageList = new ArrayList<Stage>();
-					
-					// TODO: NEED TO DOWNLOAD THIS FROM THE WEB: FOR THE DEMO
-					Stage stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=128;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=256;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=384;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=576;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=640;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=704;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=768;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 10;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=576;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=640;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=704;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=768;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 10;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration =20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 10;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=192;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=128;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=64;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=0;
-					stageList.add(stage);
+					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+					List<Stage> stageList = stagesettings.stages;
 					
 					for(int i=0; i<stageList.size();i++)
 					{
