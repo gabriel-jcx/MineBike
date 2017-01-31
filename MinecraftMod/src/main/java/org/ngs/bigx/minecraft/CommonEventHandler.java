@@ -50,6 +50,7 @@ public class CommonEventHandler {
 	int serverQuestTestTickCount = 10;
 	private static int countdown = 10;
 	private static int time = 30;
+	private static int timeFallBehind = 0;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
 	float initialDist, dist;
@@ -61,7 +62,7 @@ public class CommonEventHandler {
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
-	private final float chaseRunSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	private final float chaseRunSpeed = 2f; // 157 blocks per 15 seconds!!
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
@@ -140,7 +141,7 @@ public class CommonEventHandler {
 		switch(category)
 		{
 		case 0:
-			return Blocks.air;
+			return Blocks.brick_block;
 		case 1:
 			return Blocks.stone;
 		case 2:
@@ -295,12 +296,11 @@ public class CommonEventHandler {
 				chasingQuestInitialPosX = (int)event.entity.posX;
 				chasingQuestInitialPosY = 10;
 				chasingQuestInitialPosZ = (int)event.entity.posZ;
-				
-				//context.questManager.setQuest(QuestChasing.makeQuest("First Chase Quest", 100));
 
 				final Timer t = new Timer();
 				final Timer t2 = new Timer();
 				final Timer t3 = new Timer();
+				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
 				final TimerTask t3Task = new TimerTask() {
@@ -326,8 +326,6 @@ public class CommonEventHandler {
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
 							
-							System.out.println("time["+time+"] positionZ["+(int)event.entity.posZ+"]");
-							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
 								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY, z));
@@ -337,7 +335,6 @@ public class CommonEventHandler {
 							
 							if(context.suggestedGamePropertiesReady)
 							{
-								System.out.println("Floor Change Based on the Quest Design");
 								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
 								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
 								
@@ -393,7 +390,35 @@ public class CommonEventHandler {
 							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 
-						// Quest Failure!
+						// Quest Failure: Fall Behind!!!
+						if (ratio < 0) {
+							timeFallBehind++;
+							System.out.println("PUSH! You are too far away!");
+						}
+						
+						if(timeFallBehind >= 10)
+						{
+							chasingQuestOnGoing = false;
+							chasingQuestOnCountDown = false;
+							timeFallBehind = 0;
+							t2.cancel();
+							System.out.println("Too far away! -- FAIL");
+							time = 30;
+							BiGX.instance().context.setSpeed(0);
+//							for (Vec3 v : blocks) {
+//								// Cleanup - change all blocks back to grass/air
+//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
+//								} else {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+//								}
+//							}
+							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+							t2.cancel();
+							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+						}
+
+						// Quest Failure: Times up!
 						if (time <= 0) {
 							chasingQuestOnGoing = false;
 							chasingQuestOnCountDown = false;
