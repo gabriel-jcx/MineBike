@@ -136,21 +136,22 @@ public class ClientEventHandler {
 					p.capabilities.setPlayerWalkSpeed(0.1F);
 				}
 				
-				// Handling Player heart rate and rpm as mechanics for Chase Quest
-				if (context.suggestedGamePropertiesReady){
-					if (context.questManager.getQuest() != null)
-					{
-						if (context.questManager.getQuest().getName() == "Chase Quest"){
-							BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
-							if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
-								BiGX.characterProperty.changeSpeedRateby(-10);
-							else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
-								BiGX.characterProperty.changeSpeedRateby(10);
-							else if (playerperscription.getTargetMax() < context.heartrate)
-								BiGX.characterProperty.changeSpeedRateby(-5);
-						}
-					}
-				}
+				/***
+				 * FOR NOW THIS LOGIC MOVED TO THE COMMON EVENT HANDLER FOR THE DEMO
+				 */
+//				// Handling Player heart rate and rpm as mechanics for Chase Quest
+//				if (context.suggestedGamePropertiesReady){
+//					if (CommonEventHandler.chasingQuestOnGoing)
+//					{
+//						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+//						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+//							BiGX.characterProperty.changeSpeedRateby(-10);
+//						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+//							BiGX.characterProperty.changeSpeedRateby(10);
+//						else if (playerperscription.getTargetMax() < context.heartrate)
+//							BiGX.characterProperty.changeSpeedRateby(-5);
+//					}
+//				}
 				
 				
 				/*

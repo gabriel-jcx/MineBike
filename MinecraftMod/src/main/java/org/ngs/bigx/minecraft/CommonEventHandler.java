@@ -1,20 +1,22 @@
 package org.ngs.bigx.minecraft;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.io.FileUtils;
+import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
+import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
+import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestChasing;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -32,12 +34,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
+import scala.collection.concurrent.Debug;
 
 
 public class CommonEventHandler {
@@ -49,6 +51,7 @@ public class CommonEventHandler {
 	int serverQuestTestTickCount = 10;
 	private static int countdown = 10;
 	private static int time = 30;
+	private static int timeFallBehind = 0;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
 	float initialDist, dist;
@@ -60,7 +63,7 @@ public class CommonEventHandler {
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
-	private final float chaseRunSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	private final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
@@ -139,7 +142,7 @@ public class CommonEventHandler {
 		switch(category)
 		{
 		case 0:
-			return Blocks.air;
+			return Blocks.brick_block;
 		case 1:
 			return Blocks.stone;
 		case 2:
@@ -172,108 +175,8 @@ public class CommonEventHandler {
 				{
 					time = 300; 
 					questSettings = new ArrayList<Integer>();
-//					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
-//					List<Stage> stageList = stagesettings.stages;
-					
-					List<Stage> stageList = new ArrayList<Stage>();
-					
-					// TODO: NEED TO DOWNLOAD THIS FROM THE WEB: FOR THE DEMO
-					Stage stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=128;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=256;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=384;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=576;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=640;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=704;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=768;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 10;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=576;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=640;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=704;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=768;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 10;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration =20;
-					stage.exerciseSettings=1024;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 10;
-					stage.exerciseSettings=512;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=192;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=128;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=64;
-					stageList.add(stage);
-					stage = new Stage();
-					stage.duration = 15;
-					stage.exerciseSettings=0;
-					stageList.add(stage);
+					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+					List<Stage> stageList = stagesettings.stages;
 					
 					for(int i=0; i<stageList.size();i++)
 					{
@@ -294,12 +197,11 @@ public class CommonEventHandler {
 				chasingQuestInitialPosX = (int)event.entity.posX;
 				chasingQuestInitialPosY = 10;
 				chasingQuestInitialPosZ = (int)event.entity.posZ;
-				
-				//context.questManager.setQuest(QuestChasing.makeQuest("First Chase Quest", 100));
 
 				final Timer t = new Timer();
 				final Timer t2 = new Timer();
 				final Timer t3 = new Timer();
+				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
 				final TimerTask t3Task = new TimerTask() {
@@ -325,8 +227,6 @@ public class CommonEventHandler {
 						if (!Minecraft.getMinecraft().isGamePaused()) {
 							time--;
 							
-							System.out.println("time["+time+"] positionZ["+(int)event.entity.posZ+"]");
-							
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
 								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY, z));
@@ -336,7 +236,6 @@ public class CommonEventHandler {
 							
 							if(context.suggestedGamePropertiesReady)
 							{
-								System.out.println("Floor Change Based on the Quest Design");
 								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
 								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
 								
@@ -367,8 +266,22 @@ public class CommonEventHandler {
 								}
 							}
 						}
-						if (BiGX.instance().context.getSpeed() < chaseRunSpeed) {
-							BiGX.instance().context.setSpeed(chaseRunSpeed);
+						
+						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
+						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
+							float speedchange = 0f;
+							// Handling Player heart rate and rpm as mechanics for Chase Quest
+							BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+							if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+								speedchange += .2f;
+							else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+								speedchange += .2f;
+							else if (playerperscription.getTargetMax() < context.heartrate)
+								speedchange += -.1f;
+							
+//							if(BiGX.)
+
+							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
 						}
 						
 						// Quest Success!
@@ -392,7 +305,35 @@ public class CommonEventHandler {
 							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 
-						// Quest Failure!
+						// Quest Failure: Fall Behind!!!
+						if (ratio < 0) {
+							timeFallBehind++;
+							System.out.println("PUSH! You are too far away!");
+						}
+						
+						if(timeFallBehind >= 10)
+						{
+							chasingQuestOnGoing = false;
+							chasingQuestOnCountDown = false;
+							timeFallBehind = 0;
+							t2.cancel();
+							System.out.println("Too far away! -- FAIL");
+							time = 30;
+							BiGX.instance().context.setSpeed(0);
+//							for (Vec3 v : blocks) {
+//								// Cleanup - change all blocks back to grass/air
+//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
+//								} else {
+//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
+//								}
+//							}
+							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+							t2.cancel();
+							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+						}
+
+						// Quest Failure: Times up!
 						if (time <= 0) {
 							chasingQuestOnGoing = false;
 							chasingQuestOnCountDown = false;
@@ -488,20 +429,6 @@ public class CommonEventHandler {
 	 //Called when the server ticks. Usually 20 ticks a second. 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
-		
-		System.out.println(DimensionManager.getWorld(WorldProviderFlats.dimID));
-		if (MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID) == null) {
-			System.out.println("null af boi");
-		}
-		if (MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID) == null && DimensionManager.getCurrentSaveRootDirectory() != null) {
-			System.out.println("YES");
-			try {
-				FileUtils.deleteDirectory(new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath() + "\\DIM" + String.valueOf(WorldProviderFlats.dimID)));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
 		if (MinecraftServer.getServer()!=null&&event.phase==TickEvent.Phase.END) {
 			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
 			server_tick++;

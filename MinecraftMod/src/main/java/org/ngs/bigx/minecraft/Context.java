@@ -115,7 +115,7 @@ public class Context implements eyeTrackerListner {
 	 * BiGX Related Members
 	 */
 	public BiGXConnectionStateManagerClass connectionStateManager;
-	public static String ipAddress = "128.195.55.188";
+	public static String ipAddress = "128.195.55.199";
 //	public static String ipAddress = "localhost";
 	public static int port = 1331;
 	
@@ -128,7 +128,7 @@ public class Context implements eyeTrackerListner {
 		this.questEventQueue = new LinkedList<QuestEvent>(); 
 				
 		resistances.put(Blocks.air, Resistance.NONE);
-		resistances.put(Blocks.ice, Resistance.LOW);
+		resistances.put(Blocks.brick_block, Resistance.LOW);
 		resistances.put(Blocks.stone, Resistance.MLOW);
 		resistances.put(Blocks.cobblestone, Resistance.MLOW);
 		resistances.put(Blocks.grass, Resistance.MID);
@@ -247,6 +247,8 @@ public class Context implements eyeTrackerListner {
 					packet = new BiGXNetPacket(Command.ACK_GAME_DESIGN_DOWNLOAD_VALIDATE, 
 							0, 0, tempDataRef);
 					BiGXPacketHandler.sendPacket(bigxclient, packet);
+					
+					System.out.println("[NGS] Quest Design Downloaded.");
 					
 					bufferQuestDesign.clear();
 				}
