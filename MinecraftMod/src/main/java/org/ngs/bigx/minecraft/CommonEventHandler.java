@@ -1,21 +1,20 @@
 package org.ngs.bigx.minecraft;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.io.FileUtils;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
-import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
-import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestChasing;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -33,12 +32,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
-import scala.collection.concurrent.Debug;
 
 
 public class CommonEventHandler {
@@ -489,6 +488,20 @@ public class CommonEventHandler {
 	 //Called when the server ticks. Usually 20 ticks a second. 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
+		
+		System.out.println(DimensionManager.getWorld(WorldProviderFlats.dimID));
+		if (MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID) == null) {
+			System.out.println("null af boi");
+		}
+		if (MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID) == null && DimensionManager.getCurrentSaveRootDirectory() != null) {
+			System.out.println("YES");
+			try {
+				FileUtils.deleteDirectory(new File(DimensionManager.getCurrentSaveRootDirectory().getAbsolutePath() + "\\DIM" + String.valueOf(WorldProviderFlats.dimID)));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if (MinecraftServer.getServer()!=null&&event.phase==TickEvent.Phase.END) {
 			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
 			server_tick++;

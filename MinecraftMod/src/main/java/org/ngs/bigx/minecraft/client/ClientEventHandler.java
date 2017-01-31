@@ -1,19 +1,22 @@
 package org.ngs.bigx.minecraft.client;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 
+import org.apache.commons.io.FileUtils;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
 import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -30,7 +33,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class ClientEventHandler {
 	
@@ -82,6 +87,11 @@ public class ClientEventHandler {
 //			else if (keyBindingMoveBackward.isPressed()) {
 //				System.out.println("BiGX Backward");
 //			}
+		}
+		
+		@SubscribeEvent
+		public void onWorldUnload(WorldEvent.Unload event) {
+			
 		}
 		
 		//Called whenever the client ticks
