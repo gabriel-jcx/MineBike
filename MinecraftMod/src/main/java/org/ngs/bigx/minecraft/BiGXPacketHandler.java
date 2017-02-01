@@ -44,6 +44,7 @@ public class BiGXPacketHandler {
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.MOVE_FORWARDBACKWARD:
 				if (Minecraft.getMinecraft().thePlayer!=null) {
 					int change = packet.data[1] | (packet.data[2] << 8);
+					double maxSpeed = .0;
 					
 					if(change >= 512) {
 						change -= 512;
@@ -52,19 +53,35 @@ public class BiGXPacketHandler {
 					
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
-//					if(context.getSpeed() + ((double)change) >= 0){
-//						context.setSpeed( (float) Math.min( BiGXConstants.MAXBIKESPEED, Math.max( context.getSpeed() + ((double)change * .00125f), 0 ) ) );
-//					}
-//					else{
-//						context.setSpeed( (float) Math.max( BiGXConstants.MAXBIKESPEED * -1, Math.min( context.getSpeed() + ((double)change * .00125f), 0 ) ) );
-//					}
+					if(CommonEventHandler.chasingQuestOnGoing)
+					{
+						if(!CommonEventHandler.chasingQuestOnCountDown)
+						{
+							maxSpeed = CommonEventHandler.chaseRunBaseSpeed + CommonEventHandler.speedchange;
+							
+							if(context.getSpeed() + ((double)change) >= 0){
+								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+							}
+							else{
+								context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+							}
+						}
+						else{
+							context.setSpeed(0);
+						}
+					}
+					else
+					{
+						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+					}
 					
 					//context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
 					
-					context.increaseShoeEnergy(context.getSpeed());
+//					context.increaseShoeEnergy(context.getSpeed());
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:
+				context.rpm = buf.getInt();
 				int change = packet.data[1] | (packet.data[2] << 8);
 				//if(change == 0){context.setSpeed(0);}
 				break;

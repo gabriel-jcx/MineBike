@@ -63,7 +63,8 @@ public class CommonEventHandler {
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
-	private final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	public static float speedchange = 0f;
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
@@ -150,7 +151,7 @@ public class CommonEventHandler {
 		case 3:
 			return Blocks.gravel;
 		case 4:
-			return Blocks.water;
+			return Blocks.obsidian;
 		default:
 			return null;
 		}
@@ -164,11 +165,11 @@ public class CommonEventHandler {
 		if (event.item.getDisplayName().contains("Diamond Sword") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
 				|| event.entity.dimension == WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
-				try {
-					QuestChasing questChasing = new QuestChasing(0);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				try {
+//					QuestChasing questChasing = new QuestChasing(0);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 				
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
@@ -268,21 +269,29 @@ public class CommonEventHandler {
 						}
 						
 						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
-						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
-							float speedchange = 0f;
-							// Handling Player heart rate and rpm as mechanics for Chase Quest
-							BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
-							if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
-								speedchange += .2f;
-							else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
-								speedchange += .2f;
-							else if (playerperscription.getTargetMax() < context.heartrate)
-								speedchange += -.1f;
-							
-//							if(BiGX.)
+//						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
+						speedchange = 0f;
+						float speedchangerate = 0.05f;
+						// Handling Player heart rate and rpm as mechanics for Chase Quest
+						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+							speedchange += speedchangerate;
+						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+							speedchange += speedchangerate;
+						else if (playerperscription.getTargetMax() < context.heartrate)
+							speedchange -= speedchangerate/2;
+						
+						if (context.rpm <= 60 && context.rpm > 40)
+							speedchange += speedchangerate;
+						else if (context.rpm <= 90 && context.rpm > 60)
+							speedchange += speedchangerate;
+						else if (context.rpm > 90)
+							speedchange += speedchangerate/2;
+						else if (context.rpm <= 40)
+							speedchange -= speedchangerate;
 
-							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
-						}
+//							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
+//						}
 						
 						// Quest Success!
 						if (ratio > 0.8f) {
@@ -369,6 +378,11 @@ public class CommonEventHandler {
 								command.setSpeed(10);
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
+							}
+							else if(countdown == 3)
+							{
+								event.entity.rotationPitch = 0f;
+								event.entity.rotationYaw = 0f;
 							}
 						} else {
 							chasingQuestOnCountDown = false;
