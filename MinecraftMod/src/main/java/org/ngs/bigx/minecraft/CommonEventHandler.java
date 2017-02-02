@@ -28,6 +28,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
@@ -54,7 +55,7 @@ public class CommonEventHandler {
 	private static int timeFallBehind = 0;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
-	float initialDist, dist;
+	public static float initialDist, dist = 0;
 	boolean doMakeBlocks;
 	float ratio;
 	Vec3 returnLocation;
@@ -69,6 +70,7 @@ public class CommonEventHandler {
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
 	public static int virtualCurrency = 0;
+	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 	
 	private static ArrayList<Integer> questSettings = null;
 
@@ -84,6 +86,11 @@ public class CommonEventHandler {
 	public static int getCountdown()
 	{
 		return countdown;
+	}
+	
+	public static int getTimeFallBehind()
+	{
+		return timeFallBehind;
 	}
 	
 	
@@ -156,6 +163,12 @@ public class CommonEventHandler {
 		default:
 			return null;
 		}
+	}
+	
+	public void cleanArea(World world, int initX, int initY, int initZ, int toZ)
+	{
+//		for(int i=0; i<)
+//		world.setBlock(initX, chasingQuestInitialPosY-1, z-64, Blocks.grass);
 	}
 	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
@@ -318,8 +331,12 @@ public class CommonEventHandler {
 
 						// Quest Failure: Fall Behind!!!
 						if (ratio < 0) {
+							warningMsgBlinkingTime = System.currentTimeMillis();
 							timeFallBehind++;
 							System.out.println("PUSH! You are too far away!");
+						}
+						else{
+							timeFallBehind = 0;
 						}
 						
 						if(timeFallBehind >= 10)
@@ -374,6 +391,10 @@ public class CommonEventHandler {
 							chasingQuestOnGoing = true;
 							chasingQuestOnCountDown = true;
 							System.out.println(countdown-- + "...");
+							
+							if (countdown == 0)
+								dist = 0;
+							
 							if (countdown == 5) {
 								npc = NpcCommand.spawnNpc(0.5f, 11, 20, ws, "Thief");
 								command = new NpcCommand(npc);
@@ -381,7 +402,7 @@ public class CommonEventHandler {
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
 							}
-							else if(countdown == 3)
+							else if(countdown == 9)
 							{
 								event.entity.rotationPitch = 0f;
 								event.entity.rotationYaw = 0f;
