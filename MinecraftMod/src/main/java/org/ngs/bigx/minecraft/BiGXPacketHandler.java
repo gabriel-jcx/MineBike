@@ -72,12 +72,8 @@ public class BiGXPacketHandler {
 					}
 					else
 					{
-//						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
 					}
-					
-					//context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
-					
-//					context.increaseShoeEnergy(context.getSpeed());
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:
