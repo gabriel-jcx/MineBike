@@ -68,6 +68,7 @@ public class CommonEventHandler {
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	public static boolean chasingQuestOnGoing = false;
 	public static boolean chasingQuestOnCountDown = false;
+	public static int virtualCurrency = 0;
 	
 	private static ArrayList<Integer> questSettings = null;
 
@@ -162,7 +163,7 @@ public class CommonEventHandler {
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
-		if (event.item.getDisplayName().contains("Diamond Sword") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
+		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
 				|| event.entity.dimension == WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
 //				try {
@@ -272,6 +273,7 @@ public class CommonEventHandler {
 //						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
 						speedchange = 0f;
 						float speedchangerate = 0.05f;
+						
 						// Handling Player heart rate and rpm as mechanics for Chase Quest
 						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
 						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)

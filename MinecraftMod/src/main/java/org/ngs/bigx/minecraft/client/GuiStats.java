@@ -31,6 +31,7 @@ public class GuiStats extends GuiScreen {
 
 	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
 	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/timer.png");
+	private ResourceLocation COIN_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gold.png");
 	private ResourceLocation HEART_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/heart.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private int HEART_OFFSET = 54;
@@ -100,6 +101,8 @@ public class GuiStats extends GuiScreen {
 	    }
     	int xPos = 2;
     	int yPos = 2;
+    	FontRenderer fontRendererObj;
+    	String text;
 
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
@@ -107,6 +110,7 @@ public class GuiStats extends GuiScreen {
 	    	int WIDTH = 200;
 	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
 	    	int mcWidth = sr.getScaledWidth();
+	    	int mcHeight = sr.getScaledHeight();
 	    	xPos = mcWidth - WIDTH + 2;
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;
@@ -121,6 +125,9 @@ public class GuiStats extends GuiScreen {
 				    GL11.glEnable(GL11.GL_BLEND);
 				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
 			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
+			        
+				    mc.renderEngine.bindTexture(COIN_TEXTURE);
+			        drawTexturedModalRect(15, 15, 0, 0, 20 , 20);
 	        	
 	        	GL11.glPopMatrix();
 	        	
@@ -154,11 +161,27 @@ public class GuiStats extends GuiScreen {
 				
 				chainsgQuestTimeLeft += secondLeft;
 	        	
-	        	String text = chainsgQuestTimeLeft;
+	        	text = chainsgQuestTimeLeft;
 
-	        	FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
 	    	}
+
+	    	GL11.glPushMatrix();
+	    	
+			    GL11.glTranslatef(mcWidth/2, mcHeight, 0); 
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			    GL11.glEnable(GL11.GL_BLEND);
+		        
+			    mc.renderEngine.bindTexture(COIN_TEXTURE);
+		        drawTexturedModalRect(-90, -50, 0, 0, 10 , 10);
+        	
+        	GL11.glPopMatrix();
+    		
+    		text = "" + CommonEventHandler.virtualCurrency;
+
+        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 55, mcHeight - 48, 0);
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();
 	    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();
