@@ -29,6 +29,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.achievement.GuiStats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
@@ -163,6 +164,18 @@ public class CommonEventHandler {
 		default:
 			return null;
 		}
+	}
+	
+	public void goBackToTheOriginalWorld(World world, MinecraftServer worldServer, QuestTeleporter teleporter, Entity entity)
+	{
+		chasingQuestOnGoing = false;
+		chasingQuestOnCountDown = false;
+		timeFallBehind = 0;
+		time = 30;
+		BiGX.instance().context.setSpeed(0);
+		command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)entity.posZ);
+		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -317,24 +330,7 @@ public class CommonEventHandler {
 						
 						// Quest Success!
 						if (ratio > 0.8f) {
-							chasingQuestOnGoing = false;
-							chasingQuestOnCountDown = false;
-							System.out.println("You got me!");
-							time = 30;
-
-							BiGX.instance().context.setSpeed(0);
-							for (Vec3 v : blocks) {
-								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								} else {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//								}
-							}
-							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-							t2.cancel();
-							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
-							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
 						// Quest Failure: Fall Behind!!!
@@ -349,47 +345,12 @@ public class CommonEventHandler {
 						
 						if(timeFallBehind >= 10)
 						{
-							chasingQuestOnGoing = false;
-							chasingQuestOnCountDown = false;
-							timeFallBehind = 0;
-							t2.cancel();
-							System.out.println("Too far away! -- FAIL");
-							time = 30;
-							BiGX.instance().context.setSpeed(0);
-//							for (Vec3 v : blocks) {
-//								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								} else {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//								}
-//							}
-							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-							t2.cancel();
-							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
-							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
 						// Quest Failure: Times up!
 						if (time <= 0) {
-							chasingQuestOnGoing = false;
-							chasingQuestOnCountDown = false;
-							t2.cancel();
-							System.out.println("TIME UP -- FAIL");
-							time = 30;
-							BiGX.instance().context.setSpeed(0);
-//							for (Vec3 v : blocks) {
-//								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								} else {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//								}
-//							}
-							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-							t2.cancel();
-							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
-							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 					}
 				};
