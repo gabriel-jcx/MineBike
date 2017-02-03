@@ -100,6 +100,18 @@ public class CommonEventHandler {
 			
 			activenpc = teleporternpc;
 			activecommand = teleportercommand;
+			
+			boolean foundFather = false;
+			for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
+				if (((EntityCustomNpc)o).display.name == "Father")
+					foundFather = true;
+			}
+			
+			if (!foundFather) {
+				//EntityCustomNpc npc = NpcCommand.spawnNpc(-56, 73, 7, ws, "Father");
+				//npc.dialogs.
+			}
+				
 			//allNPCS.SetQuestNPCS();
 		}
 //		if (event.world.provider.dimensionId == 100){

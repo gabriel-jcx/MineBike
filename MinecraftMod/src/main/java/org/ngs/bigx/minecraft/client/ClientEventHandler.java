@@ -120,7 +120,7 @@ public class ClientEventHandler {
 				//Dealing with locking keys
 				if (enableLock) {
 					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-					Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
+					//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
 					p.jumpMovementFactor = 0f;
 					p.capabilities.setPlayerWalkSpeed(0f);
 					p.capabilities.setFlySpeed(0f);
