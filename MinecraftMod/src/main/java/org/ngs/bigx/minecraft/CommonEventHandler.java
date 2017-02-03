@@ -165,10 +165,17 @@ public class CommonEventHandler {
 		}
 	}
 	
-	public void cleanArea(World world, int initX, int initY, int initZ, int toZ)
+	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
 	{
-//		for(int i=0; i<)
-//		world.setBlock(initX, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+		for(int dz=initZ; dz<endZ+64; dz++)
+		{
+			for(int dx=chasingQuestInitialPosX-16; dx<chasingQuestInitialPosX+16; dx++)
+			{
+				world.setBlock(dx, initY-1, dz, Blocks.grass);
+			}
+			world.setBlock(chasingQuestInitialPosX-16, initY, dz, Blocks.air);
+			world.setBlock(chasingQuestInitialPosX+16, initY, dz, Blocks.air);
+		}
 	}
 	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
@@ -326,6 +333,7 @@ public class CommonEventHandler {
 							}
 							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 							t2.cancel();
+							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
 							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 
@@ -358,6 +366,7 @@ public class CommonEventHandler {
 //							}
 							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 							t2.cancel();
+							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
 							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 
@@ -379,6 +388,7 @@ public class CommonEventHandler {
 //							}
 							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 							t2.cancel();
+							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
 							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 						}
 					}
