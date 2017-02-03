@@ -47,6 +47,7 @@ public class Context implements eyeTrackerListner {
 	public String BiGXUserName;
 	public int heartrate = 80;
 	private float speed = 0;
+	public int rpm = 0;
 	public float resistance = 0;
 	public boolean bump = false;
 	public Block block = Blocks.air;
@@ -136,6 +137,7 @@ public class Context implements eyeTrackerListner {
 		resistances.put(Blocks.sand, Resistance.MHIGH);
 		resistances.put(Blocks.gravel, Resistance.MHIGH);
 		resistances.put(Blocks.water, Resistance.HIGH);
+		resistances.put(Blocks.obsidian, Resistance.HIGH);
 		
 		questManager = new QuestManager();
 		

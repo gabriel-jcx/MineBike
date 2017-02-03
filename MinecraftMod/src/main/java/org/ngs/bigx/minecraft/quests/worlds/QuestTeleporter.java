@@ -85,9 +85,7 @@ public class QuestTeleporter extends Teleporter {
 
         // Set Dimension
         if (entity.worldObj.provider.dimensionId != world.provider.dimensionId) {
-           
             playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, world.provider.dimensionId, this);
-            
         }
 
         entity.setPosition(dx, dy, dz); // silly to do this multiple time,s but it kept offsetting entity until this was done
