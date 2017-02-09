@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.TimerTask;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
+import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
@@ -21,6 +24,8 @@ import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -160,14 +165,14 @@ public class CommonEventHandler {
 		case 3:
 			return Blocks.gravel;
 		case 4:
-			return Blocks.obsidian;
+			return Blocks.sand;
 		default:
 			return null;
 		}
 	}
 	
 	public void goBackToTheOriginalWorld(World world, MinecraftServer worldServer, QuestTeleporter teleporter, Entity entity)
-	{
+	{		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
@@ -330,6 +335,17 @@ public class CommonEventHandler {
 						
 						// Quest Success!
 						if (ratio > 0.8f) {
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
@@ -345,11 +361,33 @@ public class CommonEventHandler {
 						
 						if(timeFallBehind >= 10)
 						{
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
 						// Quest Failure: Times up!
 						if (time <= 0) {
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 					}
@@ -373,11 +411,27 @@ public class CommonEventHandler {
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
 							}
+							else if (countdown == 1)
+							{
+								try {
+									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
+								} catch (SocketException e) {
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									e.printStackTrace();
+								} catch (BiGXNetException e) {
+									e.printStackTrace();
+								} catch (BiGXInternalGamePluginExcpetion e) {
+									e.printStackTrace();
+								}
+							}
 							else if(countdown == 9)
 							{
 								event.entity.rotationPitch = 0f;
 								event.entity.rotationYaw = 0f;
 							}
+							
+							
 						} else {
 							chasingQuestOnCountDown = false;
 							System.out.println("GO!");
