@@ -84,6 +84,11 @@ public class CommonEventHandler {
 	private static int chasingQuestInitialPosY = 0;
 	private static int chasingQuestInitialPosZ = 0;
 	
+	private static Timer t = null;
+	private static Timer t2 = null;
+	private static Timer t3 = null;
+	private static QuestTeleporter teleporter = null;
+	
 	public static int getTime()
 	{
 		return time;
@@ -178,7 +183,30 @@ public class CommonEventHandler {
 		timeFallBehind = 0;
 		time = 30;
 		BiGX.instance().context.setSpeed(0);
-		command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+		
+		if(npc != null)
+			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+
+		if(t != null)
+		{
+			t.cancel();
+			t = null;
+		}
+		if(t2 != null)
+		{
+			t2.cancel();
+			t2 = null;
+		}
+		if(t3 != null)
+		{
+			t3.cancel();
+			t3 = null;
+		}
+		if(returnLocation == null)
+		{
+			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
+		}
+		
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
@@ -202,14 +230,8 @@ public class CommonEventHandler {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
-				|| event.entity.dimension == WorldProviderFlats.dimID){
-			if (ws != null && event.entity instanceof EntityPlayerMP) {
-//				try {
-//					QuestChasing questChasing = new QuestChasing(0);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-				
+				&& event.entity.dimension != WorldProviderFlats.dimID){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {				
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -229,18 +251,19 @@ public class CommonEventHandler {
 				else{
 					time = 30;
 				}
+
+				t = new Timer();
+				t2 = new Timer();
+				t3 = new Timer();
 				
-				final QuestTeleporter teleporter = new QuestTeleporter(ws);
+				teleporter = new QuestTeleporter(ws);
+				
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 
 				chasingQuestInitialPosX = (int)event.entity.posX;
 				chasingQuestInitialPosY = 10;
 				chasingQuestInitialPosZ = (int)event.entity.posZ;
-
-				final Timer t = new Timer();
-				final Timer t2 = new Timer();
-				final Timer t3 = new Timer();
 				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
@@ -374,22 +397,6 @@ public class CommonEventHandler {
 							}
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
-
-						// Quest Failure: Times up!
-						if (time <= 0) {
-							try {
-								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
-							} catch (SocketException e) {
-								e.printStackTrace();
-							} catch (UnknownHostException e) {
-								e.printStackTrace();
-							} catch (BiGXNetException e) {
-								e.printStackTrace();
-							} catch (BiGXInternalGamePluginExcpetion e) {
-								e.printStackTrace();
-							}
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
-						}
 					}
 				};
 
@@ -452,6 +459,13 @@ public class CommonEventHandler {
 				}
 				
 				t.scheduleAtFixedRate(tTask, 0, 1000);
+			}
+		}
+		else if (event.item.getDisplayName().contains("Potion")
+				&& event.entity.dimension == WorldProviderFlats.dimID){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {
+				teleporter = new QuestTeleporter(ws);
+				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 			}
 		}
 	}

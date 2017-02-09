@@ -187,15 +187,10 @@ public class GuiStats extends GuiScreen {
 				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
 					    	
-				    		text = "THIEF IS GETTING AWAY IN";
+				    		text = "THIEF IS GETTING AWAY";
 		
 				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
-					    	
-				    		text = (10 - CommonEventHandler.getTimeFallBehind()) + "";
-		
-				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 50, 0xFF0000);
 			    		GL11.glPopMatrix();
 	    			}
 	    		}
