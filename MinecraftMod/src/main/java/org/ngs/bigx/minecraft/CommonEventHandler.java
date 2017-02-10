@@ -452,7 +452,8 @@ public class CommonEventHandler {
 								e.printStackTrace();
 							}
 							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(256))); ///Add gold bar to inventory
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity)						}
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
+						}
 
 						// Quest Failure: Fall Behind!!!
 						if (ratio < 0) {
