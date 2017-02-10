@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,6 +23,9 @@ import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -79,6 +82,7 @@ public class CommonEventHandler {
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 	
+	private static TerrainBiome terrainBiome = new TerrainBiome();
 	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
@@ -121,18 +125,6 @@ public class CommonEventHandler {
 			
 			activenpc = teleporternpc;
 			activecommand = teleportercommand;
-			
-//			boolean foundFather = false;
-//			for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
-//				if (((EntityCustomNpc)o).display.name == "Father")
-//					foundFather = true;
-//			}
-//			
-//			if (!foundFather) {
-//				//EntityCustomNpc npc = NpcCommand.spawnNpc(-56, 73, 7, ws, "Father");
-//				//npc.dialogs.
-//			}
-				
 			//allNPCS.SetQuestNPCS();
 		}
 //		if (event.world.provider.dimensionId == 100){
@@ -220,7 +212,7 @@ public class CommonEventHandler {
 			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
 		}
 		
-		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)entity.posZ);
+		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
@@ -231,6 +223,10 @@ public class CommonEventHandler {
 			for(int dx=chasingQuestInitialPosX-16; dx<chasingQuestInitialPosX+16; dx++)
 			{
 				world.setBlock(dx, initY-1, dz, Blocks.grass);
+				for(int dy= initY; dy<initY+6; dy++)
+				{
+					world.setBlock(dx, dy, dz, Blocks.air);
+				}
 			}
 			world.setBlock(chasingQuestInitialPosX-16, initY, dz, Blocks.air);
 			world.setBlock(chasingQuestInitialPosX+16, initY, dz, Blocks.air);
@@ -312,6 +308,7 @@ public class CommonEventHandler {
 							
 							if(context.suggestedGamePropertiesReady)
 							{
+								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
 								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
 								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
 								
@@ -322,6 +319,24 @@ public class CommonEventHandler {
 								
 								int currentQuestDifficulty = questSettings.get(currentRelativeTime);
 								Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
+
+								if( (blockByDifficulty == Blocks.brick_block) || 
+										(blockByDifficulty == Blocks.stone) || 
+										(blockByDifficulty == Blocks.gravel) )
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomCityBiome());
+								}
+								else if(blockByDifficulty == Blocks.grass)
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomGrassBiome());
+								}
+								else if(blockByDifficulty == Blocks.sand)
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomDesertBiome());
+								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
@@ -329,6 +344,46 @@ public class CommonEventHandler {
 										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
 									}
 								}
+								
+								for(int row=0; row<1; row++)
+								{
+									for(int idx=0; idx<areas.size(); idx++)
+									{
+										int x=0;
+										switch(idx)
+										{
+										case 0:
+											x = chasingQuestInitialPosX-14;
+											break;
+										case 1:
+											x = chasingQuestInitialPosX-7;
+											break;
+										case 2:
+											x = chasingQuestInitialPosX+1;
+											break;
+										case 3:
+											x = chasingQuestInitialPosX+9;
+											break;
+										}
+										int y = chasingQuestInitialPosY;
+										int z = (int)event.entity.posZ+49 + row*9;
+										
+										TerrainBiomeArea terrainBiomeArea = areas.get(idx);
+										
+										for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+										{
+											if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+											else
+												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+										}
+									}
+								}
+								
+								if(areas.size() != 0)
+									areas.clear();
+								
+								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ-128, (int)event.entity.posZ-112);
 							}
 							else{
 								if (ratio > 0.4) {
@@ -340,16 +395,6 @@ public class CommonEventHandler {
 										}
 									}
 								}
-							}
-							
-							Random rand = new Random();
-							int chance = rand.nextInt(10);
-							if (chance < 2) { // 20% chance, 0 and 1 from 0 to 9
-								blocks.addAll(createFakeHouse(20, 10, (int)event.entity.posZ, ws));
-							}
-							chance = rand.nextInt(10);
-							if (chance < 2) {
-								blocks.addAll(createFakeHouse(-25, 10, (int)event.entity.posZ, ws));
 							}
 						}
 						
@@ -435,15 +480,11 @@ public class CommonEventHandler {
 								dist = 0;
 							
 							if (countdown == 5) {
-								npc = NpcCommand.spawnNpc(0.5f, 11, 20, ws, "Thief");
+								npc = NpcCommand.spawnNpc(0f, 11, 20, ws, "Thief");
 								command = new NpcCommand(npc);
 								command.setSpeed(10);
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
-							}
-							else if (countdown == 7) {
-								createFakeHouse(20, 10, (int)event.entity.posZ, ws);
-								createFakeHouse(-25, 10, (int)event.entity.posZ, ws);
 							}
 							else if (countdown == 1)
 							{
@@ -507,57 +548,6 @@ public class CommonEventHandler {
 		}
 	}
 	
-	private List<Vec3> createFakeHouse(int origX, int origY, int origZ, WorldServer w) {
-		List<Vec3> blocks = new ArrayList<Vec3>();
-		for (int x = origX; x < origX+7; ++x) {
-			if (x == origX || x == origX+6) {
-				for (int y = origY; y < origY+5; ++y) {
-					for (int z = origZ; z < origZ+11; ++z) {
-						if (z == origZ || z == origZ+10) {
-							w.setBlock(x, y, z, Blocks.log);
-						} else {
-							w.setBlock(x, y, z, Blocks.planks);
-						}
-						blocks.add(Vec3.createVectorHelper(x, y, z));
-					}
-				}
-				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
-				blocks.add(Vec3.createVectorHelper(x, origY+1, origZ+5));
-				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
-				blocks.add(Vec3.createVectorHelper(x, origY+2, origZ+5));
-			} else {
-				for (int y = origY; y < origY+7; ++y) {
-					for (int z = origZ; z < origZ+11; ++z) {
-						if ((z == origZ || z == origZ+10) && y < origY+5) {
-							w.setBlock(x, y, z, Blocks.planks);
-							blocks.add(Vec3.createVectorHelper(x, y, z));
-						} else {
-							if (z > origZ && z < origZ+10 && y == origY+5) {
-								w.setBlock(x, y, z, Blocks.planks);
-								blocks.add(Vec3.createVectorHelper(x, y, z));
-							}
-							if (z > origZ+1 && z < origZ+9 && (x > origX+1 && x < origX+5) && y == origY+6
-									&& (x == origX+3 && z != origZ+3 && z != origZ+8)) {
-								w.setBlock(x, y, z, Blocks.planks);
-								blocks.add(Vec3.createVectorHelper(x, y, z));
-							}
-						}
-					}
-				}
-				if (x == origX+2 || x == origX+4) {
-					w.setBlock(x, origY+1, origZ, Blocks.glass);
-					blocks.add(Vec3.createVectorHelper(x, origY+1, origZ));
-					w.setBlock(x, origY+2, origZ, Blocks.glass);
-					blocks.add(Vec3.createVectorHelper(x, origY+2, origZ));
-					w.setBlock(x, origY+1, origZ+10, Blocks.glass);
-					blocks.add(Vec3.createVectorHelper(x, origY+1, origZ));
-					w.setBlock(x, origY+2, origZ+10, Blocks.glass);
-					blocks.add(Vec3.createVectorHelper(x, origY+2, origZ));
-				}
-			}
-		}
-		return blocks;
-	}
 	public static void makeQuestOnServer()
 	{
 		//Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
@@ -650,7 +640,7 @@ public class CommonEventHandler {
 
 		}
 	}
-	
+		
 	public static float getPlayerPitch() {
 		return playerQuestPitch;
 	}

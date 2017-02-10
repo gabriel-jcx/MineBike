@@ -116,8 +116,8 @@ public class Context implements eyeTrackerListner {
 	 * BiGX Related Members
 	 */
 	public BiGXConnectionStateManagerClass connectionStateManager;
-	public static String ipAddress = "128.195.55.199";
-//	public static String ipAddress = "localhost";
+//	public static String ipAddress = "128.195.55.199";
+	public static String ipAddress = "localhost";
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
