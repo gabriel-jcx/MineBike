@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -312,6 +313,16 @@ public class CommonEventHandler {
 									}
 								}
 							}
+							
+							Random rand = new Random();
+							int chance = rand.nextInt(10);
+							if (chance < 2) { // 20% chance, 0 and 1 from 0 to 9
+								blocks.addAll(createFakeHouse((int)event.entity.posX+20, (int)event.entity.posY, (int)event.entity.posZ, ws));
+							}
+							chance = rand.nextInt(10);
+							if (chance < 2) {
+								blocks.addAll(createFakeHouse((int)event.entity.posX-30, (int)event.entity.posY, (int)event.entity.posZ, ws));
+							}
 						}
 						
 						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
@@ -424,6 +435,56 @@ public class CommonEventHandler {
 		}
 	}
 	
+	private List<Vec3> createFakeHouse(int origX, int origY, int origZ, WorldServer w) {
+		List<Vec3> blocks = new ArrayList<Vec3>();
+		for (int x = origX; x < 7; ++x) {
+			if (x == 0 || x == 6) {
+				for (int y = origY; y < 5; ++y) {
+					for (int z = origZ; z < 11; ++z) {
+						if (z == 0 || z == 10) {
+							w.setBlock(x, y, z, Blocks.log);
+						} else {
+							w.setBlock(x, y, z, Blocks.planks);
+						}
+						blocks.add(Vec3.createVectorHelper(x, y, z));
+					}
+				}
+				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
+				blocks.add(Vec3.createVectorHelper(x, origY+1, origZ+5));
+				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
+				blocks.add(Vec3.createVectorHelper(x, origY+2, origZ+5));
+			} else {
+				for (int y = origY; y < 7; ++y) {
+					for (int z = origZ; z < 11; ++z) {
+						if ((z == 0 || z == 10) && y < 5) {
+							w.setBlock(x, y, z, Blocks.planks);
+							blocks.add(Vec3.createVectorHelper(x, y, z));
+						} else {
+							if (z > 0 && z < 10 && y == 5) {
+								w.setBlock(x, y, z, Blocks.planks);
+								blocks.add(Vec3.createVectorHelper(x, y, z));
+							}
+							if (z > 1 && z < 9 && (x > 0 && x < 6) && y == 6) {
+								w.setBlock(x, y, z, Blocks.planks);
+								blocks.add(Vec3.createVectorHelper(x, y, z));
+							}
+						}
+					}
+				}
+				if (x == 2 || x == 4) {
+					w.setBlock(x, origY+1, origZ, Blocks.glass);
+					blocks.add(Vec3.createVectorHelper(x, origY+1, origZ));
+					w.setBlock(x, origY+2, origZ, Blocks.glass);
+					blocks.add(Vec3.createVectorHelper(x, origY+2, origZ));
+					w.setBlock(x, origY+1, origZ, Blocks.glass);
+					blocks.add(Vec3.createVectorHelper(x, origY+1, origZ));
+					w.setBlock(x, origY+2, origZ, Blocks.glass);
+					blocks.add(Vec3.createVectorHelper(x, origY+2, origZ));
+				}
+			}
+		}
+		return blocks;
+	}
 	public static void makeQuestOnServer()
 	{
 		//Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
@@ -516,7 +577,7 @@ public class CommonEventHandler {
 
 		}
 	}
-		
+	
 	public static float getPlayerPitch() {
 		return playerQuestPitch;
 	}
