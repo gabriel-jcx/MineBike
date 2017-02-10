@@ -1,14 +1,18 @@
 package org.ngs.bigx.minecraft;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
+import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
@@ -19,8 +23,13 @@ import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -31,6 +40,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.achievement.GuiStats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
@@ -74,11 +84,17 @@ public class CommonEventHandler {
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 	
+	private static TerrainBiome terrainBiome = new TerrainBiome();
 	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
 	private static int chasingQuestInitialPosY = 0;
 	private static int chasingQuestInitialPosZ = 0;
+	
+	private static Timer t = null;
+	private static Timer t2 = null;
+	private static Timer t3 = null;
+	private static QuestTeleporter teleporter = null;
 	
 	public static int getTime()
 	{
@@ -162,10 +178,45 @@ public class CommonEventHandler {
 		case 3:
 			return Blocks.gravel;
 		case 4:
-			return Blocks.obsidian;
+			return Blocks.sand;
 		default:
 			return null;
 		}
+	}
+	
+	public void goBackToTheOriginalWorld(World world, MinecraftServer worldServer, QuestTeleporter teleporter, Entity entity)
+	{		
+		chasingQuestOnGoing = false;
+		chasingQuestOnCountDown = false;
+		timeFallBehind = 0;
+		time = 30;
+		BiGX.instance().context.setSpeed(0);
+		
+		if(npc != null)
+			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+
+		if(t != null)
+		{
+			t.cancel();
+			t = null;
+		}
+		if(t2 != null)
+		{
+			t2.cancel();
+			t2 = null;
+		}
+		if(t3 != null)
+		{
+			t3.cancel();
+			t3 = null;
+		}
+		if(returnLocation == null)
+		{
+			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
+		}
+		
+		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
+		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -175,6 +226,10 @@ public class CommonEventHandler {
 			for(int dx=chasingQuestInitialPosX-16; dx<chasingQuestInitialPosX+16; dx++)
 			{
 				world.setBlock(dx, initY-1, dz, Blocks.grass);
+				for(int dy= initY; dy<initY+6; dy++)
+				{
+					world.setBlock(dx, dy, dz, Blocks.air);
+				}
 			}
 			world.setBlock(chasingQuestInitialPosX-16, initY, dz, Blocks.air);
 			world.setBlock(chasingQuestInitialPosX+16, initY, dz, Blocks.air);
@@ -187,14 +242,8 @@ public class CommonEventHandler {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
-				|| event.entity.dimension == WorldProviderFlats.dimID){
-			if (ws != null && event.entity instanceof EntityPlayerMP) {
-//				try {
-//					QuestChasing questChasing = new QuestChasing(0);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-				
+				&& event.entity.dimension != WorldProviderFlats.dimID){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {				
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -214,18 +263,19 @@ public class CommonEventHandler {
 				else{
 					time = 30;
 				}
+
+				t = new Timer();
+				t2 = new Timer();
+				t3 = new Timer();
 				
-				final QuestTeleporter teleporter = new QuestTeleporter(ws);
+				teleporter = new QuestTeleporter(ws);
+				
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 
 				chasingQuestInitialPosX = (int)event.entity.posX;
 				chasingQuestInitialPosY = 10;
 				chasingQuestInitialPosZ = (int)event.entity.posZ;
-
-				final Timer t = new Timer();
-				final Timer t2 = new Timer();
-				final Timer t3 = new Timer();
 				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
@@ -261,6 +311,7 @@ public class CommonEventHandler {
 							
 							if(context.suggestedGamePropertiesReady)
 							{
+								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
 								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
 								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
 								
@@ -271,6 +322,24 @@ public class CommonEventHandler {
 								
 								int currentQuestDifficulty = questSettings.get(currentRelativeTime);
 								Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
+
+								if( (blockByDifficulty == Blocks.brick_block) || 
+										(blockByDifficulty == Blocks.stone) || 
+										(blockByDifficulty == Blocks.gravel) )
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomCityBiome());
+								}
+								else if(blockByDifficulty == Blocks.grass)
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomGrassBiome());
+								}
+								else if(blockByDifficulty == Blocks.sand)
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomDesertBiome());
+								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
@@ -278,6 +347,46 @@ public class CommonEventHandler {
 										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
 									}
 								}
+								
+								for(int row=0; row<1; row++)
+								{
+									for(int idx=0; idx<areas.size(); idx++)
+									{
+										int x=0;
+										switch(idx)
+										{
+										case 0:
+											x = chasingQuestInitialPosX-14;
+											break;
+										case 1:
+											x = chasingQuestInitialPosX-7;
+											break;
+										case 2:
+											x = chasingQuestInitialPosX+1;
+											break;
+										case 3:
+											x = chasingQuestInitialPosX+9;
+											break;
+										}
+										int y = chasingQuestInitialPosY;
+										int z = (int)event.entity.posZ+49 + row*9;
+										
+										TerrainBiomeArea terrainBiomeArea = areas.get(idx);
+										
+										for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+										{
+											if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+											else
+												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+										}
+									}
+								}
+								
+								if(areas.size() != 0)
+									areas.clear();
+								
+								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ-128, (int)event.entity.posZ-112);
 							}
 							else{
 								if (ratio > 0.4) {
@@ -298,7 +407,18 @@ public class CommonEventHandler {
 						float speedchangerate = 0.05f;
 						
 						// Handling Player heart rate and rpm as mechanics for Chase Quest
-						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+						BiGXPatientPrescription playerperscription;
+						try{
+							playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+						}
+						catch (Exception e)
+						{
+							playerperscription = new BiGXPatientPrescription();
+							playerperscription.setTargetMin(100);
+							playerperscription.setTargetMax(100);
+							System.out.println("[BiGX] player prescription is not avilable.");
+						}
+						
 						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
 							speedchange += speedchangerate;
 						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
@@ -320,26 +440,19 @@ public class CommonEventHandler {
 						
 						// Quest Success!
 						if (ratio > 0.8f) {
-							chasingQuestOnGoing = false;
-							chasingQuestOnCountDown = false;
-							System.out.println("You got me!");
-							time = 30;
-
-							BiGX.instance().context.setSpeed(0);
-							for (Vec3 v : blocks) {
-								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								} else {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//								}
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
 							}
-							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-							t2.cancel();
 							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(256))); ///Add gold bar to inventory
-							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
-							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-						}
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity)						}
 
 						// Quest Failure: Fall Behind!!!
 						if (ratio < 0) {
@@ -353,47 +466,18 @@ public class CommonEventHandler {
 						
 						if(timeFallBehind >= 10)
 						{
-							chasingQuestOnGoing = false;
-							chasingQuestOnCountDown = false;
-							timeFallBehind = 0;
-							t2.cancel();
-							System.out.println("Too far away! -- FAIL");
-							time = 30;
-							BiGX.instance().context.setSpeed(0);
-//							for (Vec3 v : blocks) {
-//								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								} else {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//								}
-//							}
-							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-							t2.cancel();
-							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
-							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-						}
-
-						// Quest Failure: Times up!
-						if (time <= 0) {
-							chasingQuestOnGoing = false;
-							chasingQuestOnCountDown = false;
-							t2.cancel();
-							System.out.println("TIME UP -- FAIL");
-							time = 30;
-							BiGX.instance().context.setSpeed(0);
-//							for (Vec3 v : blocks) {
-//								// Cleanup - change all blocks back to grass/air
-//								if (ws.getBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord) == Blocks.fence) {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.air);
-//								} else {
-//									ws.setBlock((int)v.xCoord, (int)v.yCoord, (int)v.zCoord, Blocks.grass);
-//								}
-//							}
-							command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-							t2.cancel();
-							cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)event.entity.posZ);
-							teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 					}
 				};
@@ -416,11 +500,27 @@ public class CommonEventHandler {
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
 							}
+							else if (countdown == 1)
+							{
+								try {
+									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
+								} catch (SocketException e) {
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									e.printStackTrace();
+								} catch (BiGXNetException e) {
+									e.printStackTrace();
+								} catch (BiGXInternalGamePluginExcpetion e) {
+									e.printStackTrace();
+								}
+							}
 							else if(countdown == 9)
 							{
 								event.entity.rotationPitch = 0f;
 								event.entity.rotationYaw = 0f;
 							}
+							
+							
 						} else {
 							chasingQuestOnCountDown = false;
 							System.out.println("GO!");
@@ -441,6 +541,13 @@ public class CommonEventHandler {
 				}
 				
 				t.scheduleAtFixedRate(tTask, 0, 1000);
+			}
+		}
+		else if (event.item.getDisplayName().contains("Potion")
+				&& event.entity.dimension == WorldProviderFlats.dimID){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {
+				teleporter = new QuestTeleporter(ws);
+				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 			}
 		}
 	}
