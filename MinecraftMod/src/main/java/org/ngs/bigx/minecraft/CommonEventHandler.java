@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +23,9 @@ import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
+import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -78,6 +82,7 @@ public class CommonEventHandler {
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 	
+	private static TerrainBiome terrainBiome = new TerrainBiome();
 	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
@@ -207,7 +212,7 @@ public class CommonEventHandler {
 			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
 		}
 		
-		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)entity.posZ);
+		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
@@ -218,6 +223,10 @@ public class CommonEventHandler {
 			for(int dx=chasingQuestInitialPosX-16; dx<chasingQuestInitialPosX+16; dx++)
 			{
 				world.setBlock(dx, initY-1, dz, Blocks.grass);
+				for(int dy= initY; dy<initY+6; dy++)
+				{
+					world.setBlock(dx, dy, dz, Blocks.air);
+				}
 			}
 			world.setBlock(chasingQuestInitialPosX-16, initY, dz, Blocks.air);
 			world.setBlock(chasingQuestInitialPosX+16, initY, dz, Blocks.air);
@@ -299,6 +308,7 @@ public class CommonEventHandler {
 							
 							if(context.suggestedGamePropertiesReady)
 							{
+								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
 								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
 								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
 								
@@ -309,6 +319,24 @@ public class CommonEventHandler {
 								
 								int currentQuestDifficulty = questSettings.get(currentRelativeTime);
 								Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
+
+								if( (blockByDifficulty == Blocks.brick_block) || 
+										(blockByDifficulty == Blocks.stone) || 
+										(blockByDifficulty == Blocks.gravel) )
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomCityBiome());
+								}
+								else if(blockByDifficulty == Blocks.grass)
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomGrassBiome());
+								}
+								else if(blockByDifficulty == Blocks.sand)
+								{
+									for(int idx = 0; idx<4; idx++)
+										areas.add(terrainBiome.getRandomDesertBiome());
+								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 									for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
@@ -316,6 +344,46 @@ public class CommonEventHandler {
 										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
 									}
 								}
+								
+								for(int row=0; row<1; row++)
+								{
+									for(int idx=0; idx<areas.size(); idx++)
+									{
+										int x=0;
+										switch(idx)
+										{
+										case 0:
+											x = chasingQuestInitialPosX-14;
+											break;
+										case 1:
+											x = chasingQuestInitialPosX-7;
+											break;
+										case 2:
+											x = chasingQuestInitialPosX+1;
+											break;
+										case 3:
+											x = chasingQuestInitialPosX+9;
+											break;
+										}
+										int y = chasingQuestInitialPosY;
+										int z = (int)event.entity.posZ+49 + row*9;
+										
+										TerrainBiomeArea terrainBiomeArea = areas.get(idx);
+										
+										for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+										{
+											if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+											else
+												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+										}
+									}
+								}
+								
+								if(areas.size() != 0)
+									areas.clear();
+								
+								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ-128, (int)event.entity.posZ-112);
 							}
 							else{
 								if (ratio > 0.4) {
