@@ -134,10 +134,10 @@ public class Context implements eyeTrackerListner {
 		resistances.put(Blocks.cobblestone, Resistance.MLOW);
 		resistances.put(Blocks.grass, Resistance.MID);
 		resistances.put(Blocks.dirt, Resistance.MID);
-		resistances.put(Blocks.sand, Resistance.MHIGH);
 		resistances.put(Blocks.gravel, Resistance.MHIGH);
 		resistances.put(Blocks.water, Resistance.HIGH);
 		resistances.put(Blocks.obsidian, Resistance.HIGH);
+		resistances.put(Blocks.sand, Resistance.HIGH);
 		
 		questManager = new QuestManager();
 		

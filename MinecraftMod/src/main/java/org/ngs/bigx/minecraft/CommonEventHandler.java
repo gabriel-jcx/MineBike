@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.TimerTask;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
+import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
@@ -22,6 +25,8 @@ import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -80,6 +85,11 @@ public class CommonEventHandler {
 	private static int chasingQuestInitialPosY = 0;
 	private static int chasingQuestInitialPosZ = 0;
 	
+	private static Timer t = null;
+	private static Timer t2 = null;
+	private static Timer t3 = null;
+	private static QuestTeleporter teleporter = null;
+	
 	public static int getTime()
 	{
 		return time;
@@ -112,16 +122,16 @@ public class CommonEventHandler {
 			activenpc = teleporternpc;
 			activecommand = teleportercommand;
 			
-			boolean foundFather = false;
-			for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
-				if (((EntityCustomNpc)o).display.name == "Father")
-					foundFather = true;
-			}
-			
-			if (!foundFather) {
-				//EntityCustomNpc npc = NpcCommand.spawnNpc(-56, 73, 7, ws, "Father");
-				//npc.dialogs.
-			}
+//			boolean foundFather = false;
+//			for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
+//				if (((EntityCustomNpc)o).display.name == "Father")
+//					foundFather = true;
+//			}
+//			
+//			if (!foundFather) {
+//				//EntityCustomNpc npc = NpcCommand.spawnNpc(-56, 73, 7, ws, "Father");
+//				//npc.dialogs.
+//			}
 				
 			//allNPCS.SetQuestNPCS();
 		}
@@ -173,20 +183,43 @@ public class CommonEventHandler {
 		case 3:
 			return Blocks.gravel;
 		case 4:
-			return Blocks.obsidian;
+			return Blocks.sand;
 		default:
 			return null;
 		}
 	}
 	
 	public void goBackToTheOriginalWorld(World world, MinecraftServer worldServer, QuestTeleporter teleporter, Entity entity)
-	{
+	{		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
 		time = 30;
 		BiGX.instance().context.setSpeed(0);
-		command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+		
+		if(npc != null)
+			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+
+		if(t != null)
+		{
+			t.cancel();
+			t = null;
+		}
+		if(t2 != null)
+		{
+			t2.cancel();
+			t2 = null;
+		}
+		if(t3 != null)
+		{
+			t3.cancel();
+			t3 = null;
+		}
+		if(returnLocation == null)
+		{
+			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
+		}
+		
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, chasingQuestInitialPosZ, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
@@ -210,14 +243,8 @@ public class CommonEventHandler {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
-				|| event.entity.dimension == WorldProviderFlats.dimID){
-			if (ws != null && event.entity instanceof EntityPlayerMP) {
-//				try {
-//					QuestChasing questChasing = new QuestChasing(0);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-				
+				&& event.entity.dimension != WorldProviderFlats.dimID){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {				
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -237,18 +264,19 @@ public class CommonEventHandler {
 				else{
 					time = 30;
 				}
+
+				t = new Timer();
+				t2 = new Timer();
+				t3 = new Timer();
 				
-				final QuestTeleporter teleporter = new QuestTeleporter(ws);
+				teleporter = new QuestTeleporter(ws);
+				
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 
 				chasingQuestInitialPosX = (int)event.entity.posX;
 				chasingQuestInitialPosY = 10;
 				chasingQuestInitialPosZ = (int)event.entity.posZ;
-
-				final Timer t = new Timer();
-				final Timer t2 = new Timer();
-				final Timer t3 = new Timer();
 				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
@@ -317,11 +345,11 @@ public class CommonEventHandler {
 							Random rand = new Random();
 							int chance = rand.nextInt(10);
 							if (chance < 2) { // 20% chance, 0 and 1 from 0 to 9
-								blocks.addAll(createFakeHouse((int)event.entity.posX+20, (int)event.entity.posY, (int)event.entity.posZ, ws));
+								blocks.addAll(createFakeHouse(20, 10, (int)event.entity.posZ, ws));
 							}
 							chance = rand.nextInt(10);
 							if (chance < 2) {
-								blocks.addAll(createFakeHouse((int)event.entity.posX-30, (int)event.entity.posY, (int)event.entity.posZ, ws));
+								blocks.addAll(createFakeHouse(-25, 10, (int)event.entity.posZ, ws));
 							}
 						}
 						
@@ -353,6 +381,17 @@ public class CommonEventHandler {
 						
 						// Quest Success!
 						if (ratio > 0.8f) {
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
@@ -368,11 +407,17 @@ public class CommonEventHandler {
 						
 						if(timeFallBehind >= 10)
 						{
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
-						}
-
-						// Quest Failure: Times up!
-						if (time <= 0) {
+							try {
+								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 					}
@@ -396,11 +441,31 @@ public class CommonEventHandler {
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
 							}
+							else if (countdown == 7) {
+								createFakeHouse(20, 10, (int)event.entity.posZ, ws);
+								createFakeHouse(-25, 10, (int)event.entity.posZ, ws);
+							}
+							else if (countdown == 1)
+							{
+								try {
+									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
+								} catch (SocketException e) {
+									e.printStackTrace();
+								} catch (UnknownHostException e) {
+									e.printStackTrace();
+								} catch (BiGXNetException e) {
+									e.printStackTrace();
+								} catch (BiGXInternalGamePluginExcpetion e) {
+									e.printStackTrace();
+								}
+							}
 							else if(countdown == 9)
 							{
 								event.entity.rotationPitch = 0f;
 								event.entity.rotationYaw = 0f;
 							}
+							
+							
 						} else {
 							chasingQuestOnCountDown = false;
 							System.out.println("GO!");
@@ -423,6 +488,13 @@ public class CommonEventHandler {
 				t.scheduleAtFixedRate(tTask, 0, 1000);
 			}
 		}
+		else if (event.item.getDisplayName().contains("Potion")
+				&& event.entity.dimension == WorldProviderFlats.dimID){
+			if (ws != null && event.entity instanceof EntityPlayerMP) {
+				teleporter = new QuestTeleporter(ws);
+				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
+			}
+		}
 	}
 	
 	@SubscribeEvent
@@ -437,11 +509,11 @@ public class CommonEventHandler {
 	
 	private List<Vec3> createFakeHouse(int origX, int origY, int origZ, WorldServer w) {
 		List<Vec3> blocks = new ArrayList<Vec3>();
-		for (int x = origX; x < 7; ++x) {
-			if (x == 0 || x == 6) {
-				for (int y = origY; y < 5; ++y) {
-					for (int z = origZ; z < 11; ++z) {
-						if (z == 0 || z == 10) {
+		for (int x = origX; x < origX+7; ++x) {
+			if (x == origX || x == origX+6) {
+				for (int y = origY; y < origY+5; ++y) {
+					for (int z = origZ; z < origZ+11; ++z) {
+						if (z == origZ || z == origZ+10) {
 							w.setBlock(x, y, z, Blocks.log);
 						} else {
 							w.setBlock(x, y, z, Blocks.planks);
@@ -454,31 +526,32 @@ public class CommonEventHandler {
 				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
 				blocks.add(Vec3.createVectorHelper(x, origY+2, origZ+5));
 			} else {
-				for (int y = origY; y < 7; ++y) {
-					for (int z = origZ; z < 11; ++z) {
-						if ((z == 0 || z == 10) && y < 5) {
+				for (int y = origY; y < origY+7; ++y) {
+					for (int z = origZ; z < origZ+11; ++z) {
+						if ((z == origZ || z == origZ+10) && y < origY+5) {
 							w.setBlock(x, y, z, Blocks.planks);
 							blocks.add(Vec3.createVectorHelper(x, y, z));
 						} else {
-							if (z > 0 && z < 10 && y == 5) {
+							if (z > origZ && z < origZ+10 && y == origY+5) {
 								w.setBlock(x, y, z, Blocks.planks);
 								blocks.add(Vec3.createVectorHelper(x, y, z));
 							}
-							if (z > 1 && z < 9 && (x > 0 && x < 6) && y == 6) {
+							if (z > origZ+1 && z < origZ+9 && (x > origX+1 && x < origX+5) && y == origY+6
+									&& (x == origX+3 && z != origZ+3 && z != origZ+8)) {
 								w.setBlock(x, y, z, Blocks.planks);
 								blocks.add(Vec3.createVectorHelper(x, y, z));
 							}
 						}
 					}
 				}
-				if (x == 2 || x == 4) {
+				if (x == origX+2 || x == origX+4) {
 					w.setBlock(x, origY+1, origZ, Blocks.glass);
 					blocks.add(Vec3.createVectorHelper(x, origY+1, origZ));
 					w.setBlock(x, origY+2, origZ, Blocks.glass);
 					blocks.add(Vec3.createVectorHelper(x, origY+2, origZ));
-					w.setBlock(x, origY+1, origZ, Blocks.glass);
+					w.setBlock(x, origY+1, origZ+10, Blocks.glass);
 					blocks.add(Vec3.createVectorHelper(x, origY+1, origZ));
-					w.setBlock(x, origY+2, origZ, Blocks.glass);
+					w.setBlock(x, origY+2, origZ+10, Blocks.glass);
 					blocks.add(Vec3.createVectorHelper(x, origY+2, origZ));
 				}
 			}
