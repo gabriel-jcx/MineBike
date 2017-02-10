@@ -404,7 +404,18 @@ public class CommonEventHandler {
 						float speedchangerate = 0.05f;
 						
 						// Handling Player heart rate and rpm as mechanics for Chase Quest
-						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+						BiGXPatientPrescription playerperscription;
+						try{
+							playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+						}
+						catch (Exception e)
+						{
+							playerperscription = new BiGXPatientPrescription();
+							playerperscription.setTargetMin(100);
+							playerperscription.setTargetMax(100);
+							System.out.println("[BiGX] player prescription is not avilable.");
+						}
+						
 						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
 							speedchange += speedchangerate;
 						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
