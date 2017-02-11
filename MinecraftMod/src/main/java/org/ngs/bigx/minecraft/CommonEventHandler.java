@@ -36,6 +36,8 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.entity.Entity;
@@ -113,7 +115,8 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		BikeWorldData data = BikeWorldData.get(event.world);
-		System.out.println(event.world.provider.dimensionId);
+		event.world.provider.setWorldTime(0);
+		//System.out.println(event.world.provider.dimensionId);
 		if (event.world.provider.dimensionId == 0){
 			System.out.println("DIMENSION ID == 0");
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
@@ -464,6 +467,7 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
+							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(256))); ///Add gold bar to inventory
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
@@ -608,6 +612,10 @@ public class CommonEventHandler {
 				server_tick = 0;
 			}
 			
+			//Making sure it remains daytime all the time
+			World current_world = MinecraftServer.getServer().getEntityWorld();
+			if (current_world.provider.getWorldTime() >= 12000)
+				current_world.setWorldTime(0);
 			
 			// Test Purpose Code
 			if(this.serverQuestTest)
