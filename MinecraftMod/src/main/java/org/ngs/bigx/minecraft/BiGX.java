@@ -5,8 +5,10 @@ import java.net.SocketException;
 
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
+import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
+import org.ngs.bigx.minecraft.entity.item.MysteriousKey;
 import org.ngs.bigx.minecraft.entity.lotom.BikeProperty;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
@@ -34,7 +36,10 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 @Mod (modid = BiGX.MODID, name = BiGX.MODNAME, version = BiGX.VERSION)
@@ -60,6 +65,8 @@ import net.minecraftforge.common.MinecraftForge;
 	    public Context context;
 	    
 	    public static MouseHelper disableMouseHelper;
+	    
+	    public static Item MysteriousKey;
 	    
 	    /*
 	     * Instead of using magic numbers, an enum will differentiate our GUIs when
@@ -95,16 +102,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
 	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
 	    	
-//	    	try {
-//				context.eTracker.start();
-//				context.eTracker.connect();
-//			} catch (SocketException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
+	    	MysteriousKey = new MysteriousKey(4770).setUnlocalizedName("MysteriousKey").setTextureName("bike:MysteriousKey");
 	    }
 	        
 	    @EventHandler
@@ -112,6 +110,10 @@ import net.minecraftforge.common.MinecraftForge;
 	    	proxy.init(e);
 	    	
 	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
+	    	
+	    	GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");
+	    	
+	    	MinecraftForgeClient.registerItemRenderer(BiGX.MysteriousKey, (IItemRenderer)new MysteriousKeyRenderer());
 	    }
 	        
 	    @EventHandler
