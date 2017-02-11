@@ -118,13 +118,26 @@ public class CommonEventHandler {
 			System.out.println("DIMENSION ID == 0");
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
-			EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
-			NpcCommand teleportercommand = new NpcCommand(teleporternpc);
-			teleportercommand.enableMoving(false);
-			teleportercommand.makeTransporter(true);
+			EntityCustomNpc giver = null;
+			for (Object o : NpcCommand.getCustomNpcsInDimension(0))
+				if (((EntityCustomNpc)o).display.name == "Quest Giver")
+					giver = (EntityCustomNpc)o;
+			if (giver == null) {
+				EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
+				NpcCommand teleportercommand = new NpcCommand(teleporternpc);
+				teleportercommand.enableMoving(false);
+				teleportercommand.makeTransporter(true);
+				activenpc = teleporternpc;
+				activecommand = teleportercommand;
+			} else {
+				NpcCommand teleportercommand = new NpcCommand(giver);
+				teleportercommand.enableMoving(false);
+				teleportercommand.makeTransporter(true);
+				activenpc = giver; 
+				activecommand = teleportercommand;
+			}
 			
-			activenpc = teleporternpc;
-			activecommand = teleportercommand;
+			
 			//allNPCS.SetQuestNPCS();
 		}
 //		if (event.world.provider.dimensionId == 100){
@@ -260,7 +273,10 @@ public class CommonEventHandler {
 				else{
 					time = 30;
 				}
-
+				
+				for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID))
+					((EntityCustomNpc)o).delete();
+				
 				t = new Timer();
 				t2 = new Timer();
 				t3 = new Timer();
