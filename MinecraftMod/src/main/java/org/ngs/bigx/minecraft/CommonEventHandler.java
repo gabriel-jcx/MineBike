@@ -34,6 +34,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -170,6 +171,12 @@ public class CommonEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
+		EntityPlayer player = e.entityPlayer;
+		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
+			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
+				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
+					e.setCanceled(true);
+			}
 		World w = e.world;
 		if (!w.isRemote) {
 			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
@@ -188,10 +195,10 @@ public class CommonEventHandler {
 		}
 	}
 	
-	public boolean checkPlayerInArea(final PlayerUseItemEvent.Start event, int x1, int y1, int z1, int x2, int y2, int z2){
-		if (event.entityPlayer.posX >= x1 && event.entityPlayer.posX <= x2)
-			if (event.entityPlayer.posY >= y1 && event.entityPlayer.posY <= y2)
-				if (event.entityPlayer.posZ >= z1 && event.entityPlayer.posZ <= z2)
+	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2){
+		if (player.posX >= x1 && player.posX <= x2)
+			if (player.posY >= y1 && player.posY <= y2)
+				if (player.posZ >= z1 && player.posZ <= z2)
 					return true;
 		return false;
 	}
@@ -274,7 +281,7 @@ public class CommonEventHandler {
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
-		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event, -177, 70, 333, -171, 74, 339)
+		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
 				&& event.entity.dimension != WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {				
 				// INIT questSettings ArrayList if there is any
