@@ -5,7 +5,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -13,14 +13,10 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
-import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.Context.Resistance;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestChasing;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestPlayer;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
@@ -36,23 +32,27 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
-import scala.collection.concurrent.Debug;
 
 
 public class CommonEventHandler {
@@ -119,11 +119,11 @@ public class CommonEventHandler {
 		//System.out.println(event.world.provider.dimensionId);
 		if (event.world.provider.dimensionId == 0){
 			System.out.println("DIMENSION ID == 0");
+			
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
 			EntityCustomNpc giver = null;
 			for (Object o : NpcCommand.getCustomNpcsInDimension(0))
-				if (((EntityCustomNpc)o).display.name == "Quest Giver")
+				if (((EntityCustomNpc)o).display.name.equals("Quest Giver"))
 					giver = (EntityCustomNpc)o;
 			if (giver == null) {
 				EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
@@ -166,6 +166,26 @@ public class CommonEventHandler {
 		//instead of this event which is called whenever the game is paused.
 		
 		//context.unloadWorld();
+	}
+
+	@SubscribeEvent
+	public void onPlayerInteract(PlayerInteractEvent e) {
+		World w = e.world;
+		if (!w.isRemote) {
+			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
+				System.out.println("CHEST FOUND");
+				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
+				ItemStack b = new ItemStack(Items.written_book);
+				NBTTagList pages = new NBTTagList();
+				pages.appendTag(new NBTTagString("In this cave lies a secret room. In order to save your father, you must follow the sounds of music nearby and unlock what's beyond the art."));
+				b.stackTagCompound = new NBTTagCompound();
+				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
+				b.stackTagCompound.setTag("title", new NBTTagString("A hint that may help"));
+				b.stackTagCompound.setTag("pages", pages);
+				if (!e.entityPlayer.inventory.hasItemStack(b))
+					c.setInventorySlotContents(0, b);
+			}
+		}
 	}
 	
 	public boolean checkPlayerInArea(final PlayerUseItemEvent.Start event, int x1, int y1, int z1, int x2, int y2, int z2){
@@ -236,10 +256,10 @@ public class CommonEventHandler {
 	{
 		for(int dz=initZ; dz<endZ+64; dz++)
 		{
-			for(int dx=chasingQuestInitialPosX-16; dx<chasingQuestInitialPosX+16; dx++)
+			for(int dx=chasingQuestInitialPosX-32; dx<chasingQuestInitialPosX+32; dx++)
 			{
 				world.setBlock(dx, initY-1, dz, Blocks.grass);
-				for(int dy= initY; dy<initY+6; dy++)
+				for(int dy= initY; dy<initY+16; dy++)
 				{
 					world.setBlock(dx, dy, dz, Blocks.air);
 				}
@@ -295,21 +315,22 @@ public class CommonEventHandler {
 				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
-				final TimerTask t3Task = new TimerTask() {
-					@Override
-					public void run() {
-						// Timer for the case where the main char is close enough to catch the bad guy
-						if (!Minecraft.getMinecraft().isGamePaused()) {
-							for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-									ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
-									blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
-								}
-							}
-						}
-					}
-				};
+				
+//				final TimerTask t3Task = new TimerTask() {
+//					@Override
+//					public void run() {
+//						// Timer for the case where the main char is close enough to catch the bad guy
+//						if (!Minecraft.getMinecraft().isGamePaused()) {
+//							for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+//								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+//									ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+//									blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+//									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+//								}
+//							}
+//						}
+//					}
+//				};
 				final TimerTask t2Task = new TimerTask() {
 					@Override
 					public void run() {
@@ -325,6 +346,14 @@ public class CommonEventHandler {
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, chasingQuestInitialPosY, z));
 							}
 							
+							Random rand = new Random();
+							if (rand.nextInt(10) < 2) {
+								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+							}
+							rand = new Random();
+							if (rand.nextInt(10) < 2) {
+								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+							}
 							if(context.suggestedGamePropertiesReady)
 							{
 								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
@@ -569,6 +598,45 @@ public class CommonEventHandler {
 		}
 	}
 	
+	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
+		for (int x = origX; x < origX + 7; ++x) {
+			if (x == origX || x == origX + 6) {
+				for (int y = origY; y < origY + 5; ++y) {
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if (z == origZ || z == origZ + 10)
+							w.setBlock(x, y, z, Blocks.log);
+						else
+							w.setBlock(x, y, z, Blocks.planks);
+						blocks.add(Vec3.createVectorHelper(x, y, z));
+					}
+				}
+				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
+				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
+			} else {
+				for (int y = origY; y < origY + 7; ++y) {
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
+							w.setBlock(x, y, z, Blocks.planks);
+							blocks.add(Vec3.createVectorHelper(x, y, z));
+						}
+						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
+							w.setBlock(x, y, z, Blocks.planks);
+							blocks.add(Vec3.createVectorHelper(x, y, z));
+						}
+						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
+							w.setBlock(x, y, z, Blocks.planks);
+							blocks.add(Vec3.createVectorHelper(x, y, z));
+						}
+					}
+				}
+				if (x == origX + 2 || x == origX + 4) {
+					w.setBlock(x, origY+1, origZ, Blocks.glass);
+					w.setBlock(x, origY+2, origZ, Blocks.glass);
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {
 		if (event.world.provider.getDimensionName() == WorldProviderFlats.dimName) {
@@ -611,6 +679,18 @@ public class CommonEventHandler {
 			if (server_tick==20) {
 				server_tick = 0;
 			}
+			
+//			if (activenpc == null) {
+//				System.out.println("ACTIVENPC IS NULL");
+//				for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
+//					if (((EntityCustomNpc)o).display.name.equals("Quest Giver")) {
+//						System.out.println("FOUND");
+//						activenpc = (EntityCustomNpc)o;
+//						NpcCommand teleportercommand = new NpcCommand(activenpc);
+//						activecommand = teleportercommand;
+//					}
+//				}
+//			}
 			
 			//Making sure it remains daytime all the time
 			World current_world = MinecraftServer.getServer().getEntityWorld();

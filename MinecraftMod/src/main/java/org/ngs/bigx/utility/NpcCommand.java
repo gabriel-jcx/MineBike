@@ -1,5 +1,6 @@
 package org.ngs.bigx.utility;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +13,6 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -21,7 +21,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleTransporter;
 
 public class NpcCommand {
 	
@@ -176,6 +175,7 @@ public class NpcCommand {
 	            list.add((EntityNPCInterface)entity);
 	         }
 		}
+		
 		return list;
 	}
 	
