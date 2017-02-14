@@ -174,7 +174,7 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void onPlayerInteractwithNPC(EntityInteractEvent e) {
+	void onPlayerInteractwithNPC(EntityInteractEvent e) {
 		//Merchant Exchange (Gold ingot for virtual currency)
 		if (e.entity.getEntityData().getId() == 10)
 			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
