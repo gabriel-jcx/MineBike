@@ -474,7 +474,7 @@ public class CommonEventHandler {
 						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
 //						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
 						speedchange = 0f;
-						float speedchangerate = 0.05f;
+						float speedchangerate = 0.025f;
 						
 						// Handling Player heart rate and rpm as mechanics for Chase Quest
 						BiGXPatientPrescription playerperscription;
@@ -504,6 +504,8 @@ public class CommonEventHandler {
 							speedchange += speedchangerate/2;
 						else if (context.rpm <= 40)
 							speedchange -= speedchangerate;
+						
+						System.out.println("[BiGX RPM] " + context.rpm);
 
 //							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
 //						}
