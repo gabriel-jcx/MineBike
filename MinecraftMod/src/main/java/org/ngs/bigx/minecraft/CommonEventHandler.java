@@ -205,7 +205,7 @@ public class CommonEventHandler {
 	
 	public Block getBlockByDifficulty(int difficultyLevel)
 	{
-		int category = difficultyLevel/205;
+		int category = difficultyLevel;
 		
 		switch(category)
 		{
@@ -487,7 +487,7 @@ public class CommonEventHandler {
 						else if (context.rpm <= 40)
 							speedchange -= speedchangerate;
 						
-						System.out.println("[BiGX RPM] " + context.rpm);
+						//System.out.println("[BiGX RPM] " + context.rpm);
 
 //							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
 //						}
