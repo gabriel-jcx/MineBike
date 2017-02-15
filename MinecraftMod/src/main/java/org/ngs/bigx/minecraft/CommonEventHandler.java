@@ -13,6 +13,7 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
@@ -28,6 +29,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
+import betterquesting.handlers.EventHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -49,17 +51,19 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import noppes.npcs.ai.selector.NPCInteractSelector;
 import noppes.npcs.entity.EntityCustomNpc;
 
 
 public class CommonEventHandler {
 
 	static float playerQuestPitch, playerQuestYaw;
-	
+
 	int server_tick = 0;
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
@@ -74,6 +78,7 @@ public class CommonEventHandler {
 	Vec3 returnLocation;
 	
 	private static Context context;
+	CharacterProperty characterProperty = BiGX.instance().characterProperty;;
 	EntityCustomNpc npc;
 	NpcCommand command;
 	
@@ -141,7 +146,6 @@ public class CommonEventHandler {
 				activecommand = teleportercommand;
 			}
 			
-			
 			//allNPCS.SetQuestNPCS();
 		}
 //		if (event.world.provider.dimensionId == 100){
@@ -168,10 +172,24 @@ public class CommonEventHandler {
 		
 		//context.unloadWorld();
 	}
+	
+	@SubscribeEvent
+	void onPlayerInteractwithNPC(EntityInteractEvent e) {
+		//Merchant Exchange (Gold ingot for virtual currency)
+		if (e.entity.getEntityData().getId() == 10)
+			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
+				e.entityPlayer.inventory.consumeInventoryItem(Item.getItemById(266));
+				if (characterProperty != null)
+					characterProperty.addCoins(10);
+				System.out.println("10 Gold Coins should have been added");
+			}
+}
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
+		//System.out.println(e.entity.getEntityData().getId());
+		
 		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
 			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
 				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
@@ -505,7 +523,7 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
-							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(256))); ///Add gold bar to inventory
+							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add gold bar to inventory
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 
