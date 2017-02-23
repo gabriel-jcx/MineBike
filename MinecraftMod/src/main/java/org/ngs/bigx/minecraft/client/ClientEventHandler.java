@@ -54,6 +54,7 @@ public class ClientEventHandler {
 		}
 		
 		int client_tick = 0;
+		int client_tick_count = 0;
 		QuestLootDatabase lootDatabase = new QuestLootDatabase();
 		boolean enableLock = false, enableBike = true;
 		
@@ -101,6 +102,16 @@ public class ClientEventHandler {
 			if ((Minecraft.getMinecraft().thePlayer!=null) 
 					&& (event.phase==TickEvent.Phase.END)) {
 				client_tick++;
+				
+				if(client_tick==20)
+				{
+					client_tick_count++;
+				}
+				if(client_tick_count>=4)
+				{
+					client_tick_count = 0;
+					GuiMessageWindow.showMessage("Hello\nLine Two\nLineThree");
+				}
 				
 				// Interval: 50 ms
 				if (client_tick==20) {
