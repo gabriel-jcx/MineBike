@@ -7,6 +7,7 @@ import org.apache.commons.io.FileUtils;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
@@ -27,15 +28,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
 	
@@ -52,8 +60,10 @@ public class ClientEventHandler {
 		public ClientEventHandler(Context con) {
 			context = con;
 		}
-		
+
 		int client_tick = 0;
+		int client_tick_count = 0;
+		boolean client_tick_bool = true;
 		QuestLootDatabase lootDatabase = new QuestLootDatabase();
 		boolean enableLock = false, enableBike = true;
 		
@@ -94,6 +104,46 @@ public class ClientEventHandler {
 			
 		}
 		
+		@SubscribeEvent
+		public void onAttackEntityEvent(AttackEntityEvent event) {
+			EntityCustomNpc target;
+
+			event.target.getEntityId();
+			if(event.target.getClass().getName().equals("noppes.npcs.entity.EntityCustomNpc"))
+			{
+				target = (EntityCustomNpc)event.target;
+				
+				if(target.display.name.equals("Thief"))
+				{
+//					System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
+					CommonEventHandler.deductTheifHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+				}
+			}
+		}
+		
+		@SubscribeEvent
+		public void entityAttacked(LivingHurtEvent event)
+		{
+			System.out.println("[BiGX] entityAttacked");
+			
+			EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
+			DamageSource attackSource = event.source;
+			if (attackSource.getSourceOfDamage() != null)
+			{
+				EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
+				if(player.getHeldItem() != null)
+				{
+					ItemStack itemstack = player.getHeldItem();
+					if (itemstack.getDisplayName().equals("Baton"))
+					{
+						NBTTagCompound tag = itemstack.getTagCompound();
+						int damageAmmount = tag.getInteger("Damage");
+						event.ammount = damageAmmount;
+					}
+				}
+			}
+		}
+		
 		//Called whenever the client ticks
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
@@ -108,6 +158,24 @@ public class ClientEventHandler {
 				}
 				if (client_tick==0||client_tick==10) {
 					context.bump = !context.bump;
+				}
+				
+				if(client_tick == 0)
+				{
+					client_tick_count++;
+				}
+				
+				if(client_tick_count >= 6)
+				{
+					client_tick_count = 0;
+//					GuiMessageWindow.showMessage("Line ONE\nline TWO\nlineThree");
+//					GuiMessageWindow.showGoldBar("Line ONE\nline TWO\nlineThree");
+//					GuiLeaderBoard.showLeaderBoard(client_tick_bool);
+					
+					if(client_tick_bool)
+						client_tick_bool = false;
+					else
+						client_tick_bool = true;
 				}
 
 				// Handling Player Skills

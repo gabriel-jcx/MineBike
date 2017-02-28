@@ -61,32 +61,32 @@ public class GuiLeaderBoard extends GuiScreen {
 		
 		leaderboradRows.add(row);
 		
-//		row = new LeaderboardRow();
-//		row.rank = "1";
-//		row.name = "John Morrison";
-//		row.level = "3";
-//		row.stat_1 = "23";
-//		row.totalscore = "104297";
-//		
-//		leaderboradRows.add(row);
-//		
-//		row = new LeaderboardRow();
-//		row.rank = "2";
-//		row.name = "Jamison Fawkes";
-//		row.level = "2";
-//		row.stat_1 = "21";
-//		row.totalscore = "71921";
-//		
-//		leaderboradRows.add(row);
-//		
-//		row = new LeaderboardRow();
-//		row.rank = "3";
-//		row.name = "Satya Vaswani";
-//		row.level = "1";
-//		row.stat_1 = "12";
-//		row.totalscore = "685";
-//		
-//		leaderboradRows.add(row);
+		row = new LeaderboardRow();
+		row.rank = "1";
+		row.name = "John Morrison";
+		row.level = "3";
+		row.stat_1 = "23";
+		row.totalscore = "104297";
+		
+		leaderboradRows.add(row);
+		
+		row = new LeaderboardRow();
+		row.rank = "2";
+		row.name = "Jamison Fawkes";
+		row.level = "2";
+		row.stat_1 = "21";
+		row.totalscore = "71921";
+		
+		leaderboradRows.add(row);
+		
+		row = new LeaderboardRow();
+		row.rank = "3";
+		row.name = "Satya Vaswani";
+		row.level = "1";
+		row.stat_1 = "12";
+		row.totalscore = "685";
+		
+		leaderboradRows.add(row);
 	}
 	
 	public static void addLeaderBoardRow(LeaderboardRow row)

@@ -35,7 +35,7 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/timer.png");
 	private ResourceLocation COIN_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gold.png");
 	private ResourceLocation OBJECTIVE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/objective.png");
-	private ResourceLocation HEART_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/heart.png");
+	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/theif.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
@@ -131,6 +131,9 @@ public class GuiStats extends GuiScreen {
 			        
 				    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
 			        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
+			        
+				    mc.renderEngine.bindTexture(THIEF_TEXTURE);
+			        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
 	        	
 	        	GL11.glPopMatrix();
 	        	
@@ -173,6 +176,16 @@ public class GuiStats extends GuiScreen {
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
+	        	
+	    		text = "Lv: " + CommonEventHandler.getTheifLevel();
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
+	        	
+	    		text = "HP: " + CommonEventHandler.getTheifHealthCurrent();
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
 	    		
 	    		if(CommonEventHandler.getTimeFallBehind() > 0)
 	    		{

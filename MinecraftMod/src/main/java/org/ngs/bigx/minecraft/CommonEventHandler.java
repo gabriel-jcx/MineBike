@@ -101,6 +101,11 @@ public class CommonEventHandler {
 	private static Timer t2 = null;
 	private static Timer t3 = null;
 	private static QuestTeleporter teleporter = null;
+
+	private static int theifHealthMax = 5;
+	private static int theifHealthCurrent = theifHealthMax;
+	private static int theifLevel = 1;
+	private static boolean theifLevelUpFlag = false;
 	
 	public static int getTime()
 	{
@@ -115,9 +120,20 @@ public class CommonEventHandler {
 	public static int getTimeFallBehind()
 	{
 		return timeFallBehind;
+	}	
+	
+	public static int getTheifHealthMax() {
+		return theifHealthMax;
 	}
-	
-	
+
+	public static int getTheifHealthCurrent() {
+		return theifHealthCurrent;
+	}
+
+	public static int getTheifLevel() {
+		return theifLevel;
+	}
+
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		BikeWorldData data = BikeWorldData.get(event.world);
@@ -272,7 +288,8 @@ public class CommonEventHandler {
 		{
 			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
 		}
-		
+
+		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
@@ -294,6 +311,57 @@ public class CommonEventHandler {
 		}
 	}
 	
+	public static void initThiefStat()
+	{
+		theifHealthMax = 5;
+		theifHealthCurrent = theifHealthMax;
+		theifLevel = 1;
+	}
+	
+	public static void theifLevelUp()
+	{
+		theifLevel ++;
+		
+		theifHealthMax = 5 + (int) Math.pow(3, theifLevel);
+		theifHealthCurrent = theifHealthMax;
+	}
+	
+	public static void deductTheifHealth(Item itemOnHands)
+	{
+		int deduction = 1;
+		
+		if(itemOnHands.getUnlocalizedName().equals("item.hoeStone"))
+		{
+			deduction = 3;
+		}
+		else if(itemOnHands.getUnlocalizedName().equals("item.hoeIron"))
+		{
+			deduction = 9;
+		}
+		else if(itemOnHands.getUnlocalizedName().equals("item.hoeGold"))
+		{
+			deduction = 27;
+		}
+		else if(itemOnHands.getUnlocalizedName().equals("item.hoeDiamond"))
+		{
+			deduction = 81;
+		}
+		else
+		{
+			deduction = 1;
+		}
+		
+		theifHealthCurrent -= deduction;
+		
+		virtualCurrency += deduction;
+		
+		if(theifHealthCurrent <= 0)
+		{
+			theifHealthCurrent = 0;
+			theifLevelUpFlag = true;
+		}
+	}
+	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
@@ -305,7 +373,7 @@ public class CommonEventHandler {
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
-					time = 300; 
+					time = 30; 
 					questSettings = new ArrayList<Integer>();
 					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 					List<Stage> stageList = stagesettings.stages;
@@ -505,13 +573,8 @@ public class CommonEventHandler {
 						else if (context.rpm <= 40)
 							speedchange -= speedchangerate;
 						
-						//System.out.println("[BiGX RPM] " + context.rpm);
-
-//							BiGX.instance().context.setSpeed(chaseRunBaseSpeed + speedchange);
-//						}
-						
 						// Quest Success!
-						if (ratio > 0.8f) {
+						if (time <= 0) {
 							try {
 								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 							} catch (SocketException e) {
@@ -525,6 +588,16 @@ public class CommonEventHandler {
 							}
 							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add gold bar to inventory
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
+						}
+						
+						if(theifLevelUpFlag)
+						{
+							theifLevelUpFlag = false;
+							
+							theifLevelUp();
+							time += 20;
+							
+							event.entityPlayer.setPosition(event.entityPlayer.posX, event.entityPlayer.posY, event.entityPlayer.posZ-20);
 						}
 
 						// Quest Failure: Fall Behind!!!
@@ -550,7 +623,6 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 					}
 				};
@@ -572,6 +644,7 @@ public class CommonEventHandler {
 								command.setSpeed(10);
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
+								
 							}
 							else if (countdown == 1)
 							{
@@ -595,6 +668,7 @@ public class CommonEventHandler {
 							
 							
 						} else {
+							initThiefStat();
 							chasingQuestOnCountDown = false;
 							System.out.println("GO!");
 							command.enableMoving(true);
