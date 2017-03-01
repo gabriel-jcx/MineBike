@@ -143,23 +143,42 @@ public class CommonEventHandler {
 			System.out.println("DIMENSION ID == 0");
 			
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-			EntityCustomNpc giver = null;
-			for (Object o : NpcCommand.getCustomNpcsInDimension(0))
-				if (((EntityCustomNpc)o).display.name.equals("Quest Giver"))
-					giver = (EntityCustomNpc)o;
-			if (giver == null) {
-				EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
-				NpcCommand teleportercommand = new NpcCommand(teleporternpc);
-				teleportercommand.enableMoving(false);
-				teleportercommand.makeTransporter(true);
-				activenpc = teleporternpc;
-				activecommand = teleportercommand;
-			} else {
-				NpcCommand teleportercommand = new NpcCommand(giver);
-				teleportercommand.enableMoving(false);
-				teleportercommand.makeTransporter(true);
-				activenpc = giver; 
-				activecommand = teleportercommand;
+//			EntityCustomNpc giver = null;
+//			for (Object o : NpcCommand.getCustomNpcsInDimension(0))
+//				if (((EntityCustomNpc)o).display.name.equals("Quest Giver"))
+//					giver = (EntityCustomNpc)o;
+//			if (giver == null) {
+//				EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
+//				NpcCommand teleportercommand = new NpcCommand(teleporternpc);
+//				teleportercommand.enableMoving(false);
+//				teleportercommand.makeTransporter(true);
+//				activenpc = teleporternpc;
+//				activecommand = teleportercommand;
+//			} else {
+//				NpcCommand teleportercommand = new NpcCommand(giver);
+//				teleportercommand.enableMoving(false);
+//				teleportercommand.makeTransporter(true);
+//				activenpc = giver; 
+//				activecommand = teleportercommand;
+//			}
+			
+			// NPC CHECKING
+			for (String name : NpcDatabase.NpcNames()) {
+				int found = 0;
+				for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
+					if (((EntityCustomNpc)obj).display.name.equals(name))
+						++found;
+				if (found == 0) {
+					NpcDatabase.spawn(ws, name);
+				} else if (found > 1) {
+					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
+					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
+						if (((EntityCustomNpc)obj).display.name.equals(name))
+							list.add((EntityCustomNpc)obj);
+					NpcDatabase.sortFurthestSpawn(list);
+					for (int i = 0; i < list.size()-1; ++i)
+						list.get(i).delete();
+				}
 			}
 			
 			//allNPCS.SetQuestNPCS();
@@ -640,11 +659,11 @@ public class CommonEventHandler {
 							
 							if (countdown == 5) {
 								npc = NpcCommand.spawnNpc(0f, 11, 20, ws, "Thief");
+								npc.ai.stopAndInteract = false;
 								command = new NpcCommand(npc);
 								command.setSpeed(10);
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
-								
 							}
 							else if (countdown == 1)
 							{
