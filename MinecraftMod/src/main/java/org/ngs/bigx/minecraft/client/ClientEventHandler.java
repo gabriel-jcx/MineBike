@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import org.apache.commons.io.FileUtils;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
@@ -34,6 +35,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -183,6 +185,9 @@ public class ClientEventHandler {
 				// Degrade the current player's speed
 				BiGX.characterProperty.decreaseSpeedByTime();
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+				
+				//Dealing with showing Sound Message
+				BiGXEventTriggers.MusicPlaying(p);
 				
 				
 				//Dealing with locking keys

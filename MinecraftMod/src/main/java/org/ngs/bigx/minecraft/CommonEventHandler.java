@@ -226,10 +226,11 @@ public class CommonEventHandler {
 		//System.out.println(e.entity.getEntityData().getId());
 		
 		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
-			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
-				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
-					e.setCanceled(true);
-			}
+//			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
+//				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
+//					e.setCanceled(true);
+//			}
+			BiGXEventTriggers.onRightClick(e, player);
 		World w = e.world;
 		if (!w.isRemote) {
 			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
@@ -816,6 +817,7 @@ public class CommonEventHandler {
 			World current_world = MinecraftServer.getServer().getEntityWorld();
 			if (current_world.provider.getWorldTime() >= 12000)
 				current_world.setWorldTime(0);
+
 			
 			// Test Purpose Code
 			if(this.serverQuestTest)
