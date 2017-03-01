@@ -10,6 +10,7 @@ import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
 import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
@@ -276,8 +277,13 @@ public class ClientEventHandler {
 				}  ////// END OF "TEST SHOE ENERGY IDEA"
 				
 				
+				// Detect if there is area changes where the player is in
+				ClientAreaEvent.detectAreaChange(p);
 				
-				
+				if(ClientAreaEvent.isAreaChange())
+				{
+					GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+				}
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
 				else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}

@@ -31,6 +31,7 @@ import org.ngs.bigx.dictionary.protocol.Specification.Command;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
+import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEvent;
 import org.ngs.bigx.minecraft.quests.QuestManager;
@@ -127,6 +128,7 @@ public class Context implements eyeTrackerListner {
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		this.questEventQueue = new LinkedList<QuestEvent>(); 
+		ClientAreaEvent.initArea();
 				
 		resistances.put(Blocks.air, Resistance.NONE);
 		resistances.put(Blocks.brick_block, Resistance.LOW);

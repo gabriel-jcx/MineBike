@@ -9,7 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class BiGXEventTriggers {
+public class BiGXEventTriggers {	
 	public static void onRightClick(PlayerInteractEvent event, EntityPlayer player){
 		DoorLocked(event, player);
 		ChestLocked(event, player);
