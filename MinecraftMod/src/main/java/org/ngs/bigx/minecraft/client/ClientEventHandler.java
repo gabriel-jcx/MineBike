@@ -127,21 +127,22 @@ public class ClientEventHandler {
 		@SubscribeEvent
 		public void entityAttacked(LivingHurtEvent event)
 		{
-			System.out.println("[BiGX] entityAttacked");
-			
-			EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
-			DamageSource attackSource = event.source;
-			if (attackSource.getSourceOfDamage() != null)
+			if(event.entityLiving.getClass().getName().equals(EntityLiving.class.getName()))
 			{
-				EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
-				if(player.getHeldItem() != null)
+				EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
+				DamageSource attackSource = event.source;
+				if (attackSource.getSourceOfDamage() != null)
 				{
-					ItemStack itemstack = player.getHeldItem();
-					if (itemstack.getDisplayName().equals("Baton"))
+					EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
+					if(player.getHeldItem() != null)
 					{
-						NBTTagCompound tag = itemstack.getTagCompound();
-						int damageAmmount = tag.getInteger("Damage");
-						event.ammount = damageAmmount;
+						ItemStack itemstack = player.getHeldItem();
+						if (itemstack.getDisplayName().equals("Baton"))
+						{
+							NBTTagCompound tag = itemstack.getTagCompound();
+							int damageAmmount = tag.getInteger("Damage");
+							event.ammount = damageAmmount;
+						}
 					}
 				}
 			}

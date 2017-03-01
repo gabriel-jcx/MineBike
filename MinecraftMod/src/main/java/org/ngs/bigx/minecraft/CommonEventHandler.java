@@ -13,6 +13,7 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
@@ -665,6 +666,7 @@ public class CommonEventHandler {
 								command.setSpeed(10);
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 							}
 							else if (countdown == 1)
 							{
@@ -684,6 +686,10 @@ public class CommonEventHandler {
 							{
 								event.entity.rotationPitch = 0f;
 								event.entity.rotationYaw = 0f;
+							}
+							else if(countdown == 8)
+							{
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
 							}
 							
 							

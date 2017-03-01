@@ -38,6 +38,12 @@ public class ClientAreaEvent {
 		
 		Area currentArea = detectCurrentArea(player);
 		
+		if(currentArea == null)
+		{
+			currentArea = new Area(Vec3.createVectorHelper(-100000, 0, -100000), Vec3.createVectorHelper(100000, 0, 100000), 
+					"Nowhere", AreaTypeEnum.NOTASSIGNED, player.dimension);
+		}
+		
 		if(!compareAreas(currentArea, previousArea))
 		{
 			areaChangedFlag = true;
