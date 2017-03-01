@@ -282,7 +282,12 @@ public class ClientEventHandler {
 				
 				if(ClientAreaEvent.isAreaChange())
 				{
-					GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+					ClientAreaEvent.unsetAreaChangeFlag();
+					
+					if(ClientAreaEvent.previousArea != null)
+						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+					else
+						GuiMessageWindow.showMessage("Out of Island Caprona...");
 				}
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}

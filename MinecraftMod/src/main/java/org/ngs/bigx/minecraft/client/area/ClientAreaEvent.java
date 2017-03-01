@@ -23,12 +23,17 @@ public class ClientAreaEvent {
 		return areaChangedFlag;
 	}
 	
+	public static void unsetAreaChangeFlag()
+	{
+		areaChangedFlag = false;
+	}
+	
 	public static void detectAreaChange(EntityPlayer player)
 	{
 		if(previousArea == null)
 		{
 			previousArea = new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
-					"Nowhere", AreaTypeEnum.NOTASSIGNED);
+					"Nowhere", AreaTypeEnum.NOTASSIGNED, 0);
 		}
 		
 		Area currentArea = detectCurrentArea(player);
@@ -42,20 +47,23 @@ public class ClientAreaEvent {
 	
 	public static void initArea()
 	{
-		addArea(new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
-				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(-176, 65, 334), Vec3.createVectorHelper(-171, 73, 338), 
+				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
-				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING), AreaTypeEnum.BUILDING);
+		addArea(new Area(Vec3.createVectorHelper(-82, 40, 3), Vec3.createVectorHelper(-50, 100, 19), 
+				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
-				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE), AreaTypeEnum.PLACE);
+		addArea(new Area(Vec3.createVectorHelper(-69, 40, 71), Vec3.createVectorHelper(-34, 100, 106), 
+				BiGXTextBoxDialogue.placeMarket, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
-				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE), AreaTypeEnum.PLACE);
+		addArea(new Area(Vec3.createVectorHelper(-131, 40, -18), Vec3.createVectorHelper(15, 100, 118), 
+				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
 		
-		addArea(new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
-				BiGXTextBoxDialogue.placeIslandCaprona, AreaTypeEnum.WORLD), AreaTypeEnum.WORLD);
+		addArea(new Area(Vec3.createVectorHelper(-211, 60, 312), Vec3.createVectorHelper(-138, 80, 367), 
+				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
+		
+		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
+				BiGXTextBoxDialogue.placeIslandCaprona, AreaTypeEnum.WORLD, 0), AreaTypeEnum.WORLD);
 	}
 	
 	public static void addArea(Area areaToAdd, AreaTypeEnum areaType)
@@ -114,6 +122,9 @@ public class ClientAreaEvent {
 	{
 		Area returnArea = null;
 		
+		if(player.dimension != area.dimension)
+			return returnArea;
+		
 		if( (player.posX >= area.pointA.xCoord) && (player.posX <= area.pointB.xCoord) )
 		{
 			if( (player.posY >= area.pointA.yCoord) && (player.posY <= area.pointB.yCoord) )
@@ -130,6 +141,12 @@ public class ClientAreaEvent {
 	
 	private static boolean compareAreas(Area areaA, Area areaB)
 	{
+		if(areaA == null)
+			return false;
+		
+		if(areaB == null)
+			return false;
+		
 		return areaA.equals(areaB);
 	}
 }

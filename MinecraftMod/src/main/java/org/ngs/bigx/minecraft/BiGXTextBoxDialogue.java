@@ -11,9 +11,10 @@ public class BiGXTextBoxDialogue {
 	public static final String questChaseBeginning = "Well... I guess someone's here...\nLet's find out who...";
 	public static final String questChaseShowup = "The man showed up!";
 	
-	public static final String placeHome = "< Home >"; 
-	public static final String placeVillage = "< Village >";
-	public static final String placeCave = "< Cave >";
-	public static final String placeCaveHiddenRoom = "< Hidden Room >";
-	public static final String placeIslandCaprona = "< Caprona Island >";
+	public static final String placeMarket = "\n   < Market Place >";
+	public static final String placeHome = "\n   < Home >"; 
+	public static final String placeVillage = "\n   < Village >";
+	public static final String placeCave = "\n   < Cave >";
+	public static final String placeCaveHiddenRoom = "\n   < Hidden Room >";
+	public static final String placeIslandCaprona = "\n   < Caprona Island >";
 }
