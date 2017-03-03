@@ -34,6 +34,10 @@ public class NpcDatabase {
 		npc.display.texture = getTexture(name);
 	}
 	
+	public static Vec3 getSpawn(String name) {
+		return npcs.get(name);
+	}
+	
 	private static String getTexture(String name) {
 		if (name.equals("Father"))
 			return "customnpcs:textures/entity/humanmale/VillagerSteve.png";

@@ -1,30 +1,29 @@
 package org.ngs.bigx.minecraft.client;
 
-import java.text.DecimalFormat;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import betterquesting.utils.JsonIO;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.DimensionManager;
 
 public class GuiLeaderBoard extends GuiScreen {	
 	private Minecraft mc;
@@ -33,13 +32,13 @@ public class GuiLeaderBoard extends GuiScreen {
 	
 	private Context context;
 	
-	private static ArrayList<LeaderboardRow> leaderboradRows = new ArrayList<LeaderboardRow>();
+	private static ArrayList<LeaderboardRow> leaderboardRows = new ArrayList<LeaderboardRow>();
 	
 	private static boolean isShown = false;
 	
 	public GuiLeaderBoard(Minecraft mc) {
 		super();
-		refreshLeaderBoard();
+		//refreshLeaderBoard();
 		this.mc = mc;
 	}
 	
@@ -48,54 +47,135 @@ public class GuiLeaderBoard extends GuiScreen {
 		context = c;
 	}
 	
+	public static void writeToLeaderboard(LeaderboardRow row) {
+		
+		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
+		if (!leaderboardFile.exists()) {
+			try {
+				leaderboardFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println(new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json"));
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		row.rank = getRowRank(row);
+		if (row.rank == "RANK" || Integer.parseInt(row.rank) > 10 || Integer.parseInt(row.rank) < 1) {
+			return;
+		}
+		
+		JsonObject j = new JsonObject();
+		j = JsonIO.ReadFromFile(leaderboardFile);
+		if (j.get(row.rank) != null) {
+			// Shift every leaderboard item >= rank (lesser scores) down one to make room for the new row
+			JsonObject newJ = new JsonObject();
+			for (Entry<String, JsonElement> entry : j.entrySet()) {
+				if (Integer.parseInt(entry.getKey()) >= Integer.parseInt(row.rank) && Integer.parseInt(entry.getKey()) < 10) {
+					JsonObject obj = j.get(entry.getKey()).getAsJsonObject();
+					obj.addProperty("rank", Integer.toString(Integer.parseInt(entry.getKey()) + 1));
+					newJ.add(entry.getKey(), obj);
+				} else {
+					newJ.add(entry.getKey(), entry.getValue());
+				}
+			}
+			j = newJ;
+		}
+		JsonObject jsonRow = new JsonObject();
+		jsonRow.addProperty("rank", row.rank);
+		jsonRow.addProperty("name", row.name);
+		jsonRow.addProperty("level", row.level);
+		jsonRow.addProperty("stat_1", row.stat_1);
+		jsonRow.addProperty("totalscore", row.totalscore);
+		j.add(row.rank, jsonRow);
+		
+		JsonIO.WriteToFile(leaderboardFile, j);
+	}
+	
 	public static void refreshLeaderBoard()
 	{
-		leaderboradRows = new ArrayList<LeaderboardRow>();
+		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
+		if (!leaderboardFile.exists()) {
+			try {
+				leaderboardFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println(new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json"));
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			JsonObject j = new JsonObject();
+			j = JsonIO.ReadFromFile(leaderboardFile);
+			if (j != null) {
+				leaderboardRows = new ArrayList<LeaderboardRow>();
+				for (Entry<String, JsonElement> entry : j.entrySet()) {
+					JsonObject entries = entry.getValue().getAsJsonObject();
+					LeaderboardRow row = new LeaderboardRow();
+					row.rank = entries.get("rank").getAsString();
+					row.name = entries.get("name").getAsString();
+					row.level = entries.get("level").getAsString();
+					row.stat_1 = entries.get("stat_1").getAsString();
+					row.totalscore = entries.get("totalscore").getAsString();
+					leaderboardRows.add(row);
+				}
+			}
+		}
 		
-		LeaderboardRow row = new LeaderboardRow();
-		row.rank = "RANK";
-		row.name = "NAME";
-		row.level = "LEVEL";
-		row.stat_1 = "STAT";
-		row.totalscore = "SCORE";
 		
-		leaderboradRows.add(row);
-		
-		row = new LeaderboardRow();
-		row.rank = "1";
-		row.name = "John Morrison";
-		row.level = "3";
-		row.stat_1 = "23";
-		row.totalscore = "104297";
-		
-		leaderboradRows.add(row);
-		
-		row = new LeaderboardRow();
-		row.rank = "2";
-		row.name = "Jamison Fawkes";
-		row.level = "2";
-		row.stat_1 = "21";
-		row.totalscore = "71921";
-		
-		leaderboradRows.add(row);
-		
-		row = new LeaderboardRow();
-		row.rank = "3";
-		row.name = "Satya Vaswani";
-		row.level = "1";
-		row.stat_1 = "12";
-		row.totalscore = "685";
-		
-		leaderboradRows.add(row);
+//		row.rank = "RANK";
+//		row.name = "NAME";
+//		row.level = "LEVEL";
+//		row.stat_1 = "STAT";
+//		row.totalscore = "SCORE";
+//		
+//		leaderboardRows.add(row);
+//		
+//		row = new LeaderboardRow();
+//		row.rank = "1";
+//		row.name = "John Morrison";
+//		row.level = "3";
+//		row.stat_1 = "23";
+//		row.totalscore = "104297";
+//		
+//		leaderboardRows.add(row);
+//		
+//		row = new LeaderboardRow();
+//		row.rank = "2";
+//		row.name = "Jamison Fawkes";
+//		row.level = "2";
+//		row.stat_1 = "21";
+//		row.totalscore = "71921";
+//		
+//		leaderboardRows.add(row);
+//		
+//		row = new LeaderboardRow();
+//		row.rank = "3";
+//		row.name = "Satya Vaswani";
+//		row.level = "1";
+//		row.stat_1 = "12";
+//		row.totalscore = "685";
+//		
+//		leaderboardRows.add(row);
+	}
+	
+	private static String getRowRank(LeaderboardRow row) {
+		refreshLeaderBoard();
+		for (LeaderboardRow r : leaderboardRows) {
+			if (Integer.parseInt(r.totalscore) < Integer.parseInt(row.totalscore))
+				return r.rank;
+		}
+		return "0";
 	}
 	
 	public static void addLeaderBoardRow(LeaderboardRow row)
 	{
-		leaderboradRows.add(row);
+		leaderboardRows.add(row);
 	}
 	
 	public static void showLeaderBoard(boolean isShown)
 	{
+		if (isShown)
+			refreshLeaderBoard();
 		GuiLeaderBoard.isShown = isShown;
 	}
 	
@@ -183,13 +263,13 @@ public class GuiLeaderBoard extends GuiScreen {
 			    mc.renderEngine.bindTexture(LEADERBOARD_TEXTURE);
 		        drawTexturedModalRect(-128, 0, 0, 0, 256 , 150);
         	
-	        	for(int i=0; i<leaderboradRows.size(); i++)
+	        	for(int i=0; i<leaderboardRows.size(); i++)
 	        	{
-	        		String rank = leaderboradRows.get(i).rank;
-	        		String name = leaderboradRows.get(i).name;
-	        		String level = leaderboradRows.get(i).level;
-	        		String stat_1 = leaderboradRows.get(i).stat_1;
-	        		String totalscore = leaderboradRows.get(i).totalscore;
+	        		String rank = leaderboardRows.get(i).rank;
+	        		String name = leaderboardRows.get(i).name;
+	        		String level = leaderboardRows.get(i).level;
+	        		String stat_1 = leaderboardRows.get(i).stat_1;
+	        		String totalscore = leaderboardRows.get(i).totalscore;
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(rank, -120, 32 + i*14, 0xFFFFFF);

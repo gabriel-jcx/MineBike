@@ -13,7 +13,9 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
 import org.ngs.bigx.minecraft.quests.Quest;
@@ -30,7 +32,6 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
-import betterquesting.handlers.EventHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -57,7 +58,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import noppes.npcs.ai.selector.NPCInteractSelector;
 import noppes.npcs.entity.EntityCustomNpc;
 
 
@@ -74,6 +74,7 @@ public class CommonEventHandler {
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
 	public static float initialDist, dist = 0;
+	public static int startingZ, endingZ;
 	boolean doMakeBlocks;
 	float ratio;
 	Vec3 returnLocation;
@@ -612,6 +613,16 @@ public class CommonEventHandler {
 							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add gold bar to inventory
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+							
+							endingZ = event.entity.serverPosZ;
+							LeaderboardRow row = new LeaderboardRow();
+							row.name = context.BiGXUserName;
+							row.level = Integer.toString(theifLevel);
+							int score = (int)((virtualCurrency * 100 + (endingZ - startingZ) * 10) * ((theifLevel+1) / 2.0));
+							row.totalscore = Integer.toString(score);
+							row.stat_1 = Integer.toString(endingZ - startingZ);
+							GuiLeaderBoard.writeToLeaderboard(row);
+							
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 						
@@ -660,9 +671,11 @@ public class CommonEventHandler {
 							chasingQuestOnCountDown = true;
 							System.out.println(countdown-- + "...");
 							
-							if (countdown == 0)
+							if (countdown == 0) {
 								dist = 0;
-							
+								startingZ = event.entity.serverPosZ;
+								endingZ = event.entity.serverPosZ;
+							}
 							if (countdown == 5) {
 								npc = NpcCommand.spawnNpc(0f, 11, 20, ws, "Thief");
 								npc.ai.stopAndInteract = false;

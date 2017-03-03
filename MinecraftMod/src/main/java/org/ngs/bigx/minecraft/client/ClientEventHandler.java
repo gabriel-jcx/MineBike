@@ -1,25 +1,23 @@
 package org.ngs.bigx.minecraft.client;
 
-import java.io.File;
 import java.nio.ByteBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import org.apache.commons.io.FileUtils;
-import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
 import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
 import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -36,15 +34,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
@@ -69,6 +64,9 @@ public class ClientEventHandler {
 		boolean client_tick_bool = true;
 		QuestLootDatabase lootDatabase = new QuestLootDatabase();
 		boolean enableLock = false, enableBike = true;
+		
+		private boolean showLeaderboard;
+		private int leaderboardSeconds;
 		
 		@SubscribeEvent
 		public void onLivingJump(LivingJumpEvent event) {
@@ -285,6 +283,27 @@ public class ClientEventHandler {
 				{
 					ClientAreaEvent.unsetAreaChangeFlag();
 					
+					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
+						if (showLeaderboard) {
+							showLeaderboard = false;
+							final Timer leaderboardTimer = new Timer();
+							
+							final TimerTask leaderboardTimerTask = new TimerTask() {
+								@Override
+								public void run() {
+									GuiLeaderBoard.showLeaderBoard(true);
+									if (leaderboardSeconds++ >= 5) {
+										GuiLeaderBoard.showLeaderBoard(false);
+										leaderboardSeconds = 0;
+										leaderboardTimer.cancel();
+									}
+								}
+							};
+							leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
+						}
+					} else {
+						showLeaderboard = true;
+					}
 					if(ClientAreaEvent.previousArea != null)
 						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					else
