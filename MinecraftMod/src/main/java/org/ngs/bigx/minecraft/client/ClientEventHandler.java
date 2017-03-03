@@ -352,27 +352,32 @@ public class ClientEventHandler {
 					context.questManager.showQuestPopup();
 				}
 				
-				if(this.context.questManager.getQuest() != null)
-				{
-					if(this.context.questManager.getQuest().getStateMachine() == State.QuestInProgress)
-					{
-						boolean isQuestComplete = this.context.questManager.getQuest().checkComplete(player.getDisplayName());
-						if(isQuestComplete)
-						{
-							System.out.println("Quest is Complete.");
-							//Handle the reward
-							QuestLoot sampleLoot = lootDatabase.GetReward("SampleQuest1");
-							BiGX.characterProperty.addCoins(sampleLoot.GetCoins());
-							BiGX.characterProperty.increaseEXPby(sampleLoot.GetExperience());
-							ItemStack[] loot = sampleLoot.GetLoot();
-							for (int i = 0; loot[i]!=null; i++)
-								player.inventory.addItemStackToInventory(loot[i]);
-							
-							HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
-							BiGX.network.sendToServer(packet);
-						}
-					}
-				}
+				/***
+				 * For now Let's disable this feature for the demo I can see the file\
+				 * malformed_QuestLoot.json0.json
+				 * malformed_QuestProgress.json0.json
+				 */
+//				if(this.context.questManager.getQuest() != null)
+//				{
+//					if(this.context.questManager.getQuest().getStateMachine() == State.QuestInProgress)
+//					{
+//						boolean isQuestComplete = this.context.questManager.getQuest().checkComplete(player.getDisplayName());
+//						if(isQuestComplete)
+//						{
+//							System.out.println("Quest is Complete.");
+//							//Handle the reward
+//							QuestLoot sampleLoot = lootDatabase.GetReward("SampleQuest1");
+//							BiGX.characterProperty.addCoins(sampleLoot.GetCoins());
+//							BiGX.characterProperty.increaseEXPby(sampleLoot.GetExperience());
+//							ItemStack[] loot = sampleLoot.GetLoot();
+//							for (int i = 0; loot[i]!=null; i++)
+//								player.inventory.addItemStackToInventory(loot[i]);
+//							
+//							HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
+//							BiGX.network.sendToServer(packet);
+//						}
+//					}
+//				}
 				
 /*
 				/// TODO: Challenge 1: Pushing the player to the lava

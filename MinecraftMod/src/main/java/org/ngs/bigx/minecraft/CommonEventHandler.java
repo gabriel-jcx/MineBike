@@ -69,7 +69,7 @@ public class CommonEventHandler {
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
 	private static int countdown = 10;
-	private static int time = 30;
+	private static int time = 90;
 	private static int timeFallBehind = 0;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
@@ -284,7 +284,7 @@ public class CommonEventHandler {
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
-		time = 30;
+		time = 90;
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
@@ -313,6 +313,7 @@ public class CommonEventHandler {
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -390,11 +391,12 @@ public class CommonEventHandler {
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
 				&& event.entity.dimension != WorldProviderFlats.dimID){
-			if (ws != null && event.entity instanceof EntityPlayerMP) {				
+			if (ws != null && event.entity instanceof EntityPlayerMP) {		
+				System.out.println("[BiGX] Current dimension ["+event.entity.dimension+"]");		
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
-					time = 30; 
+					time = 90; 
 					questSettings = new ArrayList<Integer>();
 					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 					List<Stage> stageList = stagesettings.stages;
@@ -408,7 +410,7 @@ public class CommonEventHandler {
 					}
 				}
 				else{
-					time = 30;
+					time = 90;
 				}
 				
 				for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID))
@@ -608,6 +610,8 @@ public class CommonEventHandler {
 								e.printStackTrace();
 							}
 							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add gold bar to inventory
+							
+							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 						
@@ -719,7 +723,7 @@ public class CommonEventHandler {
 		else if (event.item.getDisplayName().contains("Potion")
 				&& event.entity.dimension == WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
-				teleporter = new QuestTeleporter(ws);
+				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 			}
 		}

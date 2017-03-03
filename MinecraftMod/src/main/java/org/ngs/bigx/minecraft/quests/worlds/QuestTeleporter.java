@@ -22,6 +22,12 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+/***
+ * @author localadmin
+ * 
+ * Reference: http://www.minecraftforge.net/forum/topic/18295-172-dimensional-teleporting-without-the-portals/
+ *
+ */
 public class QuestTeleporter extends Teleporter {
    
     // Setup Specific Variables
@@ -82,6 +88,10 @@ public class QuestTeleporter extends Teleporter {
         // Freeze motion
         entity.motionX = entity.motionY = entity.motionZ = 0.0D;
         entity.setPosition(dx, dy, dz); 
+        
+//        
+//        world.getChunkFromBlockCoords(x, z);
+//        world.getChunkProvider().loadChunk(world.getChunkFromBlockCoords(x, z).xPosition, world.getChunkFromBlockCoords(x, z).zPosition);
 
         // Set Dimension
         if (entity.worldObj.provider.dimensionId != world.provider.dimensionId) {
