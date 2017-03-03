@@ -285,7 +285,7 @@ public class CommonEventHandler {
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
-		time = 90;
+		time = 10;
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
@@ -397,7 +397,7 @@ public class CommonEventHandler {
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
-					time = 90; 
+					time = 2; 
 					questSettings = new ArrayList<Integer>();
 					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 					List<Stage> stageList = stagesettings.stages;
@@ -612,8 +612,6 @@ public class CommonEventHandler {
 							}
 							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add gold bar to inventory
 							
-							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							
 							endingZ = event.entity.serverPosZ;
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
@@ -622,7 +620,8 @@ public class CommonEventHandler {
 							row.totalscore = Integer.toString(score);
 							row.stat_1 = Integer.toString(endingZ - startingZ);
 							GuiLeaderBoard.writeToLeaderboard(row);
-							
+
+							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 						

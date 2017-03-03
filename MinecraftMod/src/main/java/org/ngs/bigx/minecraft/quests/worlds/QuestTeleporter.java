@@ -89,9 +89,7 @@ public class QuestTeleporter extends Teleporter {
         entity.motionX = entity.motionY = entity.motionZ = 0.0D;
         entity.setPosition(dx, dy, dz); 
         
-//        
-//        world.getChunkFromBlockCoords(x, z);
-//        world.getChunkProvider().loadChunk(world.getChunkFromBlockCoords(x, z).xPosition, world.getChunkFromBlockCoords(x, z).zPosition);
+        world.getChunkProvider().loadChunk(world.getChunkFromBlockCoords(x, z).xPosition, world.getChunkFromBlockCoords(x, z).zPosition);
 
         // Set Dimension
         if (entity.worldObj.provider.dimensionId != world.provider.dimensionId) {

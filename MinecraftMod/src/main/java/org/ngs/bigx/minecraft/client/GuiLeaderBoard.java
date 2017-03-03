@@ -67,27 +67,46 @@ public class GuiLeaderBoard extends GuiScreen {
 		
 		JsonObject j = new JsonObject();
 		j = JsonIO.ReadFromFile(leaderboardFile);
-		if (j.get(row.rank) != null) {
-			// Shift every leaderboard item >= rank (lesser scores) down one to make room for the new row
-			JsonObject newJ = new JsonObject();
-			for (Entry<String, JsonElement> entry : j.entrySet()) {
-				if (Integer.parseInt(entry.getKey()) >= Integer.parseInt(row.rank) && Integer.parseInt(entry.getKey()) < 10) {
-					JsonObject obj = j.get(entry.getKey()).getAsJsonObject();
-					obj.addProperty("rank", Integer.toString(Integer.parseInt(entry.getKey()) + 1));
-					newJ.add(entry.getKey(), obj);
-				} else {
-					newJ.add(entry.getKey(), entry.getValue());
+		if(j != null)
+		{
+			if (j.get(row.rank) != null) {
+				// Shift every leaderboard item >= rank (lesser scores) down one to make room for the new row
+				JsonObject newJ = new JsonObject();
+				
+				for(int i=9; i>=Integer.parseInt(row.rank); i--)
+				{
+					JsonElement tempJsonElement = j.get(""+i);
+					
+					if(tempJsonElement != null)
+					{
+						JsonObject tempRow = tempJsonElement.getAsJsonObject();
+						tempRow.addProperty("rank", Integer.toString(i + 1));
+						newJ.add(""+(i+1), tempRow);
+					}
 				}
+				
+				j = newJ;
+
+				JsonObject jsonRow = new JsonObject();
+				jsonRow.addProperty("rank", row.rank);
+				jsonRow.addProperty("name", row.name);
+				jsonRow.addProperty("level", row.level);
+				jsonRow.addProperty("stat_1", row.stat_1);
+				jsonRow.addProperty("totalscore", row.totalscore);
+				j.add(row.rank, jsonRow);
 			}
-			j = newJ;
 		}
-		JsonObject jsonRow = new JsonObject();
-		jsonRow.addProperty("rank", row.rank);
-		jsonRow.addProperty("name", row.name);
-		jsonRow.addProperty("level", row.level);
-		jsonRow.addProperty("stat_1", row.stat_1);
-		jsonRow.addProperty("totalscore", row.totalscore);
-		j.add(row.rank, jsonRow);
+		else{
+			j = new JsonObject();
+
+			JsonObject jsonRow = new JsonObject();
+			jsonRow.addProperty("rank", row.rank);
+			jsonRow.addProperty("name", row.name);
+			jsonRow.addProperty("level", row.level);
+			jsonRow.addProperty("stat_1", row.stat_1);
+			jsonRow.addProperty("totalscore", row.totalscore);
+			j.add(row.rank, jsonRow);
+		}
 		
 		JsonIO.WriteToFile(leaderboardFile, j);
 	}
@@ -108,63 +127,43 @@ public class GuiLeaderBoard extends GuiScreen {
 			j = JsonIO.ReadFromFile(leaderboardFile);
 			if (j != null) {
 				leaderboardRows = new ArrayList<LeaderboardRow>();
-				for (Entry<String, JsonElement> entry : j.entrySet()) {
-					JsonObject entries = entry.getValue().getAsJsonObject();
-					LeaderboardRow row = new LeaderboardRow();
-					row.rank = entries.get("rank").getAsString();
-					row.name = entries.get("name").getAsString();
-					row.level = entries.get("level").getAsString();
-					row.stat_1 = entries.get("stat_1").getAsString();
-					row.totalscore = entries.get("totalscore").getAsString();
-					leaderboardRows.add(row);
+				LeaderboardRow row = new LeaderboardRow();
+				row.rank = "Rank";
+				row.name = "Name";
+				row.level = "Level";
+				row.stat_1 = "Blocks";
+				row.totalscore = "Score";
+				leaderboardRows.add(row);
+				
+				for(int i=0; i<j.entrySet().size(); i++)
+				{
+					if(j.get(""+(i+1)) != null)
+					{
+						JsonObject entries = j.get(""+(i+1)).getAsJsonObject();
+						row = new LeaderboardRow();
+						row.rank = entries.get("rank").getAsString();
+						row.name = entries.get("name").getAsString();
+						if(row.name.length() > 15)
+						{
+							row.name = row.name.substring(0, 12) + "...";
+						}
+						row.level = entries.get("level").getAsString();
+						row.stat_1 = entries.get("stat_1").getAsString();
+						row.totalscore = entries.get("totalscore").getAsString();
+						leaderboardRows.add(row);
+					}
 				}
 			}
 		}
-		
-		
-//		row.rank = "RANK";
-//		row.name = "NAME";
-//		row.level = "LEVEL";
-//		row.stat_1 = "STAT";
-//		row.totalscore = "SCORE";
-//		
-//		leaderboardRows.add(row);
-//		
-//		row = new LeaderboardRow();
-//		row.rank = "1";
-//		row.name = "John Morrison";
-//		row.level = "3";
-//		row.stat_1 = "23";
-//		row.totalscore = "104297";
-//		
-//		leaderboardRows.add(row);
-//		
-//		row = new LeaderboardRow();
-//		row.rank = "2";
-//		row.name = "Jamison Fawkes";
-//		row.level = "2";
-//		row.stat_1 = "21";
-//		row.totalscore = "71921";
-//		
-//		leaderboardRows.add(row);
-//		
-//		row = new LeaderboardRow();
-//		row.rank = "3";
-//		row.name = "Satya Vaswani";
-//		row.level = "1";
-//		row.stat_1 = "12";
-//		row.totalscore = "685";
-//		
-//		leaderboardRows.add(row);
 	}
 	
 	private static String getRowRank(LeaderboardRow row) {
 		refreshLeaderBoard();
 		for (LeaderboardRow r : leaderboardRows) {
-			if (Integer.parseInt(r.totalscore) < Integer.parseInt(row.totalscore))
+			if (Integer.parseInt(r.totalscore) <= Integer.parseInt(row.totalscore))
 				return r.rank;
 		}
-		return "0";
+		return "1";
 	}
 	
 	public static void addLeaderBoardRow(LeaderboardRow row)
@@ -275,7 +274,7 @@ public class GuiLeaderBoard extends GuiScreen {
 		    		fontRendererObj.drawString(rank, -120, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(name, -90, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(level, 5, 32 + i*14, 0xFFFFFF);
-		    		fontRendererObj.drawString(stat_1, 45, 32 + i*14, 0xFFFFFF);
+		    		fontRendererObj.drawString(stat_1, 40, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(totalscore, 75, 32 + i*14, 0xFFFFFF);
 	        	}
         	
