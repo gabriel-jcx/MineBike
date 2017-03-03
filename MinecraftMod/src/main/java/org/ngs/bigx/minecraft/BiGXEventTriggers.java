@@ -7,6 +7,8 @@ import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class BiGXEventTriggers {	
@@ -36,8 +38,14 @@ public class BiGXEventTriggers {
 			}
 	}
 	
-	public static void CaughtBadGuy(EntityPlayer player){
-		//bad guy caught conditions
+	public static void GivePlayerGoldfromCoins(EntityPlayer player, int numOfCoins){
+		int numOfGold = convertCoinsToGold(numOfCoins);
+		String rewardStr = BiGXTextBoxDialogue.gotReward + numOfGold + " Gold Ingots!";
+		GuiMessageWindow.showGoldBar(rewardStr);
+		
+		if (numOfGold > 0)
+			for (int i = 0; i < numOfGold; i++)
+				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add reward to inventory
 	}
 	
 	
@@ -56,6 +64,10 @@ public class BiGXEventTriggers {
 				if (event.z >= z1 && event.z <= z2)
 					return true;
 		return false;
+	}
+	
+	private static int convertCoinsToGold(int numCoins){
+		return Math.floorDiv(numCoins, 10);
 	}
 	
 }

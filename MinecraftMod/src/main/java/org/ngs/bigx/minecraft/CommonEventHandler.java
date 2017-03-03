@@ -610,7 +610,7 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
-							event.entityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add gold bar to inventory
+							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 							
 							endingZ = event.entity.serverPosZ;
 							LeaderboardRow row = new LeaderboardRow();
