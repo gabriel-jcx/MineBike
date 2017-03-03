@@ -285,7 +285,7 @@ public class CommonEventHandler {
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
-		time = 10;
+		time = 90;
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
@@ -397,7 +397,7 @@ public class CommonEventHandler {
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
-					time = 2; 
+					time = 90; 
 					questSettings = new ArrayList<Integer>();
 					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 					List<Stage> stageList = stagesettings.stages;
