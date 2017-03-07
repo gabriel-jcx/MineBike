@@ -612,12 +612,12 @@ public class CommonEventHandler {
 							}
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 							
-							endingZ = event.entity.serverPosZ;
+							endingZ = (int)event.entity.posZ;
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
 							row.level = Integer.toString(theifLevel);
-							int score = (int)((virtualCurrency * 100 + (endingZ - startingZ) * 10) * ((theifLevel+1) / 2.0));
-							row.totalscore = Integer.toString(score);
+//							int score = (int)((virtualCurrency * 100 + (endingZ - startingZ) * 10) * ((theifLevel+1) / 2.0));
+							row.totalscore = Integer.toString(virtualCurrency);
 							row.stat_1 = Integer.toString(endingZ - startingZ);
 							GuiLeaderBoard.writeToLeaderboard(row);
 
@@ -672,8 +672,8 @@ public class CommonEventHandler {
 							
 							if (countdown == 0) {
 								dist = 0;
-								startingZ = event.entity.serverPosZ;
-								endingZ = event.entity.serverPosZ;
+								startingZ = (int)event.entity.posZ;
+								endingZ = (int)event.entity.posZ;
 							}
 							if (countdown == 5) {
 								npc = NpcCommand.spawnNpc(0f, 11, 20, ws, "Thief");
