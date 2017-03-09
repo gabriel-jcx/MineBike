@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
@@ -34,11 +35,15 @@ public class GuiMessageWindow extends GuiScreen {
 	private Context context;
 	private static long timestampLastShowWindowCall = 0;
 	private static long timestampLastShowGoldbarCall = 0;
-	private static String[] textLinesToBeShown = {};
+	private static String[] textLinesToBeShown = null;
 	
 	private final long durationShowWindow = 5000;
 	private final long durationFadeIn = 250;
 	private final long durationFadeOut = 1000;
+	
+	private final long delayReplaceText = 1500;
+	
+	private static ArrayList<String> textList = new ArrayList<String>();
 	
 	public GuiMessageWindow(Minecraft mc) {
 		super();
@@ -93,17 +98,40 @@ public class GuiMessageWindow extends GuiScreen {
 	
 	public static void showMessage(String message)
 	{
+		textList.add("M" + message);
+		
+		if(timestampLastShowWindowCall == 0)
+			timestampLastShowWindowCall = System.currentTimeMillis();
+	}
+	
+	public static void updateMessageFromQueue()
+	{
+		if(textList == null)
+			return;
+		
+		if(textList.size() == 0)
+			return;
+		
+		String message = textList.remove(0);
+		
 		// Line Break Every 30 Chars
-		textLinesToBeShown = message.split("\n");
+		textLinesToBeShown = message.substring(1).split("\n");
 		timestampLastShowWindowCall = System.currentTimeMillis();
+		
+		if(message.substring(0, 2).equals("G"))
+		{
+			timestampLastShowGoldbarCall = timestampLastShowWindowCall;
+		}
 	}
 	
 	public static void showGoldBar(String message)
 	{
-		// Line Break Every 30 Chars
-		textLinesToBeShown = message.split("\n");
-		timestampLastShowGoldbarCall = System.currentTimeMillis();
-		timestampLastShowWindowCall = timestampLastShowGoldbarCall;
+		textList.add("G" + message);
+		
+		if(timestampLastShowWindowCall == 0)
+		{
+			timestampLastShowWindowCall = System.currentTimeMillis();
+		}
 	}
 
 	@SubscribeEvent
@@ -128,7 +156,21 @@ public class GuiMessageWindow extends GuiScreen {
 	    	{
 	    		return;
 	    	}
-	    	else if(timeDifference < durationShowWindow)
+	    	
+	    	if(textLinesToBeShown == null)
+	    	{
+	    		updateMessageFromQueue();
+	    	}
+	    	else if(textList.size() != 0)
+	    	{
+	    		if(timeDifference > delayReplaceText)
+	    		{
+	    			updateMessageFromQueue();
+	    	    	timeDifference = (System.currentTimeMillis() - timestampLastShowWindowCall);
+	    		}
+	    	}
+	    	
+	    	if(timeDifference < durationShowWindow)
 	    	{
 	    		if(timeDifference <= durationFadeIn)
 	    		{
@@ -177,10 +219,16 @@ public class GuiMessageWindow extends GuiScreen {
 		        	GL11.glPopMatrix();
 	        	}
 	    	}
+	    	else{
+	    		timestampLastShowWindowCall = 0;
+	    		timestampLastShowGoldbarCall = 0;
+	    		textLinesToBeShown = null;
+	    	}
     	}
     	else{
     		timestampLastShowWindowCall = 0;
     		timestampLastShowGoldbarCall = 0;
+    		textLinesToBeShown = null;
     	}
     }
 }
