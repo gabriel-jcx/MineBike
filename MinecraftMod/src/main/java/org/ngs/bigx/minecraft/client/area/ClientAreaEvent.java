@@ -13,6 +13,7 @@ public class ClientAreaEvent {
 	
 	public static Area previousArea = null;
 
+	private static ArrayList<Area> areaListEvent = new ArrayList<Area>();
 	private static ArrayList<Area> areaListRoom = new ArrayList<Area>();
 	private static ArrayList<Area> areaListBuilding = new ArrayList<Area>();
 	private static ArrayList<Area> areaListPlace = new ArrayList<Area>();	// e.g CITY(VILLAGE) / CASE / CASTLE... 
@@ -76,6 +77,9 @@ public class ClientAreaEvent {
 	{
 		switch(areaType)
 		{
+		case EVENT:
+			areaListEvent.add(areaToAdd);
+			break;
 		case ROOM:
 			areaListRoom.add(areaToAdd);
 			break;
@@ -96,8 +100,10 @@ public class ClientAreaEvent {
 	private static Area detectCurrentArea(EntityPlayer player)
 	{
 		Area returnArea = null;
-		
-		if((returnArea = isPlayerInAreaList(player, areaListRoom)) != null)
+
+		if((returnArea = isPlayerInAreaList(player, areaListEvent)) != null)
+			return returnArea;
+		else if((returnArea = isPlayerInAreaList(player, areaListRoom)) != null)
 			return returnArea;
 		else if((returnArea = isPlayerInAreaList(player, areaListBuilding)) != null)
 			return returnArea;

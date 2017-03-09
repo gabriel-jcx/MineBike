@@ -6,7 +6,7 @@ public class Area
 {
 	public enum AreaTypeEnum
 	{
-		ROOM, BUILDING, PLACE, WORLD, NOTASSIGNED
+		EVENT, ROOM, BUILDING, PLACE, WORLD, NOTASSIGNED
 	}
 	
 	public Area(Vec3 pointA, Vec3 pointB, String name, AreaTypeEnum type, int dimension)
