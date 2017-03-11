@@ -337,7 +337,7 @@ public class CommonEventHandler {
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
+//		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -655,8 +655,6 @@ public class CommonEventHandler {
 						
 						// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
 						if (theifHealthCurrent <= 0) {
-							int logCount = 0;
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							try {
 								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 							} catch (SocketException e) {
@@ -668,24 +666,19 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
-							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+							
 
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "win", 1.0f, 1.0f);
 							endingZ = (int)event.entity.posZ;
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
 							row.level = Integer.toString(theifLevel);
 							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							GuiLeaderBoard.writeToLeaderboard(row);
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
-
+							
+							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
-							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							
 							return;
 						}
