@@ -671,11 +671,6 @@ public class CommonEventHandler {
 						if (ratio < 0) {
 							warningMsgBlinkingTime = System.currentTimeMillis();
 							timeFallBehind++;
-<<<<<<< .mine
-
-=======
-//							System.out.println("PUSH! You are too far away!");
->>>>>>> .theirs
 						}
 						else{
 							timeFallBehind = 0;
