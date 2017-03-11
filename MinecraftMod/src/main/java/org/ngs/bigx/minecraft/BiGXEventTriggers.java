@@ -12,6 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class BiGXEventTriggers {	
+	
+	private boolean soundTriggerEntered = false;
+	
 	public static void onRightClick(PlayerInteractEvent event, EntityPlayer player){
 		DoorLocked(event, player);
 		ChestLocked(event, player);
@@ -24,9 +27,11 @@ public class BiGXEventTriggers {
 		}
 	}
 	
-	public static void MusicPlaying(EntityPlayer player){
-		if (checkPlayerInArea(player, -167, 70, 343, -166, 74, 346))
+	public void MusicPlaying(EntityPlayer player){
+		if (checkPlayerInArea(player, -167, 70, 343, -166, 74, 346) && player.dimension == 100 && !soundTriggerEntered){
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.soundComment);
+			soundTriggerEntered = true;
+		}
 	}
 	
 	public static void ChestLocked(PlayerInteractEvent event, EntityPlayer player){

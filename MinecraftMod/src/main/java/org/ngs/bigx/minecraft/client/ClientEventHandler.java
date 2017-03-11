@@ -200,7 +200,7 @@ public class ClientEventHandler {
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 				
 				//Dealing with showing Sound Message
-				BiGXEventTriggers.MusicPlaying(p);
+//				BiGXEventTriggers.MusicPlaying(p);
 				
 				
 				//Dealing with locking keys
