@@ -52,10 +52,18 @@ public class ClientAreaEvent {
 		}
 	}
 	
+	
+	
 	public static void initArea()
 	{
 		addArea(new Area(Vec3.createVectorHelper(-176, 65, 334), Vec3.createVectorHelper(-171, 73, 338), 
 				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
+		
+		addArea(new Area(Vec3.createVectorHelper(-61, 77, 8), Vec3.createVectorHelper(-56, 78, 11), 
+				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
+		
+		addArea(new Area(Vec3.createVectorHelper(-67, 73, 12), Vec3.createVectorHelper(-60, 75, 14), 
+				BiGXTextBoxDialogue.fatherMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
 		
 		addArea(new Area(Vec3.createVectorHelper(-82, 40, 3), Vec3.createVectorHelper(-50, 100, 19), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
