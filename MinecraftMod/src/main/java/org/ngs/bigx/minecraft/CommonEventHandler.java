@@ -360,26 +360,23 @@ public class CommonEventHandler {
 	public static void deductTheifHealth(Item itemOnHands)
 	{
 		int deduction = 1;
-		
-		if(itemOnHands.getUnlocalizedName().equals("item.hoeStone"))
-		{
-			deduction = 3;
-		}
-		else if(itemOnHands.getUnlocalizedName().equals("item.hoeIron"))
-		{
-			deduction = 9;
-		}
-		else if(itemOnHands.getUnlocalizedName().equals("item.hoeGold"))
-		{
-			deduction = 27;
-		}
-		else if(itemOnHands.getUnlocalizedName().equals("item.hoeDiamond"))
-		{
-			deduction = 81;
-		}
-		else
-		{
-			deduction = 1;
+		if (itemOnHands != null) {
+			if(itemOnHands.getUnlocalizedName().equals("item.hoeStone"))
+			{
+				deduction = 3;
+			}
+			else if(itemOnHands.getUnlocalizedName().equals("item.hoeIron"))
+			{
+				deduction = 9;
+			}
+			else if(itemOnHands.getUnlocalizedName().equals("item.hoeGold"))
+			{
+				deduction = 27;
+			}
+			else if(itemOnHands.getUnlocalizedName().equals("item.hoeDiamond"))
+			{
+				deduction = 81;
+			}
 		}
 		
 		theifHealthCurrent -= deduction;
@@ -422,9 +419,6 @@ public class CommonEventHandler {
 					time = 0;
 				}
 				
-				for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID))
-					((EntityCustomNpc)o).delete();
-				
 				t = new Timer();
 				t2 = new Timer();
 				t3 = new Timer();
@@ -441,6 +435,33 @@ public class CommonEventHandler {
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
 				
+				for (int z = -16; z < (int)event.entity.posZ+64; ++z) {
+					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY, z));
+					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)event.entity.posX+16, chasingQuestInitialPosY, z));
+				}
+				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+					ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+				}
+				
+				
+//				final TimerTask t3Task = new TimerTask() {
+//					@Override
+//					public void run() {
+//						// Timer for the case where the main char is close enough to catch the bad guy
+//						if (!Minecraft.getMinecraft().isGamePaused()) {
+//							for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+//								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
+//									ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+//									blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+//									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
+//								}
+//							}
+//						}
+//					}
+//				};
 				final TimerTask t2Task = new TimerTask() {
 					@Override
 					public void run() {
@@ -628,11 +649,11 @@ public class CommonEventHandler {
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 
 							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
+							event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "win", 1.0f, 1.0f);
 							endingZ = (int)event.entity.posZ;
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
 							row.level = Integer.toString(theifLevel);
-//							int score = (int)((virtualCurrency * 100 + (endingZ - startingZ) * 10) * ((theifLevel+1) / 2.0));
 							row.totalscore = Integer.toString(virtualCurrency);
 							row.stat_1 = Integer.toString(time);
 							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
@@ -650,6 +671,11 @@ public class CommonEventHandler {
 						if (ratio < 0) {
 							warningMsgBlinkingTime = System.currentTimeMillis();
 							timeFallBehind++;
+<<<<<<< .mine
+
+=======
+//							System.out.println("PUSH! You are too far away!");
+>>>>>>> .theirs
 						}
 						else{
 							timeFallBehind = 0;
@@ -685,6 +711,18 @@ public class CommonEventHandler {
 							chasingQuestOnCountDown = true;
 							System.out.println(countdown-- + "...");
 							
+							if (countdown == 7) {
+								for (Object o : event.entityPlayer.worldObj.loadedEntityList) {
+									if (((Entity)o) instanceof EntityCustomNpc) {
+//										System.out.println(((EntityCustomNpc)o).display.name);
+										((EntityCustomNpc)o).delete();
+									}
+								}
+								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID)) {
+									System.out.println(((EntityCustomNpc)o).display.name);
+//									((EntityCustomNpc)o).delete();
+								}
+							}
 							if (countdown == 0) {
 								dist = 0;
 								startingZ = (int)event.entity.posZ;
