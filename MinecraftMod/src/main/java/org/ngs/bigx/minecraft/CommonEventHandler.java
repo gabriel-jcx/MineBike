@@ -784,7 +784,38 @@ public class CommonEventHandler {
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
+				chasingQuestOnGoing = false;
+				chasingQuestOnCountDown = false;
+				timeFallBehind = 0;
+				time = 0;
+				BiGX.instance().context.setSpeed(0);
+				
+				if(npc != null)
+					command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+
+				if(t != null)
+				{
+					t.cancel();
+					t = null;
+				}
+				if(t2 != null)
+				{
+					t2.cancel();
+					t2 = null;
+				}
+				if(t3 != null)
+				{
+					t3.cancel();
+					t3 = null;
+				}
+
+				returnLocation = Vec3.createVectorHelper(-174, 71, 338);
+
+				initThiefStat();
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ - 128, (int)event.entity.posZ);
+				teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+				
+//				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 			}
 		}
 	}
