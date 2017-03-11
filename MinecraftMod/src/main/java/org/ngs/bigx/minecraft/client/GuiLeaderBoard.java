@@ -3,7 +3,8 @@ package org.ngs.bigx.minecraft.client;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
@@ -20,10 +21,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.DimensionManager;
 
 public class GuiLeaderBoard extends GuiScreen {	
 	private Minecraft mc;
@@ -125,7 +124,25 @@ public class GuiLeaderBoard extends GuiScreen {
 		} else {
 			JsonObject j = new JsonObject();
 			j = JsonIO.ReadFromFile(leaderboardFile);
+			
 			if (j != null) {
+				
+				boolean foundFirst = false;
+				int place = 1;
+				for (int i = 0; i < 10; ++i) {
+					if (j.get(""+(i+1)) != null) {
+						if (!foundFirst) {
+							foundFirst = true;
+						} else {
+							++place;
+						}
+						JsonObject jobj = j.getAsJsonObject(""+(i+1));
+						jobj.addProperty("rank", Integer.toString(place));
+						j.remove(""+(i+1));
+						j.add(Integer.toString(place), jobj);
+					}
+				}
+				
 				leaderboardRows = new ArrayList<LeaderboardRow>();
 				LeaderboardRow row = new LeaderboardRow();
 				row.rank = "Rank";
@@ -135,7 +152,7 @@ public class GuiLeaderBoard extends GuiScreen {
 				row.time_elapsed = "Time";
 				leaderboardRows.add(row);
 				
-				for(int i=0; i<j.entrySet().size(); i++)
+				for(int i=0; i< 10; i++)
 				{
 					if(j.get(""+(i+1)) != null)
 					{
