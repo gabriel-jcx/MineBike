@@ -18,7 +18,7 @@ public class NpcDatabase {
 	private static Map<String, Vec3> populateMap() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
 		map.put("Father", Vec3.createVectorHelper(-65, 74, 13));
-		map.put("Merchant", Vec3.createVectorHelper(-70,  74,  13));
+		map.put("Merchant", Vec3.createVectorHelper(-55,  72,  91));
 		//map.put("Quest Giver", Vec3.createVectorHelper(-59, 73, 72));
 		return map;
 	}

@@ -4,7 +4,7 @@ package org.ngs.bigx.minecraft;
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
 	public static final String wakeUpMsg = "Father is calling me. Let’s\ngo talk to him";
-	public static final String fatherMsg = "Father: Someone gave me these\nfor you.";
+	public static final String fatherMsg = "Father: Someone gave me\nthese for you.";
 	public static final String postCapture = "ARGH! You caught me!";
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
