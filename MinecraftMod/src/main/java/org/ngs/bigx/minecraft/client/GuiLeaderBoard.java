@@ -61,7 +61,7 @@ public class GuiLeaderBoard extends GuiScreen {
 		}
 		
 		row.rank = getRowRank(row);
-		if (row.rank == "RANK" || Integer.parseInt(row.rank) > 10 || Integer.parseInt(row.rank) < 1) {
+		if (row.rank.equals("RANK") || Integer.parseInt(row.rank) > 10 || Integer.parseInt(row.rank) < 1) {
 			return;
 		}
 		
@@ -160,8 +160,9 @@ public class GuiLeaderBoard extends GuiScreen {
 	private static String getRowRank(LeaderboardRow row) {
 		refreshLeaderBoard();
 		for (LeaderboardRow r : leaderboardRows) {
-			if (Integer.parseInt(r.totalscore) <= Integer.parseInt(row.totalscore))
-				return r.rank;
+			if(!r.totalscore.equals("Score"))
+				if (Integer.parseInt(r.totalscore) <= Integer.parseInt(row.totalscore))
+					return r.rank;
 		}
 		return "1";
 	}
