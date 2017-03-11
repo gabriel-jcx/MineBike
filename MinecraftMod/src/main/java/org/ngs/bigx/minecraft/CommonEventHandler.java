@@ -104,7 +104,7 @@ public class CommonEventHandler {
 	private static Timer t3 = null;
 	private static QuestTeleporter teleporter = null;
 
-	private static int theifHealthMax = 5;
+	private static int theifHealthMax = 50;
 	private static int theifHealthCurrent = theifHealthMax;
 	private static int theifLevel = 1;
 	private static boolean theifLevelUpFlag = false;
@@ -306,10 +306,8 @@ public class CommonEventHandler {
 			t3.cancel();
 			t3 = null;
 		}
-		if(returnLocation == null)
-		{
-			returnLocation = Vec3.createVectorHelper(-174, 71, 338);
-		}
+
+		returnLocation = Vec3.createVectorHelper(-174, 71, 338);
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
@@ -336,7 +334,7 @@ public class CommonEventHandler {
 	
 	public static void initThiefStat()
 	{
-		theifHealthMax = 5;
+		theifHealthMax = 50;
 		theifHealthCurrent = theifHealthMax;
 		theifLevel = 1;
 	}
@@ -345,7 +343,7 @@ public class CommonEventHandler {
 	{
 		theifLevel ++;
 		
-		theifHealthMax = 5 + (int) Math.pow(3, theifLevel);
+		theifHealthMax = 50 + (int) Math.pow(3, theifLevel);
 		theifHealthCurrent = theifHealthMax;
 	}
 	
@@ -353,7 +351,7 @@ public class CommonEventHandler {
 	{
 		theifLevel = level;
 		
-		theifHealthMax = 5 + (int) Math.pow(3, theifLevel);
+		theifHealthMax = 50 + (int) Math.pow(3, theifLevel);
 		theifHealthCurrent = theifHealthMax;
 	}
 	
