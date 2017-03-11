@@ -1,0 +1,26 @@
+{
+  "coin": {
+    "category": "player",
+    "sounds": ["coin"]
+  },
+  "hit1": {
+    "category": "player",
+    "sounds": ["hit1"]
+  },
+  "hit2": {
+    "category": "player",
+    "sounds": ["hit2"]
+  },
+  "hit3": {
+    "category": "player",
+    "sounds": ["hit3"]
+  },
+  "hit4": {
+    "category": "player",
+    "sounds": ["hit4"]
+  },
+  "win": {
+    "category": "player",
+    "sounds": ["win"]
+  }
+}
