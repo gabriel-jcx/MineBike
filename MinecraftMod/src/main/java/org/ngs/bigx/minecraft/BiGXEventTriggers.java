@@ -31,6 +31,7 @@ public class BiGXEventTriggers {
 	
 	public static void ChestLocked(PlayerInteractEvent event, EntityPlayer player){
 		if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339))//checking if player is in Secret Room
+			//System.out.println(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"));
 			if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
 			{
 				event.setCanceled(true);

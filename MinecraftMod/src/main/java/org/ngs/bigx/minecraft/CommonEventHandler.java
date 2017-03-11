@@ -213,13 +213,14 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	void onPlayerInteractwithNPC(EntityInteractEvent e) {
 		//Merchant Exchange (Gold ingot for virtual currency)
-		if (e.entity.getEntityData().getId() == 10)
-			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
-				e.entityPlayer.inventory.consumeInventoryItem(Item.getItemById(266));
-				if (characterProperty != null)
-					characterProperty.addCoins(10);
-				System.out.println("10 Gold Coins should have been added");
-			}
+		System.out.println(e.toString());
+//		if (e.entity.getEntityData().getId() == 10)
+//			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
+//				e.entityPlayer.inventory.consumeInventoryItem(Item.getItemById(266));
+//				if (characterProperty != null)
+//					characterProperty.addCoins(10);
+//				System.out.println("10 Gold Coins should have been added");
+//			}
 }
 
 	@SubscribeEvent
@@ -227,14 +228,17 @@ public class CommonEventHandler {
 		EntityPlayer player = e.entityPlayer;
 		//System.out.println(e.entity.getEntityData().getId());
 		
-		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
+//		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
 //			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
 //				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
 //					e.setCanceled(true);
 //			}
-			BiGXEventTriggers.onRightClick(e, player);
+//			BiGXEventTriggers.onRightClick(e, player);
 		World w = e.world;
 		if (!w.isRemote) {
+			System.out.println(e.x);
+			System.out.println(e.y);
+			System.out.println(e.z);
 			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
 				System.out.println("CHEST FOUND");
 				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
@@ -247,6 +251,26 @@ public class CommonEventHandler {
 				b.stackTagCompound.setTag("pages", pages);
 				if (!e.entityPlayer.inventory.hasItemStack(b))
 					c.setInventorySlotContents(0, b);
+			}
+			
+			if (e.x == -174 && e.y == 70 && e.z == 336 && w.getBlock(e.x, e.y, e.z) == Blocks.chest){
+				System.out.println("SECRET CHEST FOUND");
+				BiGXEventTriggers.onRightClick(e, player);
+				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
+				ItemStack b = new ItemStack(Items.written_book);
+				NBTTagList pages = new NBTTagList();
+				pages.appendTag(new NBTTagString("Use this potion to persue he who wants to bring harm to your father."));
+				b.stackTagCompound = new NBTTagCompound();
+				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
+				b.stackTagCompound.setTag("title", new NBTTagString("Potion Instructions"));
+				b.stackTagCompound.setTag("pages", pages);
+				if (!e.entityPlayer.inventory.hasItemStack(b))
+					c.setInventorySlotContents(1, b);
+				
+				ItemStack p = new ItemStack(Items.potionitem);
+				p.setStackDisplayName("Teleportation Potion");
+				if (!e.entityPlayer.inventory.hasItemStack(p))
+					c.setInventorySlotContents(0, p);
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
@@ -32,8 +33,12 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -283,6 +288,25 @@ public class ClientEventHandler {
 				{
 					ClientAreaEvent.unsetAreaChangeFlag();
 					
+					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.EVENT){
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.fatherMsg){	
+							///Give player the mysterious key
+							ItemStack key = new ItemStack(Item.getItemById(131));
+							key.setStackDisplayName("MysteriousKey");
+							if (!p.inventory.hasItemStack(key))
+								p.inventory.addItemStackToInventory(key);
+							///Give player message from the friend
+							ItemStack b = new ItemStack(Items.written_book);
+							NBTTagList pages = new NBTTagList();
+							pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
+							b.stackTagCompound = new NBTTagCompound();
+							b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
+							b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
+							b.stackTagCompound.setTag("pages", pages);
+							if (!p.inventory.hasItemStack(b))
+								p.inventory.addItemStackToInventory(b);
+						}
+					}
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
 						if (showLeaderboard) {
 							showLeaderboard = false;

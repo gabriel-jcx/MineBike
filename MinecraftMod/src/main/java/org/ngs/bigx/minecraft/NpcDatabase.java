@@ -18,7 +18,8 @@ public class NpcDatabase {
 	private static Map<String, Vec3> populateMap() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
 		map.put("Father", Vec3.createVectorHelper(-65, 74, 13));
-		map.put("Quest Giver", Vec3.createVectorHelper(-59, 73, 72));
+		map.put("Merchant", Vec3.createVectorHelper(-70,  74,  13));
+		//map.put("Quest Giver", Vec3.createVectorHelper(-59, 73, 72));
 		return map;
 	}
 	
@@ -32,6 +33,7 @@ public class NpcDatabase {
 	public static void spawn(World world, String name) {
 		EntityCustomNpc npc = NpcCommand.spawnNpc((float)npcs.get(name).xCoord, (float)npcs.get(name).yCoord, (float)npcs.get(name).zCoord, world, name);
 		npc.display.texture = getTexture(name);
+		npc.setRoleDataWatcher(getRole(name));
 	}
 	
 	public static Vec3 getSpawn(String name) {
@@ -41,8 +43,16 @@ public class NpcDatabase {
 	private static String getTexture(String name) {
 		if (name.equals("Father"))
 			return "customnpcs:textures/entity/humanmale/VillagerSteve.png";
+		if (name.equals("Merchant"))
+			return "customnpcs:textures/entity/humanmale/TraderSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/Steve.png";
+	}
+	
+	private static String getRole(String name){
+		if (name.equals("Merchant"))
+			return "Trader";
+		return "No Role";
 	}
 	
 	public static void sortFurthestSpawn(List<EntityCustomNpc> list) {
