@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -121,8 +122,15 @@ public class ClientEventHandler {
 				
 				if(target.display.name.equals("Thief"))
 				{
+					Random r = new Random();
+					int hit = r.nextInt(4)+1;
 //					System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
-					CommonEventHandler.deductTheifHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
+						CommonEventHandler.deductTheifHealth(null);
+					else
+						CommonEventHandler.deductTheifHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+//					event.entityPlayer.worldObj.playSoundEffect(event.entityPlayer.posX + 0.5D, event.entityPlayer.posY + 0.5D, event.entityPlayer.posZ + 0.5D, "minebike:sounds/hit1", 1.0f, 1.0f);
+					event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);
 				}
 			}
 		}
