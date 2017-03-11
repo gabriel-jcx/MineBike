@@ -118,9 +118,13 @@ public class GuiMessageWindow extends GuiScreen {
 		textLinesToBeShown = message.substring(1).split("\n");
 		timestampLastShowWindowCall = System.currentTimeMillis();
 		
-		if(message.substring(0, 2).equals("G"))
+		if(message.substring(0, 1).equals("G"))
 		{
 			timestampLastShowGoldbarCall = timestampLastShowWindowCall;
+		}
+		else{
+			System.out.println("[BiGX]" + message.substring(0, 1));
+			timestampLastShowGoldbarCall = 0;
 		}
 	}
 	

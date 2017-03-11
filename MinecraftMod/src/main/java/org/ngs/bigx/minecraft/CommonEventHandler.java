@@ -69,7 +69,7 @@ public class CommonEventHandler {
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
 	private static int countdown = 10;
-	private static int time = 90;
+	private static int time = 0;
 	private static int timeFallBehind = 0;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
@@ -285,7 +285,7 @@ public class CommonEventHandler {
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
-		time = 90;
+		time = 0;
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
@@ -349,6 +349,14 @@ public class CommonEventHandler {
 		theifHealthCurrent = theifHealthMax;
 	}
 	
+	public static void setTheifLevel(int level)
+	{
+		theifLevel = level;
+		
+		theifHealthMax = 5 + (int) Math.pow(3, theifLevel);
+		theifHealthCurrent = theifHealthMax;
+	}
+	
 	public static void deductTheifHealth(Item itemOnHands)
 	{
 		int deduction = 1;
@@ -394,7 +402,7 @@ public class CommonEventHandler {
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
-					time = 90; 
+					time = 0; 
 					questSettings = new ArrayList<Integer>();
 					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 					List<Stage> stageList = stagesettings.stages;
@@ -408,7 +416,7 @@ public class CommonEventHandler {
 					}
 				}
 				else{
-					time = 90;
+					time = 0;
 				}
 				
 				t = new Timer();
@@ -460,8 +468,11 @@ public class CommonEventHandler {
 						dist = event.entity.getDistanceToEntity(npc);
 						ratio = (initialDist-dist)/initialDist;
 						if (!Minecraft.getMinecraft().isGamePaused()) {
-							time--;
+							time++;
 							
+							/**
+							 * Generates structures on sides (fence and Fake house on sides)
+							 */
 							for (int z = (int)event.entity.posZ+32; z < (int)event.entity.posZ+64; ++z) {
 								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)event.entity.posX-16, chasingQuestInitialPosY, z));
@@ -477,8 +488,15 @@ public class CommonEventHandler {
 							if (rand.nextInt(10) < 2) {
 								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
 							}
+							/**
+							 * END OF Generates structures on sides
+							 */
+							
 							if(context.suggestedGamePropertiesReady)
 							{
+								/**
+								 * Generates structures inside fence
+								 */
 								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
 								int currentRelativePosition = (int)event.entity.posZ - chasingQuestInitialPosZ;
 								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
@@ -550,11 +568,20 @@ public class CommonEventHandler {
 										}
 									}
 								}
+								/**
+								 * END OF Generates structures inside fence
+								 */
 								
+								/**
+								 * Terrain Cleaning
+								 */
 								if(areas.size() != 0)
 									areas.clear();
 								
 								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ-128, (int)event.entity.posZ-112);
+								/**
+								 * END OF Terrain Cleaning
+								 */
 							}
 							else{
 								if (ratio > 0.4) {
@@ -603,8 +630,10 @@ public class CommonEventHandler {
 						else if (context.rpm <= 40)
 							speedchange -= speedchangerate;
 						
-						// Quest Success!
-						if (time <= 0) {
+						// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
+						if (theifHealthCurrent <= 0) {
+							int logCount = 0;
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							try {
 								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 							} catch (SocketException e) {
@@ -616,42 +645,39 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
-							
+
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "win", 1.0f, 1.0f);
 							endingZ = (int)event.entity.posZ;
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
 							row.level = Integer.toString(theifLevel);
 							row.totalscore = Integer.toString(virtualCurrency);
-							row.stat_1 = Integer.toString(endingZ - startingZ);
+							row.stat_1 = Integer.toString(time);
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							GuiLeaderBoard.writeToLeaderboard(row);
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
-						}
-						
-						if(theifLevelUpFlag)
-						{
-							theifLevelUpFlag = false;
+							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							
-							theifLevelUp();
-							time += 20;
-							
-							event.entityPlayer.setPosition(event.entityPlayer.posX, event.entityPlayer.posY, event.entityPlayer.posZ-20);
+							return;
 						}
 
-						// Quest Failure: Fall Behind!!!
 						if (ratio < 0) {
 							warningMsgBlinkingTime = System.currentTimeMillis();
 							timeFallBehind++;
-//							System.out.println("PUSH! You are too far away!");
 						}
 						else{
 							timeFallBehind = 0;
 						}
-						
-						if(timeFallBehind >= 10)
+
+						// CHASE QUEST LOSE CONDITION
+						if(timeFallBehind >= 30)
 						{
 							try {
 								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
@@ -664,6 +690,10 @@ public class CommonEventHandler {
 							} catch (BiGXInternalGamePluginExcpetion e) {
 								e.printStackTrace();
 							}
+							
+							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
 					}
 				};
@@ -734,7 +764,7 @@ public class CommonEventHandler {
 							command.enableMoving(true);
 							countdown = 10;
 							t.cancel();
-							initialDist = event.entity.getDistanceToEntity(npc);
+							initialDist = 20; // HARD CODED
 							t2.scheduleAtFixedRate(t2Task, 0, 1000);
 						}
 					}
@@ -752,7 +782,9 @@ public class CommonEventHandler {
 		}
 		else if (event.item.getDisplayName().contains("Potion")
 				&& event.entity.dimension == WorldProviderFlats.dimID){
+			// CHASE QUEST LOSE CONDITION
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
+				BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 			}
