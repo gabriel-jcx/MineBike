@@ -70,6 +70,7 @@ public class CommonEventHandler {
 	int serverQuestTestTickCount = 10;
 	private static int countdown = 10;
 	private static int time = 0;
+	private static double elapsedTime = 0;
 	private static int timeFallBehind = 0;
 	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
@@ -680,8 +681,7 @@ public class CommonEventHandler {
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
 							row.level = Integer.toString(theifLevel);
-							row.totalscore = Integer.toString(virtualCurrency);
-							row.stat_1 = Integer.toString(time);
+							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
 							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
 							GuiLeaderBoard.writeToLeaderboard(row);
 							System.out.println("[BiGX] theifHealthCurrent!!" + logCount++);
@@ -745,6 +745,7 @@ public class CommonEventHandler {
 								}
 							}
 							if (countdown == 0) {
+								elapsedTime = System.currentTimeMillis();
 								dist = 0;
 								startingZ = (int)event.entity.posZ;
 								endingZ = (int)event.entity.posZ;
@@ -811,39 +812,12 @@ public class CommonEventHandler {
 			// CHASE QUEST LOSE CONDITION
 			if (ws != null && event.entity instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+				virtualCurrency = 0;
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-				chasingQuestOnGoing = false;
-				chasingQuestOnCountDown = false;
-				timeFallBehind = 0;
-				time = 0;
-				BiGX.instance().context.setSpeed(0);
-				
-				if(npc != null)
-					command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-
-				if(t != null)
-				{
-					t.cancel();
-					t = null;
-				}
-				if(t2 != null)
-				{
-					t2.cancel();
-					t2 = null;
-				}
-				if(t3 != null)
-				{
-					t3.cancel();
-					t3 = null;
-				}
-
-				returnLocation = Vec3.createVectorHelper(-174, 71, 338);
-
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ - 128, (int)event.entity.posZ);
-				teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-				
-//				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
+//				teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 			}
 		}
 	}

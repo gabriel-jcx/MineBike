@@ -91,8 +91,8 @@ public class GuiLeaderBoard extends GuiScreen {
 				jsonRow.addProperty("rank", row.rank);
 				jsonRow.addProperty("name", row.name);
 				jsonRow.addProperty("level", row.level);
-				jsonRow.addProperty("stat_1", row.stat_1);
-				jsonRow.addProperty("totalscore", row.totalscore);
+//				jsonRow.addProperty("stat_1", row.stat_1);
+				jsonRow.addProperty("time_elapsed", row.time_elapsed);
 				j.add(row.rank, jsonRow);
 			}
 		}
@@ -103,8 +103,8 @@ public class GuiLeaderBoard extends GuiScreen {
 			jsonRow.addProperty("rank", row.rank);
 			jsonRow.addProperty("name", row.name);
 			jsonRow.addProperty("level", row.level);
-			jsonRow.addProperty("stat_1", row.stat_1);
-			jsonRow.addProperty("totalscore", row.totalscore);
+//			jsonRow.addProperty("stat_1", row.stat_1);
+			jsonRow.addProperty("time_elapsed", row.time_elapsed);
 			j.add(row.rank, jsonRow);
 		}
 		
@@ -131,8 +131,8 @@ public class GuiLeaderBoard extends GuiScreen {
 				row.rank = "Rank";
 				row.name = "Name";
 				row.level = "Level";
-				row.stat_1 = "Blocks";
-				row.totalscore = "Score";
+//				row.stat_1 = "Blocks";
+				row.time_elapsed = "Time";
 				leaderboardRows.add(row);
 				
 				for(int i=0; i<j.entrySet().size(); i++)
@@ -148,8 +148,8 @@ public class GuiLeaderBoard extends GuiScreen {
 							row.name = row.name.substring(0, 12) + "...";
 						}
 						row.level = entries.get("level").getAsString();
-						row.stat_1 = entries.get("stat_1").getAsString();
-						row.totalscore = entries.get("totalscore").getAsString();
+//						row.stat_1 = entries.get("stat_1").getAsString();
+						row.time_elapsed = entries.get("time_elapsed").getAsString();
 						leaderboardRows.add(row);
 					}
 				}
@@ -160,8 +160,9 @@ public class GuiLeaderBoard extends GuiScreen {
 	private static String getRowRank(LeaderboardRow row) {
 		refreshLeaderBoard();
 		for (LeaderboardRow r : leaderboardRows) {
-			if(!r.totalscore.equals("Score"))
-				if (Integer.parseInt(r.totalscore) <= Integer.parseInt(row.totalscore))
+			System.out.println(r.time_elapsed + " " + row.time_elapsed);
+			if(!r.time_elapsed.equals("Time"))
+				if (Double.parseDouble(r.time_elapsed) <= Double.parseDouble(row.time_elapsed))
 					return r.rank;
 		}
 		return "1";
@@ -268,15 +269,15 @@ public class GuiLeaderBoard extends GuiScreen {
 	        		String rank = leaderboardRows.get(i).rank;
 	        		String name = leaderboardRows.get(i).name;
 	        		String level = leaderboardRows.get(i).level;
-	        		String stat_1 = leaderboardRows.get(i).stat_1;
-	        		String totalscore = leaderboardRows.get(i).totalscore;
+//	        		String stat_1 = leaderboardRows.get(i).stat_1;
+	        		String time_elapsed = leaderboardRows.get(i).time_elapsed;
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(rank, -120, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(name, -90, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(level, 5, 32 + i*14, 0xFFFFFF);
-		    		fontRendererObj.drawString(stat_1, 40, 32 + i*14, 0xFFFFFF);
-		    		fontRendererObj.drawString(totalscore, 75, 32 + i*14, 0xFFFFFF);
+//		    		fontRendererObj.drawString(stat_1, 40, 32 + i*14, 0xFFFFFF);
+		    		fontRendererObj.drawString(time_elapsed, 75, 32 + i*14, 0xFFFFFF);
 	        	}
         	
         	GL11.glPopMatrix();
