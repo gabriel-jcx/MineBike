@@ -298,11 +298,6 @@ public class ClientEventHandler {
 					
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.EVENT){
 						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.fatherMsg){	
-							///Give player the mysterious key
-							ItemStack key = new ItemStack(Item.getItemById(131));
-							key.setStackDisplayName("MysteriousKey");
-							if (!p.inventory.hasItemStack(key))
-								p.inventory.addItemStackToInventory(key);
 							///Give player message from the friend
 							ItemStack b = new ItemStack(Items.written_book);
 							NBTTagList pages = new NBTTagList();
@@ -313,6 +308,12 @@ public class ClientEventHandler {
 							b.stackTagCompound.setTag("pages", pages);
 							if (!p.inventory.hasItemStack(b))
 								p.inventory.addItemStackToInventory(b);
+							///Give player the mysterious key
+							ItemStack key = new ItemStack(Item.getItemById(131));
+							key.setStackDisplayName("MysteriousKey");
+							if (!p.inventory.hasItemStack(key))
+								p.inventory.addItemStackToInventory(key);
+							
 						}
 					}
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {

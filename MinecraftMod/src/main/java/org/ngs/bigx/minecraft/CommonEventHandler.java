@@ -213,7 +213,13 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	void onPlayerInteractwithNPC(EntityInteractEvent e) {
 		//Merchant Exchange (Gold ingot for virtual currency)
-		System.out.println(e.toString());
+//		if (checkPlayerInArea(e.entityPlayer, -67, 73, 12, -60, 75, 14)){ //////////the same as the event with the father msg
+//			///Give player the mysterious key
+//			ItemStack key = new ItemStack(Item.getItemById(131));
+//			key.setStackDisplayName("MysteriousKey");
+//			if (!e.entityPlayer.inventory.hasItemStack(key))
+//				e.entityPlayer.inventory.addItemStackToInventory(key);
+//		}
 //		if (e.entity.getEntityData().getId() == 10)
 //			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
 //				e.entityPlayer.inventory.consumeInventoryItem(Item.getItemById(266));
@@ -236,9 +242,7 @@ public class CommonEventHandler {
 //			BiGXEventTriggers.onRightClick(e, player);
 		World w = e.world;
 		if (!w.isRemote) {
-			System.out.println(e.x);
-			System.out.println(e.y);
-			System.out.println(e.z);
+
 			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
 				System.out.println("CHEST FOUND");
 				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
