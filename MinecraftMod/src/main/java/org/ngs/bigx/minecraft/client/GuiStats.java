@@ -34,7 +34,6 @@ public class GuiStats extends GuiScreen {
 
 	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
 	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/timer.png");
-	private ResourceLocation COIN_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gold.png");
 	private ResourceLocation OBJECTIVE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/objective.png");
 	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/theif.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
@@ -209,22 +208,6 @@ public class GuiStats extends GuiScreen {
 	    			}
 	    		}
 	    	}
-
-	    	GL11.glPushMatrix();
-	    	
-			    GL11.glTranslatef(mcWidth/2, mcHeight, 0); 
-			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			    GL11.glEnable(GL11.GL_BLEND);
-		        
-			    mc.renderEngine.bindTexture(COIN_TEXTURE);
-		        drawTexturedModalRect(-90, -50, 0, 0, 10 , 10);
-        	
-        	GL11.glPopMatrix();
-    		
-    		text = "" + CommonEventHandler.virtualCurrency;
-
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 55, mcHeight - 48, 0);
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();
 	    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();
