@@ -295,27 +295,7 @@ public class ClientEventHandler {
 				if(ClientAreaEvent.isAreaChange())
 				{
 					ClientAreaEvent.unsetAreaChangeFlag();
-					
-					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.EVENT){
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.fatherMsg){	
-							///Give player message from the friend
-							ItemStack b = new ItemStack(Items.written_book);
-							NBTTagList pages = new NBTTagList();
-							pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
-							b.stackTagCompound = new NBTTagCompound();
-							b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-							b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
-							b.stackTagCompound.setTag("pages", pages);
-							if (!p.inventory.hasItemStack(b))
-								p.inventory.addItemStackToInventory(b);
-							///Give player the mysterious key
-							ItemStack key = new ItemStack(Item.getItemById(131));
-							key.setStackDisplayName("MysteriousKey");
-							if (!p.inventory.hasItemStack(key))
-								p.inventory.addItemStackToInventory(key);
-							
-						}
-					}
+
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
 						if (showLeaderboard) {
 							showLeaderboard = false;

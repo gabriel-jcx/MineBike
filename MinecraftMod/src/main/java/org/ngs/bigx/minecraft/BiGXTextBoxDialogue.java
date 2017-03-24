@@ -21,4 +21,10 @@ public class BiGXTextBoxDialogue {
 	public static final String placeCave = "\n   < Cave >";
 	public static final String placeCaveHiddenRoom = "\n   < Hidden Room >";
 	public static final String placeIslandCaprona = "\n   < Caprona Island >";
+	
+	//Messages
+	public static final String QuestMsgAuthor = "A friend";
+	public static final String firstQuestMsgTitle = "A message";
+	public static final String firstQuestMsg = "Your father is in danger. You need to find the one after him and stop him. "
+			+ "Go to the cave just outside of town and follow the music. This key will unveil answers.";
 }

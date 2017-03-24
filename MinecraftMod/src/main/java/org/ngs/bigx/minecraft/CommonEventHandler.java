@@ -213,6 +213,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	void onPlayerInteractwithNPC(EntityInteractEvent e) {
+		System.out.println("Player Interact w/ NPC Event");
 		//Merchant Exchange (Gold ingot for virtual currency)
 //		if (checkPlayerInArea(e.entityPlayer, -67, 73, 12, -60, 75, 14)){ //////////the same as the event with the father msg
 //			///Give player the mysterious key
@@ -229,21 +230,38 @@ public class CommonEventHandler {
 //				System.out.println("10 Gold Coins should have been added");
 //			}
 }
+	
+	@SubscribeEvent
+	public void entityInteractEvent(EntityInteractEvent e){
+		EntityPlayer player = e.entityPlayer;
+		System.out.println("Entity Interact Event");
+		BiGXEventTriggers.InteractWithNPC(player);
+//		if (checkPlayerInArea(player, -67, 73, 12, -60, 75, 14)){
+//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
+//			///Give player message from the friend
+//			ItemStack b = new ItemStack(Items.written_book);
+//			NBTTagList pages = new NBTTagList();
+//			pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
+//			b.stackTagCompound = new NBTTagCompound();
+//			b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
+//			b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
+//			b.stackTagCompound.setTag("pages", pages);
+//			if (!player.inventory.hasItemStack(b))
+//				player.inventory.addItemStackToInventory(b);
+//			///Give player the mysterious key
+//			ItemStack key = new ItemStack(Item.getItemById(131));
+//			key.setStackDisplayName("MysteriousKey");
+//			if (!player.inventory.hasItemStack(key))
+//				player.inventory.addItemStackToInventory(key);
+//			}
+	}
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
-		//System.out.println(e.entity.getEntityData().getId());
-		
-//		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
-//			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
-//				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
-//					e.setCanceled(true);
-//			}
-//			BiGXEventTriggers.onRightClick(e, player);
 		World w = e.world;
+		
 		if (!w.isRemote) {
-
 			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
 				System.out.println("CHEST FOUND");
 				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);

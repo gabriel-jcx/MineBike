@@ -7,8 +7,12 @@ import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class BiGXEventTriggers {	
@@ -36,9 +40,7 @@ public class BiGXEventTriggers {
 	
 	public static void ChestLocked(PlayerInteractEvent event, EntityPlayer player){
 		if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339))//checking if player is in Secret Room
-			//System.out.println(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"));
-			if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
-			{
+			if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey")){
 				event.setCanceled(true);
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.chestLocked);
 			}
@@ -52,6 +54,33 @@ public class BiGXEventTriggers {
 		if (numOfGold > 0)
 			for (int i = 0; i < numOfGold; i++)
 				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add reward to inventory
+	}
+	
+	//NPC Interactions
+	public static void InteractWithNPC(EntityPlayer player){
+		if (checkPlayerInArea(player, -67, 73, 12, -60, 75, 14)){
+			InteractWithFather(player);
+		}
+	}
+	
+	private static void InteractWithFather(EntityPlayer player){
+		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
+		///Give player message from the friend
+//		ItemStack b = new ItemStack(Items.written_book);
+//		NBTTagList pages = new NBTTagList();
+//		pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
+//		b.stackTagCompound = new NBTTagCompound();
+//		b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
+//		b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
+//		b.stackTagCompound.setTag("pages", pages);
+//		if (!player.inventory.hasItemStack(b))
+//			player.inventory.addItemStackToInventory(b);
+		///Give player the mysterious key
+		givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
+		ItemStack key = new ItemStack(Item.getItemById(131));
+		key.setStackDisplayName("MysteriousKey");
+		if (!player.inventory.hasItemStack(key))
+			player.inventory.addItemStackToInventory(key);
 	}
 	
 	
@@ -70,6 +99,18 @@ public class BiGXEventTriggers {
 				if (event.z >= z1 && event.z <= z2)
 					return true;
 		return false;
+	}
+	
+	private static void givePlayerMessage(EntityPlayer player, String message, String author, String title){
+		ItemStack b = new ItemStack(Items.written_book);
+		NBTTagList pages = new NBTTagList();
+		pages.appendTag(new NBTTagString(message));
+		b.stackTagCompound = new NBTTagCompound();
+		b.stackTagCompound.setTag("author", new NBTTagString(author));
+		b.stackTagCompound.setTag("title", new NBTTagString(title));
+		b.stackTagCompound.setTag("pages", pages);
+		if (!player.inventory.hasItemStack(b))
+			player.inventory.addItemStackToInventory(b);
 	}
 	
 	private static int convertCoinsToGold(int numCoins){
