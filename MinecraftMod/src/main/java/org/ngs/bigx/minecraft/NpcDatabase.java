@@ -17,7 +17,7 @@ public class NpcDatabase {
 	
 	private static Map<String, Vec3> populateMap() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
-		map.put("Father", Vec3.createVectorHelper(-65, 74, 13));
+		map.put("Dad", Vec3.createVectorHelper(-65, 74, 13));
 		map.put("Merchant", Vec3.createVectorHelper(-55,  72,  91));
 		//map.put("Quest Giver", Vec3.createVectorHelper(-59, 73, 72));
 		return map;
@@ -41,7 +41,7 @@ public class NpcDatabase {
 	}
 	
 	private static String getTexture(String name) {
-		if (name.equals("Father"))
+		if (name.equals("Dad"))
 			return "customnpcs:textures/entity/humanmale/VillagerSteve.png";
 		if (name.equals("Merchant"))
 			return "customnpcs:textures/entity/humanmale/TraderSteve.png";

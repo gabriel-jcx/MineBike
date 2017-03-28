@@ -3,8 +3,8 @@ package org.ngs.bigx.minecraft;
 
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
-	public static final String wakeUpMsg = "Father is calling me. Let’s\ngo talk to him";
-	public static final String fatherMsg = "Father: Someone gave me\nthese for you.";
+	public static final String wakeUpMsg = "Dad is calling me. Let’s\ngo talk to him";
+	public static final String fatherMsg = "Dad: Someone gave me\nthese for you.";
 	public static final String postCapture = "ARGH! You caught me!";
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
@@ -25,6 +25,6 @@ public class BiGXTextBoxDialogue {
 	//Messages
 	public static final String QuestMsgAuthor = "A friend";
 	public static final String firstQuestMsgTitle = "A message";
-	public static final String firstQuestMsg = "Your father is in danger. You need to find the one after him and stop him. "
+	public static final String firstQuestMsg = "Your dad is in danger. You need to find the one after him and stop him. "
 			+ "Go to the cave just outside of town and follow the music. This key will unveil answers.";
 }

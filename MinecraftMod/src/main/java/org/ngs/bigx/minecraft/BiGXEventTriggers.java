@@ -65,16 +65,6 @@ public class BiGXEventTriggers {
 	
 	private static void InteractWithFather(EntityPlayer player){
 		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
-		///Give player message from the friend
-//		ItemStack b = new ItemStack(Items.written_book);
-//		NBTTagList pages = new NBTTagList();
-//		pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
-//		b.stackTagCompound = new NBTTagCompound();
-//		b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-//		b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
-//		b.stackTagCompound.setTag("pages", pages);
-//		if (!player.inventory.hasItemStack(b))
-//			player.inventory.addItemStackToInventory(b);
 		///Give player the mysterious key
 		givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
 		ItemStack key = new ItemStack(Item.getItemById(131));
@@ -114,7 +104,7 @@ public class BiGXEventTriggers {
 	}
 	
 	private static int convertCoinsToGold(int numCoins){
-		return Math.floorDiv(numCoins, 10);
+		return Math.floorDiv(numCoins, 100);
 	}
 	
 }
