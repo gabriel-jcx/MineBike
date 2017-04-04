@@ -473,9 +473,9 @@ public class CommonEventHandler {
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 
-				chasingQuestInitialPosX = (int)event.entity.posX;
+				chasingQuestInitialPosX = 1;
 				chasingQuestInitialPosY = 10;
-				chasingQuestInitialPosZ = (int)event.entity.posZ;
+				chasingQuestInitialPosZ = 0;
 				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
