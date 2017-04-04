@@ -13,11 +13,8 @@ import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
 import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
-import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
-import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -373,15 +370,6 @@ public class ClientEventHandler {
 					BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
 							org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
-				}
-				
-				//Quest Code
-
-				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-				if (context.questManager.hasQuestPopupShown()==false&&context.questManager.getSuggestedQuest()!=null) {
-					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
-					Minecraft.getMinecraft().displayGuiScreen(gui);
-					context.questManager.showQuestPopup();
 				}
 				
 				/***

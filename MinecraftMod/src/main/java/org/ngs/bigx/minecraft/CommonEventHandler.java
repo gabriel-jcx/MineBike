@@ -17,12 +17,6 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestEvent;
-import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
-import org.ngs.bigx.minecraft.quests.QuestPlayer;
-import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -139,31 +133,12 @@ public class CommonEventHandler {
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
-		BikeWorldData data = BikeWorldData.get(event.world);
 		event.world.provider.setWorldTime(0);
 		//System.out.println(event.world.provider.dimensionId);
 		if (event.world.provider.dimensionId == 0){
 			System.out.println("DIMENSION ID == 0");
 			
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-//			EntityCustomNpc giver = null;
-//			for (Object o : NpcCommand.getCustomNpcsInDimension(0))
-//				if (((EntityCustomNpc)o).display.name.equals("Quest Giver"))
-//					giver = (EntityCustomNpc)o;
-//			if (giver == null) {
-//				EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
-//				NpcCommand teleportercommand = new NpcCommand(teleporternpc);
-//				teleportercommand.enableMoving(false);
-//				teleportercommand.makeTransporter(true);
-//				activenpc = teleporternpc;
-//				activecommand = teleportercommand;
-//			} else {
-//				NpcCommand teleportercommand = new NpcCommand(giver);
-//				teleportercommand.enableMoving(false);
-//				teleportercommand.makeTransporter(true);
-//				activenpc = giver; 
-//				activecommand = teleportercommand;
-//			}
 			
 			// NPC CHECKING
 			for (String name : NpcDatabase.NpcNames()) {
@@ -882,28 +857,6 @@ public class CommonEventHandler {
 		}
 	}
 	
-	public static void makeQuestOnServer()
-	{
-		//Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
-		Quest q = BiGX.instance().context.questManager.makeQuest("timedTrack");
-		makeQuestOnServer();
-		
-		for (WorldServer world:MinecraftServer.getServer().worldServers) {
-			List<EntityPlayerMP> playerList = world.playerEntities;
-			
-			for (EntityPlayerMP player:playerList) {
-				q.addPlayer(player.getDisplayName(),BiGX.instance().context);
-				World worldd = player.getEntityWorld();
-				q.setOriginalWorld(worldd);
-			}
-			
-			q.addQuestInitiator(1524, 65, 411);
-		}
-		
-		System.out.println("[BIGX] CREATE QUEST QUEUEING");
-		BiGX.instance().context.questEventQueue.add(new QuestEvent(q, eventType.CreateQuest));
-	}
-	
 	 //Called when the server ticks. Usually 20 ticks a second. 
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
@@ -949,46 +902,6 @@ public class CommonEventHandler {
 					//makeQuestOnServer();
 				}
 			}
-			
-			if(BiGX.instance().context.questEventQueue.size() == 0)
-			{
-				return;
-			}
-			
-			QuestEvent questevent = BiGX.instance().context.questEventQueue.remove();
-			Quest quest = questevent.quest;
-			eventType type = questevent.type; 
-			Collection<QuestPlayer> players = quest.players.values();
-			
-			switch(type)
-			{
-			case CreateQuest:
-				for (QuestPlayer player : players)
-				{
-					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
-					BiGX.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
-				}
-				break;
-			case NotifyQuestPlayers:
-				for (QuestPlayer player : players)
-				{
-					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.NotifyQuest);
-//					quest.removeQuestInitiator(1524, 65, 411);
-					BiGX.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
-				}
-				break;
-			default:
-				WorldServer[] worldServers = MinecraftServer.getServer().worldServers;
-				
-				for (WorldServer world:worldServers) {
-					List<EntityPlayerMP> playerList = world.playerEntities;
-					for (EntityPlayerMP player:playerList) {
-					}
-				}
-				break;
-			}
-					
-
 		}
 	}
 		

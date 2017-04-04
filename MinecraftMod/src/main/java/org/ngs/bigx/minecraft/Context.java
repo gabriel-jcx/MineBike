@@ -32,9 +32,6 @@ import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestEvent;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 
 import com.google.gson.Gson;
 
@@ -64,8 +61,6 @@ public class Context implements eyeTrackerListner {
 	private int bufferQuestDesignChunkNumber = 0;
 	public BiGXSuggestedGameProperties suggestedGameProperties = null;
 	public boolean suggestedGamePropertiesReady = false;
-	
-	public Queue<QuestEvent> questEventQueue;
 	
 	/* TODO: Need to be removed before production
 	 * SHOE TESTING
@@ -97,8 +92,6 @@ public class Context implements eyeTrackerListner {
 	
 	public boolean modEnabled = true;
 	
-	public QuestManager questManager;
-	
 	public enum Resistance {
 		NONE(0),LOW(1),MLOW(2),MID(3),MHIGH(4),HIGH(5);
 		
@@ -128,7 +121,6 @@ public class Context implements eyeTrackerListner {
 	public Context(BiGX main) {
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		this.questEventQueue = new LinkedList<QuestEvent>(); 
 		ClientAreaEvent.initArea();
 				
 		resistances.put(Blocks.air, Resistance.NONE);
@@ -141,8 +133,6 @@ public class Context implements eyeTrackerListner {
 		resistances.put(Blocks.water, Resistance.HIGH);
 		resistances.put(Blocks.obsidian, Resistance.HIGH);
 		resistances.put(Blocks.sand, Resistance.HIGH);
-		
-		questManager = new QuestManager();
 		
 		try {
 			this.eTracker = new eyeTracker();
@@ -304,10 +294,6 @@ public class Context implements eyeTrackerListner {
 		
 	public boolean checkQuestsEnabled() {
 		return questsEnabled;
-	}
-	
-	public void unloadWorld() {
-		questManager.unloadWorld();
 	}
 
 	@Override
