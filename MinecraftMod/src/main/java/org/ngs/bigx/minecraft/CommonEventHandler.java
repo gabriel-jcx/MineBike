@@ -13,6 +13,7 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
@@ -408,6 +409,8 @@ public class CommonEventHandler {
 			theifHealthCurrent = 0;
 			theifLevelUpFlag = true;
 		}
+		
+		GuiDamage.addDamageText(deduction, 255, 10, 10);
 	}
 	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)

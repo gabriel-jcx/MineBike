@@ -58,6 +58,8 @@ public class ClientEventHandler {
 		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
 		
+		private static long duplicateAttackEventPreventorTimeStamp = 0;
+		
 		public ClientEventHandler(Context con) {
 			context = con;
 		}
@@ -119,6 +121,11 @@ public class ClientEventHandler {
 				
 				if(target.display.name.equals("Thief"))
 				{
+					if( (System.currentTimeMillis() - duplicateAttackEventPreventorTimeStamp) < 100 )
+						return;
+					else
+						duplicateAttackEventPreventorTimeStamp = System.currentTimeMillis();
+						
 					Random r = new Random();
 					int hit = r.nextInt(4)+1;
 //					System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
