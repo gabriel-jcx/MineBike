@@ -675,8 +675,12 @@ public class CommonEventHandler {
 							row.level = Integer.toString(theifLevel);
 							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
 							GuiLeaderBoard.writeToLeaderboard(row);
-							
+
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 							
@@ -747,6 +751,7 @@ public class CommonEventHandler {
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 							}
 							else if (countdown == 1)
 							{
