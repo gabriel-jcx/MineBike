@@ -103,6 +103,7 @@ public class CommonEventHandler {
 	private static int theifHealthMax = 50;
 	private static int theifHealthCurrent = theifHealthMax;
 	private static int theifLevel = 1;
+	private static int thiefMaxLevel = 1;
 	private static boolean theifLevelUpFlag = false;
 	
 	public static int getTime()
@@ -159,21 +160,7 @@ public class CommonEventHandler {
 						list.get(i).delete();
 				}
 			}
-			
-			//allNPCS.SetQuestNPCS();
 		}
-//		if (event.world.provider.dimensionId == 100){
-//			System.out.println("DIMENSION ID == 100");
-//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(100);
-//			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
-//			EntityCustomNpc thiefnpc = NpcCommand.spawnNpc(0f, 10f, 10f, event.world, "Thief");
-//			NpcCommand thiefcommand = new NpcCommand(thiefnpc);
-//			thiefcommand.enableMoving(true);
-//			thiefcommand.setSpeed(10);
-//			thiefcommand.runInDirection(ForgeDirection.EAST);
-//			//allNPCS.SetChaseNPC();
-//			Timer questTimer = new Timer();
-//		}
 	}
 	
 	@SubscribeEvent
@@ -190,46 +177,13 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	void onPlayerInteractwithNPC(EntityInteractEvent e) {
 		System.out.println("Player Interact w/ NPC Event");
-		//Merchant Exchange (Gold ingot for virtual currency)
-//		if (checkPlayerInArea(e.entityPlayer, -67, 73, 12, -60, 75, 14)){ //////////the same as the event with the father msg
-//			///Give player the mysterious key
-//			ItemStack key = new ItemStack(Item.getItemById(131));
-//			key.setStackDisplayName("MysteriousKey");
-//			if (!e.entityPlayer.inventory.hasItemStack(key))
-//				e.entityPlayer.inventory.addItemStackToInventory(key);
-//		}
-//		if (e.entity.getEntityData().getId() == 10)
-//			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
-//				e.entityPlayer.inventory.consumeInventoryItem(Item.getItemById(266));
-//				if (characterProperty != null)
-//					characterProperty.addCoins(10);
-//				System.out.println("10 Gold Coins should have been added");
-//			}
 }
 	
 	@SubscribeEvent
 	public void entityInteractEvent(EntityInteractEvent e){
 		EntityPlayer player = e.entityPlayer;
 		System.out.println("Entity Interact Event");
-		BiGXEventTriggers.InteractWithNPC(player);
-//		if (checkPlayerInArea(player, -67, 73, 12, -60, 75, 14)){
-//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
-//			///Give player message from the friend
-//			ItemStack b = new ItemStack(Items.written_book);
-//			NBTTagList pages = new NBTTagList();
-//			pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
-//			b.stackTagCompound = new NBTTagCompound();
-//			b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-//			b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
-//			b.stackTagCompound.setTag("pages", pages);
-//			if (!player.inventory.hasItemStack(b))
-//				player.inventory.addItemStackToInventory(b);
-//			///Give player the mysterious key
-//			ItemStack key = new ItemStack(Item.getItemById(131));
-//			key.setStackDisplayName("MysteriousKey");
-//			if (!player.inventory.hasItemStack(key))
-//				player.inventory.addItemStackToInventory(key);
-//			}
+		BiGXEventTriggers.InteractWithNPC(player, e);
 	}
 
 	@SubscribeEvent
@@ -263,13 +217,15 @@ public class CommonEventHandler {
 				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
 				b.stackTagCompound.setTag("title", new NBTTagString("Potion Instructions"));
 				b.stackTagCompound.setTag("pages", pages);
-				if (!e.entityPlayer.inventory.hasItemStack(b))
-					c.setInventorySlotContents(1, b);
+				//if (!e.entityPlayer.inventory.hasItemStack(b))
+				c.setInventorySlotContents(0, b);
 				
-				ItemStack p = new ItemStack(Items.potionitem);
-				p.setStackDisplayName("Teleportation Potion");
-				if (!e.entityPlayer.inventory.hasItemStack(p))
-					c.setInventorySlotContents(0, p);
+				for (int i = 1; i <= thiefMaxLevel; ++i){
+					ItemStack p = new ItemStack(Items.potionitem);
+					p.setStackDisplayName("Teleportation Potion " + i);
+					//if (!e.entityPlayer.inventory.hasItemStack(p))
+					c.setInventorySlotContents(i, p);
+				}
 			}
 		}
 	}
@@ -365,6 +321,7 @@ public class CommonEventHandler {
 	public static void theifLevelUp()
 	{
 		theifLevel ++;
+		thiefMaxLevel ++;
 		
 		theifHealthMax = 50 + (int) Math.pow(3, theifLevel);
 		theifHealthCurrent = theifHealthMax;
@@ -422,6 +379,7 @@ public class CommonEventHandler {
 				&& event.entity.dimension != WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+event.entity.dimension+"]");		
+				setTheifLevel(Integer.parseInt(event.item.getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -469,22 +427,6 @@ public class CommonEventHandler {
 					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
 				}
 				
-				
-//				final TimerTask t3Task = new TimerTask() {
-//					@Override
-//					public void run() {
-//						// Timer for the case where the main char is close enough to catch the bad guy
-//						if (!Minecraft.getMinecraft().isGamePaused()) {
-//							for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-//								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-//									ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
-//									blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-//									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
-//								}
-//							}
-//						}
-//					}
-//				};
 				final TimerTask t2Task = new TimerTask() {
 					@Override
 					public void run() {
@@ -711,6 +653,8 @@ public class CommonEventHandler {
 							}
 							
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+							if (theifLevel == thiefMaxLevel && virtualCurrency > 50)
+								theifLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
@@ -875,18 +819,6 @@ public class CommonEventHandler {
 			if (server_tick==20) {
 				server_tick = 0;
 			}
-			
-//			if (activenpc == null) {
-//				System.out.println("ACTIVENPC IS NULL");
-//				for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
-//					if (((EntityCustomNpc)o).display.name.equals("Quest Giver")) {
-//						System.out.println("FOUND");
-//						activenpc = (EntityCustomNpc)o;
-//						NpcCommand teleportercommand = new NpcCommand(activenpc);
-//						activecommand = teleportercommand;
-//					}
-//				}
-//			}
 			
 			//Making sure it remains daytime all the time
 			World current_world = MinecraftServer.getServer().getEntityWorld();
