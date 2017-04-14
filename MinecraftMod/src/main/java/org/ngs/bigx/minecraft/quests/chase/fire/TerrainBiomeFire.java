@@ -150,10 +150,10 @@ public class TerrainBiomeFire {
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,4,2,3), Blocks.cobblestone);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,3,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,4,2,3), Blocks.fire);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,3,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,4,2,3), Blocks.lava);
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,1,3), Blocks.glass);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,1,3), Blocks.glass);
@@ -184,10 +184,10 @@ public class TerrainBiomeFire {
 		// Transparent Glass on the Floor
 		biomeArea = new TerrainBiomeArea();
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,3,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,3,3), Blocks.fire);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,3,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,3,3), Blocks.lava);
 		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.glass);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,3), Blocks.glass);
@@ -236,15 +236,15 @@ public class TerrainBiomeFire {
 		// Lava underneath
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,3,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,1,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,3,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,4,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,1,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,3,3), Blocks.fire);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,3,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,1,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,3,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,4,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,1,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,3,3), Blocks.lava);
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,2,3), Blocks.glass);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.glass);
@@ -353,8 +353,8 @@ public class TerrainBiomeFire {
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,4,2,3), Blocks.cobblestone);
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,4,2,3), Blocks.fire);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,4,2,3), Blocks.lava);
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,1,3), Blocks.glass);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,1,3), Blocks.glass);
@@ -401,15 +401,15 @@ public class TerrainBiomeFire {
 		// Lava underneath
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,3,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,1,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,2,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,3,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,4,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,1,3), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,3,3), Blocks.fire);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-2,3,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,1,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,2,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,3,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-2,4,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,1,3), Blocks.lava);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-2,3,3), Blocks.lava);
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,2,3), Blocks.glass);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.glass);
