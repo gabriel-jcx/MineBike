@@ -109,7 +109,7 @@ public class CommonEventHandler {
 	private static int thiefMaxLevel = 1;
 	private static boolean theifLevelUpFlag = false;
 	
-	private WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+	private WorldServer ws;
 	
 	public static int getTime()
 	{
@@ -452,12 +452,24 @@ public class CommonEventHandler {
 							
 							Random rand = new Random();
 							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+								
 							}
 							rand = new Random();
 							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+								
 							}
+							
+							
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64, 1);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64, 0);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-18, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-11, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-4, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+3, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+11, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							
 							/**
 							 * END OF Generates structures on sides
 							 */
@@ -817,6 +829,95 @@ public class CommonEventHandler {
 				if (x == origX + 2 || x == origX + 4) {
 					w.setBlock(x, origY+1, origZ, Blocks.glass);
 					w.setBlock(x, origY+2, origZ, Blocks.glass);
+				}
+			}
+		}
+	}
+	
+	private void generateFakeCave(World w, List<Vec3> blocks, int origX, int origY, int origZ, int side) {
+		// Side==0: Left,   Side==1: Right,    Side==2: Ceiling
+		if(side==0) {
+			for (int x = origX; x < origX + 7; ++x) {
+				if(x==origX) {
+					for (int y = origY; y < origY + 4; ++y) {
+						for (int z = origZ; z < origZ + 11; ++z) {
+							if( ((z%2)==1) && (y==(origY+2)) )
+								w.setBlock(x, y, z, Blocks.glowstone);
+							else
+								w.setBlock(x, y, z, Blocks.dirt);
+						}
+					}
+				}
+				else if(x==(origX+1)) {
+					int y=origY + 4;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x==(origX+2)) {
+					int y=origY + 5;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if((z%2)==1)
+							w.setBlock(x, y, z, Blocks.glowstone);
+						else
+							w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x>=(origX+3)) {
+					int y=origY + 6;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+			}
+		}
+		else if(side==1) {
+			for (int x = origX+6; x >= origX; --x) {
+				if(x==(origX+6)) {
+					for (int y = origY; y < origY + 4; ++y) {
+						for (int z = origZ; z < origZ + 11; ++z) {
+							if( ((z%2)==1) && (y==(origY+2)) )
+								w.setBlock(x, y, z, Blocks.glowstone);
+							else
+								w.setBlock(x, y, z, Blocks.dirt);
+						}
+					}
+				}
+				else if(x==(origX+5)) {
+					int y=origY + 4;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x==(origX+4)) {
+					int y=origY + 5;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if((z%2)==1)
+							w.setBlock(x, y, z, Blocks.glowstone);
+						else
+							w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x<=(origX+3)) {
+					int y=origY + 6;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+			}
+		}
+		else if(side==2) {
+			for (int x = origX; x < origX + 7; ++x) {
+				int y=origY + 6;
+				
+				for (int z = origZ; z < origZ + 11; ++z) {
+					w.setBlock(x, y, z, Blocks.dirt);
 				}
 			}
 		}
