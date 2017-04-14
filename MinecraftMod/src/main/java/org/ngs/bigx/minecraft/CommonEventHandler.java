@@ -13,19 +13,15 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnClient;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestEvent;
-import org.ngs.bigx.minecraft.quests.QuestEvent.eventType;
-import org.ngs.bigx.minecraft.quests.QuestPlayer;
-import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -92,8 +88,10 @@ public class CommonEventHandler {
 	public static boolean chasingQuestOnCountDown = false;
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
-	
+
 	private static TerrainBiome terrainBiome = new TerrainBiome();
+	private static TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
+	
 	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
@@ -108,7 +106,10 @@ public class CommonEventHandler {
 	private static int theifHealthMax = 50;
 	private static int theifHealthCurrent = theifHealthMax;
 	private static int theifLevel = 1;
+	private static int thiefMaxLevel = 1;
 	private static boolean theifLevelUpFlag = false;
+	
+	private WorldServer ws;
 	
 	public static int getTime()
 	{
@@ -139,31 +140,12 @@ public class CommonEventHandler {
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
-		BikeWorldData data = BikeWorldData.get(event.world);
 		event.world.provider.setWorldTime(0);
 		//System.out.println(event.world.provider.dimensionId);
 		if (event.world.provider.dimensionId == 0){
 			System.out.println("DIMENSION ID == 0");
 			
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-//			EntityCustomNpc giver = null;
-//			for (Object o : NpcCommand.getCustomNpcsInDimension(0))
-//				if (((EntityCustomNpc)o).display.name.equals("Quest Giver"))
-//					giver = (EntityCustomNpc)o;
-//			if (giver == null) {
-//				EntityCustomNpc teleporternpc = NpcCommand.spawnNpc(-60f, 73f, 70f, ws, "Quest Giver");
-//				NpcCommand teleportercommand = new NpcCommand(teleporternpc);
-//				teleportercommand.enableMoving(false);
-//				teleportercommand.makeTransporter(true);
-//				activenpc = teleporternpc;
-//				activecommand = teleportercommand;
-//			} else {
-//				NpcCommand teleportercommand = new NpcCommand(giver);
-//				teleportercommand.enableMoving(false);
-//				teleportercommand.makeTransporter(true);
-//				activenpc = giver; 
-//				activecommand = teleportercommand;
-//			}
 			
 			// NPC CHECKING
 			for (String name : NpcDatabase.NpcNames()) {
@@ -183,21 +165,7 @@ public class CommonEventHandler {
 						list.get(i).delete();
 				}
 			}
-			
-			//allNPCS.SetQuestNPCS();
 		}
-//		if (event.world.provider.dimensionId == 100){
-//			System.out.println("DIMENSION ID == 100");
-//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(100);
-//			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId);
-//			EntityCustomNpc thiefnpc = NpcCommand.spawnNpc(0f, 10f, 10f, event.world, "Thief");
-//			NpcCommand thiefcommand = new NpcCommand(thiefnpc);
-//			thiefcommand.enableMoving(true);
-//			thiefcommand.setSpeed(10);
-//			thiefcommand.runInDirection(ForgeDirection.EAST);
-//			//allNPCS.SetChaseNPC();
-//			Timer questTimer = new Timer();
-//		}
 	}
 	
 	@SubscribeEvent
@@ -213,37 +181,22 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	void onPlayerInteractwithNPC(EntityInteractEvent e) {
-		//Merchant Exchange (Gold ingot for virtual currency)
-//		if (checkPlayerInArea(e.entityPlayer, -67, 73, 12, -60, 75, 14)){ //////////the same as the event with the father msg
-//			///Give player the mysterious key
-//			ItemStack key = new ItemStack(Item.getItemById(131));
-//			key.setStackDisplayName("MysteriousKey");
-//			if (!e.entityPlayer.inventory.hasItemStack(key))
-//				e.entityPlayer.inventory.addItemStackToInventory(key);
-//		}
-//		if (e.entity.getEntityData().getId() == 10)
-//			if (e.entityPlayer.inventory.hasItem(Item.getItemById(266))){
-//				e.entityPlayer.inventory.consumeInventoryItem(Item.getItemById(266));
-//				if (characterProperty != null)
-//					characterProperty.addCoins(10);
-//				System.out.println("10 Gold Coins should have been added");
-//			}
+		System.out.println("Player Interact w/ NPC Event");
 }
+	
+	@SubscribeEvent
+	public void entityInteractEvent(EntityInteractEvent e){
+		EntityPlayer player = e.entityPlayer;
+		System.out.println("Entity Interact Event");
+		BiGXEventTriggers.InteractWithNPC(player, e);
+	}
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
-		//System.out.println(e.entity.getEntityData().getId());
-		
-//		if(e.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK))
-//			if (checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)){//checking if player is in Secret Room
-//				if(player.inventory.getCurrentItem() == null || !player.inventory.getCurrentItem().getDisplayName().contains("MysteriousKey"))
-//					e.setCanceled(true);
-//			}
-//			BiGXEventTriggers.onRightClick(e, player);
 		World w = e.world;
+		
 		if (!w.isRemote) {
-
 			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
 				System.out.println("CHEST FOUND");
 				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
@@ -269,13 +222,15 @@ public class CommonEventHandler {
 				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
 				b.stackTagCompound.setTag("title", new NBTTagString("Potion Instructions"));
 				b.stackTagCompound.setTag("pages", pages);
-				if (!e.entityPlayer.inventory.hasItemStack(b))
-					c.setInventorySlotContents(1, b);
+				//if (!e.entityPlayer.inventory.hasItemStack(b))
+				c.setInventorySlotContents(0, b);
 				
-				ItemStack p = new ItemStack(Items.potionitem);
-				p.setStackDisplayName("Teleportation Potion");
-				if (!e.entityPlayer.inventory.hasItemStack(p))
-					c.setInventorySlotContents(0, p);
+				for (int i = 1; i <= thiefMaxLevel; ++i){
+					ItemStack p = new ItemStack(Items.potionitem);
+					p.setStackDisplayName("Teleportation Potion " + i);
+					//if (!e.entityPlayer.inventory.hasItemStack(p))
+					c.setInventorySlotContents(i, p);
+				}
 			}
 		}
 	}
@@ -371,6 +326,7 @@ public class CommonEventHandler {
 	public static void theifLevelUp()
 	{
 		theifLevel ++;
+		thiefMaxLevel ++;
 		
 		theifHealthMax = 50 + (int) Math.pow(3, theifLevel);
 		theifHealthCurrent = theifHealthMax;
@@ -415,17 +371,20 @@ public class CommonEventHandler {
 			theifHealthCurrent = 0;
 			theifLevelUpFlag = true;
 		}
+		
+		GuiDamage.addDamageText(deduction, 255, 10, 10);
 	}
 	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
 				&& event.entity.dimension != WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+event.entity.dimension+"]");		
+				setTheifLevel(Integer.parseInt(event.item.getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -455,9 +414,9 @@ public class CommonEventHandler {
 				returnLocation = Vec3.createVectorHelper(event.entity.posX-1, event.entity.posY-1, event.entity.posZ);
 				teleporter.teleport(event.entity, ws, 1, 11, 0);
 
-				chasingQuestInitialPosX = (int)event.entity.posX;
+				chasingQuestInitialPosX = 1;
 				chasingQuestInitialPosY = 10;
-				chasingQuestInitialPosZ = (int)event.entity.posZ;
+				chasingQuestInitialPosZ = 0;
 				
 				// Clean up placed blocks when the quest ends
 				final List<Vec3> blocks = new ArrayList<Vec3>();
@@ -473,22 +432,6 @@ public class CommonEventHandler {
 					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
 				}
 				
-				
-//				final TimerTask t3Task = new TimerTask() {
-//					@Override
-//					public void run() {
-//						// Timer for the case where the main char is close enough to catch the bad guy
-//						if (!Minecraft.getMinecraft().isGamePaused()) {
-//							for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-//								for (int z = (int)event.entity.posZ+48; z < (int)event.entity.posZ+64; ++z) {
-//									ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
-//									blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-//									//ws.setBlock(x, (int)event.entity.posY-1, z-64, Blocks.grass);
-//								}
-//							}
-//						}
-//					}
-//				};
 				final TimerTask t2Task = new TimerTask() {
 					@Override
 					public void run() {
@@ -509,12 +452,24 @@ public class CommonEventHandler {
 							
 							Random rand = new Random();
 							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+								
 							}
 							rand = new Random();
 							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+								
 							}
+							
+							
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64, 1);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64, 0);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-18, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-11, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-4, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+3, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+11, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							
 							/**
 							 * END OF Generates structures on sides
 							 */
@@ -541,17 +496,35 @@ public class CommonEventHandler {
 										(blockByDifficulty == Blocks.gravel) )
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomCityBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomCityBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomGateBiome());
+									}
 								}
 								else if(blockByDifficulty == Blocks.grass)
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomGrassBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomGrassBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomFieldBiome());
+									}
 								}
 								else if(blockByDifficulty == Blocks.sand)
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomDesertBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomDesertBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+									}
+								}
+								else {
+									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
 								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
@@ -679,8 +652,12 @@ public class CommonEventHandler {
 							row.level = Integer.toString(theifLevel);
 							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
 							GuiLeaderBoard.writeToLeaderboard(row);
-							
+
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 							
@@ -711,6 +688,8 @@ public class CommonEventHandler {
 							}
 							
 							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+							if (theifLevel == thiefMaxLevel && virtualCurrency > 50)
+								theifLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
@@ -751,6 +730,7 @@ public class CommonEventHandler {
 								command.enableMoving(false);
 								command.runInDirection(ForgeDirection.SOUTH);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 							}
 							else if (countdown == 1)
 							{
@@ -854,6 +834,95 @@ public class CommonEventHandler {
 		}
 	}
 	
+	private void generateFakeCave(World w, List<Vec3> blocks, int origX, int origY, int origZ, int side) {
+		// Side==0: Left,   Side==1: Right,    Side==2: Ceiling
+		if(side==0) {
+			for (int x = origX; x < origX + 7; ++x) {
+				if(x==origX) {
+					for (int y = origY; y < origY + 4; ++y) {
+						for (int z = origZ; z < origZ + 11; ++z) {
+							if( ((z%2)==1) && (y==(origY+2)) )
+								w.setBlock(x, y, z, Blocks.glowstone);
+							else
+								w.setBlock(x, y, z, Blocks.dirt);
+						}
+					}
+				}
+				else if(x==(origX+1)) {
+					int y=origY + 4;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x==(origX+2)) {
+					int y=origY + 5;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if((z%2)==1)
+							w.setBlock(x, y, z, Blocks.glowstone);
+						else
+							w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x>=(origX+3)) {
+					int y=origY + 6;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+			}
+		}
+		else if(side==1) {
+			for (int x = origX+6; x >= origX; --x) {
+				if(x==(origX+6)) {
+					for (int y = origY; y < origY + 4; ++y) {
+						for (int z = origZ; z < origZ + 11; ++z) {
+							if( ((z%2)==1) && (y==(origY+2)) )
+								w.setBlock(x, y, z, Blocks.glowstone);
+							else
+								w.setBlock(x, y, z, Blocks.dirt);
+						}
+					}
+				}
+				else if(x==(origX+5)) {
+					int y=origY + 4;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x==(origX+4)) {
+					int y=origY + 5;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if((z%2)==1)
+							w.setBlock(x, y, z, Blocks.glowstone);
+						else
+							w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x<=(origX+3)) {
+					int y=origY + 6;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+			}
+		}
+		else if(side==2) {
+			for (int x = origX; x < origX + 7; ++x) {
+				int y=origY + 6;
+				
+				for (int z = origZ; z < origZ + 11; ++z) {
+					w.setBlock(x, y, z, Blocks.dirt);
+				}
+			}
+		}
+	}
+	
 	@SubscribeEvent
 	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {
 		if (event.world.provider.getDimensionName() == WorldProviderFlats.dimName) {
@@ -862,28 +931,6 @@ public class CommonEventHandler {
 				event.setResult(Result.DENY);
 			}
 		}
-	}
-	
-	public static void makeQuestOnServer()
-	{
-		//Quest q = BiGX.instance().context.questManager.makeQuest("runFromMummy");
-		Quest q = BiGX.instance().context.questManager.makeQuest("timedTrack");
-		makeQuestOnServer();
-		
-		for (WorldServer world:MinecraftServer.getServer().worldServers) {
-			List<EntityPlayerMP> playerList = world.playerEntities;
-			
-			for (EntityPlayerMP player:playerList) {
-				q.addPlayer(player.getDisplayName(),BiGX.instance().context);
-				World worldd = player.getEntityWorld();
-				q.setOriginalWorld(worldd);
-			}
-			
-			q.addQuestInitiator(1524, 65, 411);
-		}
-		
-		System.out.println("[BIGX] CREATE QUEST QUEUEING");
-		BiGX.instance().context.questEventQueue.add(new QuestEvent(q, eventType.CreateQuest));
 	}
 	
 	 //Called when the server ticks. Usually 20 ticks a second. 
@@ -896,18 +943,6 @@ public class CommonEventHandler {
 			if (server_tick==20) {
 				server_tick = 0;
 			}
-			
-//			if (activenpc == null) {
-//				System.out.println("ACTIVENPC IS NULL");
-//				for (Object o : NpcCommand.getCustomNpcsInDimension(0)) {
-//					if (((EntityCustomNpc)o).display.name.equals("Quest Giver")) {
-//						System.out.println("FOUND");
-//						activenpc = (EntityCustomNpc)o;
-//						NpcCommand teleportercommand = new NpcCommand(activenpc);
-//						activecommand = teleportercommand;
-//					}
-//				}
-//			}
 			
 			//Making sure it remains daytime all the time
 			World current_world = MinecraftServer.getServer().getEntityWorld();
@@ -931,46 +966,6 @@ public class CommonEventHandler {
 					//makeQuestOnServer();
 				}
 			}
-			
-			if(BiGX.instance().context.questEventQueue.size() == 0)
-			{
-				return;
-			}
-			
-			QuestEvent questevent = BiGX.instance().context.questEventQueue.remove();
-			Quest quest = questevent.quest;
-			eventType type = questevent.type; 
-			Collection<QuestPlayer> players = quest.players.values();
-			
-			switch(type)
-			{
-			case CreateQuest:
-				for (QuestPlayer player : players)
-				{
-					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.MakeQuest);
-					BiGX.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
-				}
-				break;
-			case NotifyQuestPlayers:
-				for (QuestPlayer player : players)
-				{
-					HandleQuestMessageOnClient packet = new HandleQuestMessageOnClient(quest, Trigger.NotifyQuest);
-//					quest.removeQuestInitiator(1524, 65, 411);
-					BiGX.network.sendTo(packet, (EntityPlayerMP) player.getEntity());
-				}
-				break;
-			default:
-				WorldServer[] worldServers = MinecraftServer.getServer().worldServers;
-				
-				for (WorldServer world:worldServers) {
-					List<EntityPlayerMP> playerList = world.playerEntities;
-					for (EntityPlayerMP player:playerList) {
-					}
-				}
-				break;
-			}
-					
-
 		}
 	}
 		

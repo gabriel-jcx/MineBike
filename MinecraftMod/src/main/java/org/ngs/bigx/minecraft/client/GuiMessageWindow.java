@@ -7,8 +7,6 @@ import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestRunFromMummy;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -123,7 +121,6 @@ public class GuiMessageWindow extends GuiScreen {
 			timestampLastShowGoldbarCall = timestampLastShowWindowCall;
 		}
 		else{
-			System.out.println("[BiGX]" + message.substring(0, 1));
 			timestampLastShowGoldbarCall = 0;
 		}
 	}

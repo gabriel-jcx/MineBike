@@ -13,11 +13,8 @@ import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.networking.HandleQuestMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestLoot;
 import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
-import org.ngs.bigx.minecraft.quests.QuestStateManager.State;
-import org.ngs.bigx.minecraft.quests.QuestStateManager.Trigger;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -60,6 +57,8 @@ public class ClientEventHandler {
 		
 		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
+		
+		private static long duplicateAttackEventPreventorTimeStamp = 0;
 		
 		public ClientEventHandler(Context con) {
 			context = con;
@@ -122,6 +121,11 @@ public class ClientEventHandler {
 				
 				if(target.display.name.equals("Thief"))
 				{
+					if( (System.currentTimeMillis() - duplicateAttackEventPreventorTimeStamp) < 100 )
+						return;
+					else
+						duplicateAttackEventPreventorTimeStamp = System.currentTimeMillis();
+						
 					Random r = new Random();
 					int hit = r.nextInt(4)+1;
 //					System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
@@ -295,27 +299,7 @@ public class ClientEventHandler {
 				if(ClientAreaEvent.isAreaChange())
 				{
 					ClientAreaEvent.unsetAreaChangeFlag();
-					
-					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.EVENT){
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.fatherMsg){	
-							///Give player message from the friend
-							ItemStack b = new ItemStack(Items.written_book);
-							NBTTagList pages = new NBTTagList();
-							pages.appendTag(new NBTTagString("Your father is in danger. You need to find the one after him and stop him. Go to the cave just outside of town and follow the music. This key will unveil answers."));
-							b.stackTagCompound = new NBTTagCompound();
-							b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-							b.stackTagCompound.setTag("title", new NBTTagString("A Message"));
-							b.stackTagCompound.setTag("pages", pages);
-							if (!p.inventory.hasItemStack(b))
-								p.inventory.addItemStackToInventory(b);
-							///Give player the mysterious key
-							ItemStack key = new ItemStack(Item.getItemById(131));
-							key.setStackDisplayName("MysteriousKey");
-							if (!p.inventory.hasItemStack(key))
-								p.inventory.addItemStackToInventory(key);
-							
-						}
-					}
+
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
 						if (showLeaderboard) {
 							showLeaderboard = false;
@@ -393,15 +377,6 @@ public class ClientEventHandler {
 					BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
 							org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
-				}
-				
-				//Quest Code
-
-				EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-				if (context.questManager.hasQuestPopupShown()==false&&context.questManager.getSuggestedQuest()!=null) {
-					GuiScreenQuest gui = new GuiScreenQuest(Minecraft.getMinecraft().thePlayer,context.questManager.getSuggestedQuest(),context);
-					Minecraft.getMinecraft().displayGuiScreen(gui);
-					context.questManager.showQuestPopup();
 				}
 				
 				/***

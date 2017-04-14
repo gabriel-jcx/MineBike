@@ -1,6 +1,12 @@
 package org.ngs.bigx.minecraft;
 
 import java.awt.Event;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +29,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
+import org.ngs.bigx.dictionary.objects.game.GameServerList;
+import org.ngs.bigx.dictionary.objects.game.GameServerStatus;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -32,9 +40,6 @@ import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestEvent;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 
 import com.google.gson.Gson;
 
@@ -44,7 +49,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class Context implements eyeTrackerListner {
-	public BiGXNetClient bigxclient;
+	public static BiGXNetClient bigxclient;
+	private Timer bigxclientTimer;
+	private static int bigxclientConnectionTryCount = 0;
+	public static final int bigxclientConnectionTryMaxCount = 10;
+	private static final int bigxclientTimerTimeout = 2000;
+	
 	public String BiGXUserName;
 	public int heartrate = 80;
 	private float speed = 0;
@@ -64,8 +74,12 @@ public class Context implements eyeTrackerListner {
 	private int bufferQuestDesignChunkNumber = 0;
 	public BiGXSuggestedGameProperties suggestedGameProperties = null;
 	public boolean suggestedGamePropertiesReady = false;
-	
-	public Queue<QuestEvent> questEventQueue;
+
+	private static boolean isMiddlwareIPFileAvailable = false;
+	private static boolean isMiddlwareIPAvailable = false;
+	public static final String gameServerListFileName = System.getProperty("user.home") + "\\bigxGameServerList.dat";
+	private static Object MiddlewareIPReadMutex = new Object();
+	private static GameServerList gameServerList = null;
 	
 	/* TODO: Need to be removed before production
 	 * SHOE TESTING
@@ -97,8 +111,6 @@ public class Context implements eyeTrackerListner {
 	
 	public boolean modEnabled = true;
 	
-	public QuestManager questManager;
-	
 	public enum Resistance {
 		NONE(0),LOW(1),MLOW(2),MID(3),MHIGH(4),HIGH(5);
 		
@@ -128,7 +140,6 @@ public class Context implements eyeTrackerListner {
 	public Context(BiGX main) {
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		this.questEventQueue = new LinkedList<QuestEvent>(); 
 		ClientAreaEvent.initArea();
 				
 		resistances.put(Blocks.air, Resistance.NONE);
@@ -142,8 +153,6 @@ public class Context implements eyeTrackerListner {
 		resistances.put(Blocks.obsidian, Resistance.HIGH);
 		resistances.put(Blocks.sand, Resistance.HIGH);
 		
-		questManager = new QuestManager();
-		
 		try {
 			this.eTracker = new eyeTracker();
 			this.eTracker.addEyeTrackerListener(this);
@@ -153,10 +162,10 @@ public class Context implements eyeTrackerListner {
 		}
 	}
 	
-	public void initBigX() {
-		this.connectionStateManager = new BiGXConnectionStateManagerClass();
-		this.bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
-		this.bigxclient.setReceiveListener(new BiGXNetClientListener() {
+	public void connectBiGX()
+	{		
+		bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
+		bigxclient.setReceiveListener(new BiGXNetClientListener() {
 			
 			@Override
 			public void onMessageReceive(BiGXNetPacket packet) {
@@ -280,6 +289,104 @@ public class Context implements eyeTrackerListner {
 		});
 	}
 	
+	public boolean checkIPFile()
+	{
+		return (new File(gameServerListFileName)).exists();
+	}
+	
+	public String extractMiddlewareIP() throws IOException
+	{
+		String returnValue = "";
+		
+		File initialFile = new File(gameServerListFileName);
+		
+	    InputStream in = new FileInputStream(initialFile);
+		byte[] buffer = new byte[10240];
+		in.read(buffer);
+		String output = (new String(buffer)).trim();
+		
+		if( (output.length() != 0) && (!output.equals("{}")) )
+		{
+			gameServerList = new Gson().fromJson(output, GameServerList.class);
+		}
+		else if(output.equals("{}"))
+		{
+			gameServerList = new GameServerList();
+		}
+		
+		in.close();
+		
+		for(GameServerStatus gameServerStatus : gameServerList.getGameserverlist())
+		{
+			// /
+			String ip = InetAddress.getLocalHost().toString().split("/")[1];
+			
+			System.out.println("InetAddress.getLocalHost()[" + ip + "]");
+			
+			if(gameServerStatus.getIpserver().equals(ip))
+			{
+				returnValue = gameServerStatus.getIpclient();
+				break;
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	public void initBigX() {
+		this.connectionStateManager = new BiGXConnectionStateManagerClass();
+		
+		// Start Timer to Connect
+		// Try to connect the middleware server for 5 times
+		this.bigxclientTimer = new Timer();
+		bigxclientTimer.scheduleAtFixedRate(new TimerTask() 
+			{
+				@Override
+				public void run() 
+				{
+					synchronized(MiddlewareIPReadMutex)
+					{
+						isMiddlwareIPFileAvailable = false;
+						isMiddlwareIPAvailable = false;
+						
+						// CHECK the IP Address FILE
+						isMiddlwareIPFileAvailable = checkIPFile();
+						
+						// Extract IP of Middleware
+						if(isMiddlwareIPFileAvailable) {
+							try {
+								ipAddress = extractMiddlewareIP();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							
+							if(!ipAddress.equals("")) {
+								isMiddlwareIPAvailable = true;
+							}
+							else {
+								// TODO: Need to disable this hardcore portion
+								ipAddress = "128.195.55.199";
+								isMiddlwareIPAvailable = true;
+							}
+						}
+						else {
+							return;
+						}
+						
+						// SUCCESS THEN CONNECT
+						if(isMiddlwareIPAvailable) {
+							connectBiGX();
+							this.cancel();
+						}
+						else {
+							return;
+						}
+					}
+				}
+			},
+		0, bigxclientTimerTimeout);
+	}
+	
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
@@ -304,10 +411,6 @@ public class Context implements eyeTrackerListner {
 		
 	public boolean checkQuestsEnabled() {
 		return questsEnabled;
-	}
-	
-	public void unloadWorld() {
-		questManager.unloadWorld();
 	}
 
 	@Override
