@@ -21,6 +21,7 @@ import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -87,8 +88,10 @@ public class CommonEventHandler {
 	public static boolean chasingQuestOnCountDown = false;
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
-	
+
 	private static TerrainBiome terrainBiome = new TerrainBiome();
+	private static TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
+	
 	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
@@ -104,6 +107,8 @@ public class CommonEventHandler {
 	private static int theifHealthCurrent = theifHealthMax;
 	private static int theifLevel = 1;
 	private static boolean theifLevelUpFlag = false;
+	
+	private WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 	
 	public static int getTime()
 	{
@@ -416,7 +421,7 @@ public class CommonEventHandler {
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
 				&& event.entity.dimension != WorldProviderFlats.dimID){
@@ -537,17 +542,35 @@ public class CommonEventHandler {
 										(blockByDifficulty == Blocks.gravel) )
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomCityBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomCityBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomGateBiome());
+									}
 								}
 								else if(blockByDifficulty == Blocks.grass)
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomGrassBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomGrassBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomFieldBiome());
+									}
 								}
 								else if(blockByDifficulty == Blocks.sand)
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomDesertBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomDesertBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+									}
+								}
+								else {
+									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
 								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
