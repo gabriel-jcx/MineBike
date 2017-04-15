@@ -42,6 +42,18 @@ public class BiGXTextBoxDialogue {
 	public static final String secretRoomMsgTitle = "Potion Instructions";
 	public static final String secretRoomMsg = "Use this potion to persue he who wants to bring harm to your father.";
 	
+	//Level-based Messages
+	public static final String level1MsgTitle = "The Start of Your Journey";
+	public static final String level1Msg = "Super Intense and Inspiring Message.... You're Welcome.";
+	public static final String fireLevelMsgTitle = "The Fire Level";
+	public static final String fireLevelMsg = "Burn baby burn";
+	public static final String waterLevelMsgTitle = "The Frost Level";
+	public static final String waterLevelMsg = "Ice Ice Baby";
+	public static final String earthLevelMsgTitle = "The Forest Level";
+	public static final String earthLevelMsg = "Make like a tree and leaf!!";
+	public static final String airLevelMsgTitle = "The Flighty Level";
+	public static final String airLevelMsg = "Heads in the Clouds";
+	
 	// Tutorial Message
 	/***
 	 * 

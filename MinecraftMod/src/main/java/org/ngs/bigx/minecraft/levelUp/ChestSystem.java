@@ -1,27 +1,21 @@
 package org.ngs.bigx.minecraft.levelUp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 
 public class ChestSystem {
-	private static Vec3 secretChest = Vec3.createVectorHelper(-174, 70, 336);
 	
 	private static Map<String, String> normalChests = populateNormalChests();
 	private static Map<String, String> lockedChests = populateLockedChests();
@@ -34,8 +28,11 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(-174, 70, 336).toString(), "MysteriousKey");
-		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "Burnt Key");
+		map.put(Vec3.createVectorHelper(105, 70, 214).toString(), "Mysterious Key");
+		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Burnt Key");
+		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
+		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); ////Change coordinates later
+		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); ////Change coordinates later
 		return map;
 	}
 	
@@ -61,17 +58,32 @@ public class ChestSystem {
 		ChestLocked(e, e.entityPlayer, keyName);
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
-		if (keyName == "MysteriousKey"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.secretRoomMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.secretRoomMsgTitle);
-			for (int i = 1; i <= levelSys.getThiefLevel(); ++i)
+		if (keyName == "Mysterious Key"){
+			putMessageInChest(c, 0, BiGXTextBoxDialogue.level1Msg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.level1MsgTitle);
+			for (int i = 1; i <= levelSys.getPlayerLevel() && i <= 3; ++i)
 				putPotionInChest(c, ("Teleportation Potion "+i), i);
+//			putPotionInChest(c, ("Teleportation Potion 1"), 0);
 		}
 		
-		if (keyName == "Burnt Key")
-			putPotionInChest(c, "Teleportation Potion 4", 0);
+		if (keyName == "Burnt Key"){
+			putMessageInChest(c, 0, BiGXTextBoxDialogue.fireLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.fireLevelMsgTitle);
+			putPotionInChest(c, "Teleportation Potion 4", 0);	
+		}
 		
-		if (keyName == "Wet Key")
-			putPotionInChest(c, "Teleportation Potion 5", 0);
+		if (keyName == "Damp Key"){
+			putMessageInChest(c, 0, BiGXTextBoxDialogue.waterLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.waterLevelMsgTitle);
+			putPotionInChest(c, "Teleportation Potion 5", 0);	
+		}
+		
+		if (keyName == "Dusty Key"){
+			putMessageInChest(c, 0, BiGXTextBoxDialogue.earthLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.earthLevelMsgTitle);
+			putPotionInChest(c, "Teleportation Potion 6", 0);	
+		}
+		
+		if (keyName == "Light Key"){
+			putMessageInChest(c, 0, BiGXTextBoxDialogue.airLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.airLevelMsgTitle);
+			putPotionInChest(c, "Teleportation Potion 7", 0);	
+		}
 		
 	}
 	

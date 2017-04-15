@@ -6,14 +6,12 @@ import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -42,26 +40,6 @@ public class BiGXEventTriggers {
 	
 	public static void chestInteract(PlayerInteractEvent e, World w, LevelSystem levelSys){
 		ChestSystem.interactWithChests(e, levelSys);
-//		if (e.x == ChestSystem.caveChest.xCoord && e.y == ChestSystem.caveChest.yCoord && e.z == ChestSystem.caveChest.zCoord) {
-//			System.out.println("CHEST FOUND");
-//			TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
-//			ItemStack b = createMessage(BiGXTextBoxDialogue.caveChestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.caveChestMsgTitle);
-//			c.setInventorySlotContents(0, b);
-//		}
-//		
-//		if (e.x == ChestSystem.secretChest.xCoord && e.y == ChestSystem.secretChest.yCoord && e.z == ChestSystem.secretChest.zCoord){
-//			System.out.println("SECRET CHEST FOUND");
-////			ChestLocked(e, e.entityPlayer);
-//			TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
-//			ItemStack b = createMessage(BiGXTextBoxDialogue.secretRoomMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.secretRoomMsgTitle);
-//			c.setInventorySlotContents(0, b);
-//			
-//			for (int i = 1; i <= levelSys.getThiefLevel(); ++i){
-//				ItemStack p = new ItemStack(Items.potionitem);
-//				p.setStackDisplayName("Teleportation Potion " + i);
-//				c.setInventorySlotContents(i, p);
-//			}
-//		}
 	}
 	
 	public static void GivePlayerGoldfromCoins(EntityPlayer player, int numOfCoins){
