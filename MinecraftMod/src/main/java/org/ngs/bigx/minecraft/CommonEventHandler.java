@@ -17,7 +17,11 @@ import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
+import org.ngs.bigx.minecraft.npcs.NpcDatabase;
+import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -31,6 +35,8 @@ import org.ngs.bigx.utility.NpcCommand;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -67,34 +73,12 @@ public class CommonEventHandler {
 	
 	private static int thiefMaxLevel = 1;
 	
+	public static LevelSystem levelSys = new LevelSystem();
+	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		event.world.provider.setWorldTime(0);
-		//System.out.println(event.world.provider.dimensionId);
-		if (event.world.provider.dimensionId == 0){
-			System.out.println("DIMENSION ID == 0");
-			
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-			
-			// NPC CHECKING
-			for (String name : NpcDatabase.NpcNames()) {
-				int found = 0;
-				for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
-					if (((EntityCustomNpc)obj).display.name.equals(name))
-						++found;
-				if (found == 0) {
-					NpcDatabase.spawn(ws, name);
-				} else if (found > 1) {
-					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
-					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
-						if (((EntityCustomNpc)obj).display.name.equals(name))
-							list.add((EntityCustomNpc)obj);
-					NpcDatabase.sortFurthestSpawn(list);
-					for (int i = 0; i < list.size()-1; ++i)
-						list.get(i).delete();
-				}
-			}
-		}
+		NpcCommand.setNpcSpawnFlag();
 	}
 	
 	@SubscribeEvent
@@ -109,58 +93,20 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
-	void onPlayerInteractwithNPC(EntityInteractEvent e) {
-		System.out.println("Player Interact w/ NPC Event");
-}
-	
-	@SubscribeEvent
-	public void entityInteractEvent(EntityInteractEvent e){
+	public void entityInteractEvent(EntityInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
 		System.out.println("Entity Interact Event");
-		BiGXEventTriggers.InteractWithNPC(player, e);
+		NpcEvents.InteractWithNPC(player, e);
 	}
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
 		World w = e.world;
-		
+
 		if (!w.isRemote) {
-			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
-				System.out.println("CHEST FOUND");
-				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
-				ItemStack b = new ItemStack(Items.written_book);
-				NBTTagList pages = new NBTTagList();
-				pages.appendTag(new NBTTagString("In this cave lies a secret room. In order to save your father, you must follow the sounds of music nearby and unlock what's beyond the art."));
-				b.stackTagCompound = new NBTTagCompound();
-				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-				b.stackTagCompound.setTag("title", new NBTTagString("A hint that may help"));
-				b.stackTagCompound.setTag("pages", pages);
-				if (!e.entityPlayer.inventory.hasItemStack(b))
-					c.setInventorySlotContents(0, b);
-			}
-			
-			if (e.x == -174 && e.y == 70 && e.z == 336 && w.getBlock(e.x, e.y, e.z) == Blocks.chest){
-				System.out.println("SECRET CHEST FOUND");
-				BiGXEventTriggers.onRightClick(e, player);
-				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
-				ItemStack b = new ItemStack(Items.written_book);
-				NBTTagList pages = new NBTTagList();
-				pages.appendTag(new NBTTagString("Use this potion to persue he who wants to bring harm to your father."));
-				b.stackTagCompound = new NBTTagCompound();
-				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-				b.stackTagCompound.setTag("title", new NBTTagString("Potion Instructions"));
-				b.stackTagCompound.setTag("pages", pages);
-				//if (!e.entityPlayer.inventory.hasItemStack(b))
-				c.setInventorySlotContents(0, b);
-				
-				for (int i = 1; i <= thiefMaxLevel; ++i){
-					ItemStack p = new ItemStack(Items.potionitem);
-					p.setStackDisplayName("Teleportation Potion " + i);
-					//if (!e.entityPlayer.inventory.hasItemStack(p))
-					c.setInventorySlotContents(i, p);
-				}
-			}
+			if (w.getBlock(e.x, e.y, e.z) == Blocks.chest)
+				BiGXEventTriggers.chestInteract(e, w, levelSys);
 		}
 	}
 	

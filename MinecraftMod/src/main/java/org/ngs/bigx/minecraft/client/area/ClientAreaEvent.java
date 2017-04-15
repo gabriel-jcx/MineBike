@@ -1,3 +1,4 @@
+
 package org.ngs.bigx.minecraft.client.area;
 
 import java.util.ArrayList;
@@ -56,35 +57,35 @@ public class ClientAreaEvent {
 	
 	public static void initArea()
 	{
-		addArea(new Area(Vec3.createVectorHelper(-176, 65, 334), Vec3.createVectorHelper(-171, 73, 338), 
-				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-176, 65, 334), Vec3.createVectorHelper(-171, 73, 338), 
+//				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(-167, 70, 343), Vec3.createVectorHelper(-166, 74, 346), 
-				BiGXTextBoxDialogue.soundComment, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-167, 70, 343), Vec3.createVectorHelper(-166, 74, 346), 
+//				BiGXTextBoxDialogue.soundComment, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(-61, 77, 8), Vec3.createVectorHelper(-56, 78, 11), 
-				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
+		addArea(new Area(Vec3.createVectorHelper(81, 74, 178), Vec3.createVectorHelper(85, 80, 181), 
+				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(-175, 65, 335), Vec3.createVectorHelper(-172, 73, 337), 
-				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
+		addArea(new Area(Vec3.createVectorHelper(90, 65, 181), Vec3.createVectorHelper(102, 80, 188), 
+				BiGXTextBoxDialogue.directionMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-//		addArea(new Area(Vec3.createVectorHelper(-67, 73, 12), Vec3.createVectorHelper(-60, 75, 14), 
-//				BiGXTextBoxDialogue.fatherMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
+//		addArea(new Area(Vec3.createVectorHelper(-175, 65, 335), Vec3.createVectorHelper(-172, 73, 337), 
+//				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(-82, 40, 3), Vec3.createVectorHelper(-50, 100, 19), 
+		addArea(new Area(Vec3.createVectorHelper(74, 45, 175), Vec3.createVectorHelper(92, 100, 193), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(-69, 40, 71), Vec3.createVectorHelper(-34, 100, 106), 
+		addArea(new Area(Vec3.createVectorHelper(107, 45, 187), Vec3.createVectorHelper(131, 100, 212), 
 				BiGXTextBoxDialogue.placeMarket, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(-131, 40, -18), Vec3.createVectorHelper(15, 100, 118), 
+		addArea(new Area(Vec3.createVectorHelper(66, 45, 166), Vec3.createVectorHelper(187, 100, 214), 
 				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
 		
-		addArea(new Area(Vec3.createVectorHelper(-211, 60, 312), Vec3.createVectorHelper(-138, 80, 367), 
+		addArea(new Area(Vec3.createVectorHelper(93, 54, -48), Vec3.createVectorHelper(99, 74, -9), 
 				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
 		
 		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
-				BiGXTextBoxDialogue.placeIslandCaprona, AreaTypeEnum.WORLD, 0), AreaTypeEnum.WORLD);
+				BiGXTextBoxDialogue.placeContinentPangea, AreaTypeEnum.WORLD, 0), AreaTypeEnum.WORLD);
 	}
 	
 	public static void addArea(Area areaToAdd, AreaTypeEnum areaType)

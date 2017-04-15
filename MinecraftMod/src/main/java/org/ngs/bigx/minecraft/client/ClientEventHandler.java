@@ -1,11 +1,13 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
@@ -13,6 +15,7 @@ import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestDemo;
 import org.ngs.bigx.minecraft.quests.QuestEventGoto;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
+import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -21,7 +24,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLiving;
@@ -37,7 +39,8 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
 	
@@ -111,11 +114,6 @@ public class ClientEventHandler {
 				questDemo.setActiveQuest(tutQuest);
 			}
 			// Else, probably returning from chasing quest dimension(s)
-		}
-		
-		@SubscribeEvent
-		public void onWorldUnload(WorldEvent.Unload event) {
-			
 		}
 		
 		@SubscribeEvent
@@ -289,6 +287,8 @@ public class ClientEventHandler {
 						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					else
 						GuiMessageWindow.showMessage("Out of Island Caprona...");
+					
+					NpcCommand.spawnNpcInDB(p.getEntityWorld());
 				}
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}

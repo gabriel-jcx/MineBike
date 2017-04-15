@@ -166,6 +166,7 @@ public class Context implements eyeTrackerListner {
 	
 	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{		
+		System.out.println("connectBiGX()");
 		bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
 		bigxclient.setReceiveListener(new BiGXNetClientListener() {
 			
@@ -381,18 +382,18 @@ public class Context implements eyeTrackerListner {
 							try {
 								connectBiGX();
 							} catch (SocketException e) {
- 								// TODO Auto-generated catch block
- 								e.printStackTrace();
- 							} catch (UnknownHostException e) {
- 								// TODO Auto-generated catch block
- 								e.printStackTrace();
- 							} catch (BiGXNetException e) {
- 								// TODO Auto-generated catch block
- 								e.printStackTrace();
- 							} catch (BiGXInternalGamePluginExcpetion e) {
- 								// TODO Auto-generated catch block
- 								e.printStackTrace();
- 							}
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							this.cancel();
 						}
 						else {

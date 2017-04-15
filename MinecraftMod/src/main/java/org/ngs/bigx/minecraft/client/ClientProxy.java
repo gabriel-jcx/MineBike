@@ -59,17 +59,17 @@ public class ClientProxy extends CommonProxy {
 	
 	public void postInit(FMLPostInitializationEvent e) {
 		super.postInit(e);
-		try {
-			BiGXPacketHandler.connect(BiGX.instance().context.bigxclient);
-		} catch (SocketException e1) {
-			e1.printStackTrace();
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		} catch (BiGXNetException e1) {
-			e1.printStackTrace();
-		} catch (BiGXInternalGamePluginExcpetion e1) {
-			e1.printStackTrace();
-		}
+//		try {
+//			BiGXPacketHandler.connect(BiGX.instance().context.bigxclient);
+//		} catch (SocketException e1) {
+//			e1.printStackTrace();
+//		} catch (UnknownHostException e1) {
+//			e1.printStackTrace();
+//		} catch (BiGXNetException e1) {
+//			e1.printStackTrace();
+//		} catch (BiGXInternalGamePluginExcpetion e1) {
+//			e1.printStackTrace();
+//		}
 	}
 	
 	

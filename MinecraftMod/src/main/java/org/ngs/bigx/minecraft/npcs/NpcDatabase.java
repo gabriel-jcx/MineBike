@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft;
+package org.ngs.bigx.minecraft.npcs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +17,9 @@ public class NpcDatabase {
 	
 	private static Map<String, Vec3> populateMap() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
-		map.put("Dad", Vec3.createVectorHelper(-65, 74, 13));
-		map.put("Weapons Merchant", Vec3.createVectorHelper(-55, 73, 91));
-		map.put("Blacksmith", Vec3.createVectorHelper(-55, 73, 83));
+		map.put("Dad", NpcLocations.dad);
+		map.put("Weapons Merchant", NpcLocations.weaponsMerchant);
+		map.put("Blacksmith", NpcLocations.blacksmith);
 		return map;
 	}
 	
@@ -32,6 +32,7 @@ public class NpcDatabase {
 	
 	public static void spawn(World world, String name) {
 		EntityCustomNpc npc = NpcCommand.spawnNpc((float)npcs.get(name).xCoord, (float)npcs.get(name).yCoord, (float)npcs.get(name).zCoord, world, name);
+		System.out.println("[BiGX] NPC SPAWN FUNCTION");
 		npc.display.texture = getTexture(name);
 		npc.setRoleDataWatcher(getRole(name));
 	}
@@ -58,4 +59,11 @@ public class NpcDatabase {
 	public static void sortFurthestSpawn(List<EntityCustomNpc> list) {
 		// TODO implement
 	}
+	
+	public static void spawnVillain(int x, int y, int z, World w, String name){
+		System.out.println("Spawning Demon");
+		EntityCustomNpc npc = NpcCommand.spawnNpc(x,y,z, w, name);
+		npc.display.texture = getTexture(name);
+	}
+
 }
