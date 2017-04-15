@@ -133,6 +133,7 @@ public class CommonEventHandler {
 			//20 ticks = 1 second
 			if (server_tick==20) {
 				server_tick = 0;
+				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
 			}
 			
 			//Making sure it remains daytime all the time
@@ -153,7 +154,6 @@ public class CommonEventHandler {
 				}
 				else{
 					this.serverQuestTest = false;
-					
 					//makeQuestOnServer();
 				}
 			}

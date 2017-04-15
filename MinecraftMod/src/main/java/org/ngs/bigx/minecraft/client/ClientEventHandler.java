@@ -32,9 +32,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
@@ -286,9 +288,10 @@ public class ClientEventHandler {
 					if(ClientAreaEvent.previousArea != null)
 						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					else
-						GuiMessageWindow.showMessage("Out of Island Caprona...");
+						GuiMessageWindow.showMessage("Out of Continent Pangea...");
 					
-					NpcCommand.spawnNpcInDB(p.getEntityWorld());
+//					NpcCommand.spawnNpc((float)116, (float)72, (float)202, world, "TEST TEST");
+//					NpcCommand.spawnNpc((float)116, (float)72, (float)196, world, "TEST TEST2");
 				}
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}

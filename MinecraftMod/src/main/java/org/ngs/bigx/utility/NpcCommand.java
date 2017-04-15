@@ -40,7 +40,7 @@ public class NpcCommand {
 		this.role = 0;
 	}
 	
-	public static EntityCustomNpc spawnNpc(float x, float y, float z, World w, String name) {
+	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
 		npc.display.name = name;
 		npc.setPosition(x, y, z);
@@ -61,7 +61,7 @@ public class NpcCommand {
 		npcSpawnFlag = true;
 	}
 	
-	public static void spawnNpcInDB(World world)
+	public static void spawnNpcInDB(WorldServer worldServer, World world)
 	{
 		if(!npcSpawnFlag)
 			return;
@@ -70,7 +70,7 @@ public class NpcCommand {
 			npcSpawnFlag = false;
 //			System.out.println("DIMENSION ID == 0");
 			
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			
 			// NPC CHECKING
 			for (String name : NpcDatabase.NpcNames()) {
@@ -79,7 +79,7 @@ public class NpcCommand {
 					if (((EntityCustomNpc)obj).display.name.equals(name))
 						++found;
 				if (found == 0) {
-					NpcDatabase.spawn(ws, name);
+					NpcDatabase.spawn(worldServer, name);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
 					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))

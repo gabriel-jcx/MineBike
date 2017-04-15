@@ -596,7 +596,7 @@ public class QuestEventChasing implements IQuestEvent {
 								endingZ = (int)player.posZ;
 							}
 							if (countdown == 5) {
-								npc = NpcCommand.spawnNpc(0f, 11, 20, ws, "Thief");
+								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 								npc.ai.stopAndInteract = false;
 								command = new NpcCommand(npc);
 								command.setSpeed(10);
