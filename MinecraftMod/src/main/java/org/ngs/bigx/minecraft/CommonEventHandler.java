@@ -29,6 +29,7 @@ import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
@@ -78,6 +79,21 @@ public class CommonEventHandler {
 	public static LevelSystem levelSys = new LevelSystem();
 	public static QuestEventChasing chaseQuest = new QuestEventChasing();
 	public static QuestEventChasingFire chaseQuestFire = new QuestEventChasingFire();
+	
+	
+	@SubscribeEvent
+	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151))) {
+			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID));
+			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), 0, 64, 0);
+		}
+	}
+	
+	private boolean inBounds(EntityPlayer player, Vec3 edge1, Vec3 edge2) {
+		return (player.posX >= edge1.xCoord && player.posX <= edge2.xCoord || player.posX <= edge1.xCoord && player.posX >= edge2.xCoord) &&
+				(player.posY >= edge1.yCoord && player.posY <= edge2.yCoord || player.posY <= edge1.yCoord && player.posY >= edge2.yCoord) &&
+				(player.posZ >= edge1.zCoord && player.posZ <= edge2.zCoord || player.posZ <= edge1.zCoord && player.posZ >= edge2.zCoord);
+	}
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
