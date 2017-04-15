@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,8 @@ import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.dictionary.protocol.Specification.Command;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
@@ -162,7 +165,7 @@ public class Context implements eyeTrackerListner {
 		}
 	}
 	
-	public void connectBiGX()
+	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{		
 		bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
 		bigxclient.setReceiveListener(new BiGXNetClientListener() {
@@ -287,6 +290,7 @@ public class Context implements eyeTrackerListner {
 				BiGXPacketHandler.sendPacket(bigxclient, packet);
 			}
 		});
+		bigxclient.connect();
 	}
 	
 	public boolean checkIPFile()
@@ -375,7 +379,21 @@ public class Context implements eyeTrackerListner {
 						
 						// SUCCESS THEN CONNECT
 						if(isMiddlwareIPAvailable) {
-							connectBiGX();
+							try {
+								connectBiGX();
+							} catch (SocketException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							this.cancel();
 						}
 						else {
