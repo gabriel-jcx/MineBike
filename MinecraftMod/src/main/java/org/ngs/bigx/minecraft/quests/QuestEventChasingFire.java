@@ -698,6 +698,16 @@ public class QuestEventChasingFire implements IQuestEvent {
 	public static float getPlayerYaw() {
 		return playerQuestYaw;
 	}
+	
+	public void setNpc(EntityCustomNpc npc)
+	{
+		this.npc = npc;
+	}
+	
+	public void setNpcCommand(NpcCommand npcCommand)
+	{
+		this.command = npcCommand;
+	}
 
 	@Override
 	public void CheckComplete() {

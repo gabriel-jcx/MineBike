@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
@@ -27,8 +29,11 @@ public class NpcCommand {
 	
 	private EntityCustomNpc npc;
 	private int role; //0=no role, 1=transporter
-	
+
 	private static boolean npcSpawnFlag = false;
+
+	private static boolean theifOnRegularChaseQuestSpawnFlag = false;
+	private static boolean theifOnFireChaseQuestSpawnFlag = false;
 	
 	public NpcCommand(EntityCustomNpc npc) {
 		this.npc = npc;
@@ -54,6 +59,52 @@ public class NpcCommand {
 	    npc.setHealth(999999999f);;
 	    
 	    return npc;
+	}
+	
+	public static void triggerSpawnTheifOnChaseQuest()
+	{
+		theifOnRegularChaseQuestSpawnFlag = true;
+	}
+	
+	public static void triggerSpawnTheifOnFireChaseQuest()
+	{
+		theifOnFireChaseQuestSpawnFlag = true;
+	}
+	
+	public static void spawnTheifOnRegularChaseQuest()
+	{	
+		if(theifOnRegularChaseQuestSpawnFlag)
+		{
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+			QuestEventChasing questEventChasing = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			EntityCustomNpc npc;
+			NpcCommand command;
+			
+			if(questEventChasing == null)
+				return;
+			
+			theifOnRegularChaseQuestSpawnFlag = false;
+			
+			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+			npc.ai.stopAndInteract = false;
+			
+			questEventChasing.setNpc(npc);
+			
+			command = new NpcCommand(npc);
+			command.setSpeed(10);
+			command.enableMoving(false);
+			command.runInDirection(ForgeDirection.SOUTH);
+			
+			questEventChasing.setNpcCommand(command);
+		}
+	}
+	
+	public static void spawnTheifOnFireChaseQuest()
+	{
+		if(theifOnFireChaseQuestSpawnFlag)
+		{
+			theifOnFireChaseQuestSpawnFlag = false;
+		}
 	}
 	
 	public static void setNpcSpawnFlag()

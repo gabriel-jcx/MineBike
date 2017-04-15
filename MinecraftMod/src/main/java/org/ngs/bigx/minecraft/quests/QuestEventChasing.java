@@ -46,12 +46,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.entity.EntityNpcCrystal;
 
 public class QuestEventChasing implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
 
-	private boolean completed = false;
+	private static boolean completed = false;
 	private static int countdown = 10;
 	private static int time = 0;
 	private static double elapsedTime = 0;
@@ -179,7 +180,6 @@ public class QuestEventChasing implements IQuestEvent {
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
-		completed = true;
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 //		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
 	}
@@ -274,7 +274,8 @@ public class QuestEventChasing implements IQuestEvent {
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {
 				// SET CURRENT ACTIVE QUEST DEMO
-				ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				if(ClientEventHandler.getHandler().questDemo == null)
+					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
 				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
 				chaseQuest.events.add(this);
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
@@ -531,6 +532,7 @@ public class QuestEventChasing implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+							completed = true;
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 							
 							return;
@@ -563,6 +565,7 @@ public class QuestEventChasing implements IQuestEvent {
 							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 								thiefLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+							completed = true;
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 						}
 					}
@@ -595,12 +598,13 @@ public class QuestEventChasing implements IQuestEvent {
 								endingZ = (int)player.posZ;
 							}
 							if (countdown == 5) {
-								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-								npc.ai.stopAndInteract = false;
-								command = new NpcCommand(npc);
-								command.setSpeed(10);
-								command.enableMoving(false);
-								command.runInDirection(ForgeDirection.SOUTH);
+//								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+//								npc.ai.stopAndInteract = false;
+//								command = new NpcCommand(npc);
+//								command.setSpeed(10);
+//								command.enableMoving(false);
+//								command.runInDirection(ForgeDirection.SOUTH);
+								NpcCommand.triggerSpawnTheifOnChaseQuest();
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 							}
@@ -662,6 +666,7 @@ public class QuestEventChasing implements IQuestEvent {
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+				completed = true;
 				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 			}
 		}
@@ -710,6 +715,16 @@ public class QuestEventChasing implements IQuestEvent {
 	}
 	public static float getPlayerYaw() {
 		return playerQuestYaw;
+	}
+	
+	public void setNpc(EntityCustomNpc npc)
+	{
+		this.npc = npc;
+	}
+	
+	public void setNpcCommand(NpcCommand npcCommand)
+	{
+		this.command = npcCommand;
 	}
 
 	@Override

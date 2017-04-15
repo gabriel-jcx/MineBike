@@ -46,7 +46,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
 	
-	public QuestDemo questDemo;
+	public static QuestDemo questDemo;
 	
 		private Context context;
 		public static KeyBinding keyBindingTogglePedalingMode;
@@ -152,6 +152,7 @@ public class ClientEventHandler {
 				if (questDemo != null && questDemo.getQuest() != null) {
 					if (questDemo.CheckQuestEventCompleted()) {
 						if (questDemo.getQuest().IsComplete()) {
+							System.out.println("questDemo.getQuest().IsComplete()");
 							// QUEST DONE!
 							for (ItemStack i : questDemo.getQuest().GetRewardItems())
 								questDemo.getPlayer().inventory.addItemStackToInventory(i);

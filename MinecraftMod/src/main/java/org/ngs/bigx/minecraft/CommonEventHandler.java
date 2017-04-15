@@ -153,6 +153,8 @@ public class CommonEventHandler {
 			if (server_tick==20) {
 				server_tick = 0;
 				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
+				NpcCommand.spawnTheifOnRegularChaseQuest();
+				NpcCommand.spawnTheifOnFireChaseQuest();
 			}
 			
 			//Making sure it remains daytime all the time
