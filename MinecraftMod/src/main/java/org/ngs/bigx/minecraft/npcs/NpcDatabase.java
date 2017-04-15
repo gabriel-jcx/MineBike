@@ -32,6 +32,7 @@ public class NpcDatabase {
 	
 	public static void spawn(World world, String name) {
 		EntityCustomNpc npc = NpcCommand.spawnNpc((float)npcs.get(name).xCoord, (float)npcs.get(name).yCoord, (float)npcs.get(name).zCoord, world, name);
+		System.out.println("[BiGX] NPC SPAWN FUNCTION");
 		npc.display.texture = getTexture(name);
 		npc.setRoleDataWatcher(getRole(name));
 	}
