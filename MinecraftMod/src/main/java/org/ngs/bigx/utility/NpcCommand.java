@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestEventChasing;
+import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
@@ -100,10 +101,30 @@ public class NpcCommand {
 	}
 	
 	public static void spawnTheifOnFireChaseQuest()
-	{
+	{	
 		if(theifOnFireChaseQuestSpawnFlag)
 		{
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+			QuestEventChasingFire questEventChasingFire = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			EntityCustomNpc npc;
+			NpcCommand command;
+			
+			if(questEventChasingFire == null)
+				return;
+			
 			theifOnFireChaseQuestSpawnFlag = false;
+			
+			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+			npc.ai.stopAndInteract = false;
+			
+			questEventChasingFire.setNpc(npc);
+			
+			command = new NpcCommand(npc);
+			command.setSpeed(10);
+			command.enableMoving(false);
+			command.runInDirection(ForgeDirection.SOUTH);
+			
+			questEventChasingFire.setNpcCommand(command);
 		}
 	}
 	

@@ -114,7 +114,6 @@ public class CommonEventHandler {
 		}
 	}
 	
-	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 //		if (levelSys.getPlayerLevel() >= 5)
@@ -128,16 +127,17 @@ public class CommonEventHandler {
 			EntityPlayer player = event.entityPlayer;
 			QuestEventChasing.player = event.entityPlayer;
 			QuestEventChasingFire.player = event.entityPlayer;
-			if (QuestEventChasing.checkPlayerInArea(player, 90, 50, -60, 105, 60, -50))
+			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -48, 99, 74, -9))
 			{
 				chaseQuest.Run(levelSys);
 			}
-			else if (QuestEventChasingFire.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
+			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasingFire.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
 			{
 				chaseQuestFire.Run(levelSys);
 			}		
 		}
 	}
+	
 	
 	@SubscribeEvent
 	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {

@@ -120,8 +120,7 @@ public class GuiStats extends GuiScreen {
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
 	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing || 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire) )
+	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing )
 	    	{
 		    	GL11.glPushMatrix();
 		    	
@@ -142,6 +141,97 @@ public class GuiStats extends GuiScreen {
 	        	int time = 0;
 	        	
 	        	QuestEventChasing quest = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	        	if(quest.chasingQuestOnCountDown)
+	        	{
+	        		time = quest.getCountdown();
+	        	}
+	        	else
+	        	{
+	        		time = quest.getTime();
+	        	}
+	        	
+	        	int minuteLeft = time/60;
+				int secondLeft = time%60;
+				
+				String chainsgQuestTimeLeft = "";
+				
+				if(minuteLeft<10)
+				{
+					chainsgQuestTimeLeft = "0";
+				}
+				
+				chainsgQuestTimeLeft += minuteLeft + ":";
+				
+				if(secondLeft<10)
+				{
+					chainsgQuestTimeLeft += "0";
+				}
+				
+				chainsgQuestTimeLeft += secondLeft;
+	        	
+	        	text = chainsgQuestTimeLeft;
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
+	        	
+	    		text = "" + new DecimalFormat("###.#").format(quest.dist);
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
+	        	
+	    		text = "Lv: " + quest.getThiefLevel();
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
+	        	
+	    		text = "HP: " + quest.getThiefHealthCurrent();
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
+	    		
+	    		if(quest.getTimeFallBehind() > 0)
+	    		{
+	    			if( (System.currentTimeMillis() - quest.warningMsgBlinkingTime) < 700)
+	    			{
+	    				GL11.glPushMatrix();
+						    GL11.glTranslatef(mcWidth/2, 0, 0);
+					    	GL11.glScalef(2F, 2F, 2F);
+					    	
+				    		text = "WARNING";
+		
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
+					    	
+				    		text = "THIEF IS GETTING AWAY";
+		
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
+			    		GL11.glPopMatrix();
+	    			}
+	    		}
+	    	}
+	    	else if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
+	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire )
+	    	{
+		    	GL11.glPushMatrix();
+		    	
+				    GL11.glTranslatef(mcWidth/2, 12f, 0); 
+				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				    GL11.glEnable(GL11.GL_BLEND);
+				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
+			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
+			        
+				    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
+			        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
+			        
+				    mc.renderEngine.bindTexture(THIEF_TEXTURE);
+			        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
+	        	
+	        	GL11.glPopMatrix();
+	        	
+	        	int time = 0;
+	        	
+	        	QuestEventChasingFire quest = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 	        	if(quest.chasingQuestOnCountDown)
 	        	{
 	        		time = quest.getCountdown();

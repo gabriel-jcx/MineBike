@@ -51,6 +51,10 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestEventChasingFire implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
+	
+	private static long questTimeStamp = 0;
+
+	private static boolean completed = false;
 
 	private static int countdown = 10;
 	private static int time = 0;
@@ -261,8 +265,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 	
 	@Override
 	public boolean IsComplete() {
-		// TODO Auto-generated method stub
-		return false;
+		return completed;
 	}
 
 	@Override
@@ -273,8 +276,20 @@ public class QuestEventChasingFire implements IQuestEvent {
 		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 124, 158, -135, 134, 168, -145)
 				&& player.dimension != WorldProviderFlats.fireQuestDimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
-				ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
-				Quest chaseQuest = new Quest("Chagse - FireElement", "Let's get started!");
+				// SET CURRENT ACTIVE QUEST DEMO
+				if(ClientEventHandler.getHandler().questDemo == null)
+					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				else {
+					if(ClientEventHandler.getHandler().questDemo.getQuest().events.contains(this)) {
+						if(System.currentTimeMillis() - questTimeStamp < 1000)
+							return;
+					}
+				}
+				
+				completed = false;
+				questTimeStamp = System.currentTimeMillis();
+				
+				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
 				chaseQuest.events.add(this);
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
 				
@@ -519,7 +534,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							completed = true;							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 							
 							return;
 						}
@@ -551,7 +566,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 								thiefLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							completed = true;							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 						}
 					}
 				};
@@ -583,13 +598,13 @@ public class QuestEventChasingFire implements IQuestEvent {
 								endingZ = (int)player.posZ;
 							}
 							if (countdown == 5) {
-								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-								npc.ai.stopAndInteract = false;
-								command = new NpcCommand(npc);
-								command.setSpeed(10);
-								command.enableMoving(false);
-								command.runInDirection(ForgeDirection.SOUTH);
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+//								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+//								npc.ai.stopAndInteract = false;
+//								command = new NpcCommand(npc);
+//								command.setSpeed(10);
+//								command.enableMoving(false);
+//								command.runInDirection(ForgeDirection.SOUTH);
+								NpcCommand.triggerSpawnTheifOnFireChaseQuest();								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 							}
 							else if (countdown == 1)
@@ -650,7 +665,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+				completed = true;				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 			}
 		}
 	}
