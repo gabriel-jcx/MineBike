@@ -22,9 +22,9 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -46,15 +46,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
-import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestEventChasing implements IQuestEvent {
+public class QuestEventChasingFire implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
-	
-	private static long questTimeStamp = 0;
 
-	private static boolean completed = false;
 	private static int countdown = 10;
 	private static int time = 0;
 	private static double elapsedTime = 0;
@@ -80,7 +76,7 @@ public class QuestEventChasing implements IQuestEvent {
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 
-	private static TerrainBiome terrainBiome = new TerrainBiome();
+	private static TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
 	
 	private static ArrayList<Integer> questSettings = null;
 
@@ -129,7 +125,7 @@ public class QuestEventChasing implements IQuestEvent {
 		return thiefLevel;
 	}
 	
-	public static boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
+	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
 		return  player.posX >= x1 && player.posX <= x2 &&
 				player.posY >= y1 && player.posY <= y2 &&
 				player.posZ >= z1 && player.posZ <= z2;
@@ -165,7 +161,7 @@ public class QuestEventChasing implements IQuestEvent {
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
-			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+			command.removeNpc(npc.display.name, WorldProviderFlats.fireQuestDimID);
 
 		if(t != null)
 		{
@@ -264,34 +260,23 @@ public class QuestEventChasing implements IQuestEvent {
 	
 	@Override
 	public boolean IsComplete() {
-		return completed;
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
 	public void Run() {
-		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.fireQuestDimID);
 		
 		context = BiGX.instance().context;
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 93, 54, -48, 99, 74, -9)
-				&& player.dimension != WorldProviderFlats.dimID){
-			if (ws != null && player instanceof EntityPlayerMP) {
-				// SET CURRENT ACTIVE QUEST DEMO
-				if(ClientEventHandler.getHandler().questDemo == null)
-					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
-				else {
-					if(ClientEventHandler.getHandler().questDemo.getQuest().events.contains(this)) {
-						if(System.currentTimeMillis() - questTimeStamp < 1000)
-							return;
-					}
-				}
-				
-				completed = false;
-				questTimeStamp = System.currentTimeMillis();
-				
-				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 124, 158, -135, 134, 168, -145)
+				&& player.dimension != WorldProviderFlats.fireQuestDimID){
+			if (ws != null && player instanceof EntityPlayerMP) {		
+				ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				Quest chaseQuest = new Quest("Chagse - FireElement", "Let's get started!");
 				chaseQuest.events.add(this);
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
-						
+				
 				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
@@ -357,17 +342,6 @@ public class QuestEventChasing implements IQuestEvent {
 								blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 							}
 							
-							Random rand = new Random();
-							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)player.posZ+64);
-								
-							}
-							rand = new Random();
-							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)player.posZ+64);
-								
-							}
-							
 							if(context.suggestedGamePropertiesReady)
 							{
 								/**
@@ -391,21 +365,21 @@ public class QuestEventChasing implements IQuestEvent {
 								{
 									for(int idx = 0; idx<4; idx++)
 									{
-										areas.add(terrainBiome.getRandomCityBiome());
+										areas.add(terrainBiomeFire.getRandomGateBiome());
 									}
 								}
 								else if(blockByDifficulty == Blocks.grass)
 								{
 									for(int idx = 0; idx<4; idx++)
 									{
-										areas.add(terrainBiome.getRandomGrassBiome());
+										areas.add(terrainBiomeFire.getRandomFieldBiome());
 									}
 								}
 								else if(blockByDifficulty == Blocks.sand)
 								{
 									for(int idx = 0; idx<4; idx++)
 									{
-										areas.add(terrainBiome.getRandomDesertBiome());
+										areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
 									}
 								}
 								else {
@@ -544,7 +518,6 @@ public class QuestEventChasing implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							completed = true;
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 							
 							return;
@@ -577,7 +550,6 @@ public class QuestEventChasing implements IQuestEvent {
 							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 								thiefLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							completed = true;
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 						}
 					}
@@ -598,7 +570,7 @@ public class QuestEventChasing implements IQuestEvent {
 										((EntityCustomNpc)o).delete();
 									}
 								}
-								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID)) {
+								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.fireQuestDimID)) {
 									System.out.println(((EntityCustomNpc)o).display.name);
 //									((EntityCustomNpc)o).delete();
 								}
@@ -610,13 +582,12 @@ public class QuestEventChasing implements IQuestEvent {
 								endingZ = (int)player.posZ;
 							}
 							if (countdown == 5) {
-//								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-//								npc.ai.stopAndInteract = false;
-//								command = new NpcCommand(npc);
-//								command.setSpeed(10);
-//								command.enableMoving(false);
-//								command.runInDirection(ForgeDirection.SOUTH);
-								NpcCommand.triggerSpawnTheifOnChaseQuest();
+								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+								npc.ai.stopAndInteract = false;
+								command = new NpcCommand(npc);
+								command.setSpeed(10);
+								command.enableMoving(false);
+								command.runInDirection(ForgeDirection.SOUTH);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 							}
@@ -669,7 +640,7 @@ public class QuestEventChasing implements IQuestEvent {
 			}
 		}
 		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-				&& player.dimension == WorldProviderFlats.dimID){
+				&& player.dimension == WorldProviderFlats.fireQuestDimID){
 			// CHASE QUEST LOSE CONDITION
 			if (ws != null && player instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
@@ -678,7 +649,6 @@ public class QuestEventChasing implements IQuestEvent {
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-				completed = true;
 				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 			}
 		}
@@ -741,6 +711,8 @@ public class QuestEventChasing implements IQuestEvent {
 
 	@Override
 	public void CheckComplete() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

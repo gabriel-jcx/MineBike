@@ -22,6 +22,8 @@ import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
+import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -74,6 +76,8 @@ public class CommonEventHandler {
 	private static int thiefMaxLevel = 1;
 	
 	public static LevelSystem levelSys = new LevelSystem();
+	public static QuestEventChasing chaseQuest = new QuestEventChasing();
+	public static QuestEventChasingFire chaseQuestFire = new QuestEventChasingFire();
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -112,6 +116,20 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
+		System.out.println(event.item.getDisplayName().contains("Teleportation Potion"));
+		if (event.item.getDisplayName().contains("Teleportation Potion")) {
+			EntityPlayer player = event.entityPlayer;
+			QuestEventChasing.player = event.entityPlayer;
+			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -48, 99, 74, -9))
+			{
+				chaseQuest.Run();
+			}
+			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
+			{
+				chaseQuestFire.Run();
+			}
+					
+		}
 	}
 	
 	
@@ -130,15 +148,18 @@ public class CommonEventHandler {
 		if (MinecraftServer.getServer() != null && event.phase == TickEvent.Phase.END) {
 			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
 			server_tick++;
+			
 			//20 ticks = 1 second
 			if (server_tick==20) {
 				server_tick = 0;
+				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
+				NpcCommand.spawnTheifOnRegularChaseQuest();
+				NpcCommand.spawnTheifOnFireChaseQuest();
 			}
 			
 			//Making sure it remains daytime all the time
 			World current_world = MinecraftServer.getServer().getEntityWorld();
-//			if (current_world.provider.getWorldTime() >= 12000)
-//				current_world.setWorldTime(0);
+
 			current_world.setWorldTime(8000);
 			
 			// Test Purpose Code
@@ -153,8 +174,6 @@ public class CommonEventHandler {
 				}
 				else{
 					this.serverQuestTest = false;
-					
-					//makeQuestOnServer();
 				}
 			}
 		}

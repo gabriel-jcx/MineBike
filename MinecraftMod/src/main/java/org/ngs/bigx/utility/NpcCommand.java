@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
@@ -27,8 +29,11 @@ public class NpcCommand {
 	
 	private EntityCustomNpc npc;
 	private int role; //0=no role, 1=transporter
-	
+
 	private static boolean npcSpawnFlag = false;
+
+	private static boolean theifOnRegularChaseQuestSpawnFlag = false;
+	private static boolean theifOnFireChaseQuestSpawnFlag = false;
 	
 	public NpcCommand(EntityCustomNpc npc) {
 		this.npc = npc;
@@ -40,7 +45,7 @@ public class NpcCommand {
 		this.role = 0;
 	}
 	
-	public static EntityCustomNpc spawnNpc(float x, float y, float z, World w, String name) {
+	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
 		npc.display.name = name;
 		npc.setPosition(x, y, z);
@@ -56,12 +61,58 @@ public class NpcCommand {
 	    return npc;
 	}
 	
+	public static void triggerSpawnTheifOnChaseQuest()
+	{
+		theifOnRegularChaseQuestSpawnFlag = true;
+	}
+	
+	public static void triggerSpawnTheifOnFireChaseQuest()
+	{
+		theifOnFireChaseQuestSpawnFlag = true;
+	}
+	
+	public static void spawnTheifOnRegularChaseQuest()
+	{	
+		if(theifOnRegularChaseQuestSpawnFlag)
+		{
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+			QuestEventChasing questEventChasing = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			EntityCustomNpc npc;
+			NpcCommand command;
+			
+			if(questEventChasing == null)
+				return;
+			
+			theifOnRegularChaseQuestSpawnFlag = false;
+			
+			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+			npc.ai.stopAndInteract = false;
+			
+			questEventChasing.setNpc(npc);
+			
+			command = new NpcCommand(npc);
+			command.setSpeed(10);
+			command.enableMoving(false);
+			command.runInDirection(ForgeDirection.SOUTH);
+			
+			questEventChasing.setNpcCommand(command);
+		}
+	}
+	
+	public static void spawnTheifOnFireChaseQuest()
+	{
+		if(theifOnFireChaseQuestSpawnFlag)
+		{
+			theifOnFireChaseQuestSpawnFlag = false;
+		}
+	}
+	
 	public static void setNpcSpawnFlag()
 	{
 		npcSpawnFlag = true;
 	}
 	
-	public static void spawnNpcInDB(World world)
+	public static void spawnNpcInDB(WorldServer worldServer, World world)
 	{
 		if(!npcSpawnFlag)
 			return;
@@ -70,7 +121,7 @@ public class NpcCommand {
 			npcSpawnFlag = false;
 //			System.out.println("DIMENSION ID == 0");
 			
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			
 			// NPC CHECKING
 			for (String name : NpcDatabase.NpcNames()) {
@@ -79,7 +130,7 @@ public class NpcCommand {
 					if (((EntityCustomNpc)obj).display.name.equals(name))
 						++found;
 				if (found == 0) {
-					NpcDatabase.spawn(ws, name);
+					NpcDatabase.spawn(worldServer, name);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
 					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))

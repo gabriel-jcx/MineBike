@@ -8,6 +8,7 @@ import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.quests.QuestEventChasing;
+import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -118,7 +119,9 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
-	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing)
+	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
+	    			(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing || 
+	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire) )
 	    	{
 		    	GL11.glPushMatrix();
 		    	

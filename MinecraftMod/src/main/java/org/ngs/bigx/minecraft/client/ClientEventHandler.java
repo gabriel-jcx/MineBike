@@ -32,9 +32,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
@@ -44,7 +46,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
 	
-	public QuestDemo questDemo;
+	public static QuestDemo questDemo;
 	
 		private Context context;
 		public static KeyBinding keyBindingTogglePedalingMode;
@@ -105,14 +107,14 @@ public class ClientEventHandler {
 		
 		@SubscribeEvent
 		public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-			if (questDemo == null && event.entity instanceof EntityPlayer) {
-				// FIRST LOAD - START IT UP
-				questDemo = new QuestDemo((EntityPlayer) event.entity);
-				Quest tutQuest = new Quest("Tutorial", "Let's get started!");
-				tutQuest.events.add(new QuestEventGoto((EntityPlayer) event.entity,
-						Vec3.createVectorHelper(90, 71, 187), Vec3.createVectorHelper(91, 73, 183)));
-				questDemo.setActiveQuest(tutQuest);
-			}
+//			if (questDemo == null && event.entity instanceof EntityPlayer) {
+//				// FIRST LOAD - START IT UP
+//				questDemo = new QuestDemo((EntityPlayer) event.entity);
+//				Quest tutQuest = new Quest("Tutorial", "Let's get started!");
+//				tutQuest.events.add(new QuestEventGoto((EntityPlayer) event.entity,
+//						Vec3.createVectorHelper(90, 71, 187), Vec3.createVectorHelper(91, 73, 183)));
+//				questDemo.setActiveQuest(tutQuest);
+//			}
 			// Else, probably returning from chasing quest dimension(s)
 		}
 		
@@ -150,6 +152,7 @@ public class ClientEventHandler {
 				if (questDemo != null && questDemo.getQuest() != null) {
 					if (questDemo.CheckQuestEventCompleted()) {
 						if (questDemo.getQuest().IsComplete()) {
+							System.out.println("questDemo.getQuest().IsComplete()");
 							// QUEST DONE!
 							for (ItemStack i : questDemo.getQuest().GetRewardItems())
 								questDemo.getPlayer().inventory.addItemStackToInventory(i);
@@ -286,9 +289,10 @@ public class ClientEventHandler {
 					if(ClientAreaEvent.previousArea != null)
 						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					else
-						GuiMessageWindow.showMessage("Out of Island Caprona...");
+						GuiMessageWindow.showMessage("Out of Continent Pangea...");
 					
-					NpcCommand.spawnNpcInDB(p.getEntityWorld());
+//					NpcCommand.spawnNpc((float)116, (float)72, (float)202, world, "TEST TEST");
+//					NpcCommand.spawnNpc((float)116, (float)72, (float)196, world, "TEST TEST2");
 				}
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}

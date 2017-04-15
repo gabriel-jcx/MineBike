@@ -25,6 +25,10 @@ public class CommonProxy {
 	public void preInit(FMLPreInitializationEvent e) {
 		DimensionManager.registerProviderType(WorldProviderFlats.dimID, WorldProviderFlats.class, true);
 		DimensionManager.registerDimension(WorldProviderFlats.dimID, WorldProviderFlats.dimID);
+		
+		DimensionManager.registerProviderType(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.class, true);
+		DimensionManager.registerDimension(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.fireQuestDimID);
+		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);
     	MinecraftForge.TERRAIN_GEN_BUS.register(events);
