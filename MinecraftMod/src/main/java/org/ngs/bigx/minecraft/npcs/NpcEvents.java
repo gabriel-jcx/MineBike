@@ -21,6 +21,10 @@ public class NpcEvents {
 	
 	//NPC Interactions
 		public static void InteractWithNPC(EntityPlayer player, EntityInteractEvent event){
+			System.out.println(event.target.posX);
+			System.out.println(event.target.posY);
+			System.out.println(event.target.posZ);
+			System.out.println(NpcLocations.dad);
 			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.dad, NpcLocations.dad.addVector(1, 1, 1))) //checks to see if NPC is Dad
 				InteractWithFather(player, event);
 			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch

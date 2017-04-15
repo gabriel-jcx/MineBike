@@ -14,7 +14,7 @@ public class LevelSystem {
 	//Quest-specific (levels of the thief)
 	private int thiefHealthMax = 50;
 	private int thiefHealthCurrent = thiefHealthMax;
-	private int thiefLevel = 3;
+	private int thiefLevel = 1;
 	private boolean thiefLevelUpFlag = false;
 	
 	public LevelSystem() {}
