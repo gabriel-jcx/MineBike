@@ -14,12 +14,6 @@ public class LevelSystem {
 	private int playerLevel = 1; ///the player's current level
 	private int playerExp = 0; ///player's current exp
 	
-	//Quest-specific (levels of the thief)
-//	private int thiefHealthMax = 50;
-//	private int thiefHealthCurrent = thiefHealthMax;
-//	private int thiefLevel = 1;
-//	private boolean thiefLevelUpFlag = false;
-	
 	public LevelSystem() {}
 	
 	public int getPlayerLevel(){
@@ -29,18 +23,6 @@ public class LevelSystem {
 	public int getPlayerExp(){
 		return playerExp;
 	}
-	
-//	public int getThiefHealthMax() {
-//		return thiefHealthMax;
-//	}
-//
-//	public int getThiefHealthCurrent() {
-//		return thiefHealthCurrent;
-//	}
-//
-//	public int getThiefLevel() {
-//		return thiefLevel;
-//	}
 	
 	public boolean levelUp(){
 		playerLevel++;
@@ -64,67 +46,6 @@ public class LevelSystem {
 		playerLevel = 1;
 		playerExp = 0;
 	}
-//
-//	public void initThiefStat()
-//	{
-//		thiefHealthMax = 50;
-//		thiefHealthCurrent = thiefHealthMax;
-//		thiefLevel = 1;
-//	}
-//	
-//	public void thiefLevelUp()
-//	{
-//		thiefLevel ++;
-//		
-//		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
-//		thiefHealthCurrent = thiefHealthMax;
-//	}
-//	
-//	public void setThiefLevel(int level)
-//	{
-//		thiefLevel = level;
-//		
-//		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
-//		thiefHealthCurrent = thiefHealthMax;
-//	}
-//	
-//	public int deductThiefHealth(Item itemOnHands, int virtualCurrency)
-//	{
-//		int deduction = 1;
-//		if (itemOnHands != null) {
-//			if(itemOnHands.getUnlocalizedName().equals("item.npcBronzeSword"))
-//			{
-//				deduction = 3;
-//			}
-//			else if(itemOnHands.getUnlocalizedName().equals("item.npcFrostSword"))
-//			{
-//				deduction = 9;
-//			}
-//			else if(itemOnHands.getUnlocalizedName().equals("item.npcMithrilSword"))
-//			{
-//				deduction = 27;
-//			}
-//			else if(itemOnHands.getUnlocalizedName().equals("item.npcEmeraldSword"))
-//			{
-//				deduction = 81;
-//			}
-//		}
-//		
-//		thiefHealthCurrent -= deduction;
-//		
-//		virtualCurrency += deduction;
-//		
-//		if(thiefHealthCurrent <= 0)
-//		{
-//			thiefHealthCurrent = 0;
-//			thiefLevelUpFlag = true;
-//		}
-//		
-//		GuiDamage.addDamageText(deduction, 255, 10, 10);
-//		
-//		return virtualCurrency;
-//	}
-	
 	
 	///Rewards based on levels
 	public void giveLevelUpRewards(EntityPlayer player){
