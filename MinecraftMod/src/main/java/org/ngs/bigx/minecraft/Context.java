@@ -63,7 +63,6 @@ public class Context implements eyeTrackerListner {
 	private float speed = 0;
 	public int rpm = 0;
 	public float resistance = 0;
-	public boolean bump = false;
 	public Block block = Blocks.air;
 	public int rotation = 0;
 	public BiGX main = null;

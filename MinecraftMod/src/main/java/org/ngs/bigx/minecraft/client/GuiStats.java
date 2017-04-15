@@ -7,6 +7,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -117,7 +118,7 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
-	    	if(CommonEventHandler.chasingQuestOnGoing)
+	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing)
 	    	{
 		    	GL11.glPushMatrix();
 		    	
@@ -137,13 +138,14 @@ public class GuiStats extends GuiScreen {
 	        	
 	        	int time = 0;
 	        	
-	        	if(CommonEventHandler.chasingQuestOnCountDown)
+	        	QuestEventChasing quest = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	        	if(quest.chasingQuestOnCountDown)
 	        	{
-	        		time = CommonEventHandler.getCountdown();
+	        		time = quest.getCountdown();
 	        	}
 	        	else
 	        	{
-	        		time = CommonEventHandler.getTime();
+	        		time = quest.getTime();
 	        	}
 	        	
 	        	int minuteLeft = time/60;
@@ -170,24 +172,24 @@ public class GuiStats extends GuiScreen {
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
 	        	
-	    		text = "" + new DecimalFormat("###.#").format(CommonEventHandler.dist);
+	    		text = "" + new DecimalFormat("###.#").format(quest.dist);
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
 	        	
-	    		text = "Lv: " + CommonEventHandler.levelSys.getThiefLevel();
+	    		text = "Lv: " + quest.getThiefLevel();
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
 	        	
-	    		text = "HP: " + CommonEventHandler.levelSys.getThiefHealthCurrent();
+	    		text = "HP: " + quest.getThiefHealthCurrent();
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
 	    		
-	    		if(CommonEventHandler.getTimeFallBehind() > 0)
+	    		if(quest.getTimeFallBehind() > 0)
 	    		{
-	    			if( (System.currentTimeMillis() - CommonEventHandler.warningMsgBlinkingTime) < 700)
+	    			if( (System.currentTimeMillis() - quest.warningMsgBlinkingTime) < 700)
 	    			{
 	    				GL11.glPushMatrix();
 						    GL11.glTranslatef(mcWidth/2, 0, 0);

@@ -51,13 +51,7 @@ public class ClientProxy extends CommonProxy {
 
     	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("", Keyboard.KEY_P, "ChaseQuestLock");
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("", Keyboard.KEY_MINUS, "ToggleBike");
-//    	ClientEventHandler.keyBindingTogglePedalingMode = new KeyBinding("key.togglebigxshoe", Keyboard.KEY_K, "bigx.key.togglebigxshoe");
-//    	ClientEventHandler.keyBindingMoveForward = new KeyBinding("key.keyforward", Keyboard.KEY_W, "bigx.key.keyforward");
-//    	ClientEventHandler.keyBindingMoveBackward = new KeyBinding("key.keybackward", Keyboard.KEY_S, "bigx.key.keybackward");
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
-//    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingTogglePedalingMode);
-//    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingMoveForward);
-//    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingMoveBackward);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());

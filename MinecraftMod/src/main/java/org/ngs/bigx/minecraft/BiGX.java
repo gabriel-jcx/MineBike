@@ -1,8 +1,5 @@
 package org.ngs.bigx.minecraft;
 	
-import java.io.IOException;
-import java.net.SocketException;
-
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
@@ -17,6 +14,7 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
+import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
 
@@ -104,6 +102,8 @@ import net.minecraftforge.common.MinecraftForge;
 	    @EventHandler
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
+	    	
+	    	MinecraftForge.EVENT_BUS.register(new QuestEventHandler());
 	    	
 	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	
