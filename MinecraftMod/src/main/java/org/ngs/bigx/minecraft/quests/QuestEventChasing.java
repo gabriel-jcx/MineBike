@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
@@ -50,6 +51,7 @@ public class QuestEventChasing implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
 
+	private boolean completed = false;
 	private static int countdown = 10;
 	private static int time = 0;
 	private static double elapsedTime = 0;
@@ -173,10 +175,11 @@ public class QuestEventChasing implements IQuestEvent {
 			t2 = null;
 		}
 
-		returnLocation = Vec3.createVectorHelper(-174, 71, 338);
+		returnLocation = Vec3.createVectorHelper(96, 72, -8);
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
+		completed = true;
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 //		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
 	}
@@ -259,8 +262,7 @@ public class QuestEventChasing implements IQuestEvent {
 	
 	@Override
 	public boolean IsComplete() {
-		// TODO Auto-generated method stub
-		return false;
+		return completed;
 	}
 
 	@Override
@@ -270,8 +272,13 @@ public class QuestEventChasing implements IQuestEvent {
 		context = BiGX.instance().context;
 		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 93, 54, -48, 99, 74, -9)
 				&& player.dimension != WorldProviderFlats.dimID){
-			if (ws != null && player instanceof EntityPlayerMP) {		
-				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		
+			if (ws != null && player instanceof EntityPlayerMP) {
+				// SET CURRENT ACTIVE QUEST DEMO
+				ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
+				chaseQuest.events.add(this);
+				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
+						
 				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
@@ -707,8 +714,6 @@ public class QuestEventChasing implements IQuestEvent {
 
 	@Override
 	public void CheckComplete() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

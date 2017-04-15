@@ -119,7 +119,7 @@ public class CommonEventHandler {
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		System.out.println(event.item.getDisplayName().contains("Teleportation Potion"));
 		if (event.item.getDisplayName().contains("Teleportation Potion")) {
-			EntityPlayer player = QuestEventChasing.player;
+			EntityPlayer player = event.entityPlayer;
 			QuestEventChasing.player = event.entityPlayer;
 			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -48, 99, 74, -9))
 			{

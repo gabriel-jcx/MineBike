@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
@@ -173,7 +174,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 			t2 = null;
 		}
 
-		returnLocation = Vec3.createVectorHelper(-174, 71, 338);
+		returnLocation = Vec3.createVectorHelper(96, 72, -8);
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
@@ -271,7 +272,11 @@ public class QuestEventChasingFire implements IQuestEvent {
 		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 124, 158, -135, 134, 168, -145)
 				&& player.dimension != WorldProviderFlats.fireQuestDimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
-				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		
+				ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				Quest chaseQuest = new Quest("Chagse - FireElement", "Let's get started!");
+				chaseQuest.events.add(this);
+				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
+				
 				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
