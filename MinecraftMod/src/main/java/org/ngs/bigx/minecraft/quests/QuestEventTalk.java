@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.quests;
 
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
+
 import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.entity.EntityCustomNpc;
 
@@ -20,7 +22,7 @@ public class QuestEventTalk implements IQuestEvent {
 	}
 
 	@Override
-	public void Run() {
+	public void Run(final LevelSystem levelSys) {
 		
 	}
 	

@@ -22,6 +22,7 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
@@ -125,7 +126,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 		return thiefLevel;
 	}
 	
-	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
+	public static boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
 		return  player.posX >= x1 && player.posX <= x2 &&
 				player.posY >= y1 && player.posY <= y2 &&
 				player.posZ >= z1 && player.posZ <= z2;
@@ -265,7 +266,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 	}
 
 	@Override
-	public void Run() {
+	public void Run(final LevelSystem levelSys) {
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.fireQuestDimID);
 		
 		context = BiGX.instance().context;

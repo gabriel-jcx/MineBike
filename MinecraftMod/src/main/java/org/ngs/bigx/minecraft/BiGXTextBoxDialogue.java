@@ -11,9 +11,8 @@ public class BiGXTextBoxDialogue {
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
 	public static final String soundComment = "Where's that sound coming\nfrom?";
-	public static final String gotReward = "Congrats! You collected\n";
-	public static final String levelUpMsg = "Level Up! New Quests Unlocked!"; 
 	
+	public static final String gotReward = "Congrats! You collected\n";
 	public static final String goldBarInfo = "Gold bars can be exchanged\nfor useful items at\nMarket Place";
 	public static final String goldSpendWisely = "Spend your gold\nwisely!";
 	public static final String questChaseBeginning = "Well...\nI guess someone's here...\nLet's find out who...";
@@ -43,6 +42,7 @@ public class BiGXTextBoxDialogue {
 	public static final String secretRoomMsg = "Use this potion to persue he who wants to bring harm to your father.";
 	
 	//Level-based Messages
+	public static final String levelUpMsg = "Level Up! New Quests Unlocked!"; 
 	public static final String level1MsgTitle = "The Start of Your Journey";
 	public static final String level1Msg = "Super Intense and Inspiring Message.... You're Welcome.";
 	public static final String fireLevelMsgTitle = "The Fire Level";
