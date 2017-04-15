@@ -129,7 +129,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 		return thiefLevel;
 	}
 	
-	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
+	public static boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
 		return  player.posX >= x1 && player.posX <= x2 &&
 				player.posY >= y1 && player.posY <= y2 &&
 				player.posZ >= z1 && player.posZ <= z2;
@@ -264,8 +264,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 	
 	@Override
 	public boolean IsComplete() {
-		// TODO Auto-generated method stub
-		return false;
+		return completed;
 	}
 
 	@Override
@@ -534,7 +533,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							completed = true;							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 							
 							return;
 						}
@@ -566,7 +565,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 								thiefLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							completed = true;							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 						}
 					}
 				};
@@ -598,13 +597,13 @@ public class QuestEventChasingFire implements IQuestEvent {
 								endingZ = (int)player.posZ;
 							}
 							if (countdown == 5) {
-								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-								npc.ai.stopAndInteract = false;
-								command = new NpcCommand(npc);
-								command.setSpeed(10);
-								command.enableMoving(false);
-								command.runInDirection(ForgeDirection.SOUTH);
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+//								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+//								npc.ai.stopAndInteract = false;
+//								command = new NpcCommand(npc);
+//								command.setSpeed(10);
+//								command.enableMoving(false);
+//								command.runInDirection(ForgeDirection.SOUTH);
+								NpcCommand.triggerSpawnTheifOnFireChaseQuest();								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 							}
 							else if (countdown == 1)
@@ -664,9 +663,8 @@ public class QuestEventChasingFire implements IQuestEvent {
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
-				completed = true;
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+				completed = true;				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 			}
 		}
 	}
