@@ -59,7 +59,6 @@ public class QuestEventChasing implements IQuestEvent {
 	public static int startingZ, endingZ;
 	boolean doMakeBlocks;
 	float ratio;
-	Vec3 returnLocation;
 	
 	private static Context context;
 	CharacterProperty characterProperty = BiGX.instance().characterProperty;
@@ -87,28 +86,33 @@ public class QuestEventChasing implements IQuestEvent {
 	private static Timer t2 = null;
 	private static QuestTeleporter teleporter = null;
 
-	private static int thiefHealthMax = 50;
-	private static int thiefHealthCurrent = thiefHealthMax;
-	private static int thiefLevel = 1;
-	private static int thiefMaxLevel = 1;
+	private static int thiefHealth, thiefHealthMax;
+	private static int thiefLevel, thiefLevelMax;
 	private static boolean thiefLevelUpFlag = false;
 	
-	private WorldServer ws;
-	
+	private WorldServer chaseWorld;
 	private EntityPlayer player;
+	Vec3 spawnPosition, returnPosition;
+	int startDimension, returnDimension;
 	
-	public static int getTime()
-	{
+	public QuestEventChasing (EntityPlayer p, int startDim, Vec3 startPos, int returnDim, Vec3 returnPos, int npcHealth, int npcLevel) {
+		player = p;
+		chaseWorld = MinecraftServer.getServer().worldServerForDimension(startDim);
+		thiefHealthMax = npcHealth;
+		thiefHealth = thiefHealthMax;
+		thiefLevelMax = npcLevel;
+		thiefLevel = thiefLevelMax;
+	}
+	
+	public static int getTime() {
 		return time;
 	}
 	
-	public static int getCountdown()
-	{
+	public static int getCountdown() {
 		return countdown;
 	}
 	
-	public static int getTimeFallBehind()
-	{
+	public static int getTimeFallBehind() {
 		return timeFallBehind;
 	}	
 	
@@ -116,8 +120,8 @@ public class QuestEventChasing implements IQuestEvent {
 		return thiefHealthMax;
 	}
 
-	public static int getThiefHealthCurrent() {
-		return thiefHealthCurrent;
+	public static int getThiefHealth() {
+		return thiefHealth;
 	}
 
 	public static int getThiefLevel() {
@@ -125,9 +129,9 @@ public class QuestEventChasing implements IQuestEvent {
 	}
 	
 	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
-		return  player.posX >= x1 && player.posX <= x2 &&
-				player.posY >= y1 && player.posY <= y2 &&
-				player.posZ >= z1 && player.posZ <= z2;
+		return  (player.posX >= x1 && player.posX <= x2 || player.posX <= x1 && player.posX >= x2) &&
+				(player.posY >= y1 && player.posY <= y2 || player.posY <= y1 && player.posY >= y2) &&
+				(player.posZ >= z1 && player.posZ <= z2 || player.posZ <= z1 && player.posZ >= z2);
 	}
 	
 	public Block getBlockByDifficulty(int difficultyLevel)
@@ -155,29 +159,28 @@ public class QuestEventChasing implements IQuestEvent {
 	{		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
+		
 		timeFallBehind = 0;
 		time = 0;
+		
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 
-		if(t != null)
-		{
+		if (t != null) {
 			t.cancel();
 			t = null;
 		}
-		if(t2 != null)
-		{
+		
+		if (t2 != null) {
 			t2.cancel();
 			t2 = null;
 		}
 
-		returnLocation = Vec3.createVectorHelper(-174, 71, 338);
-
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
-		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnPosition.xCoord, (int)returnPosition.yCoord, (int)returnPosition.zCoord);
 //		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
 	}
 	
@@ -201,17 +204,17 @@ public class QuestEventChasing implements IQuestEvent {
 	public static void initThiefStat()
 	{
 		thiefHealthMax = 50;
-		thiefHealthCurrent = thiefHealthMax;
+		thiefHealth = thiefHealthMax;
 		thiefLevel = 1;
 	}
 	
 	public static void thiefLevelUp()
 	{
 		thiefLevel ++;
-		thiefMaxLevel ++;
+		thiefLevelMax ++;
 		
 		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
-		thiefHealthCurrent = thiefHealthMax;
+		thiefHealth = thiefHealthMax;
 	}
 	
 	public static void setThiefLevel(int level)
@@ -219,7 +222,7 @@ public class QuestEventChasing implements IQuestEvent {
 		thiefLevel = level;
 		
 		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
-		thiefHealthCurrent = thiefHealthMax;
+		thiefHealth = thiefHealthMax;
 	}
 	
 	public static void deductThiefHealth(Item itemOnHands)
@@ -244,13 +247,13 @@ public class QuestEventChasing implements IQuestEvent {
 			}
 		}
 		
-		thiefHealthCurrent -= deduction;
+		thiefHealth -= deduction;
 		
 		virtualCurrency += deduction;
 		
-		if(thiefHealthCurrent <= 0)
+		if(thiefHealth <= 0)
 		{
-			thiefHealthCurrent = 0;
+			thiefHealth = 0;
 			thiefLevelUpFlag = true;
 		}
 		
@@ -265,11 +268,11 @@ public class QuestEventChasing implements IQuestEvent {
 
 	@Override
 	public void Run() {
-		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		chaseWorld = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (player.getHeldItem().getDisplayName().contains("Potion") && checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)
 				&& player.dimension != WorldProviderFlats.dimID){
-			if (ws != null && player instanceof EntityPlayerMP) {		
+			if (chaseWorld != null && player instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		
 				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
@@ -295,10 +298,10 @@ public class QuestEventChasing implements IQuestEvent {
 				t = new Timer();
 				t2 = new Timer();
 				
-				teleporter = new QuestTeleporter(ws);
+				teleporter = new QuestTeleporter(chaseWorld);
 				
-				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-				teleporter.teleport(player, ws, 1, 11, 0);
+//				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
+				teleporter.teleport(player, chaseWorld, 1, 11, 0);
 
 				chasingQuestInitialPosX = 1;
 				chasingQuestInitialPosY = 10;
@@ -308,13 +311,13 @@ public class QuestEventChasing implements IQuestEvent {
 				final List<Vec3> blocks = new ArrayList<Vec3>();
 				
 				for (int z = -16; z < (int)player.posZ+64; ++z) {
-					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+					chaseWorld.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+					chaseWorld.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
 					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 				}
 				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-					ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
+					chaseWorld.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
 					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
 				}
 				
@@ -330,20 +333,20 @@ public class QuestEventChasing implements IQuestEvent {
 							 * Generates structures on sides (fence and Fake house on sides)
 							 */
 							for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
-								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+								chaseWorld.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-								ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+								chaseWorld.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
 								blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 							}
 							
 							Random rand = new Random();
 							if (rand.nextInt(10) < 2) {
-//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)player.posZ+64);
+//								generateFakeHouse(chaseWorld, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)player.posZ+64);
 								
 							}
 							rand = new Random();
 							if (rand.nextInt(10) < 2) {
-//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)player.posZ+64);
+//								generateFakeHouse(chaseWorld, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)player.posZ+64);
 								
 							}
 							
@@ -402,7 +405,7 @@ public class QuestEventChasing implements IQuestEvent {
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 									for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-										ws.setBlock(x, chasingQuestInitialPosY-1, z, blockByDifficulty);
+										chaseWorld.setBlock(x, chasingQuestInitialPosY-1, z, blockByDifficulty);
 										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
 									}
 								}
@@ -435,9 +438,9 @@ public class QuestEventChasing implements IQuestEvent {
 										for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 										{
 											if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
-												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+												chaseWorld.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
 											else
-												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+												chaseWorld.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
 										}
 									}
 								}
@@ -451,7 +454,7 @@ public class QuestEventChasing implements IQuestEvent {
 								if(areas.size() != 0)
 									areas.clear();
 								
-								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
+								cleanArea(chaseWorld, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
 								/**
 								 * END OF Terrain Cleaning
 								 */
@@ -460,9 +463,9 @@ public class QuestEventChasing implements IQuestEvent {
 								if (ratio > 0.4) {
 									for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 										for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-											ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+											chaseWorld.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
 											blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-											ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+											chaseWorld.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
 										}
 									}
 								}
@@ -504,7 +507,7 @@ public class QuestEventChasing implements IQuestEvent {
 							speedchange -= speedchangerate;
 						
 						// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
-						if (thiefHealthCurrent <= 0) {
+						if (thiefHealth <= 0) {
 							try {
 								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 							} catch (SocketException e) {
@@ -532,7 +535,7 @@ public class QuestEventChasing implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							goBackToTheOriginalWorld(chaseWorld, MinecraftServer.getServer(), teleporter, player);
 							
 							return;
 						}
@@ -561,10 +564,10 @@ public class QuestEventChasing implements IQuestEvent {
 							}
 							
 							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
+							if (thiefLevel == thiefLevelMax && virtualCurrency > 50)
 								thiefLevelUp();
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							goBackToTheOriginalWorld(chaseWorld, MinecraftServer.getServer(), teleporter, player);
 						}
 					}
 				};
@@ -596,7 +599,7 @@ public class QuestEventChasing implements IQuestEvent {
 								endingZ = (int)player.posZ;
 							}
 							if (countdown == 5) {
-								npc = NpcCommand.spawnNpc(0f, 11, 20, ws, "Thief");
+								npc = NpcCommand.spawnNpc(0f, 11, 20, chaseWorld, "Thief");
 								npc.ai.stopAndInteract = false;
 								command = new NpcCommand(npc);
 								command.setSpeed(10);
@@ -644,9 +647,9 @@ public class QuestEventChasing implements IQuestEvent {
 				};
 				
 				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					chaseWorld.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
 					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					chaseWorld.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
 					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
 				}
 				
@@ -656,14 +659,14 @@ public class QuestEventChasing implements IQuestEvent {
 		else if (player.getHeldItem().getDisplayName().contains("Potion")
 				&& player.dimension == WorldProviderFlats.dimID){
 			// CHASE QUEST LOSE CONDITION
-			if (ws != null && player instanceof EntityPlayerMP) {
+			if (chaseWorld != null && player instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 				virtualCurrency = 0;
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				initThiefStat();
-				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+				cleanArea(chaseWorld, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+				goBackToTheOriginalWorld(chaseWorld, MinecraftServer.getServer(), teleporter, player);
 			}
 		}
 	}

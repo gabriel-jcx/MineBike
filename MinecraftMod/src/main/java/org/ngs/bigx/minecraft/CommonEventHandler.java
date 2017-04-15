@@ -110,10 +110,10 @@ public class CommonEventHandler {
 		}
 	}
 	
-	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 	}
+	
 	
 	@SubscribeEvent
 	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {

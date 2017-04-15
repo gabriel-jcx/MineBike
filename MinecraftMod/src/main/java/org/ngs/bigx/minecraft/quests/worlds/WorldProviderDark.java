@@ -5,18 +5,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
 
-public class WorldProviderFlats extends WorldProvider {
-
-	public static int dimID = 100;
-	public static int fireQuestDimID = 100;
+public class WorldProviderDark extends WorldProvider {
+	public static int dimID = 101;
+	public static int fireQuestDimID = 101;
 	
-	public static int flatBiomeID = 50;
-	public static String dimName = "Chasing - Outside";
-	private static String flatGenPreset = "2;7,5x1,3x3,2;" + Integer.toString(flatBiomeID) + ";decoration";
+	public static int flatBiomeID = 51;
+	public static String dimName = "Chasing - Caves";
+	private static String flatGenPreset = "2;7,9x1,7x0,2x1;" + Integer.toString(flatBiomeID) + ";";
 	public static int groundHeight = 11;
 	
 	@Override
@@ -26,7 +24,7 @@ public class WorldProviderFlats extends WorldProvider {
 	
 	public void registerWorldChunkManager() {
 		this.dimensionId = dimID;
-		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(50), 0F);
+		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlatCaves(51), 0F);
 		this.hasNoSky = false;
 		this.terrainType = WorldType.FLAT;
 		
