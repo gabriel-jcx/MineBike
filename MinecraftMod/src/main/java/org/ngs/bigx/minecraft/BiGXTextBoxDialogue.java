@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft;
 
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
+	public static final String directionMsg = "North: Gate to Dungeon";
 	public static final String wakeUpMsg = "Dad is calling me. Let’s\ngo talk to him";
 	public static final String fatherMsg = "Dad: Someone gave me\nthese for you.";
 	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";
@@ -25,7 +26,7 @@ public class BiGXTextBoxDialogue {
 	public static final String placeVillage = "\n   < Village >";
 	public static final String placeCave = "\n   < Cave >";
 	public static final String placeCaveHiddenRoom = "\n   < Hidden Room >";
-	public static final String placeIslandCaprona = "\n   < Caprona Island >";
+	public static final String placeContinentPangea = "\n   < Pangea Continent >";
 	
 	//Chest Box Message
 	public static final String questChasePotionInfo = "Use different potions\nto challenge different\nthieves";
