@@ -107,14 +107,14 @@ public class ClientEventHandler {
 		
 		@SubscribeEvent
 		public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-			if (questDemo == null && event.entity instanceof EntityPlayer) {
-				// FIRST LOAD - START IT UP
-				questDemo = new QuestDemo((EntityPlayer) event.entity);
-				Quest tutQuest = new Quest("Tutorial", "Let's get started!");
-				tutQuest.events.add(new QuestEventGoto((EntityPlayer) event.entity,
-						Vec3.createVectorHelper(90, 71, 187), Vec3.createVectorHelper(91, 73, 183)));
-				questDemo.setActiveQuest(tutQuest);
-			}
+//			if (questDemo == null && event.entity instanceof EntityPlayer) {
+//				// FIRST LOAD - START IT UP
+//				questDemo = new QuestDemo((EntityPlayer) event.entity);
+//				Quest tutQuest = new Quest("Tutorial", "Let's get started!");
+//				tutQuest.events.add(new QuestEventGoto((EntityPlayer) event.entity,
+//						Vec3.createVectorHelper(90, 71, 187), Vec3.createVectorHelper(91, 73, 183)));
+//				questDemo.setActiveQuest(tutQuest);
+//			}
 			// Else, probably returning from chasing quest dimension(s)
 		}
 		

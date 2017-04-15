@@ -51,6 +51,8 @@ import noppes.npcs.entity.EntityNpcCrystal;
 public class QuestEventChasing implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
+	
+	private static long questTimeStamp = 0;
 
 	private static boolean completed = false;
 	private static int countdown = 10;
@@ -276,6 +278,16 @@ public class QuestEventChasing implements IQuestEvent {
 				// SET CURRENT ACTIVE QUEST DEMO
 				if(ClientEventHandler.getHandler().questDemo == null)
 					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				else {
+					if(ClientEventHandler.getHandler().questDemo.getQuest().events.contains(this)) {
+						if(System.currentTimeMillis() - questTimeStamp < 1000)
+							return;
+					}
+				}
+				
+				completed = false;
+				questTimeStamp = System.currentTimeMillis();
+				
 				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
 				chaseQuest.events.add(this);
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
