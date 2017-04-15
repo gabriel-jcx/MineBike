@@ -22,6 +22,7 @@ import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -74,6 +75,7 @@ public class CommonEventHandler {
 	private static int thiefMaxLevel = 1;
 	
 	public static LevelSystem levelSys = new LevelSystem();
+	public static QuestEventChasing chaseQuest = new QuestEventChasing();
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -113,6 +115,9 @@ public class CommonEventHandler {
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
+		System.out.println(event.item.getDisplayName().contains("Teleportation Potion"));
+		if (event.item.getDisplayName().contains("Teleportation Potion"))
+			chaseQuest.Run();
 	}
 	
 	@SubscribeEvent
