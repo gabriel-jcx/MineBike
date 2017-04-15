@@ -50,6 +50,10 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestEventChasingFire implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
+	
+	private static long questTimeStamp = 0;
+
+	private static boolean completed = false;
 
 	private static int countdown = 10;
 	private static int time = 0;
@@ -272,8 +276,20 @@ public class QuestEventChasingFire implements IQuestEvent {
 		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 124, 158, -135, 134, 168, -145)
 				&& player.dimension != WorldProviderFlats.fireQuestDimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
-				ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
-				Quest chaseQuest = new Quest("Chagse - FireElement", "Let's get started!");
+				// SET CURRENT ACTIVE QUEST DEMO
+				if(ClientEventHandler.getHandler().questDemo == null)
+					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
+				else {
+					if(ClientEventHandler.getHandler().questDemo.getQuest().events.contains(this)) {
+						if(System.currentTimeMillis() - questTimeStamp < 1000)
+							return;
+					}
+				}
+				
+				completed = false;
+				questTimeStamp = System.currentTimeMillis();
+				
+				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
 				chaseQuest.events.add(this);
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
 				
@@ -648,6 +664,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+				completed = true;
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
 			}
