@@ -276,7 +276,7 @@ public class QuestEventChasing implements IQuestEvent {
 		System.out.println(player.posX);
 		System.out.println(player.posY);
 		System.out.println(player.posZ);
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -60, 105, 60, -50)
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {
 				// SET CURRENT ACTIVE QUEST DEMO
@@ -297,6 +297,7 @@ public class QuestEventChasing implements IQuestEvent {
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
 						
 				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
+				System.out.println("[BiGX] thiefLevel: " + thiefLevel + " vs playerlevel: " + levelSys.getPlayerLevel());
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -546,6 +547,7 @@ public class QuestEventChasing implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
+							System.out.println("[BiGX] increased exp: " + levelSys.incExp(50));
 							if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
 								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
 								levelSys.giveLevelUpRewards(player);

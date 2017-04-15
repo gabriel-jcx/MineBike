@@ -44,13 +44,18 @@ public class LevelSystem {
 	
 	public boolean levelUp(){
 		playerLevel++;
+		System.out.println("[BiGX] playerLevel[" + playerLevel + "]");
 		return true;
 	}
 	
 	public boolean incExp(int exp){
 		//increases experience needed to level up
+//		System.out.println("[BiGX] experience: " + playerExp);
+//		System.out.println("[BiGX] level: " + playerLevel);
 		playerExp += exp;
-		if (exp >= playerLevel * 100)
+//		System.out.println("[BiGX] should be true: " + (exp >= (playerLevel * 100)));
+//		System.out.println("[BiGX] exp req: " + (playerLevel * 100));
+		if (playerExp >= (playerLevel * 100))
 			return levelUp();
 		return false;
 	}
@@ -127,8 +132,6 @@ public class LevelSystem {
 		System.out.println(playerLevel);
 		switch(playerLevel)
 		{
-		case 1:
-			System.out.println("Level1");//reward = new ItemStack(Item.getItemById(268));
 		case 2:
 			reward = new ItemStack(Item.getItemById(4420));
 			System.out.println("Level2");
