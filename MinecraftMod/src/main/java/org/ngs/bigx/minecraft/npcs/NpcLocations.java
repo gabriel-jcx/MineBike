@@ -1,26 +1,10 @@
 package org.ngs.bigx.minecraft.npcs;
 
-import java.util.ArrayList;
-
-import org.ngs.bigx.minecraft.BiGXEventTriggers;
-import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.client.GuiDamage;
-import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import noppes.npcs.CustomItems;
-import noppes.npcs.NpcMiscInventory;
-import noppes.npcs.entity.EntityCustomNpc;
-import noppes.npcs.roles.RoleTrader;
 
 
 public class NpcLocations {
-	public static Vec3 dad= Vec3.createVectorHelper(-65, 73, 13);
-	public static Vec3 weaponsMerchant = Vec3.createVectorHelper(-55, 73, 91);
-	public static Vec3 blacksmith = Vec3.createVectorHelper(-55, 73, 83);
+	public static Vec3 dad = Vec3.createVectorHelper(87, 71, 183);
+	public static Vec3 weaponsMerchant = Vec3.createVectorHelper(116, 71, 196);
+	public static Vec3 blacksmith = Vec3.createVectorHelper(116, 71, 202);
 }

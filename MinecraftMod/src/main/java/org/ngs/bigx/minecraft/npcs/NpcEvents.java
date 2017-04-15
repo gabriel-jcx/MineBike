@@ -1,13 +1,9 @@
 package org.ngs.bigx.minecraft.npcs;
 
-import java.util.ArrayList;
-
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,7 +32,7 @@ public class NpcEvents {
 		private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
 			///Give player the mysterious key
 			BiGXEventTriggers.givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
-			if (!BiGXEventTriggers.givePlayerKey(player, "MysteriousKey", BiGXTextBoxDialogue.fatherMsg))
+			if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg))
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 		}
 		

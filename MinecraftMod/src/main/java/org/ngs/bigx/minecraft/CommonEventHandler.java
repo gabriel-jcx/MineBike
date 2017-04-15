@@ -17,6 +17,7 @@ import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
@@ -268,7 +269,7 @@ public class CommonEventHandler {
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
-		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
+		if (event.item.getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
 				&& event.entity.dimension != WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+event.entity.dimension+"]");		
@@ -672,7 +673,7 @@ public class CommonEventHandler {
 				t.scheduleAtFixedRate(tTask, 0, 1000);
 			}
 		}
-		else if (event.item.getDisplayName().contains("Potion")
+		else if (event.item.getDisplayName().contains("Teleportation Potion")
 				&& event.entity.dimension == WorldProviderFlats.dimID){
 			// CHASE QUEST LOSE CONDITION
 			if (ws != null && event.entity instanceof EntityPlayerMP) {

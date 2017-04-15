@@ -1,14 +1,9 @@
 package org.ngs.bigx.minecraft.levelUp;
 
-import java.util.ArrayList;
-
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
-import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiDamage;
-import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -128,16 +123,24 @@ public class LevelSystem {
 		switch(thiefLevel){
 		case 3:
 			BiGXEventTriggers.givePlayerKey(player, "Burned Key", "");
+//		case #:
+//			BiGXEventTriggers.givePlayerKey(player, "Damp Key", "");
+//		case #:
+//			BiGXEventTriggers.givePlayerKey(player, "Dusty Key", "");
+//		case #:
+//			BiGXEventTriggers.givePlayerKey(player, "Light Key", "");
 		}
+//		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
 	}
 	
 	public void level4rewards(EntityPlayer player){
 		player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4421)));
-		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
+//		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
 	}
 	
 	public void level5rewards(EntityPlayer player){
 		player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420)));
+//		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
 	}
 	
 }
