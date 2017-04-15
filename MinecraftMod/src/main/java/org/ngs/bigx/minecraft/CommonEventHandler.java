@@ -116,8 +116,10 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		System.out.println(event.item.getDisplayName().contains("Teleportation Potion"));
-		if (event.item.getDisplayName().contains("Teleportation Potion"))
+		if (event.item.getDisplayName().contains("Teleportation Potion")) {
+			QuestEventChasing.player = event.entityPlayer;
 			chaseQuest.Run();
+		}
 	}
 	
 	@SubscribeEvent
@@ -135,6 +137,7 @@ public class CommonEventHandler {
 		if (MinecraftServer.getServer() != null && event.phase == TickEvent.Phase.END) {
 			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
 			server_tick++;
+			
 			//20 ticks = 1 second
 			if (server_tick==20) {
 				server_tick = 0;
@@ -143,8 +146,7 @@ public class CommonEventHandler {
 			
 			//Making sure it remains daytime all the time
 			World current_world = MinecraftServer.getServer().getEntityWorld();
-//			if (current_world.provider.getWorldTime() >= 12000)
-//				current_world.setWorldTime(0);
+
 			current_world.setWorldTime(8000);
 			
 			// Test Purpose Code
@@ -159,7 +161,6 @@ public class CommonEventHandler {
 				}
 				else{
 					this.serverQuestTest = false;
-					//makeQuestOnServer();
 				}
 			}
 		}

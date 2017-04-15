@@ -31,6 +31,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -95,7 +97,7 @@ public class QuestEventChasing implements IQuestEvent {
 	
 	private WorldServer ws;
 	
-	private EntityPlayer player;
+	public static EntityPlayer player;
 	
 	public static int getTime()
 	{
@@ -266,8 +268,10 @@ public class QuestEventChasing implements IQuestEvent {
 	@Override
 	public void Run() {
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		
 		context = BiGX.instance().context;
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -55, 105, 60, -40)
+//		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -55, 105, 60, -40)
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, -1000, 65, -1005, 1005, 90, 1000)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		
