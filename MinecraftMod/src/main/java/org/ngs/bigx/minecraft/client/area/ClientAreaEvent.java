@@ -63,13 +63,10 @@ public class ClientAreaEvent {
 				BiGXTextBoxDialogue.soundComment, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
 		addArea(new Area(Vec3.createVectorHelper(-61, 77, 8), Vec3.createVectorHelper(-56, 78, 11), 
-				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
+				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 		addArea(new Area(Vec3.createVectorHelper(-175, 65, 335), Vec3.createVectorHelper(-172, 73, 337), 
-				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
-		
-//		addArea(new Area(Vec3.createVectorHelper(-67, 73, 12), Vec3.createVectorHelper(-60, 75, 14), 
-//				BiGXTextBoxDialogue.fatherMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT); ////////////////////
+				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 		addArea(new Area(Vec3.createVectorHelper(-82, 40, 3), Vec3.createVectorHelper(-50, 100, 19), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);

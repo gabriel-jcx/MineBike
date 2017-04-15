@@ -175,12 +175,12 @@ public class GuiStats extends GuiScreen {
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
 	        	
-	    		text = "Lv: " + CommonEventHandler.getTheifLevel();
+	    		text = "Lv: " + CommonEventHandler.levelSys.getThiefLevel();
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
 	        	
-	    		text = "HP: " + CommonEventHandler.getTheifHealthCurrent();
+	    		text = "HP: " + CommonEventHandler.levelSys.getThiefHealthCurrent();
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);

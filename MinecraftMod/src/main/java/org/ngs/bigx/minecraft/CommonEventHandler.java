@@ -18,6 +18,9 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
+import org.ngs.bigx.minecraft.npcs.NpcDatabase;
+import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -87,6 +90,7 @@ public class CommonEventHandler {
 	public static boolean chasingQuestOnCountDown = false;
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
+	public static LevelSystem levelSys = new LevelSystem();
 	
 	private static TerrainBiome terrainBiome = new TerrainBiome();
 	private static ArrayList<Integer> questSettings = null;
@@ -100,11 +104,7 @@ public class CommonEventHandler {
 	private static Timer t3 = null;
 	private static QuestTeleporter teleporter = null;
 
-	private static int theifHealthMax = 50;
-	private static int theifHealthCurrent = theifHealthMax;
-	private static int theifLevel = 1;
-	private static int thiefMaxLevel = 1;
-	private static boolean theifLevelUpFlag = false;
+	
 	
 	public static int getTime()
 	{
@@ -120,18 +120,6 @@ public class CommonEventHandler {
 	{
 		return timeFallBehind;
 	}	
-	
-	public static int getTheifHealthMax() {
-		return theifHealthMax;
-	}
-
-	public static int getTheifHealthCurrent() {
-		return theifHealthCurrent;
-	}
-
-	public static int getTheifLevel() {
-		return theifLevel;
-	}
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -175,58 +163,20 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
-	void onPlayerInteractwithNPC(EntityInteractEvent e) {
-		System.out.println("Player Interact w/ NPC Event");
-}
-	
-	@SubscribeEvent
 	public void entityInteractEvent(EntityInteractEvent e){
 		EntityPlayer player = e.entityPlayer;
 		System.out.println("Entity Interact Event");
-		BiGXEventTriggers.InteractWithNPC(player, e);
+		NpcEvents.InteractWithNPC(player, e);
 	}
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
 		World w = e.world;
-		
+
 		if (!w.isRemote) {
-			if (e.x == -155 && e.y == 71 && e.z == 359 && w.getBlock(e.x, e.y, e.z) == Blocks.chest) {
-				System.out.println("CHEST FOUND");
-				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
-				ItemStack b = new ItemStack(Items.written_book);
-				NBTTagList pages = new NBTTagList();
-				pages.appendTag(new NBTTagString("In this cave lies a secret room. In order to save your father, you must follow the sounds of music nearby and unlock what's beyond the art."));
-				b.stackTagCompound = new NBTTagCompound();
-				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-				b.stackTagCompound.setTag("title", new NBTTagString("A hint that may help"));
-				b.stackTagCompound.setTag("pages", pages);
-				if (!e.entityPlayer.inventory.hasItemStack(b))
-					c.setInventorySlotContents(0, b);
-			}
-			
-			if (e.x == -174 && e.y == 70 && e.z == 336 && w.getBlock(e.x, e.y, e.z) == Blocks.chest){
-				System.out.println("SECRET CHEST FOUND");
-				BiGXEventTriggers.onRightClick(e, player);
-				TileEntityChest c = (TileEntityChest)w.getTileEntity(e.x, e.y, e.z);
-				ItemStack b = new ItemStack(Items.written_book);
-				NBTTagList pages = new NBTTagList();
-				pages.appendTag(new NBTTagString("Use this potion to persue he who wants to bring harm to your father."));
-				b.stackTagCompound = new NBTTagCompound();
-				b.stackTagCompound.setTag("author", new NBTTagString("A friend"));
-				b.stackTagCompound.setTag("title", new NBTTagString("Potion Instructions"));
-				b.stackTagCompound.setTag("pages", pages);
-				//if (!e.entityPlayer.inventory.hasItemStack(b))
-				c.setInventorySlotContents(0, b);
-				
-				for (int i = 1; i <= thiefMaxLevel; ++i){
-					ItemStack p = new ItemStack(Items.potionitem);
-					p.setStackDisplayName("Teleportation Potion " + i);
-					//if (!e.entityPlayer.inventory.hasItemStack(p))
-					c.setInventorySlotContents(i, p);
-				}
-			}
+			if (w.getBlock(e.x, e.y, e.z) == Blocks.chest)
+				BiGXEventTriggers.chestInteract(e, w, levelSys);
 		}
 	}
 	
@@ -288,7 +238,7 @@ public class CommonEventHandler {
 
 		returnLocation = Vec3.createVectorHelper(-174, 71, 338);
 
-		initThiefStat();
+		levelSys.initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
 		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 //		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
@@ -310,66 +260,7 @@ public class CommonEventHandler {
 			world.setBlock(chasingQuestInitialPosX+16, initY, dz, Blocks.air);
 		}
 	}
-	
-	public static void initThiefStat()
-	{
-		theifHealthMax = 50;
-		theifHealthCurrent = theifHealthMax;
-		theifLevel = 1;
-	}
-	
-	public static void theifLevelUp()
-	{
-		theifLevel ++;
-		thiefMaxLevel ++;
 		
-		theifHealthMax = 50 + (int) Math.pow(3, theifLevel);
-		theifHealthCurrent = theifHealthMax;
-	}
-	
-	public static void setTheifLevel(int level)
-	{
-		theifLevel = level;
-		
-		theifHealthMax = 50 + (int) Math.pow(3, theifLevel);
-		theifHealthCurrent = theifHealthMax;
-	}
-	
-	public static void deductTheifHealth(Item itemOnHands)
-	{
-		int deduction = 1;
-		if (itemOnHands != null) {
-			if(itemOnHands.getUnlocalizedName().equals("item.hoeStone"))
-			{
-				deduction = 3;
-			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.hoeIron"))
-			{
-				deduction = 9;
-			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.hoeGold"))
-			{
-				deduction = 27;
-			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.hoeDiamond"))
-			{
-				deduction = 81;
-			}
-		}
-		
-		theifHealthCurrent -= deduction;
-		
-		virtualCurrency += deduction;
-		
-		if(theifHealthCurrent <= 0)
-		{
-			theifHealthCurrent = 0;
-			theifLevelUpFlag = true;
-		}
-		
-		GuiDamage.addDamageText(deduction, 255, 10, 10);
-	}
-	
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
@@ -379,7 +270,6 @@ public class CommonEventHandler {
 				&& event.entity.dimension != WorldProviderFlats.dimID){
 			if (ws != null && event.entity instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+event.entity.dimension+"]");		
-				setTheifLevel(Integer.parseInt(event.item.getDisplayName().split(" ")[2]));
 				// INIT questSettings ArrayList if there is any
 				if(context.suggestedGamePropertiesReady)
 				{
@@ -567,7 +457,10 @@ public class CommonEventHandler {
 						float speedchangerate = 0.025f;
 						
 						// Handling Player heart rate and rpm as mechanics for Chase Quest
-						BiGXPatientPrescription playerperscription;
+						BiGXPatientPrescription playerperscription; // = new BiGXPatientPrescription();
+//						playerperscription.setTargetMin(100);
+//						playerperscription.setTargetMax(100);
+						
 						try{
 							playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
 						}
@@ -596,7 +489,7 @@ public class CommonEventHandler {
 							speedchange -= speedchangerate;
 						
 						// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
-						if (theifHealthCurrent <= 0) {
+						if (levelSys.getThiefHealthCurrent() <= 0) {
 							try {
 								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 							} catch (SocketException e) {
@@ -614,12 +507,16 @@ public class CommonEventHandler {
 							endingZ = (int)event.entity.posZ;
 							LeaderboardRow row = new LeaderboardRow();
 							row.name = context.BiGXUserName;
-							row.level = Integer.toString(theifLevel);
+							row.level = Integer.toString(levelSys.getThiefLevel());
 							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
 							GuiLeaderBoard.writeToLeaderboard(row);
 
-							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
-
+//							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
+							
+							levelSys.getLevelRewards(event.entityPlayer, virtualCurrency);
+							if (levelSys.getThiefLevel() == levelSys.getPlayerLevel() && virtualCurrency > 50)
+								levelSys.levelUp();
+							
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
@@ -652,9 +549,7 @@ public class CommonEventHandler {
 								e.printStackTrace();
 							}
 							
-							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
-							if (theifLevel == thiefMaxLevel && virtualCurrency > 50)
-								theifLevelUp();
+//							BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);
 						}
@@ -723,7 +618,7 @@ public class CommonEventHandler {
 							
 							
 						} else {
-							initThiefStat();
+							levelSys.initThiefStat();
 							chasingQuestOnCountDown = false;
 							System.out.println("GO!");
 							command.enableMoving(true);
@@ -752,7 +647,7 @@ public class CommonEventHandler {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(event.entityPlayer, virtualCurrency); ///Give player reward
 				virtualCurrency = 0;
 				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-				initThiefStat();
+				levelSys.initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)event.entity.posZ - 128, (int)event.entity.posZ);
 //				teleporter.teleport(event.entity, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, event.entity);

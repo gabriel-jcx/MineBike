@@ -130,9 +130,9 @@ public class ClientEventHandler {
 					int hit = r.nextInt(4)+1;
 //					System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
-						CommonEventHandler.deductTheifHealth(null);
+						CommonEventHandler.virtualCurrency = CommonEventHandler.levelSys.deductThiefHealth(null, CommonEventHandler.virtualCurrency);
 					else
-						CommonEventHandler.deductTheifHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+						CommonEventHandler.virtualCurrency = CommonEventHandler.levelSys.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem(), CommonEventHandler.virtualCurrency);
 //					event.entityPlayer.worldObj.playSoundEffect(event.entityPlayer.posX + 0.5D, event.entityPlayer.posY + 0.5D, event.entityPlayer.posZ + 0.5D, "minebike:sounds/hit1", 1.0f, 1.0f);
 					event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);
 				}
