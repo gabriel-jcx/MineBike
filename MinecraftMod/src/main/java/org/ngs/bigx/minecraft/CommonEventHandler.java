@@ -24,6 +24,7 @@ import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -91,8 +92,9 @@ public class CommonEventHandler {
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 	public static LevelSystem levelSys = new LevelSystem();
-	
 	private static TerrainBiome terrainBiome = new TerrainBiome();
+	private static TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
+	
 	private static ArrayList<Integer> questSettings = null;
 
 	private static int chasingQuestInitialPosX = 0;
@@ -105,7 +107,7 @@ public class CommonEventHandler {
 	private static QuestTeleporter teleporter = null;
 
 	
-	
+	private WorldServer ws;
 	public static int getTime()
 	{
 		return time;
@@ -264,7 +266,7 @@ public class CommonEventHandler {
 	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		final WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
 		if (event.item.getDisplayName().contains("Potion") && checkPlayerInArea(event.entityPlayer, -177, 70, 333, -171, 74, 339)
 				&& event.entity.dimension != WorldProviderFlats.dimID){
@@ -337,12 +339,24 @@ public class CommonEventHandler {
 							
 							Random rand = new Random();
 							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+								
 							}
 							rand = new Random();
 							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64);
+								
 							}
+							
+							
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)event.entity.posZ+64, 1);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)event.entity.posZ+64, 0);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-18, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-11, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX-4, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+3, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							generateFakeCave(ws, blocks, chasingQuestInitialPosX+11, chasingQuestInitialPosY, (int)event.entity.posZ+64, 2);
+							
 							/**
 							 * END OF Generates structures on sides
 							 */
@@ -369,17 +383,35 @@ public class CommonEventHandler {
 										(blockByDifficulty == Blocks.gravel) )
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomCityBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomCityBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomGateBiome());
+									}
 								}
 								else if(blockByDifficulty == Blocks.grass)
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomGrassBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomGrassBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomFieldBiome());
+									}
 								}
 								else if(blockByDifficulty == Blocks.sand)
 								{
 									for(int idx = 0; idx<4; idx++)
-										areas.add(terrainBiome.getRandomDesertBiome());
+									{
+										if(false)
+											areas.add(terrainBiome.getRandomDesertBiome());
+										else
+											areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+									}
+								}
+								else {
+									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
 								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
@@ -689,6 +721,95 @@ public class CommonEventHandler {
 				if (x == origX + 2 || x == origX + 4) {
 					w.setBlock(x, origY+1, origZ, Blocks.glass);
 					w.setBlock(x, origY+2, origZ, Blocks.glass);
+				}
+			}
+		}
+	}
+	
+	private void generateFakeCave(World w, List<Vec3> blocks, int origX, int origY, int origZ, int side) {
+		// Side==0: Left,   Side==1: Right,    Side==2: Ceiling
+		if(side==0) {
+			for (int x = origX; x < origX + 7; ++x) {
+				if(x==origX) {
+					for (int y = origY; y < origY + 4; ++y) {
+						for (int z = origZ; z < origZ + 11; ++z) {
+							if( ((z%2)==1) && (y==(origY+2)) )
+								w.setBlock(x, y, z, Blocks.glowstone);
+							else
+								w.setBlock(x, y, z, Blocks.dirt);
+						}
+					}
+				}
+				else if(x==(origX+1)) {
+					int y=origY + 4;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x==(origX+2)) {
+					int y=origY + 5;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if((z%2)==1)
+							w.setBlock(x, y, z, Blocks.glowstone);
+						else
+							w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x>=(origX+3)) {
+					int y=origY + 6;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+			}
+		}
+		else if(side==1) {
+			for (int x = origX+6; x >= origX; --x) {
+				if(x==(origX+6)) {
+					for (int y = origY; y < origY + 4; ++y) {
+						for (int z = origZ; z < origZ + 11; ++z) {
+							if( ((z%2)==1) && (y==(origY+2)) )
+								w.setBlock(x, y, z, Blocks.glowstone);
+							else
+								w.setBlock(x, y, z, Blocks.dirt);
+						}
+					}
+				}
+				else if(x==(origX+5)) {
+					int y=origY + 4;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x==(origX+4)) {
+					int y=origY + 5;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						if((z%2)==1)
+							w.setBlock(x, y, z, Blocks.glowstone);
+						else
+							w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+				else if(x<=(origX+3)) {
+					int y=origY + 6;
+					
+					for (int z = origZ; z < origZ + 11; ++z) {
+						w.setBlock(x, y, z, Blocks.dirt);
+					}
+				}
+			}
+		}
+		else if(side==2) {
+			for (int x = origX; x < origX + 7; ++x) {
+				int y=origY + 6;
+				
+				for (int z = origZ; z < origZ + 11; ++z) {
+					w.setBlock(x, y, z, Blocks.dirt);
 				}
 			}
 		}

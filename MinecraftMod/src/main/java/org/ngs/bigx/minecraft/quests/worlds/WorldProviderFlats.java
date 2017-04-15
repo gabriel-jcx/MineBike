@@ -10,8 +10,10 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
 
 public class WorldProviderFlats extends WorldProvider {
-	
+
 	public static int dimID = 100;
+	public static int fireQuestDimID = 100;
+	
 	public static int flatBiomeID = 50;
 	public static String dimName = "Quest World";
 	private static String flatGenPreset = "2;7,5x1,3x3,2;" + Integer.toString(flatBiomeID) + ";decoration";

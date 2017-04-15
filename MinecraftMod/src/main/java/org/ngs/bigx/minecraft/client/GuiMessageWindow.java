@@ -121,7 +121,6 @@ public class GuiMessageWindow extends GuiScreen {
 			timestampLastShowGoldbarCall = timestampLastShowWindowCall;
 		}
 		else{
-			System.out.println("[BiGX]" + message.substring(0, 1));
 			timestampLastShowGoldbarCall = 0;
 		}
 	}
