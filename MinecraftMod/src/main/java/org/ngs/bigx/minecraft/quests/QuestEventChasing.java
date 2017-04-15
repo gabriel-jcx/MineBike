@@ -270,12 +270,13 @@ public class QuestEventChasing implements IQuestEvent {
 
 	@Override
 	public void Run(final LevelSystem levelSys) {
+		System.out.println("Running...");
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		
 		context = BiGX.instance().context;
-		System.out.println(player.posX);
-		System.out.println(player.posY);
-		System.out.println(player.posZ);
+
+		System.out.println(player.dimension);
+		System.out.println(WorldProviderFlats.dimID);
 		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -60, 105, 60, -50)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {
@@ -750,6 +751,19 @@ public class QuestEventChasing implements IQuestEvent {
 
 	@Override
 	public void CheckComplete() {
+	}
+	
+	public void goBackToOriginalWorld(){
+		if (ws != null && player instanceof EntityPlayerMP) {
+			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+			virtualCurrency = 0;
+			teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+			initThiefStat();
+			cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+//			teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+			completed = true;
+			goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+		}
 	}
 	
 }

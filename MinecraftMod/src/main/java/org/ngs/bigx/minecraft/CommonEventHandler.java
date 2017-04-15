@@ -78,6 +78,7 @@ public class CommonEventHandler {
 	public static LevelSystem levelSys = new LevelSystem();
 	public static QuestEventChasing chaseQuest = new QuestEventChasing();
 	public static QuestEventChasingFire chaseQuestFire = new QuestEventChasingFire();
+	boolean chaseQuestInProgress = false;
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -116,25 +117,24 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-//		if (levelSys.getPlayerLevel() >= 5)
-//			levelSys.setPlayerLevel(1);
 		System.out.println(event.item.getDisplayName());
-//		System.out.println(event.item.getDisplayName().contains("Sword"));
-//		if (event.item.getDisplayName().contains("Sword"))
-//			if (levelSys.levelUp())
-//				levelSys.giveLevelUpRewards(event.entityPlayer);
 		if (event.item.getDisplayName().contains("Teleportation Potion")) {
 			EntityPlayer player = event.entityPlayer;
 			QuestEventChasing.player = event.entityPlayer;
 			QuestEventChasingFire.player = event.entityPlayer;
-			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -48, 99, 74, -9))
+			
+			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -60, 99, 74, -9))
 			{
 				chaseQuest.Run(levelSys);
+				chaseQuestInProgress = true;
 			}
 			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasingFire.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
 			{
 				chaseQuestFire.Run(levelSys);
-			}		
+				chaseQuestInProgress = true;
+			}
+			else if (chaseQuestInProgress)
+				chaseQuest.goBackToOriginalWorld(); //probably want to make this a part of the template class or something
 		}
 	}
 	
