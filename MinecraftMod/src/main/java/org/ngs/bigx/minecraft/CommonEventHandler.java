@@ -34,6 +34,8 @@ import org.ngs.bigx.utility.NpcCommand;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -126,31 +128,7 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		event.world.provider.setWorldTime(0);
-		//System.out.println(event.world.provider.dimensionId);
-		if (event.world.provider.dimensionId == 0){
-			System.out.println("DIMENSION ID == 0");
-			
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-			
-			// NPC CHECKING
-			for (String name : NpcDatabase.NpcNames()) {
-				int found = 0;
-				for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
-					if (((EntityCustomNpc)obj).display.name.equals(name))
-						++found;
-				if (found == 0) {
-					NpcDatabase.spawn(ws, name);
-				} else if (found > 1) {
-					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
-					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
-						if (((EntityCustomNpc)obj).display.name.equals(name))
-							list.add((EntityCustomNpc)obj);
-					NpcDatabase.sortFurthestSpawn(list);
-					for (int i = 0; i < list.size()-1; ++i)
-						list.get(i).delete();
-				}
-			}
-		}
+		NpcCommand.setNpcSpawnFlag();
 	}
 	
 	@SubscribeEvent

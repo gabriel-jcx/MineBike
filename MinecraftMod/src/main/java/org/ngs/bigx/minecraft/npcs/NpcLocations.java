@@ -20,7 +20,7 @@ import noppes.npcs.roles.RoleTrader;
 
 
 public class NpcLocations {
-	public static Vec3 dad= Vec3.createVectorHelper(-65, 73, 13);
-	public static Vec3 weaponsMerchant = Vec3.createVectorHelper(-55, 73, 91);
-	public static Vec3 blacksmith = Vec3.createVectorHelper(-55, 73, 83);
+	public static Vec3 dad= Vec3.createVectorHelper(85, 73, 180);
+	public static Vec3 weaponsMerchant = Vec3.createVectorHelper(116, 73, 202);
+	public static Vec3 blacksmith = Vec3.createVectorHelper(116, 73, 196);
 }

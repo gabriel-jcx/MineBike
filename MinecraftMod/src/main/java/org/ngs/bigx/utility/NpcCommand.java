@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
@@ -26,6 +27,8 @@ public class NpcCommand {
 	
 	private EntityCustomNpc npc;
 	private int role; //0=no role, 1=transporter
+	
+	private static boolean npcSpawnFlag = false;
 	
 	public NpcCommand(EntityCustomNpc npc) {
 		this.npc = npc;
@@ -51,6 +54,43 @@ public class NpcCommand {
 	    npc.setHealth(999999999f);;
 	    
 	    return npc;
+	}
+	
+	public static void setNpcSpawnFlag()
+	{
+		npcSpawnFlag = true;
+	}
+	
+	public static void spawnNpcInDB(World world)
+	{
+		if(!npcSpawnFlag)
+			return;
+		
+		if (world.provider.dimensionId == 0){
+			npcSpawnFlag = false;
+//			System.out.println("DIMENSION ID == 0");
+			
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+			
+			// NPC CHECKING
+			for (String name : NpcDatabase.NpcNames()) {
+				int found = 0;
+				for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
+					if (((EntityCustomNpc)obj).display.name.equals(name))
+						++found;
+				if (found == 0) {
+					NpcDatabase.spawn(ws, name);
+				} else if (found > 1) {
+					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
+					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
+						if (((EntityCustomNpc)obj).display.name.equals(name))
+							list.add((EntityCustomNpc)obj);
+					NpcDatabase.sortFurthestSpawn(list);
+					for (int i = 0; i < list.size()-1; ++i)
+						list.get(i).delete();
+				}
+			}
+		}
 	}
 	
 	public List getPath() {
