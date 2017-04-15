@@ -28,7 +28,7 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(105, 70, 214).toString(), "Mysterious Key");
+		map.put(Vec3.createVectorHelper(96, 55, -47).toString(), "Mysterious Key");
 		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
 		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); ////Change coordinates later
@@ -59,10 +59,9 @@ public class ChestSystem {
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
 		if (keyName == "Mysterious Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.level1Msg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.level1MsgTitle);
+			putMessageInChest(c, 0, BiGXTextBoxDialogue.secretRoomMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.secretRoomMsgTitle);
 			for (int i = 1; i <= levelSys.getPlayerLevel() && i <= 3; ++i)
 				putPotionInChest(c, ("Teleportation Potion "+i), i);
-//			putPotionInChest(c, ("Teleportation Potion 1"), 0);
 		}
 		
 		if (keyName == "Burnt Key"){
