@@ -84,9 +84,15 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151))) {
+		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151)) &&
+				event.player.dimension == 0) {
 			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID));
 			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), 0, 64, 0);
+		}
+		if (inBounds(event.player, Vec3.createVectorHelper(3, 63, 10), Vec3.createVectorHelper(-3, 68, 20)) &&
+				event.player.dimension == WorldProviderDungeon.dimID) {
+			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
+			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(0), 121, 163, -145);
 		}
 	}
 	
