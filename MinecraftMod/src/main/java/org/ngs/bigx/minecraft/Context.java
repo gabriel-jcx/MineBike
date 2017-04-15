@@ -167,7 +167,7 @@ public class Context implements eyeTrackerListner {
 	
 	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{		
-		System.out.println("connectBiGX()");
+		System.out.println("connectBiGX(Context.ipAddress[" + Context.ipAddress + "], Context.port[" + Context.port + "])");
 		bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
 		bigxclient.setReceiveListener(new BiGXNetClientListener() {
 			
@@ -331,6 +331,7 @@ public class Context implements eyeTrackerListner {
 			if(gameServerStatus.getIpserver().equals(ip))
 			{
 				returnValue = gameServerStatus.getIpclient();
+				System.out.println("Middleware IP[" + gameServerStatus.getIpclient() + "]");
 				break;
 			}
 		}
