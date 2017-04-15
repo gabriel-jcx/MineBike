@@ -5,19 +5,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
 
-public class WorldProviderFlats extends WorldProvider {
+public class WorldProviderDungeon extends WorldProvider {
 
-	public static int dimID = 100;
-	public static int fireQuestDimID = 110;
+	public static int dimID = 105;
+	public static int fireQuestDimID = 115;
 	
-	public static int flatBiomeID = 150;
-	public static String dimName = "Chasing - Outside";
-	private static String flatGenPreset = "2;7,5x1,3x3,2;" + Integer.toString(flatBiomeID) + ";decoration";
-	public static int groundHeight = 11;
+	public static int dungeonBiomeID = 152;
+	public static String dimName = "Dungeon";
+	private static String flatGenPreset = "2;7,254x1;" + Integer.toString(dungeonBiomeID) + ";stronghold,mineshaft,dungeon";
+	public static int groundHeight = 64;
 	
 	@Override
 	public String getDimensionName() {
@@ -26,7 +25,7 @@ public class WorldProviderFlats extends WorldProvider {
 	
 	public void registerWorldChunkManager() {
 		this.dimensionId = dimID;
-		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(flatBiomeID), 0F);
+		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenDungeon(dungeonBiomeID), 0F);
 		this.hasNoSky = false;
 		this.terrainType = WorldType.FLAT;
 		
@@ -101,4 +100,5 @@ public class WorldProviderFlats extends WorldProvider {
 	public double getHorizon() {
 		return 0.0D;
 	}
+
 }

@@ -1,22 +1,17 @@
 package org.ngs.bigx.minecraft;
 
-import java.awt.Event;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
-import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy {
 	
@@ -28,6 +23,12 @@ public class CommonProxy {
 		
 		DimensionManager.registerProviderType(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.class, true);
 		DimensionManager.registerDimension(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.fireQuestDimID);
+		
+		DimensionManager.registerProviderType(WorldProviderDungeon.dimID, WorldProviderDungeon.class, true);
+		DimensionManager.registerDimension(WorldProviderDungeon.dimID, WorldProviderDungeon.dimID);
+		
+		DimensionManager.registerProviderType(WorldProviderDungeon.fireQuestDimID, WorldProviderDungeon.class, true);
+		DimensionManager.registerDimension(WorldProviderDungeon.fireQuestDimID, WorldProviderDungeon.fireQuestDimID);
 		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);

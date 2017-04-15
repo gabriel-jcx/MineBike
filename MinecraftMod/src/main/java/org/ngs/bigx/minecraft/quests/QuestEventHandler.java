@@ -2,12 +2,18 @@ package org.ngs.bigx.minecraft.quests;
 
 import java.util.Random;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Vec3;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import noppes.npcs.entity.EntityCustomNpc;
+
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestEventHandler {
 	
