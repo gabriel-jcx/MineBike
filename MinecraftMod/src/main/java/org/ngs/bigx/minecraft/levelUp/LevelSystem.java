@@ -1,7 +1,9 @@
 package org.ngs.bigx.minecraft.levelUp;
 
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
-import org.ngs.bigx.minecraft.client.GuiDamage;
+import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
+//import org.ngs.bigx.minecraft.client.GuiDamage;
+import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -10,12 +12,13 @@ import net.minecraft.item.ItemStack;
 
 public class LevelSystem {
 	private int playerLevel = 1; ///the player's current level
+	private int playerExp = 0; ///player's current exp
 	
 	//Quest-specific (levels of the thief)
-	private int thiefHealthMax = 50;
-	private int thiefHealthCurrent = thiefHealthMax;
-	private int thiefLevel = 1;
-	private boolean thiefLevelUpFlag = false;
+//	private int thiefHealthMax = 50;
+//	private int thiefHealthCurrent = thiefHealthMax;
+//	private int thiefLevel = 1;
+//	private boolean thiefLevelUpFlag = false;
 	
 	public LevelSystem() {}
 	
@@ -23,94 +26,133 @@ public class LevelSystem {
 		return playerLevel;
 	}
 	
-	public int getThiefHealthMax() {
-		return thiefHealthMax;
-	}
-
-	public int getThiefHealthCurrent() {
-		return thiefHealthCurrent;
-	}
-
-	public int getThiefLevel() {
-		return thiefLevel;
+	public int getPlayerExp(){
+		return playerExp;
 	}
 	
-	public void levelUp(){
+//	public int getThiefHealthMax() {
+//		return thiefHealthMax;
+//	}
+//
+//	public int getThiefHealthCurrent() {
+//		return thiefHealthCurrent;
+//	}
+//
+//	public int getThiefLevel() {
+//		return thiefLevel;
+//	}
+	
+	public boolean levelUp(){
 		playerLevel++;
+		return true;
 	}
 	
-
-	public void initThiefStat()
-	{
-		thiefHealthMax = 50;
-		thiefHealthCurrent = thiefHealthMax;
-		thiefLevel = 1;
+	public boolean incExp(int exp){
+		//increases experience needed to level up
+		playerExp += exp;
+		if (exp >= playerLevel * 100)
+			return levelUp();
+		return false;
 	}
 	
-	public void thiefLevelUp()
-	{
-		thiefLevel ++;
-		
-		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
-		thiefHealthCurrent = thiefHealthMax;
+	public void setPlayerLevel(int level){
+		playerLevel = 1;
+		playerExp = 0;
 	}
+//
+//	public void initThiefStat()
+//	{
+//		thiefHealthMax = 50;
+//		thiefHealthCurrent = thiefHealthMax;
+//		thiefLevel = 1;
+//	}
+//	
+//	public void thiefLevelUp()
+//	{
+//		thiefLevel ++;
+//		
+//		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
+//		thiefHealthCurrent = thiefHealthMax;
+//	}
+//	
+//	public void setThiefLevel(int level)
+//	{
+//		thiefLevel = level;
+//		
+//		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
+//		thiefHealthCurrent = thiefHealthMax;
+//	}
+//	
+//	public int deductThiefHealth(Item itemOnHands, int virtualCurrency)
+//	{
+//		int deduction = 1;
+//		if (itemOnHands != null) {
+//			if(itemOnHands.getUnlocalizedName().equals("item.npcBronzeSword"))
+//			{
+//				deduction = 3;
+//			}
+//			else if(itemOnHands.getUnlocalizedName().equals("item.npcFrostSword"))
+//			{
+//				deduction = 9;
+//			}
+//			else if(itemOnHands.getUnlocalizedName().equals("item.npcMithrilSword"))
+//			{
+//				deduction = 27;
+//			}
+//			else if(itemOnHands.getUnlocalizedName().equals("item.npcEmeraldSword"))
+//			{
+//				deduction = 81;
+//			}
+//		}
+//		
+//		thiefHealthCurrent -= deduction;
+//		
+//		virtualCurrency += deduction;
+//		
+//		if(thiefHealthCurrent <= 0)
+//		{
+//			thiefHealthCurrent = 0;
+//			thiefLevelUpFlag = true;
+//		}
+//		
+//		GuiDamage.addDamageText(deduction, 255, 10, 10);
+//		
+//		return virtualCurrency;
+//	}
 	
-	public void setThiefLevel(int level)
-	{
-		thiefLevel = level;
-		
-		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
-		thiefHealthCurrent = thiefHealthMax;
-	}
 	
-	public int deductThiefHealth(Item itemOnHands, int virtualCurrency)
-	{
-		int deduction = 1;
-		if (itemOnHands != null) {
-			if(itemOnHands.getUnlocalizedName().equals("item.npcBronzeSword"))
-			{
-				deduction = 3;
-			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.npcFrostSword"))
-			{
-				deduction = 9;
-			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.npcMithrilSword"))
-			{
-				deduction = 27;
-			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.npcEmeraldSword"))
-			{
-				deduction = 81;
-			}
-		}
-		
-		thiefHealthCurrent -= deduction;
-		
-		virtualCurrency += deduction;
-		
-		if(thiefHealthCurrent <= 0)
+	///Rewards based on levels
+	public void giveLevelUpRewards(EntityPlayer player){
+		ItemStack reward = null;
+		System.out.println(playerLevel);
+		switch(playerLevel)
 		{
-			thiefHealthCurrent = 0;
-			thiefLevelUpFlag = true;
+		case 1:
+			System.out.println("Level1");//reward = new ItemStack(Item.getItemById(268));
+		case 2:
+			reward = new ItemStack(Item.getItemById(4420));
+			System.out.println("Level2");
+		case 3:
+			reward = new ItemStack(Item.getItemById(4421));
+			System.out.println("Level3");
 		}
-		
-		GuiDamage.addDamageText(deduction, 255, 10, 10);
-		
-		return virtualCurrency;
+		if (reward != null){
+			player.inventory.addItemStackToInventory(reward);
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.gotReward + reward.getDisplayName());	
+		}
 	}
 	
-	public void getLevelRewards(EntityPlayer player, int virtualCurrency){
+	public void getLevelRewards(EntityPlayer player, int virtualCurrency, int thiefLevel){
 		int level = thiefLevel;
 		
 		switch(level)
 		{
 		case 1:
-			level123rewards(player, virtualCurrency);
+			level123rewards(player, virtualCurrency, thiefLevel);
 		case 2:
-			level123rewards(player, virtualCurrency);
+			level123rewards(player, virtualCurrency, thiefLevel);
 		case 3:
-			level123rewards(player, virtualCurrency);
+			level123rewards(player, virtualCurrency, thiefLevel);
 		case 4:
 			level4rewards(player);
 		case 5:
@@ -118,9 +160,11 @@ public class LevelSystem {
 		}
 	}
 	
-	public void level123rewards(EntityPlayer player, int virtualCurrency){
+	public void level123rewards(EntityPlayer player, int virtualCurrency, int thiefLevel){
 		BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency*thiefLevel); ///Give player gold from coins
 		switch(thiefLevel){
+		case 2:
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420)));
 		case 3:
 			BiGXEventTriggers.givePlayerKey(player, "Burned Key", "");
 //		case #:

@@ -130,24 +130,30 @@ public class CommonEventHandler {
 		}
 	}
 	
-	// TODO BUG: Player transports to Quest World when items are used (leave this in for testing purposes)
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		System.out.println(event.item.getDisplayName().contains("Teleportation Potion"));
+//		if (levelSys.getPlayerLevel() >= 5)
+//			levelSys.setPlayerLevel(1);
+		System.out.println(event.item.getDisplayName());
+//		System.out.println(event.item.getDisplayName().contains("Sword"));
+//		if (event.item.getDisplayName().contains("Sword"))
+//			if (levelSys.levelUp())
+//				levelSys.giveLevelUpRewards(event.entityPlayer);
 		if (event.item.getDisplayName().contains("Teleportation Potion")) {
 			EntityPlayer player = event.entityPlayer;
 			QuestEventChasing.player = event.entityPlayer;
+			QuestEventChasingFire.player = event.entityPlayer;
 			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -48, 99, 74, -9))
 			{
-				chaseQuest.Run();
+				chaseQuest.Run(levelSys);
 			}
-			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
+			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasingFire.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
 			{
-				chaseQuestFire.Run();
-			}
-					
+				chaseQuestFire.Run(levelSys);
+			}		
 		}
 	}
+	
 	
 	@SubscribeEvent
 	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {

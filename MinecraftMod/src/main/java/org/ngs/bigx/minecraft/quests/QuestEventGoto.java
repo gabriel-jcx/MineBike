@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.quests;
 
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
@@ -21,7 +23,7 @@ public class QuestEventGoto implements IQuestEvent {
 	}
 
 	@Override
-	public void Run() {
+	public void Run(final LevelSystem levelSys) {
 		
 	}
 

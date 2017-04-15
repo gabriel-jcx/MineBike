@@ -22,6 +22,7 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -268,11 +269,14 @@ public class QuestEventChasing implements IQuestEvent {
 	}
 
 	@Override
-	public void Run() {
+	public void Run(final LevelSystem levelSys) {
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		
 		context = BiGX.instance().context;
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 93, 54, -48, 99, 74, -9)
+		System.out.println(player.posX);
+		System.out.println(player.posY);
+		System.out.println(player.posZ);
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -60, 105, 60, -50)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {
 				// SET CURRENT ACTIVE QUEST DEMO
@@ -539,9 +543,14 @@ public class QuestEventChasing implements IQuestEvent {
 							GuiLeaderBoard.writeToLeaderboard(row);
 
 							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+							
+							if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
+								levelSys.giveLevelUpRewards(player);
+							}
+							
 							
 							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							completed = true;

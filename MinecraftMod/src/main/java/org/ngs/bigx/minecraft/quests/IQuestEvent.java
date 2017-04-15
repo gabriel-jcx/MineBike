@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.quests;
 
+import org.ngs.bigx.minecraft.levelUp.LevelSystem;
+
 public interface IQuestEvent {
 	
 	/**
@@ -11,5 +13,5 @@ public interface IQuestEvent {
 	/**
 	 * Allows the quest event to execute any timer-based mechanics, or anything that needs waiting
 	 */
-	public void Run();
+	public void Run(LevelSystem levelsys);
 }
