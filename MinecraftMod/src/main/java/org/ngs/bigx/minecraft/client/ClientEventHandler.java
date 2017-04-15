@@ -1,20 +1,17 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.quests.QuestLoot;
-import org.ngs.bigx.minecraft.quests.QuestLootDatabase;
+import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestDemo;
+import org.ngs.bigx.minecraft.quests.QuestEventGoto;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -31,22 +28,20 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
+	
+	public QuestDemo questDemo;
 	
 		private Context context;
 		public static KeyBinding keyBindingTogglePedalingMode;
@@ -58,16 +53,17 @@ public class ClientEventHandler {
 		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
 		
-		private static long duplicateAttackEventPreventorTimeStamp = 0;
+		private static ClientEventHandler handler;
 		
 		public ClientEventHandler(Context con) {
 			context = con;
+			handler = this;
 		}
 
-		int client_tick = 0;
-		int client_tick_count = 0;
-		boolean client_tick_bool = true;
-		QuestLootDatabase lootDatabase = new QuestLootDatabase();
+		public static ClientEventHandler getHandler() {
+			return handler;
+		}
+		
 		boolean enableLock = false, enableBike = true;
 		
 		private boolean showLeaderboard;
@@ -75,7 +71,6 @@ public class ClientEventHandler {
 		
 		@SubscribeEvent
 		public void onLivingJump(LivingJumpEvent event) {
-			// FOR NOW, disable jumping
 			if (enableLock)
 				event.entity.motionY = 0;
 		}
@@ -106,37 +101,21 @@ public class ClientEventHandler {
 		}
 		
 		@SubscribeEvent
-		public void onWorldUnload(WorldEvent.Unload event) {
-			
+		public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+			if (questDemo == null && event.entity instanceof EntityPlayer) {
+				// FIRST LOAD - START IT UP
+				questDemo = new QuestDemo((EntityPlayer) event.entity);
+				Quest tutQuest = new Quest("Tutorial", "Let's get started!");
+				tutQuest.events.add(new QuestEventGoto((EntityPlayer) event.entity,
+						Vec3.createVectorHelper(90, 71, 187), Vec3.createVectorHelper(91, 73, 183)));
+				questDemo.setActiveQuest(tutQuest);
+			}
+			// Else, probably returning from chasing quest dimension(s)
 		}
 		
 		@SubscribeEvent
-		public void onAttackEntityEvent(AttackEntityEvent event) {
-			EntityCustomNpc target;
-
-			event.target.getEntityId();
-			if(event.target.getClass().getName().equals("noppes.npcs.entity.EntityCustomNpc"))
-			{
-				target = (EntityCustomNpc)event.target;
-				
-				if(target.display.name.equals("Thief"))
-				{
-					if( (System.currentTimeMillis() - duplicateAttackEventPreventorTimeStamp) < 100 )
-						return;
-					else
-						duplicateAttackEventPreventorTimeStamp = System.currentTimeMillis();
-						
-					Random r = new Random();
-					int hit = r.nextInt(4)+1;
-//					System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
-					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
-						CommonEventHandler.deductTheifHealth(null);
-					else
-						CommonEventHandler.deductTheifHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
-//					event.entityPlayer.worldObj.playSoundEffect(event.entityPlayer.posX + 0.5D, event.entityPlayer.posY + 0.5D, event.entityPlayer.posZ + 0.5D, "minebike:sounds/hit1", 1.0f, 1.0f);
-					event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);
-				}
-			}
+		public void onWorldUnload(WorldEvent.Unload event) {
+			
 		}
 		
 		@SubscribeEvent
@@ -169,34 +148,19 @@ public class ClientEventHandler {
 		public void onClientTick(TickEvent.ClientTickEvent event) {
 			if ((Minecraft.getMinecraft().thePlayer!=null) 
 					&& (event.phase==TickEvent.Phase.END)) {
-				client_tick++;
 				
-				// Interval: 50 ms
-				if (client_tick==20) {
-					client_tick = 0;
-				}
-				if (client_tick==0||client_tick==10) {
-					context.bump = !context.bump;
-				}
-				
-				if(client_tick == 0)
-				{
-					client_tick_count++;
+				if (questDemo != null && questDemo.getQuest() != null) {
+					if (questDemo.CheckQuestEventCompleted()) {
+						if (questDemo.getQuest().IsComplete()) {
+							// QUEST DONE!
+							for (ItemStack i : questDemo.getQuest().GetRewardItems())
+								questDemo.getPlayer().inventory.addItemStackToInventory(i);
+							questDemo.getPlayer().addExperience(questDemo.getQuest().GetRewardXP());
+							questDemo.setActiveQuest(null); // 1 quest at a time for now (demo code)
+						}
+					}
 				}
 				
-				if(client_tick_count >= 6)
-				{
-					client_tick_count = 0;
-//					GuiMessageWindow.showMessage("Line ONE\nline TWO\nlineThree");
-//					GuiMessageWindow.showGoldBar("Line ONE\nline TWO\nlineThree");
-//					GuiLeaderBoard.showLeaderBoard(client_tick_bool);
-					
-					if(client_tick_bool)
-						client_tick_bool = false;
-					else
-						client_tick_bool = true;
-				}
-
 				// Handling Player Skills
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 				// Degrade the current player's speed

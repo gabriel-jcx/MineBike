@@ -53,27 +53,27 @@ public class BiGXPacketHandler {
 					
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
-					if(CommonEventHandler.chasingQuestOnGoing)
-					{
-						if(!CommonEventHandler.chasingQuestOnCountDown)
-						{
-							maxSpeed = CommonEventHandler.chaseRunBaseSpeed + CommonEventHandler.speedchange;
-							
-							if(context.getSpeed() + ((double)change) >= 0){
-								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-							}
-							else{
-								context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-							}
-						}
-						else{
-							context.setSpeed(0);
-						}
-					}
-					else
-					{
-						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
-					}
+//					if(CommonEventHandler.chasingQuestOnGoing)
+//					{
+//						if(!CommonEventHandler.chasingQuestOnCountDown)
+//						{
+//							maxSpeed = CommonEventHandler.chaseRunBaseSpeed + CommonEventHandler.speedchange;
+//							
+//							if(context.getSpeed() + ((double)change) >= 0){
+//								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+//							}
+//							else{
+//								context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+//							}
+//						}
+//						else{
+//							context.setSpeed(0);
+//						}
+//					}
+//					else
+//					{
+//						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+//					}
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:
@@ -97,6 +97,11 @@ public class BiGXPacketHandler {
 
 	public synchronized static void connect(BiGXNetClient client) throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{
-		client.connect();
+		try {
+			client.connect();	
+		}
+		catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 	}
 }

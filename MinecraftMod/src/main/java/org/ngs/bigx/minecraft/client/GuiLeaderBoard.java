@@ -41,7 +41,7 @@ public class GuiLeaderBoard extends GuiScreen {
 		this.mc = mc;
 	}
 	
-	public GuiLeaderBoard(Context c,Minecraft mc) {
+	public GuiLeaderBoard(Context c, Minecraft mc) {
 		this(mc);
 		context = c;
 	}
