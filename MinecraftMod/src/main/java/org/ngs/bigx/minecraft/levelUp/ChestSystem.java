@@ -29,7 +29,7 @@ public class ChestSystem {
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Mysterious Key");
-		map.put(Vec3.createVectorHelper(-10, 63, -142).toString(), "Burnt Key");
+		map.put(Vec3.createVectorHelper(-10, 63, 2).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
 		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); ////Change coordinates later
 		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); ////Change coordinates later

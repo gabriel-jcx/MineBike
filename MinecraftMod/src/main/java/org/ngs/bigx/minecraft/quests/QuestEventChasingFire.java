@@ -4,7 +4,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,13 +26,12 @@ import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -45,7 +43,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestEventChasingFire implements IQuestEvent {
@@ -270,11 +267,10 @@ public class QuestEventChasingFire implements IQuestEvent {
 
 	@Override
 	public void Run(final LevelSystem levelSys) {
-		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.fireQuestDimID);
+		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
 		
 		context = BiGX.instance().context;
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 124, 158, -135, 134, 168, -145)
-				&& player.dimension != WorldProviderFlats.fireQuestDimID){
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && player.dimension != WorldProviderDark.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
 				// SET CURRENT ACTIVE QUEST DEMO
 				if(ClientEventHandler.getHandler().questDemo == null)
@@ -586,7 +582,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 										((EntityCustomNpc)o).delete();
 									}
 								}
-								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.fireQuestDimID)) {
+								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderDark.dimID)) {
 									System.out.println(((EntityCustomNpc)o).display.name);
 //									((EntityCustomNpc)o).delete();
 								}
@@ -609,17 +605,17 @@ public class QuestEventChasingFire implements IQuestEvent {
 							}
 							else if (countdown == 1)
 							{
-								try {
-									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
-								} catch (SocketException e) {
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									e.printStackTrace();
-								} catch (BiGXNetException e) {
-									e.printStackTrace();
-								} catch (BiGXInternalGamePluginExcpetion e) {
-									e.printStackTrace();
-								}
+//								try {
+//									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
+//								} catch (SocketException e) {
+//									e.printStackTrace();
+//								} catch (UnknownHostException e) {
+//									e.printStackTrace();
+//								} catch (BiGXNetException e) {
+//									e.printStackTrace();
+//								} catch (BiGXInternalGamePluginExcpetion e) {
+//									e.printStackTrace();
+//								}
 							}
 							else if(countdown == 9)
 							{
@@ -656,7 +652,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 			}
 		}
 		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-				&& player.dimension == WorldProviderFlats.fireQuestDimID){
+				&& player.dimension == WorldProviderDark.dimID){
 			// CHASE QUEST LOSE CONDITION
 			if (ws != null && player instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
@@ -669,44 +665,45 @@ public class QuestEventChasingFire implements IQuestEvent {
 			}
 		}
 	}
-	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
-		for (int x = origX; x < origX + 7; ++x) {
-			if (x == origX || x == origX + 6) {
-				for (int y = origY; y < origY + 5; ++y) {
-					for (int z = origZ; z < origZ + 11; ++z) {
-						if (z == origZ || z == origZ + 10)
-							w.setBlock(x, y, z, Blocks.log);
-						else
-							w.setBlock(x, y, z, Blocks.planks);
-						blocks.add(Vec3.createVectorHelper(x, y, z));
-					}
-				}
-				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
-				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
-			} else {
-				for (int y = origY; y < origY + 7; ++y) {
-					for (int z = origZ; z < origZ + 11; ++z) {
-						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
-							w.setBlock(x, y, z, Blocks.planks);
-							blocks.add(Vec3.createVectorHelper(x, y, z));
-						}
-						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							w.setBlock(x, y, z, Blocks.planks);
-							blocks.add(Vec3.createVectorHelper(x, y, z));
-						}
-						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							w.setBlock(x, y, z, Blocks.planks);
-							blocks.add(Vec3.createVectorHelper(x, y, z));
-						}
-					}
-				}
-				if (x == origX + 2 || x == origX + 4) {
-					w.setBlock(x, origY+1, origZ, Blocks.glass);
-					w.setBlock(x, origY+2, origZ, Blocks.glass);
-				}
-			}
-		}
-	}
+//	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
+//		for (int x = origX; x < origX + 7; ++x) {
+//			if (x == origX || x == origX + 6) {
+//				for (int y = origY; y < origY + 5; ++y) {
+//					for (int z = origZ; z < origZ + 11; ++z) {
+//						if (z == origZ || z == origZ + 10)
+//							w.setBlock(x, y, z, Blocks.log);
+//						else
+//							w.setBlock(x, y, z, Blocks.planks);
+//						blocks.add(Vec3.createVectorHelper(x, y, z));
+//					}
+//				}
+//				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
+//				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
+//			} else {
+//				for (int y = origY; y < origY + 7; ++y) {
+//					for (int z = origZ; z < origZ + 11; ++z) {
+//						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
+//							w.setBlock(x, y, z, Blocks.planks);
+//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//						}
+//						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
+//							w.setBlock(x, y, z, Blocks.planks);
+//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//						}
+//						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
+//							w.setBlock(x, y, z, Blocks.planks);
+//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//						}
+//					}
+//				}
+//				if (x == origX + 2 || x == origX + 4) {
+//					w.setBlock(x, origY+1, origZ, Blocks.glass);
+//					w.setBlock(x, origY+2, origZ, Blocks.glass);
+//				}
+//			}
+//		}
+//	}
+	
 	
 	public static float getPlayerPitch() {
 		return playerQuestPitch;

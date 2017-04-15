@@ -1,6 +1,5 @@
 package org.ngs.bigx.utility;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +11,7 @@ import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -76,7 +75,7 @@ public class NpcCommand {
 	{	
 		if(theifOnRegularChaseQuestSpawnFlag)
 		{
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
 			QuestEventChasing questEventChasing = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 			EntityCustomNpc npc;
 			NpcCommand command;
@@ -104,7 +103,7 @@ public class NpcCommand {
 	{	
 		if(theifOnFireChaseQuestSpawnFlag)
 		{
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
 			QuestEventChasingFire questEventChasingFire = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 			EntityCustomNpc npc;
 			NpcCommand command;
@@ -114,9 +113,9 @@ public class NpcCommand {
 			
 			theifOnFireChaseQuestSpawnFlag = false;
 			
-			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
 			npc.ai.stopAndInteract = false;
-			
+			npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
 			questEventChasingFire.setNpc(npc);
 			
 			command = new NpcCommand(npc);
@@ -330,7 +329,7 @@ public class NpcCommand {
 	}
 	
 	public void transportPlayer(){
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 		if (ws != null) {
 			QuestTeleporter teleporter = new QuestTeleporter(ws);
