@@ -20,7 +20,8 @@ public class BiGXPacketHandler {
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
 		Context context = BiGX.instance().context;
 		
-		
+//		System.out.println("Receiving Data");
+
 		
 		switch (packet.deviceEvent) {
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATIONSTATE:

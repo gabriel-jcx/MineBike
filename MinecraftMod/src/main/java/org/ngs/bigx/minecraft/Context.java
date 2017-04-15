@@ -167,6 +167,7 @@ public class Context implements eyeTrackerListner {
 	
 	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{		
+		System.out.println("connectBiGX()");
 		bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
 		bigxclient.setReceiveListener(new BiGXNetClientListener() {
 			
