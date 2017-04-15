@@ -21,9 +21,9 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -46,7 +46,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
 
-public class QuestEventChasing implements IQuestEvent {
+public class QuestEventChasingFire implements IQuestEvent {
 
 	static float playerQuestPitch, playerQuestYaw;
 
@@ -75,7 +75,7 @@ public class QuestEventChasing implements IQuestEvent {
 	public static int virtualCurrency = 0;
 	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 
-	private static TerrainBiome terrainBiome = new TerrainBiome();
+	private static TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
 	
 	private static ArrayList<Integer> questSettings = null;
 
@@ -338,17 +338,6 @@ public class QuestEventChasing implements IQuestEvent {
 								blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 							}
 							
-							Random rand = new Random();
-							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)player.posZ+64);
-								
-							}
-							rand = new Random();
-							if (rand.nextInt(10) < 2) {
-								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)player.posZ+64);
-								
-							}
-							
 							if(context.suggestedGamePropertiesReady)
 							{
 								/**
@@ -372,21 +361,21 @@ public class QuestEventChasing implements IQuestEvent {
 								{
 									for(int idx = 0; idx<4; idx++)
 									{
-										areas.add(terrainBiome.getRandomCityBiome());
+										areas.add(terrainBiomeFire.getRandomGateBiome());
 									}
 								}
 								else if(blockByDifficulty == Blocks.grass)
 								{
 									for(int idx = 0; idx<4; idx++)
 									{
-										areas.add(terrainBiome.getRandomGrassBiome());
+										areas.add(terrainBiomeFire.getRandomFieldBiome());
 									}
 								}
 								else if(blockByDifficulty == Blocks.sand)
 								{
 									for(int idx = 0; idx<4; idx++)
 									{
-										areas.add(terrainBiome.getRandomDesertBiome());
+										areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
 									}
 								}
 								else {
