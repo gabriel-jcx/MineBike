@@ -3,8 +3,8 @@ package org.ngs.bigx.minecraft;
 
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
-	public static final String directionMsg = "North: Gate to Dungeon";
-	public static final String wakeUpMsg = "Dad is calling me. Let’s\ngo talk to him";
+	public static final String directionMsg = "Steve: I heard there's\na cave northward...";
+	public static final String wakeUpMsg = "Steve: Dad is calling\nme. Let’s go talk\nto him";
 	public static final String fatherMsg = "Dad: Someone gave me\nthese for you.";
 	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";
 	public static final String postCapture = "ARGH! You caught me!";
