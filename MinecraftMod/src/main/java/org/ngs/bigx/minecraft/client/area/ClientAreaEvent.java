@@ -57,11 +57,11 @@ public class ClientAreaEvent {
 	
 	public static void initArea()
 	{
-		addArea(new Area(Vec3.createVectorHelper(-176, 65, 334), Vec3.createVectorHelper(-171, 73, 338), 
-				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-176, 65, 334), Vec3.createVectorHelper(-171, 73, 338), 
+//				BiGXTextBoxDialogue.placeCaveHiddenRoom, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(-167, 70, 343), Vec3.createVectorHelper(-166, 74, 346), 
-				BiGXTextBoxDialogue.soundComment, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-167, 70, 343), Vec3.createVectorHelper(-166, 74, 346), 
+//				BiGXTextBoxDialogue.soundComment, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
 		addArea(new Area(Vec3.createVectorHelper(81, 74, 178), Vec3.createVectorHelper(85, 80, 181), 
 				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
@@ -69,8 +69,8 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(90, 65, 181), Vec3.createVectorHelper(102, 80, 188), 
 				BiGXTextBoxDialogue.directionMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(-175, 65, 335), Vec3.createVectorHelper(-172, 73, 337), 
-				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
+//		addArea(new Area(Vec3.createVectorHelper(-175, 65, 335), Vec3.createVectorHelper(-172, 73, 337), 
+//				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 		addArea(new Area(Vec3.createVectorHelper(74, 45, 175), Vec3.createVectorHelper(92, 100, 193), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
