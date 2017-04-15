@@ -12,7 +12,7 @@ import net.minecraft.world.gen.ChunkProviderFlat;
 public class WorldProviderFlats extends WorldProvider {
 
 	public static int dimID = 100;
-	public static int fireQuestDimID = 100;
+	public static int fireQuestDimID = 110;
 	
 	public static int flatBiomeID = 50;
 	public static String dimName = "Quest World";

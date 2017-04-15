@@ -23,6 +23,7 @@ import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.QuestEventChasing;
+import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -76,6 +77,7 @@ public class CommonEventHandler {
 	
 	public static LevelSystem levelSys = new LevelSystem();
 	public static QuestEventChasing chaseQuest = new QuestEventChasing();
+	public static QuestEventChasingFire chaseQuestFire = new QuestEventChasingFire();
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -117,8 +119,17 @@ public class CommonEventHandler {
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		System.out.println(event.item.getDisplayName().contains("Teleportation Potion"));
 		if (event.item.getDisplayName().contains("Teleportation Potion")) {
+			EntityPlayer player = QuestEventChasing.player;
 			QuestEventChasing.player = event.entityPlayer;
-			chaseQuest.Run();
+			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 93, 54, -48, 99, 74, -9))
+			{
+				chaseQuest.Run();
+			}
+			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 124, 158, -135, 134, 168, -145))
+			{
+				chaseQuestFire.Run();
+			}
+					
 		}
 	}
 	

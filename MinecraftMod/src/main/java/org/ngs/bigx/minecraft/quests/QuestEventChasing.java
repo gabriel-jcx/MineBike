@@ -124,7 +124,7 @@ public class QuestEventChasing implements IQuestEvent {
 		return thiefLevel;
 	}
 	
-	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
+	public static boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
 		return  player.posX >= x1 && player.posX <= x2 &&
 				player.posY >= y1 && player.posY <= y2 &&
 				player.posZ >= z1 && player.posZ <= z2;
@@ -268,8 +268,7 @@ public class QuestEventChasing implements IQuestEvent {
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		
 		context = BiGX.instance().context;
-//		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -55, 105, 60, -40)
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, -1000, 65, -1005, 1005, 90, 1000)
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 93, 54, -48, 99, 74, -9)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		

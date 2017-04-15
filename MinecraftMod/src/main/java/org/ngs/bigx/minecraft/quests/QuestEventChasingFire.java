@@ -160,7 +160,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 		BiGX.instance().context.setSpeed(0);
 		
 		if(npc != null)
-			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+			command.removeNpc(npc.display.name, WorldProviderFlats.fireQuestDimID);
 
 		if(t != null)
 		{
@@ -265,12 +265,11 @@ public class QuestEventChasingFire implements IQuestEvent {
 
 	@Override
 	public void Run() {
-		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
+		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.fireQuestDimID);
 		
 		context = BiGX.instance().context;
-//		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -55, 105, 60, -40)
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, -1000, 65, -1005, 1005, 90, 1000)
-				&& player.dimension != WorldProviderFlats.dimID){
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 124, 158, -135, 134, 168, -145)
+				&& player.dimension != WorldProviderFlats.fireQuestDimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		
 				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
@@ -566,7 +565,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 										((EntityCustomNpc)o).delete();
 									}
 								}
-								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID)) {
+								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.fireQuestDimID)) {
 									System.out.println(((EntityCustomNpc)o).display.name);
 //									((EntityCustomNpc)o).delete();
 								}
@@ -636,7 +635,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 			}
 		}
 		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-				&& player.dimension == WorldProviderFlats.dimID){
+				&& player.dimension == WorldProviderFlats.fireQuestDimID){
 			// CHASE QUEST LOSE CONDITION
 			if (ws != null && player instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
