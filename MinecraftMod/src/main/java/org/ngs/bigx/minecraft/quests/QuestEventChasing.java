@@ -267,7 +267,7 @@ public class QuestEventChasing implements IQuestEvent {
 	public void Run() {
 		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 		context = BiGX.instance().context;
-		if (player.getHeldItem().getDisplayName().contains("Potion") && checkPlayerInArea(player, -177, 70, 333, -171, 74, 339)
+		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 90, 50, -55, 105, 60, -40)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {		
 				System.out.println("[BiGX] Current dimension ["+player.dimension+"]");		
@@ -653,7 +653,7 @@ public class QuestEventChasing implements IQuestEvent {
 				t.scheduleAtFixedRate(tTask, 0, 1000);
 			}
 		}
-		else if (player.getHeldItem().getDisplayName().contains("Potion")
+		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 				&& player.dimension == WorldProviderFlats.dimID){
 			// CHASE QUEST LOSE CONDITION
 			if (ws != null && player instanceof EntityPlayerMP) {
