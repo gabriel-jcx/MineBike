@@ -5,7 +5,10 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
+import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -52,29 +55,48 @@ public class BiGXPacketHandler {
 						change *= -1;
 					}
 					
+					boolean chasingQuestOnGoing = false;
+					boolean chasingQuestOnCountDown = false;
+					float speedchange = 0f;
+					
+					if ((ClientEventHandler.getHandler().questDemo != null) && (ClientEventHandler.getHandler().questDemo.getQuest() != null) )
+					{
+						if (ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing)
+						{
+							chasingQuestOnGoing = ((QuestEventChasing)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnGoing;
+							chasingQuestOnCountDown = ((QuestEventChasing)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnCountDown;
+							speedchange = QuestEventChasing.speedchange;
+						}
+						else if (ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire)
+						{
+							chasingQuestOnGoing = ((QuestEventChasingFire)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnGoing;
+							chasingQuestOnCountDown = ((QuestEventChasingFire)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnCountDown;
+							speedchange = QuestEventChasingFire.speedchange;
+						}
+					}
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
-//					if(CommonEventHandler.chasingQuestOnGoing)
-//					{
-//						if(!CommonEventHandler.chasingQuestOnCountDown)
-//						{
-//							maxSpeed = CommonEventHandler.chaseRunBaseSpeed + CommonEventHandler.speedchange;
-//							
-//							if(context.getSpeed() + ((double)change) >= 0){
-//								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-//							}
-//							else{
-//								context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-//							}
-//						}
-//						else{
-//							context.setSpeed(0);
-//						}
-//					}
-//					else
-//					{
-//						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
-//					}
+					if(chasingQuestOnGoing)
+					{
+						if(!chasingQuestOnCountDown)
+						{
+							maxSpeed = QuestEventChasing.chaseRunBaseSpeed + speedchange;
+							
+							if(context.getSpeed() + ((double)change) >= 0){
+								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+							}
+							else{
+								context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+							}
+						}
+						else{
+							context.setSpeed(0);
+						}
+					}
+					else
+					{
+						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+					}
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:
