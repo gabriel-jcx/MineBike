@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.quests;
 
-import org.ngs.bigx.minecraft.levelUp.LevelSystem;
+import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 public interface IQuestEvent {
 	

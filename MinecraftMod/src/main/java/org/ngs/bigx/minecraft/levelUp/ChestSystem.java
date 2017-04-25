@@ -6,6 +6,7 @@ import java.util.Map;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;

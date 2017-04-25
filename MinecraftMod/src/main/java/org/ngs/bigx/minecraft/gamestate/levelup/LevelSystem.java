@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft.levelUp;
+package org.ngs.bigx.minecraft.gamestate.levelup;
 
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
@@ -14,7 +14,16 @@ public class LevelSystem {
 	private int playerLevel = 1; ///the player's current level
 	private int playerExp = 0; ///player's current exp
 	
-	public LevelSystem() {}
+	public LevelSystem()
+	{
+		this.resetLevelSystem();
+	}
+	
+	public void resetLevelSystem()
+	{
+		this.playerLevel = 1;
+		this.playerExp = 0;
+	}
 	
 	public int getPlayerLevel(){
 		return playerLevel;

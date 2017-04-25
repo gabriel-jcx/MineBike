@@ -1,8 +1,8 @@
 package org.ngs.bigx.minecraft;
 
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.levelUp.ChestSystem;
-import org.ngs.bigx.minecraft.levelUp.LevelSystem;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
