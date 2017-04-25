@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 public class GameSave {
+	private long timestamp = 0;
 	
 	// PLAYER STATE
 	private LevelSystem levelSystem = null;
@@ -32,6 +33,14 @@ public class GameSave {
 		this.posY = 0;
 		this.posZ = 0;
 		this.accomplishedQuestId = new ArrayList<String>();
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public LevelSystem getLevelSystem() {
