@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class Quest {
+	protected String id; 		// Quest ID by type
+	
 	private String name, description;
 	private List<EntityPlayer> players;
 	public List<IQuestEvent> events;
