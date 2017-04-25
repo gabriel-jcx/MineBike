@@ -12,7 +12,7 @@ public class GameState {
 	private ArrayList<String> itemOnItemStack;		// Items by item id
 	
 	// QUEST STATE
-	private GameStateQuestProgress gameStateQuestProgress = null;
+//	private GameStateQuestProgress gameStateQuestProgress = null;
 	
 	// LOCATION (SAVED LOCATION IN GAME)
 	private int posX;
@@ -28,7 +28,7 @@ public class GameState {
 		this.gamename = "minecraft";
 		this.levelSystem = new LevelSystem();
 		this.itemOnItemStack = new ArrayList<String>();
-		this.gameStateQuestProgress = new GameStateQuestProgress();
+//		this.gameStateQuestProgress = new GameStateQuestProgress();
 		this.posDim = 0;
 		this.posX = 0;
 		this.posY = 0;
