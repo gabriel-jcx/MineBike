@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.gamestate;
 
-public class GameStateQuestProgress {
+public class GameSaveQuestProgress {
 	public static enum QuestProgressEnum {
 		NOTSTARTED, PROGRESSING, ACHIEVED
 	}
