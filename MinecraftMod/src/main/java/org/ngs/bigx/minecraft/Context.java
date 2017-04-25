@@ -43,7 +43,7 @@ import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.gamestate.GameState;
+import org.ngs.bigx.minecraft.gamestate.GameSave;
 
 import com.google.gson.Gson;
 
@@ -84,7 +84,7 @@ public class Context implements eyeTrackerListner {
 	private static Object MiddlewareIPReadMutex = new Object();
 	private static GameServerList gameServerList = null;
 	
-	private static GameState gameState = null;
+	private static GameSave gameState = null;
 	
 	/* TODO: Need to be removed before production
 	 * SHOE TESTING
@@ -342,7 +342,7 @@ public class Context implements eyeTrackerListner {
 	}
 	
 	public void initBigX() {
-		gameState = new GameState();
+		gameState = new GameSave();
 		
 		this.connectionStateManager = new BiGXConnectionStateManagerClass();
 		
