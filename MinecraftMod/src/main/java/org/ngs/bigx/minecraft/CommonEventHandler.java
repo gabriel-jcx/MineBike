@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.jws.Oneway;
 
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
@@ -19,6 +22,8 @@ import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
+import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
+import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
@@ -38,6 +43,7 @@ import org.ngs.bigx.utility.NpcCommand;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -67,9 +73,32 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 
 public class CommonEventHandler {
+	private static boolean EVENT_PLAYERSTATE_FLAG = false;
+	private static boolean EVENT_PLAYERSTATE_RESET = false;
+	private static boolean EVENT_PLAYERSTATE_LOAD = false;
+	private static boolean EVENT_PLAYERSTATE_SAVE = false;
+	
+	public static void setEVENT_PLAYERSTATE_FLAG() {
+		EVENT_PLAYERSTATE_FLAG = true;
+	}
+
+	public static void setEVENT_PLAYERSTATE_RESET() {
+		setEVENT_PLAYERSTATE_FLAG();
+		EVENT_PLAYERSTATE_RESET = true;
+	}
+
+	public static void setEVENT_PLAYERSTATE_LOAD() {
+		setEVENT_PLAYERSTATE_FLAG();
+		EVENT_PLAYERSTATE_LOAD = true;
+	}
+
+	public static void setEVENT_PLAYERSTATE_SAVE() {
+		setEVENT_PLAYERSTATE_FLAG();
+		EVENT_PLAYERSTATE_SAVE = true;
+	}
 
 	static float playerQuestPitch, playerQuestYaw;
-
+	
 	int server_tick = 0;
 	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
@@ -81,7 +110,7 @@ public class CommonEventHandler {
 	public static QuestEventChasingFire chaseQuestFire = new QuestEventChasingFire();
 	boolean chaseQuestInProgress = false;
 	
-	
+	private static int onPlayerTickEventCount = 0;
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151)) &&
@@ -89,10 +118,59 @@ public class CommonEventHandler {
 			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID));
 			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), 0, 64, 0);
 		}
-		if (inBounds(event.player, Vec3.createVectorHelper(3, 63, 10), Vec3.createVectorHelper(-3, 68, 20)) &&
+		else if (inBounds(event.player, Vec3.createVectorHelper(3, 63, 10), Vec3.createVectorHelper(-3, 68, 20)) &&
 				event.player.dimension == WorldProviderDungeon.dimID) {
 			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(0), 121, 163, -145);
+		}
+		
+		/**
+		 * TODO: IMPLEMENT PLAYER STATE RESET FEATURE HERE.
+		 */
+		if (!event.player.worldObj.isRemote)
+		{
+			try {
+				onPlayerTickEventCount++;
+				
+				if(onPlayerTickEventCount >= 50)
+					onPlayerTickEventCount = 0;
+				
+				if(onPlayerTickEventCount == 0)
+				{
+					if(EVENT_PLAYERSTATE_FLAG)
+					{
+						if(EVENT_PLAYERSTATE_LOAD)
+						{
+							GameSaveManager.sendCustomCommand(Context.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
+							EVENT_PLAYERSTATE_LOAD = false;
+						}
+						if(EVENT_PLAYERSTATE_RESET)
+						{
+							/**
+							 * 
+							 * 
+							 * 
+							 * FILL THIS IN TO IMPLEMENT THE GAME STATE RESET FEATURE
+							 * 
+							 * 
+							 */
+							EVENT_PLAYERSTATE_RESET = false;
+						}
+						if(EVENT_PLAYERSTATE_SAVE)
+						{
+							GameSaveManager.sendCustomCommand(Context.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
+							EVENT_PLAYERSTATE_SAVE = false;
+						}
+						
+						if(!(EVENT_PLAYERSTATE_LOAD || EVENT_PLAYERSTATE_RESET || EVENT_PLAYERSTATE_SAVE))
+							EVENT_PLAYERSTATE_FLAG = false;
+					}
+				}
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	

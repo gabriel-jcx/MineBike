@@ -44,6 +44,9 @@ import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
+import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
+import org.ngs.bigx.minecraft.gamestate.GameSaveList;
+import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 
 import com.google.gson.Gson;
 
@@ -58,6 +61,8 @@ public class Context implements eyeTrackerListner {
 	private static int bigxclientConnectionTryCount = 0;
 	public static final int bigxclientConnectionTryMaxCount = 10;
 	private static final int bigxclientTimerTimeout = 2000;
+	
+	public static Context self = null;
 	
 	public String BiGXUserName;
 	public int heartrate = 80;
@@ -84,13 +89,13 @@ public class Context implements eyeTrackerListner {
 	private static Object MiddlewareIPReadMutex = new Object();
 	private static GameServerList gameServerList = null;
 	
-	private static GameSave gameState = null;
+	private static GameSaveList gameSaveList = null;
+	private static GameSave currentGameState = null;
 	
 	/* TODO: Need to be removed before production
 	 * SHOE TESTING
 	 */
 	public float shoeEnergy = 0;
-	public boolean isSubtleModeOn = false;
 	///// END OF SHOE TESTING
 	
 	public float getRotationX() {
@@ -143,6 +148,7 @@ public class Context implements eyeTrackerListner {
 	public eyeTracker eTracker;
 	
 	public Context(BiGX main) {
+		self = this;
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		ClientAreaEvent.initArea();
@@ -165,6 +171,11 @@ public class Context implements eyeTrackerListner {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static Context getInstance()
+	{
+		return self;
 	}
 	
 	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
@@ -341,8 +352,13 @@ public class Context implements eyeTrackerListner {
 		return returnValue;
 	}
 	
-	public void initBigX() {
-		gameState = new GameSave();
+	public void initBigX() throws IOException {
+		currentGameState = new GameSave();
+		
+		GameSaveConfig gameSaveConfig = GameSaveManager.readGameSaveServerConfigFile();
+
+		GameSaveManager.serveraccount = gameSaveConfig.getServeraccount();
+		GameSaveManager.serverpassword = gameSaveConfig.getServerpassword();
 		
 		this.connectionStateManager = new BiGXConnectionStateManagerClass();
 		
@@ -433,6 +449,14 @@ public class Context implements eyeTrackerListner {
 		return ID;
 	}
 		
+	public static GameSaveList getGameSaveList() {
+		return gameSaveList;
+	}
+
+	public static void setGameSaveList(GameSaveList gameSaveList) {
+		Context.gameSaveList = gameSaveList;
+	}
+
 	public boolean checkQuestsEnabled() {
 		return questsEnabled;
 	}

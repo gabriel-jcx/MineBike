@@ -14,7 +14,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy {
-	
 	CommonEventHandler events = new CommonEventHandler();
 	
 	public void preInit(FMLPreInitializationEvent e) {

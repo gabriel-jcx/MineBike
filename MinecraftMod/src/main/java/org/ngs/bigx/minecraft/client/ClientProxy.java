@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.awt.Event;
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -33,7 +34,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
-	
 	ClientEventHandler clientEvents;
 	
 	public void preInit(FMLPreInitializationEvent e) {
@@ -47,7 +47,11 @@ public class ClientProxy extends CommonProxy {
     	MinecraftForge.EVENT_BUS.register(new GuiLeaderBoard(context,Minecraft.getMinecraft()));
     	MinecraftForge.EVENT_BUS.register(new GuiMessageWindow(context,Minecraft.getMinecraft()));
     	
-    	context.initBigX();
+    	try {
+			context.initBigX();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
     	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("", Keyboard.KEY_P, "ChaseQuestLock");
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("", Keyboard.KEY_MINUS, "ToggleBike");

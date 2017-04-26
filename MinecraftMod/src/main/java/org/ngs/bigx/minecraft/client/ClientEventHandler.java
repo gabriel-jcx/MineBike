@@ -19,6 +19,7 @@ import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -93,29 +94,10 @@ public class ClientEventHandler {
 				enableBike = !enableBike;
 				System.out.println("Toggle Bike Movement: " + enableBike);
 			}
-//			if (keyBindingTogglePedalingMode.isPressed()) {
-//				System.out.println("BiGX Shoe Toggle Key Pressed");
-//				context.isSubtleModeOn ^= true;
-//			}
-//			else if (keyBindingMoveForward.isPressed()) {
-//				System.out.println("BiGX Forward");
-//			}
-//			else if (keyBindingMoveBackward.isPressed()) {
-//				System.out.println("BiGX Backward");
-//			}
 		}
 		
 		@SubscribeEvent
 		public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-//			if (questDemo == null && event.entity instanceof EntityPlayer) {
-//				// FIRST LOAD - START IT UP
-//				questDemo = new QuestDemo((EntityPlayer) event.entity);
-//				Quest tutQuest = new Quest("Tutorial", "Let's get started!");
-//				tutQuest.events.add(new QuestEventGoto((EntityPlayer) event.entity,
-//						Vec3.createVectorHelper(90, 71, 187), Vec3.createVectorHelper(91, 73, 183)));
-//				questDemo.setActiveQuest(tutQuest);
-//			}
-			// Else, probably returning from chasing quest dimension(s)
 		}
 		
 		@SubscribeEvent
@@ -168,10 +150,6 @@ public class ClientEventHandler {
 				BiGX.characterProperty.decreaseSpeedByTime();
 				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 				
-				//Dealing with showing Sound Message
-//				BiGXEventTriggers.MusicPlaying(p);
-				
-				
 				//Dealing with locking keys
 				if (enableLock) {
 					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
@@ -191,71 +169,16 @@ public class ClientEventHandler {
 					p.capabilities.setPlayerWalkSpeed(0.1F);
 				}
 				
-				/***
-				 * FOR NOW THIS LOGIC MOVED TO THE COMMON EVENT HANDLER FOR THE DEMO
-				 */
-//				// Handling Player heart rate and rpm as mechanics for Chase Quest
-//				if (context.suggestedGamePropertiesReady){
-//					if (CommonEventHandler.chasingQuestOnGoing)
-//					{
-//						BiGXPatientPrescription playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
-//						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
-//							BiGX.characterProperty.changeSpeedRateby(-10);
-//						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
-//							BiGX.characterProperty.changeSpeedRateby(10);
-//						else if (playerperscription.getTargetMax() < context.heartrate)
-//							BiGX.characterProperty.changeSpeedRateby(-5);
-//					}
-//				}
-				
-				
 				/*
-				 * TODO: TEST SHOE ENERGY IDEA (OPTION 3)
+				 * CHARACTER MOVEMENT LOGIC
 				 */
-				if(context.isSubtleModeOn)
 				{
-					if(p.moveForward > 0.9f)
-					{
-						if(context.shoeEnergy < 0.9f)
-						{
-							context.shoeEnergy = 0;
-							p.setVelocity(0, p.motionY, 0);
-						}
-						else
-						{
-							context.shoeEnergy -= 0.8f;
-							
-							if(context.shoeEnergy < 0)
-								context.shoeEnergy = 0;
-							
-							System.out.println("shoeEnergy[" + context.shoeEnergy + "]");
-						}
-					}
-					else{
-						context.shoeEnergy -= 0.6f;
-					}
-				}
-				else {
 					float moveSpeed = context.getSpeed()/4;
 					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 					if (enableBike)
 						p.setVelocity(xt, p.motionY, zt);
-					
-//					float degradation = 0.05f;
-//	                if(context.getSpeed() >= 0){
-//						context.setSpeed((float) Math.max(0,context.getSpeed()-degradation));
-//					}
-//					else{
-//						context.setSpeed((float) Math.min(0,context.getSpeed()+degradation));
-//						System.out.println("Negative Velocity: " + context.getSpeed());
-//					}
-//					float moveSpeed = context.getSpeed()/4;
-//					//getRotationYawHead() returns player's angle in degrees - 90
-//					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-//					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-//					p.setVelocity(xt, p.motionY, zt);
-				}  ////// END OF "TEST SHOE ENERGY IDEA"
+				}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 				
 				
 				// Detect if there is area changes where the player is in
@@ -290,9 +213,6 @@ public class ClientEventHandler {
 						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					else
 						GuiMessageWindow.showMessage("Out of Continent Pangea...");
-					
-//					NpcCommand.spawnNpc((float)116, (float)72, (float)202, world, "TEST TEST");
-//					NpcCommand.spawnNpc((float)116, (float)72, (float)196, world, "TEST TEST2");
 				}
 				
 				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
@@ -341,86 +261,10 @@ public class ClientEventHandler {
 					buf.put((byte) 0x00);
 					buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
 					buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
-//					buf.putFloat(context.resistance);
 					BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
 							org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
 					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 				}
-				
-				/***
-				 * For now Let's disable this feature for the demo I can see the file\
-				 * malformed_QuestLoot.json0.json
-				 * malformed_QuestProgress.json0.json
-				 */
-//				if(this.context.questManager.getQuest() != null)
-//				{
-//					if(this.context.questManager.getQuest().getStateMachine() == State.QuestInProgress)
-//					{
-//						boolean isQuestComplete = this.context.questManager.getQuest().checkComplete(player.getDisplayName());
-//						if(isQuestComplete)
-//						{
-//							System.out.println("Quest is Complete.");
-//							//Handle the reward
-//							QuestLoot sampleLoot = lootDatabase.GetReward("SampleQuest1");
-//							BiGX.characterProperty.addCoins(sampleLoot.GetCoins());
-//							BiGX.characterProperty.increaseEXPby(sampleLoot.GetExperience());
-//							ItemStack[] loot = sampleLoot.GetLoot();
-//							for (int i = 0; loot[i]!=null; i++)
-//								player.inventory.addItemStackToInventory(loot[i]);
-//							
-//							HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
-//							BiGX.network.sendToServer(packet);
-//						}
-//					}
-//				}
-				
-/*
-				/// TODO: Challenge 1: Pushing the player to the lava
-				if((player.getEntityWorld().getBlock(1523, 65, 411).getClass()!=BiGX.BlockQuestFRMCheck.getClass()) && ((client_tick%10) == 0) && (context.questManager.getSuggestedQuest()!=null))
-				{
-					// TODO: Need to revise the code to make quest
-					context.questManager.setQuest(context.questManager.getSuggestedQuest());
-					context.questManager.setSuggestedQuest(null);
-					Quest quest = context.questManager.getQuest();
-					quest.triggerStateChange(Trigger.AcceptQuestAndTeleport);
-					HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(quest,Trigger.AcceptQuestAndTeleport);
-					BiGX.network.sendToServer(packet);
-				}
-				
-				if((player.getEntityWorld().isRemote) && ((client_tick%10) == 0))
-				{
-					if(this.context.questManager.getQuest() != null)
-					{
-						if(this.context.questManager.getQuest().getStateMachine() == State.QuestInProgress)
-						{
-							int i,j=0;
-							int count=0;
-							
-							/// CHECK THE TREASURE
-							for(i=0; i<30; i++)
-							{
-								for(j=0; j<30; j++)
-								{
-									if(Minecraft.getMinecraft().theWorld.getBlock(1524 + i, 65, 411 + j).getClass() == BiGX.BlockQuestFRMCheck.getClass())
-									{
-										count++;
-									}
-								}
-							}
-							QuestRunFromMummy.itemsCollected = QuestRunFromMummy.countDeadend - count;
-							boolean isQuestDone = this.context.questManager.getQuest().checkComplete(player.getDisplayName());
-							if(isQuestDone)
-							{
-								System.out.println("Quest is Done.");
-								HandleQuestMessageOnServer packet = new HandleQuestMessageOnServer(this.context.questManager.getQuest(),Trigger.SuccessQuest);
-								BiGX.network.sendToServer(packet);
-							}
-						}
-					}
-				}
-
-				GuiStats.tick++;
-*/			
 			}
 		}
 		
