@@ -46,7 +46,8 @@ import net.minecraft.world.WorldServer;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestEventChasingFire implements IQuestEvent {
-
+	public static final String id = "QUEST_CHASE";
+	
 	static float playerQuestPitch, playerQuestYaw;
 	
 	private static long questTimeStamp = 0;
@@ -285,7 +286,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 				completed = false;
 				questTimeStamp = System.currentTimeMillis();
 				
-				Quest chaseQuest = new Quest("Chagse", "Let's get started!");
+				Quest chaseQuest = new Quest(this.id, "Chagse", "Let's get started!");
 				chaseQuest.events.add(this);
 				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
 				
