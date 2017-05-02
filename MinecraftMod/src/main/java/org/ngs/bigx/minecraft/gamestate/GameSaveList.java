@@ -8,6 +8,7 @@ public class GameSaveList {
 	
 	public GameSaveList()
 	{
+		this.gamename = "minecraft";
 		this.gameSaves = new ArrayList<GameSave>();
 	}
 
