@@ -141,7 +141,7 @@ public class CommonEventHandler {
 					{
 						if(EVENT_PLAYERSTATE_LOAD)
 						{
-							GameSaveManager.sendCustomCommand(Context.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
+							GameSaveManager.sendCustomCommand(BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
 							EVENT_PLAYERSTATE_LOAD = false;
 						}
 						if(EVENT_PLAYERSTATE_RESET)
@@ -158,7 +158,7 @@ public class CommonEventHandler {
 						}
 						if(EVENT_PLAYERSTATE_SAVE)
 						{
-							GameSaveManager.sendCustomCommand(Context.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
+							GameSaveManager.sendCustomCommand(BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
 							EVENT_PLAYERSTATE_SAVE = false;
 						}
 						
@@ -188,7 +188,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
-		Context context = BiGX.instance().context;
+		BigxClientContext context = BiGX.instance().context;
 		
 		//TODO: Implement proper cleanup when the game is exited
 		//The event which is called by the server shutting down needs to be located and used

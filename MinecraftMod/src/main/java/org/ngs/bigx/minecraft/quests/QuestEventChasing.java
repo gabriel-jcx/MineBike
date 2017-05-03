@@ -15,7 +15,7 @@ import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
@@ -69,7 +69,7 @@ public class QuestEventChasing implements IQuestEvent {
 	float ratio;
 	Vec3 returnLocation;
 	
-	private static Context context;
+	private static BigxClientContext context;
 	CharacterProperty characterProperty = BiGX.instance().characterProperty;
 	EntityCustomNpc npc;
 	NpcCommand command;
@@ -506,9 +506,9 @@ public class QuestEventChasing implements IQuestEvent {
 							System.out.println("[BiGX] player prescription is not avilable.");
 						}
 						
-						if (playerperscription.getTargetMin() > context.heartrate || context.rotation < 40)
+						if (playerperscription.getTargetMin() > context.heartrate || context.rpm < 40)
 							speedchange += speedchangerate;
-						else if (playerperscription.getTargetMax() >= context.heartrate || context.rotation > 60 && context.rotation <= 90)
+						else if (playerperscription.getTargetMax() >= context.heartrate || context.rpm > 60 && context.rpm <= 90)
 							speedchange += speedchangerate;
 						else if (playerperscription.getTargetMax() < context.heartrate)
 							speedchange -= speedchangerate/2;

@@ -7,7 +7,7 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -36,7 +36,7 @@ public class GuiDamage extends GuiScreen {
 
 //	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
 	
-	private Context context;
+	private BigxClientContext context;
 	
 	private static ArrayList<DamageTextItem> damageTextList;
 	
@@ -46,7 +46,7 @@ public class GuiDamage extends GuiScreen {
 		this.damageTextList = new ArrayList<DamageTextItem>();
 	}
 	
-	public GuiDamage(Context c,Minecraft mc) {
+	public GuiDamage(BigxClientContext c,Minecraft mc) {
 		this(mc);
 		context = c;
 	}

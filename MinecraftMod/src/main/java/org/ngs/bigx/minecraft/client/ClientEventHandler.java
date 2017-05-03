@@ -7,8 +7,8 @@ import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
@@ -52,7 +52,7 @@ public class ClientEventHandler {
 	
 	public static QuestDemo questDemo;
 	
-		private Context context;
+		private BigxClientContext context;
 		public static KeyBinding keyBindingTogglePedalingMode;
 		public static KeyBinding keyBindingMoveForward;
 		public static KeyBinding keyBindingMoveBackward;
@@ -67,7 +67,7 @@ public class ClientEventHandler {
 		
 		private static int demo =0;
 		
-		public ClientEventHandler(Context con) {
+		public ClientEventHandler(BigxClientContext con) {
 			context = con;
 			handler = this;
 		}
@@ -104,7 +104,7 @@ public class ClientEventHandler {
 			if(keyBindingToggleQuestListGui.isPressed())
 			{
 				Minecraft mc = Minecraft.getMinecraft();
-				GuiQuestlistManager guiQuestlistManager =new GuiQuestlistManager(Context.self, mc);
+				GuiQuestlistManager guiQuestlistManager =new GuiQuestlistManager(BigxClientContext.self, mc);
 				String[] demoquestreq = new String[5];
 				demoquestreq[0] = "quest[" + demo + "] req 1";
 				demoquestreq[1] = "quest[" + demo + "] req 2";
@@ -275,7 +275,7 @@ public class ClientEventHandler {
 				if (b==Blocks.air) {
 					b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
 				}
-				context.block= b;
+
 				float new_resistance = context.resistance;
 				if (b!=null) {
 					if (context.resistances.containsKey(b)) {

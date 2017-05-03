@@ -55,48 +55,39 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class Context implements eyeTrackerListner {
+public class BigxClientContext implements eyeTrackerListner {
+	// CLIENT
+	public BiGX main = null;
+	public static BigxClientContext self = null;
+	
 	public static BiGXNetClient bigxclient;
 	private Timer bigxclientTimer;
 	private static int bigxclientConnectionTryCount = 0;
 	public static final int bigxclientConnectionTryMaxCount = 10;
 	private static final int bigxclientTimerTimeout = 2000;
-	
-	public static Context self = null;
-	
+
 	public String BiGXUserName;
+	
 	public int heartrate = 80;
 	private float speed = 0;
 	public int rpm = 0;
 	public float resistance = 0;
-	public Block block = Blocks.air;
-	public int rotation = 0;
-	public BiGX main = null;
-	private int ID = 0;
-	private boolean questsEnabled = true;
-	private float rotationX;
+	private float rotationX;		// EYETRACKING
 	
-	// TODO: Buffer instance to add the packet data in.
 	private Hashtable<Integer, byte[]> bufferQuestDesign = new Hashtable<Integer, byte[]>();
 	private int bufferQuestDesignFragmentationNumber = 0;
 	private int bufferQuestDesignChunkNumber = 0;
 	public BiGXSuggestedGameProperties suggestedGameProperties = null;
 	public boolean suggestedGamePropertiesReady = false;
-
+	
 	private static boolean isMiddlwareIPFileAvailable = false;
 	private static boolean isMiddlwareIPAvailable = false;
 	public static final String gameServerListFileName = System.getProperty("user.home") + "\\bigxGameServerList.dat";
 	private static Object MiddlewareIPReadMutex = new Object();
 	private static GameServerList gameServerList = null;
-	
+
 	private static GameSaveList gameSaveList = null;
 	private static GameSave currentGameState = null;
-	
-	/* TODO: Need to be removed before production
-	 * SHOE TESTING
-	 */
-	public float shoeEnergy = 0;
-	///// END OF SHOE TESTING
 	
 	public float getRotationX() {
 		return rotationX;
@@ -147,7 +138,7 @@ public class Context implements eyeTrackerListner {
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
 	public eyeTracker eTracker;
 	
-	public Context(BiGX main) {
+	public BigxClientContext(BiGX main) {
 		self = this;
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -173,15 +164,15 @@ public class Context implements eyeTrackerListner {
 		}
 	}
 	
-	public static Context getInstance()
+	public static BigxClientContext getInstance()
 	{
 		return self;
 	}
 	
 	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{		
-		System.out.println("connectBiGX(Context.ipAddress[" + Context.ipAddress + "], Context.port[" + Context.port + "])");
-		bigxclient = new BiGXNetClient(Context.ipAddress, Context.port);
+		System.out.println("connectBiGX(Context.ipAddress[" + BigxClientContext.ipAddress + "], Context.port[" + BigxClientContext.port + "])");
+		bigxclient = new BiGXNetClient(BigxClientContext.ipAddress, BigxClientContext.port);
 		bigxclient.setReceiveListener(new BiGXNetClientListener() {
 			
 			@Override
@@ -404,16 +395,12 @@ public class Context implements eyeTrackerListner {
 							try {
 								connectBiGX();
 							} catch (SocketException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (UnknownHostException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (BiGXNetException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							} catch (BiGXInternalGamePluginExcpetion e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							this.cancel();
@@ -434,31 +421,13 @@ public class Context implements eyeTrackerListner {
 	public float getSpeed() {
 		return speed;
 	}
-
-	public void increaseShoeEnergy(float shoeEnergy) {
-		this.shoeEnergy += shoeEnergy;
-		
-		if( (this.shoeEnergy > 500) )
-		{
-			this.shoeEnergy = 500;
-		}
-	}
-
-	public int getID() {
-		ID++;
-		return ID;
-	}
 		
 	public static GameSaveList getGameSaveList() {
 		return gameSaveList;
 	}
 
 	public static void setGameSaveList(GameSaveList gameSaveList) {
-		Context.gameSaveList = gameSaveList;
-	}
-
-	public boolean checkQuestsEnabled() {
-		return questsEnabled;
+		BigxClientContext.gameSaveList = gameSaveList;
 	}
 
 	@Override

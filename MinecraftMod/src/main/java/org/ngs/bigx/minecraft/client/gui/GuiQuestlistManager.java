@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -24,7 +24,7 @@ public class GuiQuestlistManager extends GuiScreen {
 	private GuiQuestlistDescriptionSlot guiQuestlistDescriptionSlot; 
 	
 	private Minecraft mc;
-	private Context context;
+	private BigxClientContext context;
 	
 	public GuiQuestlistManager(Minecraft mc) {
 		super();
@@ -37,7 +37,7 @@ public class GuiQuestlistManager extends GuiScreen {
 			this.questReferenceListLock = new Object();
 	}
 	
-	public GuiQuestlistManager(Context c,Minecraft mc) {
+	public GuiQuestlistManager(BigxClientContext c,Minecraft mc) {
 		this(mc);
 		context = c;
 	}

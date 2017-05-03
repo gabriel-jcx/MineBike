@@ -9,7 +9,7 @@ import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonProxy;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.renderer.TileEntityQuestChestRenderer;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
@@ -39,7 +39,7 @@ public class ClientProxy extends CommonProxy {
 	
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
-		Context context = BiGX.instance().context;
+		BigxClientContext context = BiGX.instance().context;
 		clientEvents = new ClientEventHandler(context);
 		FMLCommonHandler.instance().bus().register(clientEvents);
     	MinecraftForge.EVENT_BUS.register(clientEvents);

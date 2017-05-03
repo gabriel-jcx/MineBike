@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -30,7 +30,7 @@ public class GuiMessageWindow extends GuiScreen {
 	private ResourceLocation MESSAGE_WINDOW_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/dialog.png");
 	private ResourceLocation GOLDBAR_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/goldbar.png");
 	
-	private Context context;
+	private BigxClientContext context;
 	private static long timestampLastShowWindowCall = 0;
 	private static long timestampLastShowGoldbarCall = 0;
 	private static String[] textLinesToBeShown = null;
@@ -48,7 +48,7 @@ public class GuiMessageWindow extends GuiScreen {
 		this.mc = mc;
 	}
 	
-	public GuiMessageWindow(Context c,Minecraft mc) {
+	public GuiMessageWindow(BigxClientContext c,Minecraft mc) {
 		this(mc);
 		context = c;
 	}

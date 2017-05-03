@@ -60,7 +60,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    public static CharacterProperty characterProperty;
 	    public static BikeProperty bikeProperty;	
 	    
-	    public Context context;
+	    public BigxClientContext context;
 	    
 	    public static MouseHelper disableMouseHelper;
 	    
@@ -87,7 +87,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
 	    	
 	    	instance = this;
-	    	context = new Context(this);
+	    	context = new BigxClientContext(this);
 	    	proxy.preInit(e);
 	    	network = NetworkRegistry.INSTANCE.newSimpleChannel("BikeChannel");
 	    	network.registerMessage(HandleHungerMessageOnServer.Handler.class,HandleHungerMessageOnServer.class,0,Side.SERVER);

@@ -9,7 +9,7 @@ import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -24,11 +24,11 @@ import net.minecraft.util.EnumChatFormatting;
 public class GuiConnection extends GuiScreen {
 	private final GuiScreen back;
 	protected String name = "Connection";
-	private static Context context;
+	private static BigxClientContext context;
 	private GuiTextField textFieldUserName;
 	private GuiButton    buttonDone;
 	
-	public GuiConnection(Context context,GuiScreen back) {
+	public GuiConnection(BigxClientContext context,GuiScreen back) {
 		this.back = back;
 		this.context = context;
 	}

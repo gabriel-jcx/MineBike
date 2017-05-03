@@ -3,7 +3,7 @@ package org.ngs.bigx.minecraft.client;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonLanguage;
@@ -14,7 +14,7 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiMenu extends GuiMainMenu {
 	
-	private Context context;
+	private BigxClientContext context;
 	
 	@Override
 	public void initGui()
@@ -36,7 +36,7 @@ public class GuiMenu extends GuiMainMenu {
 		}
     }
 	
-	public void setContext(Context context) {
+	public void setContext(BigxClientContext context) {
 		this.context = context;
 	}
 }

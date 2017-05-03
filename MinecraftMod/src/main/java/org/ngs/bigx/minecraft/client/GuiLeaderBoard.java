@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,7 +29,7 @@ public class GuiLeaderBoard extends GuiScreen {
 
 	private ResourceLocation LEADERBOARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/leaderboard.png");
 	
-	private Context context;
+	private BigxClientContext context;
 	
 	private static ArrayList<LeaderboardRow> leaderboardRows = new ArrayList<LeaderboardRow>();
 	
@@ -41,7 +41,7 @@ public class GuiLeaderBoard extends GuiScreen {
 		this.mc = mc;
 	}
 	
-	public GuiLeaderBoard(Context c, Minecraft mc) {
+	public GuiLeaderBoard(BigxClientContext c, Minecraft mc) {
 		this(mc);
 		context = c;
 	}
