@@ -21,27 +21,12 @@ public class BiGXPacketHandler {
 	public static boolean Handle(BiGXNetClient client, BiGXNetPacket packet) {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
-		Context context = BiGX.instance().context;
+		BigxClientContext context = BiGX.instance().context;
 		
 //		System.out.println("Receiving Data");
 
 		
 		switch (packet.deviceEvent) {
-			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATIONSTATE:
-				if (Minecraft.getMinecraft().thePlayer!=null) {
-					int old_rotation = context.rotation;
-					int new_rotation = buf.getInt();
-					if (new_rotation!=context.rotation) {
-						context.rotation = new_rotation;
-						if (old_rotation>330&&new_rotation<30) {
-							old_rotation -= 360;
-						}
-						double change = (new_rotation-old_rotation);
-
-						context.setSpeed( (float) Math.min( BiGXConstants.MAXBIKESPEED, Math.max( context.getSpeed() + change / 1000 , 0 ) ) );
-					} 
-				}
-			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.HEART:
 				context.heartrate = buf.getInt();
 			break;

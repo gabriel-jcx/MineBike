@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 
 import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
@@ -19,7 +19,7 @@ import com.jcraft.jsch.UserInfo;
 
 public class GameSaveManager {
 	private Object lockGameSave = new Object();
-	private Context bigxContext;
+	private BigxClientContext bigxContext;
 	
 	public static final String gameSaveConfigRootFolderName = System.getProperty("user.home") + "\\ixercise";
 	public static final String gameSaveConfigFolderName = gameSaveConfigRootFolderName + "\\gameconfig";
@@ -79,7 +79,7 @@ public class GameSaveManager {
 	}
 	
 	@SuppressWarnings("unused")
-	public static void sendCustomCommand(Context bigxContext, String host, CUSTOMCOMMAND commandenum) throws IOException
+	public static void sendCustomCommand(BigxClientContext bigxContext, String host, CUSTOMCOMMAND commandenum) throws IOException
 	{
 		boolean okayToProceed = true;
 		
@@ -217,7 +217,7 @@ public class GameSaveManager {
 		return b;
 	}
 	
-	public GameSaveManager(Context bigxContext)
+	public GameSaveManager(BigxClientContext bigxContext)
 	{
 		this.bigxContext = bigxContext;
 	}

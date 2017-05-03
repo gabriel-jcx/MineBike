@@ -9,7 +9,8 @@ import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonProxy;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.renderer.TileEntityQuestChestRenderer;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
@@ -38,7 +39,7 @@ public class ClientProxy extends CommonProxy {
 	
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
-		Context context = BiGX.instance().context;
+		BigxClientContext context = BiGX.instance().context;
 		clientEvents = new ClientEventHandler(context);
 		FMLCommonHandler.instance().bus().register(clientEvents);
     	MinecraftForge.EVENT_BUS.register(clientEvents);
@@ -53,9 +54,11 @@ public class ClientProxy extends CommonProxy {
 			e1.printStackTrace();
 		}
 
-    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("", Keyboard.KEY_P, "ChaseQuestLock");
+    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("org.ngs.bigx.keyBindingToggleMouse.desc", Keyboard.KEY_P, "ChaseQuestLock");
+    	ClientEventHandler.keyBindingToggleQuestListGui = new KeyBinding("org.ngs.bigx.keyBindingToggleQuestListGui.desc", Keyboard.KEY_K, "QuestListGui");
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("", Keyboard.KEY_MINUS, "ToggleBike");
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleQuestListGui);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());

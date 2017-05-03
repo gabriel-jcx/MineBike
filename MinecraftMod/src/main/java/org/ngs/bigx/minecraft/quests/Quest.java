@@ -10,25 +10,46 @@ public class Quest {
 	protected String id; 		// Quest ID by type
 	
 	private String name, description;
+	private String[] requirements;
 	private List<EntityPlayer> players;
 	public List<IQuestEvent> events;
 	private List<ItemStack> rewardItems;
 	private int rewardXP, rewardCoins;
 	
-	public Quest() {
-		events = new ArrayList<IQuestEvent>();
-		rewardItems = new ArrayList<ItemStack>();
-		name = "Quest";
-		description = "I'm a quest!";
+	public Quest(String id) {
+		this(id, "Quest", "I'm a quest!");
 	}
 	
-	public Quest(String n, String d) {
+	public Quest(String id, String n, String d) {
+		this(id, n, d, new String[1]);
+	}
+	
+	public Quest(String id, String n, String d, String[] requirements) {
+		this.id = id;
 		events = new ArrayList<IQuestEvent>();
 		rewardItems = new ArrayList<ItemStack>();
 		name = n;
 		description = d;
+		this.requirements = requirements;
 	}
 	
+	public String getQuestId()
+	{
+		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String[] getRequirements() {
+		return requirements;
+	}
+
 	public void AddPlayer(EntityPlayer player) {
 		players.add(player);
 	}

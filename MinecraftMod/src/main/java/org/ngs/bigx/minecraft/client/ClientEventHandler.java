@@ -7,12 +7,15 @@ import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.Context;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestDemo;
+import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 import org.ngs.bigx.minecraft.quests.QuestEventGoto;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.utility.NpcCommand;
@@ -49,11 +52,12 @@ public class ClientEventHandler {
 	
 	public static QuestDemo questDemo;
 	
-		private Context context;
+		private BigxClientContext context;
 		public static KeyBinding keyBindingTogglePedalingMode;
 		public static KeyBinding keyBindingMoveForward;
 		public static KeyBinding keyBindingMoveBackward;
 		public static KeyBinding keyBindingToggleMouse;
+		public static KeyBinding keyBindingToggleQuestListGui;
 		public static KeyBinding keyBindingToggleBike;
 		
 		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
@@ -61,7 +65,9 @@ public class ClientEventHandler {
 		
 		private static ClientEventHandler handler;
 		
-		public ClientEventHandler(Context con) {
+		private static int demo =0;
+		
+		public ClientEventHandler(BigxClientContext con) {
 			context = con;
 			handler = this;
 		}
@@ -89,10 +95,35 @@ public class ClientEventHandler {
 			if (keyBindingToggleMouse.isPressed()) {
 				enableLock = !enableLock;
 				System.out.println("Movement/Look lock: " + enableLock);
+				
 			}
 			if (keyBindingToggleBike.isPressed()) {
 				enableBike = !enableBike;
 				System.out.println("Toggle Bike Movement: " + enableBike);
+			}
+			if(keyBindingToggleQuestListGui.isPressed())
+			{
+				Minecraft mc = Minecraft.getMinecraft();
+				GuiQuestlistManager guiQuestlistManager =new GuiQuestlistManager(BigxClientContext.self, mc);
+				String[] demoquestreq = new String[5];
+				demoquestreq[0] = "quest[" + demo + "] req 1";
+				demoquestreq[1] = "quest[" + demo + "] req 2";
+				demoquestreq[2] = "quest[" + demo + "] req 3";
+				demoquestreq[3] = "quest[" + demo + "] req 4";
+				demoquestreq[4] = "quest[" + demo + "] req 5";
+				
+				try {
+					guiQuestlistManager.addQuestReference(new Quest(QuestEventChasing.id + demo, "demo chasing quest", "demo chasing quest desc", demoquestreq));
+					demo++;
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (GuiQuestlistException e) {
+					e.printStackTrace();
+				}
+				
+				if(mc.currentScreen == null)
+					mc.displayGuiScreen(guiQuestlistManager);
+				System.out.println("Display Quest List");
 			}
 		}
 		
@@ -244,7 +275,7 @@ public class ClientEventHandler {
 				if (b==Blocks.air) {
 					b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
 				}
-				context.block= b;
+
 				float new_resistance = context.resistance;
 				if (b!=null) {
 					if (context.resistances.containsKey(b)) {

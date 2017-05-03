@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.Context;
+import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.quests.QuestEventChasing;
 import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
@@ -43,14 +43,14 @@ public class GuiStats extends GuiScreen {
 	public static float gauge_01_percentile = 0;
 	public static float gauge_02_percentile = 0;
 	
-	private Context context;
+	private BigxClientContext context;
 	
 	public GuiStats(Minecraft mc) {
 		super();
 		this.mc = mc;
 	}
 	
-	public GuiStats(Context c,Minecraft mc) {
+	public GuiStats(BigxClientContext c,Minecraft mc) {
 		this(mc);
 		context = c;
 	}
