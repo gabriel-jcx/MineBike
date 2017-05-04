@@ -45,7 +45,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import noppes.npcs.entity.EntityCustomNpc;
 
-public class QuestEventChasingFire implements IQuestEvent {
+public class QuestTaskChasingFire implements IQuestTask {
 	public static final String id = "QUEST_CHASE";
 	
 	static float playerQuestPitch, playerQuestYaw;
@@ -89,7 +89,6 @@ public class QuestEventChasingFire implements IQuestEvent {
 	
 	private static Timer t = null;
 	private static Timer t2 = null;
-	private static QuestTeleporter teleporter = null;
 
 	private static int thiefHealthMax = 50;
 	private static int thiefHealthCurrent = thiefHealthMax;
@@ -155,7 +154,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 		}
 	}
 	
-	public void goBackToTheOriginalWorld(World world, MinecraftServer worldServer, QuestTeleporter teleporter, Entity entity)
+	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
@@ -181,8 +180,7 @@ public class QuestEventChasingFire implements IQuestEvent {
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
-		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-//		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
+		QuestTeleporter.teleport(entity, 0, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -314,10 +312,8 @@ public class QuestEventChasingFire implements IQuestEvent {
 				t = new Timer();
 				t2 = new Timer();
 				
-				teleporter = new QuestTeleporter(ws);
-				
 				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-				teleporter.teleport(player, ws, 1, 11, 0);
+				QuestTeleporter.teleport(player, WorldProviderDark.dimID, 1, 11, 0);
 
 				chasingQuestInitialPosX = 1;
 				chasingQuestInitialPosY = 10;
@@ -530,8 +526,8 @@ public class QuestEventChasingFire implements IQuestEvent {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 							
-							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							completed = true;							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							completed = true;
+							goBackToTheOriginalWorld(ws, player);
 							
 							return;
 						}
@@ -562,8 +558,8 @@ public class QuestEventChasingFire implements IQuestEvent {
 							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 								thiefLevelUp();
-							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-							completed = true;							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							completed = true;
+							goBackToTheOriginalWorld(ws, player);
 						}
 					}
 				};
@@ -658,53 +654,13 @@ public class QuestEventChasingFire implements IQuestEvent {
 			if (ws != null && player instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 				virtualCurrency = 0;
-				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
-//				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-				completed = true;				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+				completed = true;
+				goBackToTheOriginalWorld(ws, player);
 			}
 		}
 	}
-//	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
-//		for (int x = origX; x < origX + 7; ++x) {
-//			if (x == origX || x == origX + 6) {
-//				for (int y = origY; y < origY + 5; ++y) {
-//					for (int z = origZ; z < origZ + 11; ++z) {
-//						if (z == origZ || z == origZ + 10)
-//							w.setBlock(x, y, z, Blocks.log);
-//						else
-//							w.setBlock(x, y, z, Blocks.planks);
-//						blocks.add(Vec3.createVectorHelper(x, y, z));
-//					}
-//				}
-//				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
-//				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
-//			} else {
-//				for (int y = origY; y < origY + 7; ++y) {
-//					for (int z = origZ; z < origZ + 11; ++z) {
-//						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
-//							w.setBlock(x, y, z, Blocks.planks);
-//							blocks.add(Vec3.createVectorHelper(x, y, z));
-//						}
-//						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-//							w.setBlock(x, y, z, Blocks.planks);
-//							blocks.add(Vec3.createVectorHelper(x, y, z));
-//						}
-//						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-//							w.setBlock(x, y, z, Blocks.planks);
-//							blocks.add(Vec3.createVectorHelper(x, y, z));
-//						}
-//					}
-//				}
-//				if (x == origX + 2 || x == origX + 4) {
-//					w.setBlock(x, origY+1, origZ, Blocks.glass);
-//					w.setBlock(x, origY+2, origZ, Blocks.glass);
-//				}
-//			}
-//		}
-//	}
-	
 	
 	public static float getPlayerPitch() {
 		return playerQuestPitch;

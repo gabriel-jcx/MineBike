@@ -60,7 +60,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    public static CharacterProperty characterProperty;
 	    public static BikeProperty bikeProperty;	
 	    
-	    public BigxClientContext context;
+	    public BigxContext context; // BigxClientContext for client and BigxServerContext for server
 	    
 	    public static MouseHelper disableMouseHelper;
 	    

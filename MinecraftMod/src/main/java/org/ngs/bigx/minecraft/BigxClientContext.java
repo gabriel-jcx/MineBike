@@ -47,6 +47,7 @@ import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 
 import com.google.gson.Gson;
 
@@ -55,11 +56,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
-public class BigxClientContext implements eyeTrackerListner {
+public class BigxClientContext extends BigxContext implements eyeTrackerListner {
 	// CLIENT
-	public BiGX main = null;
-	public static BigxClientContext self = null;
-	
 	public static BiGXNetClient bigxclient;
 	private Timer bigxclientTimer;
 	private static int bigxclientConnectionTryCount = 0;
@@ -77,8 +75,6 @@ public class BigxClientContext implements eyeTrackerListner {
 	private Hashtable<Integer, byte[]> bufferQuestDesign = new Hashtable<Integer, byte[]>();
 	private int bufferQuestDesignFragmentationNumber = 0;
 	private int bufferQuestDesignChunkNumber = 0;
-	public BiGXSuggestedGameProperties suggestedGameProperties = null;
-	public boolean suggestedGamePropertiesReady = false;
 	
 	private static boolean isMiddlwareIPFileAvailable = false;
 	private static boolean isMiddlwareIPAvailable = false;
@@ -164,7 +160,7 @@ public class BigxClientContext implements eyeTrackerListner {
 		}
 	}
 	
-	public static BigxClientContext getInstance()
+	public static BigxContext getInstance()
 	{
 		return self;
 	}

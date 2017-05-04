@@ -24,100 +24,16 @@ import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-/***
- * @author localadmin
- * 
- * Reference: http://www.minecraftforge.net/forum/topic/18295-172-dimensional-teleporting-without-the-portals/
- *
- */
-public class QuestTeleporter extends Teleporter {
-   
-    // Setup Specific Variables
-    private WorldServer worldserver;
-
-    public QuestTeleporter(WorldServer worldserver) {
-        super(worldserver);
-        
-        // Setup Variables
-        this.worldserver = worldserver;
-        
-    }
-    
-    public void teleport(Entity entity,World world) {
-    	teleport(entity,world,0,0,0);
+public class QuestTeleporter {
+    public static void teleport(Entity entity,int targetDimensionId) {
+    	teleport(entity,targetDimensionId,0,0,0);
     }
 
     // Move the Entity to the portal
-    public void teleport(Entity entity, World world,int x,int y,int z) {
-       
-//        // Setup Variables
-//        EntityPlayerMP playerMP = (EntityPlayerMP) entity;
-//        
-//        // Set default location
-//        double dx = x;
-//        double dy = y;
-//        double dz = z;
-//        
-//        System.out.println("RUNNING FROM TELEPORT METHOD");
-//        // check for zeros
-//        if (dx == 0 && dy == 0 && dz == 0) {
-//           
-//            // Set height to something big
-//            dy = 250;
-//
-//            // Drop down until find solid
-//            while (world.getBlock((int) dx, (int) dy - 1, (int) dz).equals(Blocks.air) && dy > 0) {
-//               
-//                dy--;
-//                
-//            }
-//
-//            // Last check if dy == 0
-//            if (dy == 0) {
-//               
-//                dy = 128;
-//                
-//            }
-//            
-//        }
-//
-//        // Offset locations for accuracy
-//        dx = dx + 0.5d;
-//        dy = dy + 1.0d;
-//        dz = dz + 0.5d;
-//        entity.setPosition(dx, dy, dz);
-//        
-//        // Freeze motion
-//        entity.motionX = entity.motionY = entity.motionZ = 0.0D;
-//        entity.setPosition(dx, dy, dz); 
-//        
-//        world.getChunkProvider().loadChunk(world.getChunkFromBlockCoords(x, z).xPosition, world.getChunkFromBlockCoords(x, z).zPosition);
-//
-//        // Set Dimension
-//        if (entity.worldObj.provider.dimensionId != world.provider.dimensionId) {
-//            playerMP.mcServer.getConfigurationManager().transferPlayerToDimension(playerMP, world.provider.dimensionId, this);
-//        }
-//
-//        entity.setPosition(dx, dy, dz); // silly to do this multiple time,s but it kept offsetting entity until this was done
-    	if (entity.worldObj.provider.dimensionId != world.provider.dimensionId) {
-    		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + world.provider.dimensionId);
+    public static void teleport(Entity entity, int targetDimensionId,int x,int y,int z) {
+    	if (entity.worldObj.provider.dimensionId != targetDimensionId) {
+    		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + targetDimensionId);
     	}
         Minecraft.getMinecraft().thePlayer.sendChatMessage("/tp" + " " + x + " " + y + " " + z);
     }
-
-    @Override
-    public boolean placeInExistingPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
-    {
-        return false;
-    }
-
-    @Override
-    public void removeStalePortalLocations(long par1) {
-    }
-
-    @Override
-    public void placeInPortal(Entity par1Entity, double par2, double par4, double par6, float par8)
-    {
-    }
-    
 }
