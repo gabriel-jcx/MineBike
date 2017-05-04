@@ -76,11 +76,11 @@ public class NpcCommand {
 		if(theifOnRegularChaseQuestSpawnFlag)
 		{
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskChasing questEventChasing = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			QuestTaskChasing questTaskChasing = (QuestTaskChasing) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
 			EntityCustomNpc npc;
 			NpcCommand command;
 			
-			if(questEventChasing == null)
+			if(questTaskChasing == null)
 				return;
 			
 			theifOnRegularChaseQuestSpawnFlag = false;
@@ -88,14 +88,14 @@ public class NpcCommand {
 			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 			npc.ai.stopAndInteract = false;
 			
-			questEventChasing.setNpc(npc);
+			questTaskChasing.setNpc(npc);
 			
 			command = new NpcCommand(npc);
 			command.setSpeed(10);
 			command.enableMoving(false);
 			command.runInDirection(ForgeDirection.SOUTH);
 			
-			questEventChasing.setNpcCommand(command);
+			questTaskChasing.setNpcCommand(command);
 		}
 	}
 	
@@ -104,11 +104,11 @@ public class NpcCommand {
 		if(theifOnFireChaseQuestSpawnFlag)
 		{
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskChasingFire questEventChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
 			EntityCustomNpc npc;
 			NpcCommand command;
 			
-			if(questEventChasingFire == null)
+			if(questTaskChasingFire == null)
 				return;
 			
 			theifOnFireChaseQuestSpawnFlag = false;
@@ -116,14 +116,14 @@ public class NpcCommand {
 			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
 			npc.ai.stopAndInteract = false;
 			npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
-			questEventChasingFire.setNpc(npc);
+			questTaskChasingFire.setNpc(npc);
 			
 			command = new NpcCommand(npc);
 			command.setSpeed(10);
 			command.enableMoving(false);
 			command.runInDirection(ForgeDirection.SOUTH);
 			
-			questEventChasingFire.setNpcCommand(command);
+			questTaskChasingFire.setNpcCommand(command);
 		}
 	}
 	

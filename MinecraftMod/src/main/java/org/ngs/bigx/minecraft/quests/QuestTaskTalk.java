@@ -10,10 +10,19 @@ public class QuestTaskTalk implements IQuestTask {
 	private boolean completed;
 	private EntityPlayer player;
 	private EntityCustomNpc npc;
+	private boolean isRequired;
 	
 	public QuestTaskTalk(EntityPlayer p, EntityCustomNpc n) {
 		player = p;
 		npc = n;
+		isRequired = false;
+	}
+	
+	
+	public QuestTaskTalk(EntityPlayer p, EntityCustomNpc n, boolean required) {
+		player = p;
+		npc = n;
+		isRequired = required;
 	}
 	
 	@Override
@@ -22,7 +31,7 @@ public class QuestTaskTalk implements IQuestTask {
 	}
 
 	@Override
-	public void Run(final LevelSystem levelSys) {
+	public void Run(LevelSystem levelSys) {
 		
 	}
 	
@@ -30,5 +39,20 @@ public class QuestTaskTalk implements IQuestTask {
 	public void CheckComplete() {
 		if (npc.interactingEntities.contains(player))
 			completed = true;
+	}
+
+	@Override
+	public boolean IsMainTask() {
+		return isRequired;
+	}
+
+	@Override
+	public String getTaskDescription() {
+		return null;
+	}
+
+	@Override
+	public String getTaskName() {
+		return null;
 	}
 }

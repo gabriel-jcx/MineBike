@@ -48,6 +48,8 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskChasingFire implements IQuestTask {
 	public static final String id = "QUEST_CHASE";
 	
+	private boolean isRequired;
+	
 	static float playerQuestPitch, playerQuestYaw;
 	
 	private static long questTimeStamp = 0;
@@ -58,7 +60,6 @@ public class QuestTaskChasingFire implements IQuestTask {
 	private static int time = 0;
 	private static double elapsedTime = 0;
 	private static int timeFallBehind = 0;
-	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
 	public static float initialDist, dist = 0;
 	public static int startingZ, endingZ;
@@ -99,6 +100,22 @@ public class QuestTaskChasingFire implements IQuestTask {
 	private WorldServer ws;
 	
 	public static EntityPlayer player;
+	
+	public QuestTaskChasingFire(EntityPlayer p, WorldServer worldServer, int level, int maxLevel, boolean required) {
+		player = p;
+		ws = worldServer;
+		thiefLevel = level;
+		thiefMaxLevel = maxLevel;
+		isRequired = required;
+	}
+	
+	public QuestTaskChasingFire(EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
+		player = p;
+		ws = worldServer;
+		thiefLevel = level;
+		thiefMaxLevel = maxLevel;
+		isRequired = false;
+	}
 	
 	public static int getTime()
 	{
@@ -683,6 +700,21 @@ public class QuestTaskChasingFire implements IQuestTask {
 	public void CheckComplete() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean IsMainTask() {
+		return isRequired;
+	}
+
+	@Override
+	public String getTaskDescription() {
+		return null;
+	}
+
+	@Override
+	public String getTaskName() {
+		return null;
 	}
 	
 }

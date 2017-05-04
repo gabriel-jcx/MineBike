@@ -11,10 +11,20 @@ public class QuestTaskGoto implements IQuestTask {
 	public Vec3 edge1, edge2;
 	public EntityPlayer player;
 	
+	private boolean isRequired;
+	
+	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2, boolean required) {
+		player = p;
+		edge1 = e1;
+		edge2 = e2;
+		isRequired = required;
+	}
+	
 	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2) {
 		player = p;
 		edge1 = e1;
 		edge2 = e2;
+		isRequired = false;
 	}
 	
 	@Override
@@ -33,5 +43,20 @@ public class QuestTaskGoto implements IQuestTask {
 				(player.posY >= edge1.yCoord && player.posY <= edge2.yCoord || player.posY <= edge1.yCoord && player.posY >= edge2.yCoord) &&
 				(player.posZ >= edge1.zCoord && player.posZ <= edge2.zCoord || player.posZ <= edge1.zCoord && player.posZ >= edge2.zCoord))
 			completed = true;
+	}
+
+	@Override
+	public boolean IsMainTask() {
+		return isRequired;
+	}
+
+	@Override
+	public String getTaskDescription() {
+		return null;
+	}
+
+	@Override
+	public String getTaskName() {
+		return null;
 	}
 }

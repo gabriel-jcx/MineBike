@@ -81,7 +81,7 @@ public class Quest {
 	}
 	
 	public IQuestTask getCurrentQuestEvent() {
-		for (IQuestTask e : this.events) {
+		for (IQuestTask e : this.tasks) {
 			if (!e.IsComplete())
 				return e;
 		}
@@ -89,7 +89,7 @@ public class Quest {
 	}
 	
 	public boolean IsComplete() {
-		for (IQuestTask questEvent : events) {
+		for (IQuestTask questEvent : tasks) {
 			if (!questEvent.IsComplete())
 				return false;
 		}

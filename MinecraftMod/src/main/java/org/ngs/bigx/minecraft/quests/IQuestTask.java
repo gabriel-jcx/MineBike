@@ -10,7 +10,7 @@ public interface IQuestTask {
 	public boolean IsComplete();
 	public void CheckComplete();
 	public boolean IsMainTask();
-	public String getTaskDescrption();
+	public String getTaskDescription();
 	public String getTaskName();
 	
 	/**
