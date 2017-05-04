@@ -11,10 +11,20 @@ public class QuestTaskGoto implements IQuestTask {
 	public Vec3 edge1, edge2;
 	public EntityPlayer player;
 	
+	private boolean isRequired;
+	
+	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2, boolean required) {
+		player = p;
+		edge1 = e1;
+		edge2 = e2;
+		isRequired = required;
+	}
+	
 	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2) {
 		player = p;
 		edge1 = e1;
 		edge2 = e2;
+		isRequired = false;
 	}
 	
 	@Override
@@ -37,19 +47,16 @@ public class QuestTaskGoto implements IQuestTask {
 
 	@Override
 	public boolean IsMainTask() {
-		// TODO Auto-generated method stub
-		return false;
+		return isRequired;
 	}
 
 	@Override
-	public String getTaskDescrption() {
-		// TODO Auto-generated method stub
+	public String getTaskDescription() {
 		return null;
 	}
 
 	@Override
 	public String getTaskName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

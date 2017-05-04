@@ -39,8 +39,14 @@ public class QuestManager {
 		return activeQuestId;
 	}
 	
+	// WARNING: volatile - use this to read information, not set new information
 	public Quest getActiveQuest() {
 		return availableQuestList.get(activeQuestId);
+	}
+	
+	// WARNING: volatile - use this to read information, not set new information
+	public IQuestTask getActiveQuestTask() {
+		return availableQuestList.get(activeQuestId).getCurrentQuestEvent();
 	}
 	
 	public EntityPlayer getPlayer() {

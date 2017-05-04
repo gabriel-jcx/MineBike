@@ -38,23 +38,23 @@ public class QuestEventHandler {
 				Random r = new Random();
 				int hit = r.nextInt(4)+1;
 //				System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
-				if(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasing)
+				if(ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask() instanceof QuestTaskChasing)
 				{
-					QuestTaskChasing questEventChasing = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+					QuestTaskChasing questTaskChasing = (QuestTaskChasing) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
 					
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
-						questEventChasing.deductThiefHealth(null);
+						questTaskChasing.deductThiefHealth(null);
 					else
-						questEventChasing.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+						questTaskChasing.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 				}
-				else if(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire)
+				else if(ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask() instanceof QuestTaskChasingFire)
 				{
-					QuestTaskChasingFire questEventChasing = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+					QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
 					
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
-						questEventChasing.deductThiefHealth(null);
+						questTaskChasingFire.deductThiefHealth(null);
 					else
-						questEventChasing.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+						questTaskChasingFire.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 				}
 				
 //				event.entityPlayer.worldObj.playSoundEffect(event.entityPlayer.posX + 0.5D, event.entityPlayer.posY + 0.5D, event.entityPlayer.posZ + 0.5D, "minebike:sounds/hit1", 1.0f, 1.0f);

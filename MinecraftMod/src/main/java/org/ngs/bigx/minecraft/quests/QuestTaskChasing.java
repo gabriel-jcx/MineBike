@@ -53,6 +53,8 @@ import noppes.npcs.entity.EntityNpcCrystal;
 public class QuestTaskChasing implements IQuestTask {
 	public static final String id = "QUEST_CHASE";
 	
+	private boolean isRequired;
+	
 	static float playerQuestPitch, playerQuestYaw;
 	
 	private static long questTimeStamp = 0;
@@ -62,7 +64,6 @@ public class QuestTaskChasing implements IQuestTask {
 	private static int time = 0;
 	private static double elapsedTime = 0;
 	private static int timeFallBehind = 0;
-	EntityCustomNpc activenpc;
 	NpcCommand activecommand;
 	public static float initialDist, dist = 0;
 	public static int startingZ, endingZ;
@@ -103,6 +104,22 @@ public class QuestTaskChasing implements IQuestTask {
 	private WorldServer ws;
 	
 	public EntityPlayer player;
+	
+	public QuestTaskChasing(EntityPlayer p, WorldServer worldServer, int level, int maxLevel, boolean required) {
+		player = p;
+		ws = worldServer;
+		thiefLevel = level;
+		thiefMaxLevel = maxLevel;
+		isRequired = required;
+	}
+	
+	public QuestTaskChasing(EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
+		player = p;
+		ws = worldServer;
+		thiefLevel = level;
+		thiefMaxLevel = maxLevel;
+		isRequired = false;
+	}
 	
 	public static int getTime()
 	{
@@ -764,22 +781,19 @@ public class QuestTaskChasing implements IQuestTask {
 		}
 	}
 
-
 	@Override
 	public boolean IsMainTask() {
-		// TODO Auto-generated method stub
-		return false;
+		return isRequired;
 	}
 
 	@Override
-	public String getTaskDescrption() {
-		// TODO Auto-generated method stub
+	public String getTaskDescription() {
 		return null;
 	}
 
 	@Override
 	public String getTaskName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+	
 }
