@@ -12,7 +12,6 @@ import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -94,22 +93,23 @@ public class ClientEventHandler {
 			if(keyBindingToggleQuestListGui.isPressed())
 			{
 				Minecraft mc = Minecraft.getMinecraft();
-				GuiQuestlistManager guiQuestlistManager =new GuiQuestlistManager((BigxClientContext)BigxClientContext.self, mc);
-				String[] demoquestreq = new String[5];
-				demoquestreq[0] = "quest[" + demo + "] req 1";
-				demoquestreq[1] = "quest[" + demo + "] req 2";
-				demoquestreq[2] = "quest[" + demo + "] req 3";
-				demoquestreq[3] = "quest[" + demo + "] req 4";
-				demoquestreq[4] = "quest[" + demo + "] req 5";
-				
-				try {
-					guiQuestlistManager.addQuestReference(new Quest(QuestTaskChasing.id + demo, "demo chasing quest", "demo chasing quest desc", demoquestreq));
-					demo++;
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				} catch (GuiQuestlistException e) {
-					e.printStackTrace();
-				}
+				GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+				// TODO populate guiQuestlistManager with playerQuestManager quest list items
+//				String[] demoquestreq = new String[5];
+//				demoquestreq[0] = "quest[" + demo + "] req 1";
+//				demoquestreq[1] = "quest[" + demo + "] req 2";
+//				demoquestreq[2] = "quest[" + demo + "] req 3";
+//				demoquestreq[3] = "quest[" + demo + "] req 4";
+//				demoquestreq[4] = "quest[" + demo + "] req 5";
+//				
+//				try {
+//					guiQuestlistManager.addQuestReference(new Quest(QuestEventChasing.id + demo, "demo chasing quest", "demo chasing quest desc", demoquestreq));
+//					demo++;
+//				} catch (NullPointerException e) {
+//					e.printStackTrace();
+//				} catch (GuiQuestlistException e) {
+//					e.printStackTrace();
+//				}
 				
 				if(mc.currentScreen == null)
 					mc.displayGuiScreen(guiQuestlistManager);

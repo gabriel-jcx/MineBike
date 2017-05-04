@@ -139,7 +139,7 @@ public class CommonEventHandler {
 					{
 						if(EVENT_PLAYERSTATE_LOAD)
 						{
-							GameSaveManager.sendCustomCommand(BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
+							GameSaveManager.sendCustomCommand((BigxClientContext)BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
 							EVENT_PLAYERSTATE_LOAD = false;
 						}
 						if(EVENT_PLAYERSTATE_RESET)
@@ -156,7 +156,7 @@ public class CommonEventHandler {
 						}
 						if(EVENT_PLAYERSTATE_SAVE)
 						{
-							GameSaveManager.sendCustomCommand(BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
+							GameSaveManager.sendCustomCommand((BigxClientContext)BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
 							EVENT_PLAYERSTATE_SAVE = false;
 						}
 						
