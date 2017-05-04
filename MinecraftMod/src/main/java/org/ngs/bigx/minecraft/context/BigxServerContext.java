@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft;
+package org.ngs.bigx.minecraft.context;
 
 import java.awt.Event;
 import java.io.File;

@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
@@ -35,9 +36,12 @@ public class NpcCommand {
 	private static boolean theifOnRegularChaseQuestSpawnFlag = false;
 	private static boolean theifOnFireChaseQuestSpawnFlag = false;
 	
-	public NpcCommand(EntityCustomNpc npc) {
+	private static BigxContext bigxContext;
+	
+	public NpcCommand(BigxContext bigxContext, EntityCustomNpc npc) {
 		this.npc = npc;
 		this.role = 0;
+		this.bigxContext = bigxContext;
 	}
 	
 	public void setNPC(EntityCustomNpc npc) {
@@ -76,7 +80,7 @@ public class NpcCommand {
 		if(theifOnRegularChaseQuestSpawnFlag)
 		{
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskChasing questEventChasing = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			QuestTaskChasing questEventChasing = (QuestTaskChasing) bigxContext.getQuestManager().getQuest().getCurrentQuestEvent();
 			EntityCustomNpc npc;
 			NpcCommand command;
 			

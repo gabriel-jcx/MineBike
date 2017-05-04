@@ -5,10 +5,10 @@ import java.text.DecimalFormat;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -120,7 +120,7 @@ public class GuiStats extends GuiScreen {
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
 	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing )
+	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasing )
 	    	{
 		    	GL11.glPushMatrix();
 		    	
@@ -140,7 +140,7 @@ public class GuiStats extends GuiScreen {
 	        	
 	        	int time = 0;
 	        	
-	        	QuestEventChasing quest = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	        	QuestTaskChasing quest = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 	        	if(quest.chasingQuestOnCountDown)
 	        	{
 	        		time = quest.getCountdown();
@@ -211,7 +211,7 @@ public class GuiStats extends GuiScreen {
 	    		}
 	    	}
 	    	else if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire )
+	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire )
 	    	{
 		    	GL11.glPushMatrix();
 		    	
@@ -231,7 +231,7 @@ public class GuiStats extends GuiScreen {
 	        	
 	        	int time = 0;
 	        	
-	        	QuestEventChasingFire quest = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	        	QuestTaskChasingFire quest = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 	        	if(quest.chasingQuestOnCountDown)
 	        	{
 	        		time = quest.getCountdown();

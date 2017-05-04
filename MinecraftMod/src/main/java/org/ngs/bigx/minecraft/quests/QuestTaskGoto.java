@@ -34,4 +34,22 @@ public class QuestTaskGoto implements IQuestTask {
 				(player.posZ >= edge1.zCoord && player.posZ <= edge2.zCoord || player.posZ <= edge1.zCoord && player.posZ >= edge2.zCoord))
 			completed = true;
 	}
+
+	@Override
+	public boolean IsMainTask() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getTaskDescrption() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTaskName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

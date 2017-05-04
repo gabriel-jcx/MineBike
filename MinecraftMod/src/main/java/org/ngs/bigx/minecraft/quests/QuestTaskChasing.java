@@ -15,12 +15,13 @@ import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
@@ -69,7 +70,7 @@ public class QuestTaskChasing implements IQuestTask {
 	float ratio;
 	Vec3 returnLocation;
 	
-	private static BigxClientContext context;
+	private static BigxContext context;
 	CharacterProperty characterProperty = BiGX.instance().characterProperty;
 	EntityCustomNpc npc;
 	NpcCommand command;
@@ -163,7 +164,9 @@ public class QuestTaskChasing implements IQuestTask {
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
 		time = 0;
-		BiGX.instance().context.setSpeed(0);
+		
+		if(world.isRemote)
+			((BigxClientContext)context).setSpeed(0);
 		
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
@@ -760,5 +763,23 @@ public class QuestTaskChasing implements IQuestTask {
 			goBackToTheOriginalWorld(ws, player);
 		}
 	}
-	
+
+
+	@Override
+	public boolean IsMainTask() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getTaskDescrption() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTaskName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

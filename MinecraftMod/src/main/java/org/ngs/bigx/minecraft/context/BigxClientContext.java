@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft;
+package org.ngs.bigx.minecraft.context;
 
 import java.awt.Event;
 import java.io.File;
@@ -23,6 +23,9 @@ import org.ngs.bigx.dictionary.protocol.Specification.Command;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
+import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
+import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
@@ -122,6 +125,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		self = this;
 		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		
 		ClientAreaEvent.initArea();
 				
 		resistances.put(Blocks.air, Resistance.NONE);

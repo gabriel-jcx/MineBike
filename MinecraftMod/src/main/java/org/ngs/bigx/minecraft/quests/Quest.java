@@ -7,12 +7,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class Quest {
+	public static final String QUEST_ID_STRING_CHASE_REG = "ID_QUEST_CHASE_REG";
+	public static final String QUEST_ID_STRING_CHASE_FIRE = "ID_QUEST_CHASE_FIRE";
+	
 	protected String id; 		// Quest ID by type
 	
 	private String name, description;
 	private String[] requirements;
 	private List<EntityPlayer> players;
-	public List<IQuestTask> tasks;
+	private List<IQuestTask> tasks;
 	private List<ItemStack> rewardItems;
 	private int rewardXP, rewardCoins;
 	
@@ -23,6 +26,8 @@ public class Quest {
 	public Quest(String id, String n, String d) {
 		this(id, n, d, new String[1]);
 	}
+	
+	
 	
 	/**
 	 * Returns the progress of a Quest in percentage
@@ -80,8 +85,8 @@ public class Quest {
 		players.add(player);
 	}
 	
-	public IQuestTask getCurrentQuestEvent() {
-		for (IQuestTask e : this.events) {
+	public IQuestTask getCurrentQuestTask() {
+		for (IQuestTask e : this.tasks) {
 			if (!e.IsComplete())
 				return e;
 		}
@@ -89,7 +94,7 @@ public class Quest {
 	}
 	
 	public boolean IsComplete() {
-		for (IQuestTask questEvent : events) {
+		for (IQuestTask questEvent : this.tasks) {
 			if (!questEvent.IsComplete())
 				return false;
 		}

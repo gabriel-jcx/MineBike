@@ -31,4 +31,22 @@ public class QuestTaskTalk implements IQuestTask {
 		if (npc.interactingEntities.contains(player))
 			completed = true;
 	}
+
+	@Override
+	public boolean IsMainTask() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getTaskDescrption() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getTaskName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

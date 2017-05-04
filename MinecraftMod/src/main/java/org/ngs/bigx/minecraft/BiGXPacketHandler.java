@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
@@ -44,18 +46,20 @@ public class BiGXPacketHandler {
 					boolean chasingQuestOnCountDown = false;
 					float speedchange = 0f;
 					
-					if ((ClientEventHandler.getHandler().questDemo != null) && (ClientEventHandler.getHandler().questDemo.getQuest() != null) )
+					QuestManager questManager = context.getQuestManager(); 
+					
+					if ((questManager != null) && (questManager.getActiveQuest() != null) )
 					{
-						if (ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasing)
+						if (questManager.getActiveQuest() instanceof QuestTaskChasing)
 						{
-							chasingQuestOnGoing = ((QuestTaskChasing)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestTaskChasing)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnCountDown;
+							chasingQuestOnGoing = ((QuestTaskChasing)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
+							chasingQuestOnCountDown = ((QuestTaskChasing)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
 							speedchange = QuestTaskChasing.speedchange;
 						}
-						else if (ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire)
+						else if (questManager.getCurrentQuestEvent() instanceof QuestTaskChasingFire)
 						{
-							chasingQuestOnGoing = ((QuestTaskChasingFire)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestTaskChasingFire)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnCountDown;
+							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
+							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
 							speedchange = QuestTaskChasingFire.speedchange;
 						}
 					}

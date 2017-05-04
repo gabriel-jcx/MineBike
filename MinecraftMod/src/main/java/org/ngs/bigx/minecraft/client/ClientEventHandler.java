@@ -6,11 +6,11 @@ import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
@@ -51,8 +51,6 @@ public class ClientEventHandler {
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
 		
 		private static ClientEventHandler handler;
-		
-		public QuestManager playerQuestManager;
 		
 		private static int demo =0;
 		
@@ -151,8 +149,12 @@ public class ClientEventHandler {
 		public void onClientTick(TickEvent.ClientTickEvent event) {
 			if ((Minecraft.getMinecraft().thePlayer!=null) 
 					&& (event.phase==TickEvent.Phase.END)) {
+				if(context.getQuestManager() == null)
+				{
+					context.setQuestManager(new QuestManager(Minecraft.getMinecraft().thePlayer));
+				}
 				
-				playerQuestManager = new QuestManager(Minecraft.getMinecraft().thePlayer);
+				QuestManager playerQuestManager = context.getQuestManager();
 				
 				if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
 					try {
