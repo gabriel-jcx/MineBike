@@ -8,6 +8,6 @@ public class BigxContext {
 	protected BiGX main = null;
 	protected static BigxContext self = null;
 	
-	protected BiGXSuggestedGameProperties suggestedGameProperties = null;
+	public BiGXSuggestedGameProperties suggestedGameProperties = null;
 	protected boolean suggestedGamePropertiesReady = false;
 }
