@@ -5,13 +5,13 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.entity.EntityCustomNpc;
 
-public class QuestEventTalk implements IQuestEvent {
+public class QuestTaskTalk implements IQuestTask {
 
 	private boolean completed;
 	private EntityPlayer player;
 	private EntityCustomNpc npc;
 	
-	public QuestEventTalk(EntityPlayer p, EntityCustomNpc n) {
+	public QuestTaskTalk(EntityPlayer p, EntityCustomNpc n) {
 		player = p;
 		npc = n;
 	}

@@ -8,8 +8,8 @@ import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
-import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 
@@ -76,7 +76,7 @@ public class NpcCommand {
 		if(theifOnRegularChaseQuestSpawnFlag)
 		{
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestEventChasing questEventChasing = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			QuestTaskChasing questEventChasing = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 			EntityCustomNpc npc;
 			NpcCommand command;
 			
@@ -104,7 +104,7 @@ public class NpcCommand {
 		if(theifOnFireChaseQuestSpawnFlag)
 		{
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestEventChasingFire questEventChasingFire = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+			QuestTaskChasingFire questEventChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 			EntityCustomNpc npc;
 			NpcCommand command;
 			
@@ -251,6 +251,8 @@ public class NpcCommand {
 					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)npc.posZ});
 					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)npc.posZ});
 					break;
+				default:
+					break;
 				}
 				npc.ai.getMovingPath().remove(0);
 			}
@@ -332,8 +334,7 @@ public class NpcCommand {
 		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
 		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
 		if (ws != null) {
-			QuestTeleporter teleporter = new QuestTeleporter(ws);
-			teleporter.teleport(player, ws);
+			 QuestTeleporter.teleport(player, WorldProviderDark.dimID);
 		}
 	}
 	

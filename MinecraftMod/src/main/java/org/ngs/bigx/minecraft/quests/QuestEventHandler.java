@@ -38,18 +38,18 @@ public class QuestEventHandler {
 				Random r = new Random();
 				int hit = r.nextInt(4)+1;
 //				System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
-				if(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing)
+				if(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasing)
 				{
-					QuestEventChasing questEventChasing = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+					QuestTaskChasing questEventChasing = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 					
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
 						questEventChasing.deductThiefHealth(null);
 					else
 						questEventChasing.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 				}
-				else if(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire)
+				else if(ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire)
 				{
-					QuestEventChasingFire questEventChasing = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+					QuestTaskChasingFire questEventChasing = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
 					
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
 						questEventChasing.deductThiefHealth(null);

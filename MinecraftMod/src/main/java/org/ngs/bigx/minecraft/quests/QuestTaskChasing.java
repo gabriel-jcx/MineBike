@@ -49,7 +49,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestEventChasing implements IQuestEvent {
+public class QuestTaskChasing implements IQuestTask {
 	public static final String id = "QUEST_CHASE";
 	
 	static float playerQuestPitch, playerQuestYaw;
@@ -92,7 +92,6 @@ public class QuestEventChasing implements IQuestEvent {
 	
 	private static Timer t = null;
 	private static Timer t2 = null;
-	private static QuestTeleporter teleporter = null;
 
 	private static int thiefHealthMax = 50;
 	private static int thiefHealthCurrent = thiefHealthMax;
@@ -102,7 +101,7 @@ public class QuestEventChasing implements IQuestEvent {
 	
 	private WorldServer ws;
 	
-	public static EntityPlayer player;
+	public EntityPlayer player;
 	
 	public static int getTime()
 	{
@@ -158,7 +157,7 @@ public class QuestEventChasing implements IQuestEvent {
 		}
 	}
 	
-	public void goBackToTheOriginalWorld(World world, MinecraftServer worldServer, QuestTeleporter teleporter, Entity entity)
+	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
@@ -184,8 +183,7 @@ public class QuestEventChasing implements IQuestEvent {
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
-		teleporter.teleport(entity, worldServer.worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-//		entity.setPosition(returnLocation.xCoord, returnLocation.yCoord, returnLocation.zCoord);
+		QuestTeleporter.teleport(entity, 0, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -278,6 +276,7 @@ public class QuestEventChasing implements IQuestEvent {
 
 		System.out.println(player.dimension);
 		System.out.println(WorldProviderFlats.dimID);
+		
 		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
 				&& player.dimension != WorldProviderFlats.dimID){
 			if (ws != null && player instanceof EntityPlayerMP) {
@@ -323,10 +322,8 @@ public class QuestEventChasing implements IQuestEvent {
 				t = new Timer();
 				t2 = new Timer();
 				
-				teleporter = new QuestTeleporter(ws);
-				
 				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-				teleporter.teleport(player, ws, 1, 11, 0);
+				QuestTeleporter.teleport(player, WorldProviderFlats.dimID, 1, 11, 0);
 
 				chasingQuestInitialPosX = 1;
 				chasingQuestInitialPosY = 10;
@@ -416,7 +413,7 @@ public class QuestEventChasing implements IQuestEvent {
 									}
 								}
 								else {
-									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
+									System.out.println("DIFFICULTY IS OUT OF OUR HAND...");
 								}
 								
 								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
@@ -555,10 +552,8 @@ public class QuestEventChasing implements IQuestEvent {
 								levelSys.giveLevelUpRewards(player);
 							}
 							
-							
-							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							completed = true;
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							goBackToTheOriginalWorld(ws, player);
 							
 							return;
 						}
@@ -589,9 +584,8 @@ public class QuestEventChasing implements IQuestEvent {
 							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 								thiefLevelUp();
-							teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 							completed = true;
-							goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+							goBackToTheOriginalWorld(ws, player);
 						}
 					}
 				};
@@ -687,12 +681,11 @@ public class QuestEventChasing implements IQuestEvent {
 			if (ws != null && player instanceof EntityPlayerMP) {
 				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 				virtualCurrency = 0;
-				teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 				initThiefStat();
 				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 //				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 				completed = true;
-				goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+				goBackToTheOriginalWorld(ws, player);
 			}
 		}
 	}
@@ -760,12 +753,11 @@ public class QuestEventChasing implements IQuestEvent {
 		if (ws != null && player instanceof EntityPlayerMP) {
 			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 			virtualCurrency = 0;
-			teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
 			initThiefStat();
 			cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 //			teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 			completed = true;
-			goBackToTheOriginalWorld(ws, MinecraftServer.getServer(), teleporter, player);
+			goBackToTheOriginalWorld(ws, player);
 		}
 	}
 	

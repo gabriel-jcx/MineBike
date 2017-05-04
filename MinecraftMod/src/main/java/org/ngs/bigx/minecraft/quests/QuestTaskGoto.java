@@ -5,13 +5,13 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
-public class QuestEventGoto implements IQuestEvent {
+public class QuestTaskGoto implements IQuestTask {
 
 	private boolean completed;
 	public Vec3 edge1, edge2;
 	public EntityPlayer player;
 	
-	public QuestEventGoto(EntityPlayer p, Vec3 e1, Vec3 e2) {
+	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2) {
 		player = p;
 		edge1 = e1;
 		edge2 = e2;

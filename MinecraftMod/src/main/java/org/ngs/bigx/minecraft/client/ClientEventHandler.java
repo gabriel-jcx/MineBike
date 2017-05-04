@@ -50,7 +50,6 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
 	
-	public static QuestDemo questDemo;
 	
 		private BigxClientContext context;
 		public static KeyBinding keyBindingTogglePedalingMode;

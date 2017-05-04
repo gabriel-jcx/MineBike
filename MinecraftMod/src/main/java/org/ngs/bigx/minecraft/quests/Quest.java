@@ -12,7 +12,7 @@ public class Quest {
 	private String name, description;
 	private String[] requirements;
 	private List<EntityPlayer> players;
-	public List<IQuestEvent> events;
+	public List<IQuestTask> tasks;
 	private List<ItemStack> rewardItems;
 	private int rewardXP, rewardCoins;
 	
@@ -24,9 +24,35 @@ public class Quest {
 		this(id, n, d, new String[1]);
 	}
 	
+	/**
+	 * Returns the progress of a Quest in percentage
+	 * @return 0-100 in percentage
+	 * @throws QuestException
+	 */
+	public int getQuestProgress() throws QuestException // returns 0-100% 
+	{
+		if(this.tasks.size() == 0)
+		{
+			throw new QuestException("Quest with no task detected");
+		}
+		
+		int returnValue = 0;
+		int countTaskDone = 0;
+		
+		for(IQuestTask task : this.tasks)
+		{
+			if(task.IsComplete())
+				countTaskDone++;
+		}
+		
+		returnValue = countTaskDone / this.tasks.size();
+		
+		return returnValue;
+	}
+	
 	public Quest(String id, String n, String d, String[] requirements) {
 		this.id = id;
-		events = new ArrayList<IQuestEvent>();
+		events = new ArrayList<IQuestTask>();
 		rewardItems = new ArrayList<ItemStack>();
 		name = n;
 		description = d;
@@ -54,8 +80,8 @@ public class Quest {
 		players.add(player);
 	}
 	
-	public IQuestEvent getCurrentQuestEvent() {
-		for (IQuestEvent e : events) {
+	public IQuestTask getCurrentQuestEvent() {
+		for (IQuestTask e : events) {
 			if (!e.IsComplete())
 				return e;
 		}
@@ -63,7 +89,7 @@ public class Quest {
 	}
 	
 	public boolean IsComplete() {
-		for (IQuestEvent questEvent : events) {
+		for (IQuestTask questEvent : events) {
 			if (!questEvent.IsComplete())
 				return false;
 		}
