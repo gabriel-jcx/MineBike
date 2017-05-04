@@ -39,7 +39,7 @@ public class ClientProxy extends CommonProxy {
 	
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
-		BigxClientContext context = BiGX.instance().context;
+		BigxClientContext context = (BigxClientContext) BiGX.instance().context;
 		clientEvents = new ClientEventHandler(context);
 		FMLCommonHandler.instance().bus().register(clientEvents);
     	MinecraftForge.EVENT_BUS.register(clientEvents);

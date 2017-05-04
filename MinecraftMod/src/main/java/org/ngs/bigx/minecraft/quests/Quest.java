@@ -52,7 +52,7 @@ public class Quest {
 	
 	public Quest(String id, String n, String d, String[] requirements) {
 		this.id = id;
-		events = new ArrayList<IQuestTask>();
+		tasks = new ArrayList<IQuestTask>();
 		rewardItems = new ArrayList<ItemStack>();
 		name = n;
 		description = d;
@@ -81,7 +81,7 @@ public class Quest {
 	}
 	
 	public IQuestTask getCurrentQuestEvent() {
-		for (IQuestTask e : events) {
+		for (IQuestTask e : this.events) {
 			if (!e.IsComplete())
 				return e;
 		}

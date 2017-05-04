@@ -54,9 +54,9 @@ import com.google.gson.Gson;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class BigxServerContext extends BigxContext {
-	
-
+	private WorldServer WorldServer;
 }
