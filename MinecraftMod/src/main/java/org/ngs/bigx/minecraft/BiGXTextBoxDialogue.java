@@ -19,6 +19,9 @@ public class BiGXTextBoxDialogue {
 	public static final String questChaseShowup = "The man showed up!";
 	public static final String questChaseHintWeapon = "Hint: Buy weapon to\nincrease damage";
 	
+	public static final String questAdded = "New Quest Added!\nPress K for details";
+	public static final String questBookInstructions = "Press K to open or\nclose the quest book.";
+	
 	//Area Names
 	public static final String placeMarket = "\n   < Market Place >";
 	public static final String placeHome = "\n   < Home >";
