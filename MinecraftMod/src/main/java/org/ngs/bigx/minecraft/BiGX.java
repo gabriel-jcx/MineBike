@@ -15,6 +15,7 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
 

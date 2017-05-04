@@ -1,8 +1,10 @@
 package org.ngs.bigx.minecraft.quests;
 
 import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 /**
  * QuestDemo - Active Quest   - Quest Detail
@@ -21,10 +23,11 @@ public class QuestManager {
 	public QuestManager(EntityPlayer p) {
 		player = p;
 		this.availableQuestList = new HashMap<String, Quest>();
+		activeQuestId = "NONE";
 	}
 	
 	public void setActiveQuest(String questid) throws QuestException {
-		if(this.availableQuestList.get(questid) == null)
+		if(activeQuestId == "NONE" || this.availableQuestList.get(questid) == null)
 		{
 			throw new QuestException("The requeseted Quest is not available");
 		}
@@ -36,12 +39,15 @@ public class QuestManager {
 		return activeQuestId;
 	}
 	
+	public Quest getActiveQuest() {
+		return availableQuestList.get(activeQuestId);
+	}
+	
 	public EntityPlayer getPlayer() {
 		return player;
 	}
 	
-	public boolean CheckQuestEventCompleted() throws QuestException {
-		boolean found = false;
+	public List<ItemStack> getActiveQuestRewards() throws QuestException {
 		Quest activeQuest = this.availableQuestList.get(activeQuestId);
 		
 		if(activeQuest == null)
@@ -49,12 +55,53 @@ public class QuestManager {
 			throw new QuestException("Active Quest is out of sync");
 		}
 		
-		for (IQuestTask e : activeQuest.events) {
+		return activeQuest.GetRewardItems();
+	}
+	
+	public int getActiveQuestRewardXP() throws QuestException {
+		Quest activeQuest = this.availableQuestList.get(activeQuestId);
+		
+		if(activeQuest == null)
+		{
+			throw new QuestException("Active Quest is out of sync");
+		}
+		
+		return activeQuest.GetRewardXP();
+	}
+	
+	public boolean CheckActiveQuestCompleted() throws QuestException {
+		if (activeQuestId == "NONE") {
+			return false;
+		}
+		
+		Quest activeQuest = this.availableQuestList.get(activeQuestId);
+		
+		if(activeQuest == null)
+		{
+			throw new QuestException("Active Quest is out of sync");
+		}
+		
+		return activeQuest.IsComplete();
+	}
+	
+	public boolean CheckQuestEventCompleted() throws QuestException {
+		if (activeQuestId == "NONE") {
+			return false;
+		}
+		
+		Quest activeQuest = this.availableQuestList.get(activeQuestId);
+		
+		if(activeQuest == null)
+		{
+			throw new QuestException("Active Quest is out of sync");
+		}
+		
+		for (IQuestTask e : activeQuest.tasks) {
 			if (!e.IsComplete()) {
-				found = true;
 				e.CheckComplete();
+				return e.IsComplete();
 			}
 		}
-		return found;
+		return false;
 	}
 }

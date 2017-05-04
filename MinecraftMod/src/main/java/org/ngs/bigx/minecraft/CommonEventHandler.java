@@ -27,6 +27,7 @@ import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
@@ -105,8 +106,8 @@ public class CommonEventHandler {
 	private static int thiefMaxLevel = 1;
 	
 	public static LevelSystem levelSys = new LevelSystem();
-	public static QuestTaskChasing chaseQuest = new QuestTaskChasing();
-	public static QuestTaskChasingFire chaseQuestFire = new QuestTaskChasingFire();
+//	public static QuestTaskChasing chaseQuest = new QuestTaskChasing();
+//	public static QuestTaskChasingFire chaseQuestFire = new QuestTaskChasingFire();
 	boolean chaseQuestInProgress = false;
 	
 	private static int onPlayerTickEventCount = 0;
@@ -214,24 +215,24 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		System.out.println(event.item.getDisplayName());
-		if (event.item.getDisplayName().contains("Teleportation Potion")) {
-			EntityPlayer player = event.entityPlayer;
-			QuestTaskChasing.player = event.entityPlayer;
-			QuestTaskChasingFire.player = event.entityPlayer;
-			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasing.checkPlayerInArea(player, 94, 53, -54, 99, 58, -48))
-			{
-				chaseQuest.Run(levelSys);
-				chaseQuestInProgress = true;
-			}
-			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasingFire.checkPlayerInArea(player, -50, 50, -50, 50, 100, 50))
-			{
-				chaseQuestFire.Run(levelSys);
-				chaseQuestInProgress = true;
-			}
-			else if (chaseQuestInProgress)
-				chaseQuest.goBackToOriginalWorld(); //probably want to make this a part of the template class or something
-		}
+//		System.out.println(event.item.getDisplayName());
+//		if (event.item.getDisplayName().contains("Teleportation Potion")) {
+//			EntityPlayer player = event.entityPlayer;
+//			QuestTaskChasing.player = event.entityPlayer;
+//			QuestTaskChasingFire.player = event.entityPlayer;
+//			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasing.checkPlayerInArea(player, 94, 53, -54, 99, 58, -48))
+//			{
+//				chaseQuest.Run(levelSys);
+//				chaseQuestInProgress = true;
+//			}
+//			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasingFire.checkPlayerInArea(player, -50, 50, -50, 50, 100, 50))
+//			{
+//				chaseQuestFire.Run(levelSys);
+//				chaseQuestInProgress = true;
+//			}
+//			else if (chaseQuestInProgress)
+//				chaseQuest.goBackToOriginalWorld(); //probably want to make this a part of the template class or something
+//		}
 	}
 	
 	
@@ -254,9 +255,9 @@ public class CommonEventHandler {
 			//20 ticks = 1 second
 			if (server_tick==20) {
 				server_tick = 0;
-				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
-				NpcCommand.spawnTheifOnRegularChaseQuest();
-				NpcCommand.spawnTheifOnFireChaseQuest();
+//				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
+//				NpcCommand.spawnTheifOnRegularChaseQuest();
+//				NpcCommand.spawnTheifOnFireChaseQuest();
 				
 				// SET BLOCK EVERY ONE SECOND IN QUEST
 				

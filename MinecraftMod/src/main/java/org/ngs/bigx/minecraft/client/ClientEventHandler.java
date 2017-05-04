@@ -1,28 +1,24 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.BigxClientContext;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestDemo;
 import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventGoto;
+import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
-import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,17 +32,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
 	
@@ -63,6 +54,8 @@ public class ClientEventHandler {
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
 		
 		private static ClientEventHandler handler;
+		
+		public QuestManager playerQuestManager;
 		
 		private static int demo =0;
 		
@@ -161,16 +154,21 @@ public class ClientEventHandler {
 			if ((Minecraft.getMinecraft().thePlayer!=null) 
 					&& (event.phase==TickEvent.Phase.END)) {
 				
-				if (questDemo != null && questDemo.getQuest() != null) {
-					if (questDemo.CheckQuestEventCompleted()) {
-						if (questDemo.getQuest().IsComplete()) {
-							System.out.println("questDemo.getQuest().IsComplete()");
-							// QUEST DONE!
-							for (ItemStack i : questDemo.getQuest().GetRewardItems())
-								questDemo.getPlayer().inventory.addItemStackToInventory(i);
-							questDemo.getPlayer().addExperience(questDemo.getQuest().GetRewardXP());
-							questDemo.setActiveQuest(null); // 1 quest at a time for now (demo code)
+				playerQuestManager = new QuestManager(Minecraft.getMinecraft().thePlayer);
+				
+				if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
+					try {
+						if (playerQuestManager.CheckQuestEventCompleted()) {
+							if (playerQuestManager.CheckActiveQuestCompleted()) {
+								// QUEST DONE!
+								for (ItemStack i : playerQuestManager.getActiveQuestRewards())
+									playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
+								playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
+								playerQuestManager.setActiveQuest("NONE");
+							}
 						}
+					} catch (QuestException e) {
+						e.printStackTrace();
 					}
 				}
 				
