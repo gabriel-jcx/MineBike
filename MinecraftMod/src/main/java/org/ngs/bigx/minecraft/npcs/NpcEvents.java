@@ -49,7 +49,7 @@ public class NpcEvents {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
 			
-			if(ws.isRemote)
+			if(player.worldObj.isRemote)
 			{
 				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().clientContext.getQuestManager());
 				quest.addTasks(new QuestTaskChasing(BiGX.instance().clientContext.getQuestManager(), player, ws, 0, 1));
