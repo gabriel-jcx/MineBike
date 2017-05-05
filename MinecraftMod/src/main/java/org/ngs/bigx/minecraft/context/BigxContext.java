@@ -9,7 +9,7 @@ public class BigxContext {
 	protected BiGX main = null;
 	
 	public BiGXSuggestedGameProperties suggestedGameProperties = null;
-	protected boolean suggestedGamePropertiesReady = false;
+	public boolean suggestedGamePropertiesReady = false;
 	
 	public static BigxContext self = null;
 	
