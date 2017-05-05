@@ -172,4 +172,10 @@ public class QuestManager {
 			this.notifyAll();
 		}
 	}
+
+	public BigxContext getContext() {
+		return context;
+	}
+	
+	
 }

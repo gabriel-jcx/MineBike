@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft.quests;
 
 import java.util.TimerTask;
 
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,11 +14,13 @@ public abstract class QuestTask implements IQuestTask, Runnable {
 	protected boolean isRequired;
 	protected QuestManager questManager;
 	protected boolean isActive = false;
+	protected BigxContext context;
 	
 	public QuestTask(QuestManager questManager, boolean isMainTask)
 	{
 		this.questManager = questManager;
 		this.isRequired = isMainTask;
+		this.context = questManager.getContext();
 	}
 	
 	public QuestManager getQuestManager() {

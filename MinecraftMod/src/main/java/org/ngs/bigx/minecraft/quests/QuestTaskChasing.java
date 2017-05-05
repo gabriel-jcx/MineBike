@@ -78,7 +78,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	float ratio;
 	private Vec3 returnLocation;
 	
-	protected BigxContext context;
 	private CharacterProperty characterProperty = BiGX.instance().characterProperty;
 	private EntityCustomNpc npc;
 	private NpcCommand command;
