@@ -53,7 +53,7 @@ public abstract class QuestTask implements IQuestTask, Runnable {
 	public void activateTask()
 	{
 		this.isActive = true;
-		
+		this.registerEvents();
 		new Thread(this).start();
 	}
 	
