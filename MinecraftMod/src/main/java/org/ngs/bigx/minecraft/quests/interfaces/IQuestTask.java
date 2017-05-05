@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft.quests;
+package org.ngs.bigx.minecraft.quests.interfaces;
 
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
@@ -16,5 +16,5 @@ public interface IQuestTask {
 	/**
 	 * Allows the quest event to execute any timer-based mechanics, or anything that needs waiting
 	 */
-	public void Run(LevelSystem levelsys);
+	public void run(LevelSystem levelsys);
 }

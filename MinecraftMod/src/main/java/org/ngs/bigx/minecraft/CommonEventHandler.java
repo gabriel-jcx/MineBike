@@ -31,7 +31,6 @@ import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -113,6 +112,7 @@ public class CommonEventHandler {
 	boolean chaseQuestInProgress = false;
 	
 	private static int onPlayerTickEventCount = 0;
+	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151)) &&
@@ -124,9 +124,6 @@ public class CommonEventHandler {
 			QuestTeleporter.teleport(event.player, 0, 121, 163, -145);
 		}
 		
-		/**
-		 * TODO: IMPLEMENT PLAYER STATE RESET FEATURE HERE.
-		 */
 		if (!event.player.worldObj.isRemote)
 		{
 			try {
@@ -188,7 +185,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
-		BigxContext context = BiGX.instance().context;
+//		BigxContext context = BiGX.instance().context;
 		
 		//TODO: Implement proper cleanup when the game is exited
 		//The event which is called by the server shutting down needs to be located and used

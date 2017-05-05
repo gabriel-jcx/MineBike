@@ -14,6 +14,11 @@ public class BigxContext {
 	public static BigxContext self = null;
 	
 	protected QuestManager questManager = null;
+	
+	public BigxContext(BiGX main)
+	{
+		this.main = main;
+	}
 
 	public void setQuestManager(QuestManager questManager)
 	{
@@ -23,5 +28,9 @@ public class BigxContext {
 	public QuestManager getQuestManager()
 	{
 		return this.questManager;
+	}
+
+	public boolean isSuggestedGamePropertiesReady() {
+		return suggestedGamePropertiesReady;
 	}
 }

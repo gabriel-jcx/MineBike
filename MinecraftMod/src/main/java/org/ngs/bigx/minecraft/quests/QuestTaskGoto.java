@@ -5,35 +5,24 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
-public class QuestTaskGoto implements IQuestTask {
+public class QuestTaskGoto extends QuestTask {
 
-	private boolean completed;
 	public Vec3 edge1, edge2;
-	public EntityPlayer player;
 	
-	private boolean isRequired;
-	
-	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2, boolean required) {
+	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3 e1, Vec3 e2, boolean required) {
+		super(questManager, true);
 		player = p;
 		edge1 = e1;
 		edge2 = e2;
 		isRequired = required;
 	}
 	
-	public QuestTaskGoto(EntityPlayer p, Vec3 e1, Vec3 e2) {
-		player = p;
-		edge1 = e1;
-		edge2 = e2;
-		isRequired = false;
-	}
-	
-	@Override
-	public boolean IsComplete() {
-		return completed;
+	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3 e1, Vec3 e2) {
+		this(questManager, p,e1,e2,false);
 	}
 
 	@Override
-	public void Run(final LevelSystem levelSys) {
+	public void run(final LevelSystem levelSys) {
 		
 	}
 
@@ -46,17 +35,25 @@ public class QuestTaskGoto implements IQuestTask {
 	}
 
 	@Override
-	public boolean IsMainTask() {
-		return isRequired;
-	}
-
-	@Override
 	public String getTaskDescription() {
-		return null;
+		return "QuestTaskGoto Description";
 	}
 
 	@Override
 	public String getTaskName() {
-		return null;
+		return QuestTaskGoto.class.toString();
+	}
+
+	@Override
+	public void run() {	}
+
+	@Override
+	public void init() { }
+
+	@Override
+	public void unregisterEvents() { }
+
+	@Override
+	public void registerEvents() {
 	}
 }

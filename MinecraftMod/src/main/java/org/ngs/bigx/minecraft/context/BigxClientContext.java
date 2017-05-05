@@ -122,8 +122,9 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	public eyeTracker eTracker;
 	
 	public BigxClientContext(BiGX main) {
+		super(main);
+		
 		self = this;
-		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		
 		ClientAreaEvent.initArea();

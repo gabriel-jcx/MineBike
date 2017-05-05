@@ -151,21 +151,19 @@ public class ClientEventHandler {
 					&& (event.phase==TickEvent.Phase.END)) {
 				if(context.getQuestManager() == null)
 				{
-					context.setQuestManager(new QuestManager(Minecraft.getMinecraft().thePlayer));
+					context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
 				}
 				
 				QuestManager playerQuestManager = context.getQuestManager();
 				
 				if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
 					try {
-						if (playerQuestManager.CheckQuestEventCompleted()) {
-							if (playerQuestManager.CheckActiveQuestCompleted()) {
-								// QUEST DONE!
-								for (ItemStack i : playerQuestManager.getActiveQuestRewards())
-									playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
-								playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
-								playerQuestManager.setActiveQuest("NONE");
-							}
+						if (playerQuestManager.CheckActiveQuestCompleted()) {
+							// QUEST DONE!
+							for (ItemStack i : playerQuestManager.getActiveQuestRewards())
+								playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
+							playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
+							playerQuestManager.setActiveQuest("NONE");
 						}
 					} catch (QuestException e) {
 						e.printStackTrace();

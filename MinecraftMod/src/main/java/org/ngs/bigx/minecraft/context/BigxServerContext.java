@@ -42,6 +42,7 @@ import org.ngs.bigx.dictionary.protocol.Specification.Command;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
@@ -59,4 +60,9 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class BigxServerContext extends BigxContext {
 	private WorldServer WorldServer;
+	
+	public BigxServerContext(BiGX main)
+	{
+		super(main);
+	}
 }

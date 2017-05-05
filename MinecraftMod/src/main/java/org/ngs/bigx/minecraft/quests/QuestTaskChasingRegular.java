@@ -4,6 +4,7 @@
 //import java.net.UnknownHostException;
 //import java.util.ArrayList;
 //import java.util.List;
+//import java.util.Random;
 //import java.util.Timer;
 //import java.util.TimerTask;
 //
@@ -20,19 +21,20 @@
 //import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 //import org.ngs.bigx.minecraft.client.LeaderboardRow;
 //import org.ngs.bigx.minecraft.context.BigxClientContext;
+//import org.ngs.bigx.minecraft.context.BigxContext;
 //import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 //import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+//import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 //import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 //import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
-//import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
-//import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
 //import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-//import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 //import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 //import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 //import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 //import org.ngs.bigx.utility.NpcCommand;
 //
+//import cpw.mods.fml.relauncher.Side;
+//import cpw.mods.fml.relauncher.SideOnly;
 //import net.minecraft.block.Block;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.entity.Entity;
@@ -44,10 +46,12 @@
 //import net.minecraft.util.Vec3;
 //import net.minecraft.world.World;
 //import net.minecraft.world.WorldServer;
+//import net.minecraftforge.common.util.ForgeDirection;
 //import noppes.npcs.entity.EntityCustomNpc;
+//import noppes.npcs.entity.EntityNpcCrystal;
 //
-//public class QuestTaskChasingFire implements IQuestTask {
-//	public static final String id = "QUEST_TASK_CHASE_FIRE";
+//public class QuestTaskChasingRegular extends QuestTask {
+//	public static final String id = "QUEST_TASK_CHASE_REG";
 //	
 //	private boolean isRequired;
 //	
@@ -56,7 +60,6 @@
 //	private static long questTimeStamp = 0;
 //
 //	private static boolean completed = false;
-//
 //	private static int countdown = 10;
 //	private static int time = 0;
 //	private static double elapsedTime = 0;
@@ -68,7 +71,7 @@
 //	float ratio;
 //	Vec3 returnLocation;
 //	
-//	private static BigxClientContext context;
+//	private static BigxContext context;
 //	CharacterProperty characterProperty = BiGX.instance().characterProperty;
 //	EntityCustomNpc npc;
 //	NpcCommand command;
@@ -81,7 +84,7 @@
 //	public static int virtualCurrency = 0;
 //	public static long warningMsgBlinkingTime = System.currentTimeMillis();
 //
-//	private static TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
+//	private static TerrainBiome terrainBiome = new TerrainBiome();
 //	
 //	private static ArrayList<Integer> questSettings = null;
 //
@@ -100,9 +103,9 @@
 //	
 //	private WorldServer ws;
 //	
-//	public static EntityPlayer player;
+//	public EntityPlayer player;
 //	
-//	public QuestTaskChasingFire(EntityPlayer p, WorldServer worldServer, int level, int maxLevel, boolean required) {
+//	public QuestTaskChasingRegular(EntityPlayer p, WorldServer worldServer, int level, int maxLevel, boolean required) {
 //		player = p;
 //		ws = worldServer;
 //		thiefLevel = level;
@@ -110,7 +113,7 @@
 //		isRequired = required;
 //	}
 //	
-//	public QuestTaskChasingFire(EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
+//	public QuestTaskChasingRegular(EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
 //		player = p;
 //		ws = worldServer;
 //		thiefLevel = level;
@@ -178,10 +181,12 @@
 //		chasingQuestOnCountDown = false;
 //		timeFallBehind = 0;
 //		time = 0;
-//		BiGX.instance().context.setSpeed(0);
+//		
+//		if(world.isRemote)
+//			((BigxClientContext)context).setSpeed(0);
 //		
 //		if(npc != null)
-//			command.removeNpc(npc.display.name, WorldProviderFlats.fireQuestDimID);
+//			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 //
 //		if(t != null)
 //		{
@@ -282,13 +287,111 @@
 //		return completed;
 //	}
 //
+//	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
+//		for (int x = origX; x < origX + 7; ++x) {
+//			if (x == origX || x == origX + 6) {
+//				for (int y = origY; y < origY + 5; ++y) {
+//					for (int z = origZ; z < origZ + 11; ++z) {
+//						if (z == origZ || z == origZ + 10)
+//							w.setBlock(x, y, z, Blocks.log);
+//						else
+//							w.setBlock(x, y, z, Blocks.planks);
+//						blocks.add(Vec3.createVectorHelper(x, y, z));
+//					}
+//				}
+//				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
+//				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
+//			} else {
+//				for (int y = origY; y < origY + 7; ++y) {
+//					for (int z = origZ; z < origZ + 11; ++z) {
+//						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
+//							w.setBlock(x, y, z, Blocks.planks);
+//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//						}
+//						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
+//							w.setBlock(x, y, z, Blocks.planks);
+//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//						}
+//						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
+//							w.setBlock(x, y, z, Blocks.planks);
+//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//						}
+//					}
+//				}
+//				if (x == origX + 2 || x == origX + 4) {
+//					w.setBlock(x, origY+1, origZ, Blocks.glass);
+//					w.setBlock(x, origY+2, origZ, Blocks.glass);
+//				}
+//			}
+//		}
+//	}
+//	
+//	public static float getPlayerPitch() {
+//		return playerQuestPitch;
+//	}
+//	public static float getPlayerYaw() {
+//		return playerQuestYaw;
+//	}
+//	
+//	public void setNpc(EntityCustomNpc npc)
+//	{
+//		this.npc = npc;
+//	}
+//	
+//	public void setNpcCommand(NpcCommand npcCommand)
+//	{
+//		this.command = npcCommand;
+//	}
+//
+//	@Override
+//	public void CheckComplete() {
+//	}
+//	
+//	public void goBackToOriginalWorld(){
+//		if (ws != null && player instanceof EntityPlayerMP) {
+//			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//			virtualCurrency = 0;
+//			initThiefStat();
+//			cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+////			teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+//			completed = true;
+//			goBackToTheOriginalWorld(ws, player);
+//		}
+//	}
+//
+//	@Override
+//	public boolean IsMainTask() {
+//		return isRequired;
+//	}
+//
+//	@Override
+//	public String getTaskDescription() {
+//		return null;
+//	}
+//
+//	@Override
+//	public String getTaskName() {
+//		return null;
+//	}
+//
 //	@Override
 //	public void run(final LevelSystem levelSys) {
-//		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
+//		
+//	}
+//
+//	@Override
+//	public void run() {
+//		System.out.println("Running...");
+//		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderFlats.dimID);
 //		
 //		context = BiGX.instance().context;
-//		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && player.dimension != WorldProviderDark.dimID){
-//			if (ws != null && player instanceof EntityPlayerMP) {		
+//
+//		System.out.println(player.dimension);
+//		System.out.println(WorldProviderFlats.dimID);
+//		
+//		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
+//				&& player.dimension != WorldProviderFlats.dimID){
+//			if (ws != null && player instanceof EntityPlayerMP) {
 //				// SET CURRENT ACTIVE QUEST DEMO
 //				if(ClientEventHandler.getHandler().questDemo == null)
 //					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
@@ -305,8 +408,9 @@
 //				Quest chaseQuest = new Quest(this.id, "Chagse", "Let's get started!");
 //				chaseQuest.events.add(this);
 //				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
-//				
+//						
 //				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
+//				System.out.println("[BiGX] thiefLevel: " + thiefLevel + " vs playerlevel: " + levelSys.getPlayerLevel());
 //				// INIT questSettings ArrayList if there is any
 //				if(context.suggestedGamePropertiesReady)
 //				{
@@ -331,7 +435,7 @@
 //				t2 = new Timer();
 //				
 //				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-//				QuestTeleporter.teleport(player, WorldProviderDark.dimID, 1, 11, 0);
+//				QuestTeleporter.teleport(player, WorldProviderFlats.dimID, 1, 11, 0);
 //
 //				chasingQuestInitialPosX = 1;
 //				chasingQuestInitialPosY = 10;
@@ -369,6 +473,17 @@
 //								blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 //							}
 //							
+//							Random rand = new Random();
+//							if (rand.nextInt(10) < 2) {
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)player.posZ+64);
+//								
+//							}
+//							rand = new Random();
+//							if (rand.nextInt(10) < 2) {
+//								generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)player.posZ+64);
+//								
+//							}
+//							
 //							if(context.suggestedGamePropertiesReady)
 //							{
 //								/**
@@ -392,25 +507,25 @@
 //								{
 //									for(int idx = 0; idx<4; idx++)
 //									{
-//										areas.add(terrainBiomeFire.getRandomGateBiome());
+//										areas.add(terrainBiome.getRandomCityBiome());
 //									}
 //								}
 //								else if(blockByDifficulty == Blocks.grass)
 //								{
 //									for(int idx = 0; idx<4; idx++)
 //									{
-//										areas.add(terrainBiomeFire.getRandomFieldBiome());
+//										areas.add(terrainBiome.getRandomGrassBiome());
 //									}
 //								}
 //								else if(blockByDifficulty == Blocks.sand)
 //								{
 //									for(int idx = 0; idx<4; idx++)
 //									{
-//										areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+//										areas.add(terrainBiome.getRandomDesertBiome());
 //									}
 //								}
 //								else {
-//									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
+//									System.out.println("DIFFICULTY IS OUT OF OUR HAND...");
 //								}
 //								
 //								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
@@ -540,9 +655,14 @@
 //							GuiLeaderBoard.writeToLeaderboard(row);
 //
 //							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-//
 //							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 //							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+//							
+//							System.out.println("[BiGX] increased exp: " + levelSys.incExp(50));
+//							if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
+//								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
+//								levelSys.giveLevelUpRewards(player);
+//							}
 //							
 //							completed = true;
 //							goBackToTheOriginalWorld(ws, player);
@@ -597,7 +717,7 @@
 //										((EntityCustomNpc)o).delete();
 //									}
 //								}
-//								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderDark.dimID)) {
+//								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID)) {
 //									System.out.println(((EntityCustomNpc)o).display.name);
 ////									((EntityCustomNpc)o).delete();
 //								}
@@ -615,22 +735,23 @@
 ////								command.setSpeed(10);
 ////								command.enableMoving(false);
 ////								command.runInDirection(ForgeDirection.SOUTH);
-//								NpcCommand.triggerSpawnTheifOnFireChaseQuest();								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+//								NpcCommand.triggerSpawnTheifOnChaseQuest();
+//								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 //								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 //							}
 //							else if (countdown == 1)
 //							{
-////								try {
-////									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
-////								} catch (SocketException e) {
-////									e.printStackTrace();
-////								} catch (UnknownHostException e) {
-////									e.printStackTrace();
-////								} catch (BiGXNetException e) {
-////									e.printStackTrace();
-////								} catch (BiGXInternalGamePluginExcpetion e) {
-////									e.printStackTrace();
-////								}
+//								try {
+//									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
+//								} catch (SocketException e) {
+//									e.printStackTrace();
+//								} catch (UnknownHostException e) {
+//									e.printStackTrace();
+//								} catch (BiGXNetException e) {
+//									e.printStackTrace();
+//								} catch (BiGXInternalGamePluginExcpetion e) {
+//									e.printStackTrace();
+//								}
 //							}
 //							else if(countdown == 9)
 //							{
@@ -667,55 +788,18 @@
 //			}
 //		}
 //		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-//				&& player.dimension == WorldProviderDark.dimID){
+//				&& player.dimension == WorldProviderFlats.dimID){
 //			// CHASE QUEST LOSE CONDITION
 //			if (ws != null && player instanceof EntityPlayerMP) {
 //				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 //				virtualCurrency = 0;
 //				initThiefStat();
 //				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+////				teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 //				completed = true;
 //				goBackToTheOriginalWorld(ws, player);
 //			}
 //		}
-//	}
-//	
-//	public static float getPlayerPitch() {
-//		return playerQuestPitch;
-//	}
-//	public static float getPlayerYaw() {
-//		return playerQuestYaw;
-//	}
-//	
-//	public void setNpc(EntityCustomNpc npc)
-//	{
-//		this.npc = npc;
-//	}
-//	
-//	public void setNpcCommand(NpcCommand npcCommand)
-//	{
-//		this.command = npcCommand;
-//	}
-//
-//	@Override
-//	public void CheckComplete() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public boolean IsMainTask() {
-//		return isRequired;
-//	}
-//
-//	@Override
-//	public String getTaskDescription() {
-//		return null;
-//	}
-//
-//	@Override
-//	public String getTaskName() {
-//		return null;
 //	}
 //	
 //}

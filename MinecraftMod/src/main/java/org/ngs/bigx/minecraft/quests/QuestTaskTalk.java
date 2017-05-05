@@ -1,37 +1,28 @@
 package org.ngs.bigx.minecraft.quests;
 
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
 
 import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.entity.EntityCustomNpc;
 
-public class QuestTaskTalk implements IQuestTask {
-
-	private boolean completed;
-	private EntityPlayer player;
+public class QuestTaskTalk extends QuestTask {
 	private EntityCustomNpc npc;
-	private boolean isRequired;
 	
-	public QuestTaskTalk(EntityPlayer p, EntityCustomNpc n) {
-		player = p;
-		npc = n;
-		isRequired = false;
+	public QuestTaskTalk(QuestManager questManager, EntityPlayer p, EntityCustomNpc n) {
+		this(questManager, p, n, false);
 	}
 	
 	
-	public QuestTaskTalk(EntityPlayer p, EntityCustomNpc n, boolean required) {
+	public QuestTaskTalk(QuestManager questManager, EntityPlayer p, EntityCustomNpc n, boolean required) {
+		super(questManager, required);
 		player = p;
 		npc = n;
 		isRequired = required;
 	}
-	
-	@Override
-	public boolean IsComplete() {
-		return completed;
-	}
 
 	@Override
-	public void Run(LevelSystem levelSys) {
+	public void run(LevelSystem levelSys) {
 		
 	}
 	
@@ -42,17 +33,32 @@ public class QuestTaskTalk implements IQuestTask {
 	}
 
 	@Override
-	public boolean IsMainTask() {
-		return isRequired;
-	}
-
-	@Override
 	public String getTaskDescription() {
-		return null;
+		return "QuestTaskTalk Description";
 	}
 
 	@Override
 	public String getTaskName() {
-		return null;
+		return QuestTaskTalk.class.toString();
+	}
+
+	@Override
+	public void run() { }
+
+	@Override
+	public void init() { }
+
+
+	@Override
+	public void unregisterEvents() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void registerEvents() {
+		// TODO Auto-generated method stub
+		
 	}
 }

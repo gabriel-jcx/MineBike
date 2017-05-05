@@ -10,7 +10,6 @@ import org.ngs.bigx.minecraft.client.ClientProxy;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasingFire;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -23,7 +22,7 @@ public class BiGXPacketHandler {
 	public static boolean Handle(BiGXNetClient client, BiGXNetPacket packet) {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
-		BigxClientContext context = (BigxClientContext) BiGX.instance().context;
+		BigxClientContext context = (BigxClientContext) BiGX.instance().clientContext;
 		
 //		System.out.println("Receiving Data");
 
@@ -50,18 +49,19 @@ public class BiGXPacketHandler {
 					
 					if ((questManager != null) && (questManager.getActiveQuest() != null) )
 					{
-						if (questManager.getActiveQuest() instanceof QuestTaskChasing)
+						if (questManager.getActiveQuest().getCurrentQuestTask() instanceof QuestTaskChasing)
 						{
-							chasingQuestOnGoing = ((QuestTaskChasing)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestTaskChasing)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
-							speedchange = QuestTaskChasing.speedchange;
+							QuestTaskChasing questTaskChasing = (QuestTaskChasing) questManager.getActiveQuest().getCurrentQuestTask();
+							chasingQuestOnGoing = questTaskChasing.isChasingQuestOnGoing();
+							chasingQuestOnCountDown = questTaskChasing.isChasingQuestOnCountDown();
+							speedchange = questTaskChasing.getSpeedchange();
 						}
-						else if (questManager.getCurrentQuestEvent() instanceof QuestTaskChasingFire)
-						{
-							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
-							speedchange = QuestTaskChasingFire.speedchange;
-						}
+//						else if (questManager.getCurrentQuestEvent().getCurrentQuestTask() instanceof QuestTaskChasingFire)
+//						{
+//							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
+//							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
+//							speedchange = QuestTaskChasingFire.speedchange;
+//						}
 					}
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
