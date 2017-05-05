@@ -32,6 +32,7 @@ public class Quest implements Runnable {
 		this.name = n;
 		this.description = d;
 		this.questManager = questManager;
+		this.tasks = new ArrayList<QuestTask>();
 	}
 	
 	public List<QuestTask> getTasks()
