@@ -47,16 +47,22 @@ public class NpcEvents {
 		
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+			Quest quest;
 			
-			Quest quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().clientContext.getQuestManager());
-			quest.addTasks(new QuestTaskChasing(BiGX.instance().clientContext.getQuestManager(), player, ws, 0, 1));
-			BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest);
-			BiGX.instance().clientContext.getQuestManager().activateQuest(quest);
-			
-			quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().serverContext.getQuestManager());
-			quest.addTasks(new QuestTaskChasing(BiGX.instance().serverContext.getQuestManager(), player, ws, 0, 1));
-			BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest);
-			BiGX.instance().serverContext.getQuestManager().activateQuest(quest);
+			if(ws.isRemote)
+			{
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().clientContext.getQuestManager());
+				quest.addTasks(new QuestTaskChasing(BiGX.instance().clientContext.getQuestManager(), player, ws, 0, 1));
+				BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest);
+				BiGX.instance().clientContext.getQuestManager().activateQuest(quest);
+			}
+			else
+			{
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().serverContext.getQuestManager());
+				quest.addTasks(new QuestTaskChasing(BiGX.instance().serverContext.getQuestManager(), player, ws, 0, 1));
+				BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest);
+				BiGX.instance().serverContext.getQuestManager().activateQuest(quest);
+			}
 		} catch (QuestException e) {
 			e.printStackTrace();
 		}
