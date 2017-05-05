@@ -9,6 +9,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 
@@ -37,19 +38,20 @@ public class QuestEventHandler {
 				
 				Random r = new Random();
 				int hit = r.nextInt(4)+1;
+				
 //				System.out.println("[BiGX] Interact with the Thief HP["+CommonEventHandler.getTheifHealthCurrent()+"/"+CommonEventHandler.getTheifHealthMax()+"] Lv["+CommonEventHandler.getTheifLevel()+"]");
-				if(ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask() instanceof QuestTaskChasing)
+				if(BigxContext.self.getQuestManager().getActiveQuestTask() instanceof QuestTaskChasing)
 				{
-					QuestTaskChasing questTaskChasing = (QuestTaskChasing) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
+					QuestTaskChasing questTaskChasing = (QuestTaskChasing) BigxContext.self.getQuestManager().getActiveQuestTask();
 					
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
 						questTaskChasing.deductThiefHealth(null);
 					else
 						questTaskChasing.deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 				}
-				else if(ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask() instanceof QuestTaskChasingFire)
+				else if(BigxContext.self.getQuestManager().getActiveQuestTask() instanceof QuestTaskChasingFire)
 				{
-					QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
+					QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) BigxContext.self.getQuestManager().getActiveQuestTask();
 					
 					if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
 						questTaskChasingFire.deductThiefHealth(null);

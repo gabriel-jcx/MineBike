@@ -46,7 +46,7 @@ public class QuestManager {
 	
 	// WARNING: volatile - use this to read information, not set new information
 	public IQuestTask getActiveQuestTask() {
-		return availableQuestList.get(activeQuestId).getCurrentQuestEvent();
+		return availableQuestList.get(activeQuestId).getCurrentQuestTask();
 	}
 	
 	public EntityPlayer getPlayer() {
@@ -90,7 +90,7 @@ public class QuestManager {
 		return activeQuest.IsComplete();
 	}
 	
-	public boolean CheckQuestEventCompleted() throws QuestException {
+	public boolean CheckQuestTaskCompleted() throws QuestException {
 		if (activeQuestId == "NONE") {
 			return false;
 		}
@@ -102,12 +102,11 @@ public class QuestManager {
 			throw new QuestException("Active Quest is out of sync");
 		}
 		
-		for (IQuestTask e : activeQuest.tasks) {
-			if (!e.IsComplete()) {
-				e.CheckComplete();
-				return e.IsComplete();
-			}
+		if (!activeQuest.getCurrentQuestTask().IsComplete()) {
+			activeQuest.getCurrentQuestTask().CheckComplete();
+			return activeQuest.getCurrentQuestTask().IsComplete();
 		}
+		
 		return false;
 	}
 }

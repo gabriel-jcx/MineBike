@@ -50,16 +50,16 @@ public class BiGXPacketHandler {
 					
 					if ((questManager != null) && (questManager.getActiveQuest() != null) )
 					{
-						if (questManager.getActiveQuest() instanceof QuestTaskChasing)
+						if (questManager.getActiveQuestTask() instanceof QuestTaskChasing)
 						{
-							chasingQuestOnGoing = ((QuestTaskChasing)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestTaskChasing)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
+							chasingQuestOnGoing = ((QuestTaskChasing)questManager.getActiveQuestTask()).chasingQuestOnGoing;
+							chasingQuestOnCountDown = ((QuestTaskChasing)questManager.getActiveQuestTask()).chasingQuestOnCountDown;
 							speedchange = QuestTaskChasing.speedchange;
 						}
-						else if (questManager.getCurrentQuestEvent() instanceof QuestTaskChasingFire)
+						else if (questManager.getActiveQuestTask() instanceof QuestTaskChasingFire)
 						{
-							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
+							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getActiveQuestTask()).chasingQuestOnGoing;
+							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getActiveQuestTask()).chasingQuestOnCountDown;
 							speedchange = QuestTaskChasingFire.speedchange;
 						}
 					}

@@ -75,60 +75,62 @@ public class NpcCommand {
 		theifOnFireChaseQuestSpawnFlag = true;
 	}
 	
-	public static void spawnTheifOnRegularChaseQuest()
-	{	
-		if(theifOnRegularChaseQuestSpawnFlag)
-		{
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskChasing questTaskChasing = (QuestTaskChasing)bigxContext.getQuestManager().getActiveQuestTask();			EntityCustomNpc npc;
-			NpcCommand command;
-			
-			if(questTaskChasing == null)
-				return;
-			
-			theifOnRegularChaseQuestSpawnFlag = false;
-			
-			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-			npc.ai.stopAndInteract = false;
-			
-			questTaskChasing.setNpc(npc);
-			
-			command = new NpcCommand(npc);
-			command.setSpeed(10);
-			command.enableMoving(false);
-			command.runInDirection(ForgeDirection.SOUTH);
-			
-			questTaskChasing.setNpcCommand(command);
-		}
-	}
+	// TODO move to QuestTaskChasing
+//	public static void spawnTheifOnRegularChaseQuest()
+//	{	
+//		if(theifOnRegularChaseQuestSpawnFlag)
+//		{
+//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
+//			QuestTaskChasing questTaskChasing = (QuestTaskChasing)bigxContext.getQuestManager().getActiveQuestTask();			EntityCustomNpc npc;
+//			NpcCommand command;
+//			
+//			if(questTaskChasing == null)
+//				return;
+//			
+//			theifOnRegularChaseQuestSpawnFlag = false;
+//			
+//			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+//			npc.ai.stopAndInteract = false;
+//			
+//			questTaskChasing.setNpc(npc);
+//			
+//			command = new NpcCommand(npc);
+//			command.setSpeed(10);
+//			command.enableMoving(false);
+//			command.runInDirection(ForgeDirection.SOUTH);
+//			
+//			questTaskChasing.setNpcCommand(command);
+//		}
+//	}
 	
-	public static void spawnTheifOnFireChaseQuest()
-	{	
-		if(theifOnFireChaseQuestSpawnFlag)
-		{
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
-			EntityCustomNpc npc;
-			NpcCommand command;
-			
-			if(questTaskChasingFire == null)
-				return;
-			
-			theifOnFireChaseQuestSpawnFlag = false;
-			
-			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
-			npc.ai.stopAndInteract = false;
-			npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
-			questTaskChasingFire.setNpc(npc);
-			
-			command = new NpcCommand(npc);
-			command.setSpeed(10);
-			command.enableMoving(false);
-			command.runInDirection(ForgeDirection.SOUTH);
-			
-			questTaskChasingFire.setNpcCommand(command);
-		}
-	}
+	// TODO move to QuestTaskChasingFire
+//	public static void spawnTheifOnFireChaseQuest()
+//	{	
+//		if(theifOnFireChaseQuestSpawnFlag)
+//		{
+//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
+//			QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) ClientEventHandler.getHandler().playerQuestManager.getActiveQuestTask();
+//			EntityCustomNpc npc;
+//			NpcCommand command;
+//			
+//			if(questTaskChasingFire == null)
+//				return;
+//			
+//			theifOnFireChaseQuestSpawnFlag = false;
+//			
+//			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
+//			npc.ai.stopAndInteract = false;
+//			npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
+//			questTaskChasingFire.setNpc(npc);
+//			
+//			command = new NpcCommand(npc);
+//			command.setSpeed(10);
+//			command.enableMoving(false);
+//			command.runInDirection(ForgeDirection.SOUTH);
+//			
+//			questTaskChasingFire.setNpcCommand(command);
+//		}
+//	}
 	
 	public static void setNpcSpawnFlag()
 	{

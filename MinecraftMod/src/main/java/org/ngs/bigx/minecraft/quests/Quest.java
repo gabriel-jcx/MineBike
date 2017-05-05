@@ -85,7 +85,7 @@ public class Quest {
 		players.add(player);
 	}
 	
-	public IQuestTask getCurrentQuestEvent() {
+	public IQuestTask getCurrentQuestTask() {
 		for (IQuestTask e : this.tasks) {
 			if (!e.IsComplete())
 				return e;
@@ -94,8 +94,8 @@ public class Quest {
 	}
 	
 	public boolean IsComplete() {
-		for (IQuestTask questEvent : this.tasks) {
-			if (!questEvent.IsComplete())
+		for (IQuestTask questTask : this.tasks) {
+			if (!questTask.IsComplete())
 				return false;
 		}
 		return true;

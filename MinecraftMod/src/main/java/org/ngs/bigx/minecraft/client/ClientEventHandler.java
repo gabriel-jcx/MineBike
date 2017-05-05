@@ -158,7 +158,7 @@ public class ClientEventHandler {
 				
 				if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
 					try {
-						if (playerQuestManager.CheckQuestEventCompleted()) {
+						if (playerQuestManager.CheckQuestTaskCompleted()) {
 							if (playerQuestManager.CheckActiveQuestCompleted()) {
 								// QUEST DONE!
 								for (ItemStack i : playerQuestManager.getActiveQuestRewards())

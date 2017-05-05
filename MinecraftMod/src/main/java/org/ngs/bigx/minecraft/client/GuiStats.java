@@ -119,8 +119,8 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
-	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasing )
+	    	if(context.getQuestManager() != null && context.getQuestManager().getActiveQuestId() != "NONE" && 
+	    			context.getQuestManager().getActiveQuestTask() instanceof QuestTaskChasing )
 	    	{
 		    	GL11.glPushMatrix();
 		    	
@@ -140,7 +140,7 @@ public class GuiStats extends GuiScreen {
 	        	
 	        	int time = 0;
 	        	
-	        	QuestTaskChasing quest = (QuestTaskChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	        	QuestTaskChasing quest = (QuestTaskChasing) context.getQuestManager().getActiveQuestTask();
 	        	if(quest.chasingQuestOnCountDown)
 	        	{
 	        		time = quest.getCountdown();
@@ -210,8 +210,8 @@ public class GuiStats extends GuiScreen {
 	    			}
 	    		}
 	    	}
-	    	else if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire )
+	    	else if(context.getQuestManager() != null && context.getQuestManager().getActiveQuestId() != "NONE" && 
+	    			context.getQuestManager().getActiveQuestTask() instanceof QuestTaskChasingFire )
 	    	{
 		    	GL11.glPushMatrix();
 		    	
@@ -231,7 +231,7 @@ public class GuiStats extends GuiScreen {
 	        	
 	        	int time = 0;
 	        	
-	        	QuestTaskChasingFire quest = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	        	QuestTaskChasingFire quest = (QuestTaskChasingFire) context.getQuestManager().getActiveQuestTask();
 	        	if(quest.chasingQuestOnCountDown)
 	        	{
 	        		time = quest.getCountdown();

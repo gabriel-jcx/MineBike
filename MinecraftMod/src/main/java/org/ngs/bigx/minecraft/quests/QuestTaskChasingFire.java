@@ -1,45 +1,23 @@
 package org.ngs.bigx.minecraft.quests;
 
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
-import org.ngs.bigx.dictionary.objects.game.properties.Stage;
-import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
-import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.BiGXEventTriggers;
-import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
-import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
-import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.client.LeaderboardRow;
-import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
-import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -67,7 +45,7 @@ public class QuestTaskChasingFire implements IQuestTask {
 	float ratio;
 	Vec3 returnLocation;
 	
-	private static BigxClientContext context;
+	private static BigxContext context;
 	CharacterProperty characterProperty = BiGX.instance().characterProperty;
 	EntityCustomNpc npc;
 	NpcCommand command;
@@ -177,7 +155,7 @@ public class QuestTaskChasingFire implements IQuestTask {
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
 		time = 0;
-		BiGX.instance().context.setSpeed(0);
+//		context.setSpeed(0);
 		
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.fireQuestDimID);
@@ -283,405 +261,384 @@ public class QuestTaskChasingFire implements IQuestTask {
 
 	@Override
 	public void Run(final LevelSystem levelSys) {
-		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-		
-		context = BiGX.instance().context;
-		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && player.dimension != WorldProviderDark.dimID){
-			if (ws != null && player instanceof EntityPlayerMP) {		
-				// SET CURRENT ACTIVE QUEST DEMO
-				if(ClientEventHandler.getHandler().questDemo == null)
-					ClientEventHandler.getHandler().questDemo = new QuestDemo(player);
-				else {
-					if(ClientEventHandler.getHandler().questDemo.getQuest().events.contains(this)) {
-						if(System.currentTimeMillis() - questTimeStamp < 1000)
-							return;
-					}
-				}
-				
-				completed = false;
-				questTimeStamp = System.currentTimeMillis();
-				
-				Quest chaseQuest = new Quest(this.id, "Chagse", "Let's get started!");
-				chaseQuest.events.add(this);
-				ClientEventHandler.getHandler().questDemo.setActiveQuest(chaseQuest);
-				
-				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
-				// INIT questSettings ArrayList if there is any
-				if(context.suggestedGamePropertiesReady)
-				{
-					time = 0; 
-					questSettings = new ArrayList<Integer>();
-					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
-					List<Stage> stageList = stagesettings.stages;
-					
-					for(int i=0; i<stageList.size();i++)
-					{
-						for(int j=0; j<stageList.get(i).duration; j++)
-						{
-							questSettings.add(stageList.get(i).exerciseSettings);
-						}
-					}
-				}
-				else{
-					time = 0;
-				}
-				
-				t = new Timer();
-				t2 = new Timer();
-				
-				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-				QuestTeleporter.teleport(player, WorldProviderDark.dimID, 1, 11, 0);
-
-				chasingQuestInitialPosX = 1;
-				chasingQuestInitialPosY = 10;
-				chasingQuestInitialPosZ = 0;
-				
-				// Clean up placed blocks when the quest ends
-				final List<Vec3> blocks = new ArrayList<Vec3>();
-				
-				for (int z = -16; z < (int)player.posZ+64; ++z) {
-					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
-				}
-				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-					ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
-				}
-				
-				final TimerTask t2Task = new TimerTask() {
-					@Override
-					public void run() {
-						dist = player.getDistanceToEntity(npc);
-						ratio = (initialDist-dist)/initialDist;
-						if (!Minecraft.getMinecraft().isGamePaused()) {
-							time++;
-							
-							/**
-							 * Generates structures on sides (fence and Fake house on sides)
-							 */
-							for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
-								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-								blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-								ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-								blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
-							}
-							
-							if(context.suggestedGamePropertiesReady)
-							{
-								/**
-								 * Generates structures inside fence
-								 */
-								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
-								int currentRelativePosition = (int)player.posZ - chasingQuestInitialPosZ;
-								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
-								
-								if(currentRelativeTime > questSettings.size())
-								{
-									currentRelativeTime = questSettings.size() -1;
-								}
-								
-								int currentQuestDifficulty = questSettings.get(currentRelativeTime);
-								Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
-
-								if( (blockByDifficulty == Blocks.brick_block) || 
-										(blockByDifficulty == Blocks.stone) || 
-										(blockByDifficulty == Blocks.gravel) )
-								{
-									for(int idx = 0; idx<4; idx++)
-									{
-										areas.add(terrainBiomeFire.getRandomGateBiome());
-									}
-								}
-								else if(blockByDifficulty == Blocks.grass)
-								{
-									for(int idx = 0; idx<4; idx++)
-									{
-										areas.add(terrainBiomeFire.getRandomFieldBiome());
-									}
-								}
-								else if(blockByDifficulty == Blocks.sand)
-								{
-									for(int idx = 0; idx<4; idx++)
-									{
-										areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
-									}
-								}
-								else {
-									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
-								}
-								
-								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-									for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-										ws.setBlock(x, chasingQuestInitialPosY-1, z, blockByDifficulty);
-										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-									}
-								}
-								
-								for(int row=0; row<1; row++)
-								{
-									for(int idx=0; idx<areas.size(); idx++)
-									{
-										int x=0;
-										switch(idx)
-										{
-										case 0:
-											x = chasingQuestInitialPosX-14;
-											break;
-										case 1:
-											x = chasingQuestInitialPosX-7;
-											break;
-										case 2:
-											x = chasingQuestInitialPosX+1;
-											break;
-										case 3:
-											x = chasingQuestInitialPosX+9;
-											break;
-										}
-										int y = chasingQuestInitialPosY;
-										int z = (int)player.posZ+49 + row*9;
-										
-										TerrainBiomeArea terrainBiomeArea = areas.get(idx);
-										
-										for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
-										{
-											if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
-												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
-											else
-												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
-										}
-									}
-								}
-								/**
-								 * END OF Generates structures inside fence
-								 */
-								
-								/**
-								 * Terrain Cleaning
-								 */
-								if(areas.size() != 0)
-									areas.clear();
-								
-								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
-								/**
-								 * END OF Terrain Cleaning
-								 */
-							}
-							else{
-								if (ratio > 0.4) {
-									for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-										for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-											ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
-											blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-											ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
-										}
-									}
-								}
-							}
-						}
-						
-						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
-//						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
-						speedchange = 0f;
-						float speedchangerate = 0.025f;
-						
-						// Handling Player heart rate and rpm as mechanics for Chase Quest
-						BiGXPatientPrescription playerperscription;
-						try{
-							playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
-						}
-						catch (Exception e)
-						{
-							playerperscription = new BiGXPatientPrescription();
-							playerperscription.setTargetMin(100);
-							playerperscription.setTargetMax(100);
-							System.out.println("[BiGX] player prescription is not avilable.");
-						}
-						
-						if (playerperscription.getTargetMin() > context.heartrate || context.rpm < 40)
-							speedchange += speedchangerate;
-						else if (playerperscription.getTargetMax() >= context.heartrate || context.rpm > 60 && context.rpm <= 90)
-							speedchange += speedchangerate;
-						else if (playerperscription.getTargetMax() < context.heartrate)
-							speedchange -= speedchangerate/2;
-						
-						if (context.rpm <= 60 && context.rpm > 40)
-							speedchange += speedchangerate;
-						else if (context.rpm <= 90 && context.rpm > 60)
-							speedchange += speedchangerate;
-						else if (context.rpm > 90)
-							speedchange += speedchangerate/2;
-						else if (context.rpm <= 40)
-							speedchange -= speedchangerate;
-						
-						// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
-						if (thiefHealthCurrent <= 0) {
-							try {
-								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
-							} catch (SocketException e) {
-								e.printStackTrace();
-							} catch (UnknownHostException e) {
-								e.printStackTrace();
-							} catch (BiGXNetException e) {
-								e.printStackTrace();
-							} catch (BiGXInternalGamePluginExcpetion e) {
-								e.printStackTrace();
-							}
-							
-
-							player.worldObj.playSoundAtEntity(player, "win", 1.0f, 1.0f);
-							endingZ = (int)player.posZ;
-							LeaderboardRow row = new LeaderboardRow();
-							row.name = context.BiGXUserName;
-							row.level = Integer.toString(thiefLevel);
-							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
-							GuiLeaderBoard.writeToLeaderboard(row);
-
-							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
-							
-							completed = true;
-							goBackToTheOriginalWorld(ws, player);
-							
-							return;
-						}
-
-						if (ratio < 0) {
-							warningMsgBlinkingTime = System.currentTimeMillis();
-							timeFallBehind++;
-						}
-						else{
-							timeFallBehind = 0;
-						}
-
-						// CHASE QUEST LOSE CONDITION
-						if(timeFallBehind >= 30)
-						{
-							try {
-								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
-							} catch (SocketException e) {
-								e.printStackTrace();
-							} catch (UnknownHostException e) {
-								e.printStackTrace();
-							} catch (BiGXNetException e) {
-								e.printStackTrace();
-							} catch (BiGXInternalGamePluginExcpetion e) {
-								e.printStackTrace();
-							}
-							
-							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
-								thiefLevelUp();
-							completed = true;
-							goBackToTheOriginalWorld(ws, player);
-						}
-					}
-				};
-
-				final TimerTask tTask = new TimerTask() {
-					@Override
-					public void run() {
-						if (countdown > 0) {
-							chasingQuestOnGoing = true;
-							chasingQuestOnCountDown = true;
-							System.out.println(countdown-- + "...");
-							
-							if (countdown == 7) {
-								for (Object o : player.worldObj.loadedEntityList) {
-									if (((Entity)o) instanceof EntityCustomNpc) {
-//										System.out.println(((EntityCustomNpc)o).display.name);
-										((EntityCustomNpc)o).delete();
-									}
-								}
-								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderDark.dimID)) {
-									System.out.println(((EntityCustomNpc)o).display.name);
-//									((EntityCustomNpc)o).delete();
-								}
-							}
-							if (countdown == 0) {
-								elapsedTime = System.currentTimeMillis();
-								dist = 0;
-								startingZ = (int)player.posZ;
-								endingZ = (int)player.posZ;
-							}
-							if (countdown == 5) {
-//								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-//								npc.ai.stopAndInteract = false;
-//								command = new NpcCommand(npc);
-//								command.setSpeed(10);
-//								command.enableMoving(false);
-//								command.runInDirection(ForgeDirection.SOUTH);
-								NpcCommand.triggerSpawnTheifOnFireChaseQuest();								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
-							}
-							else if (countdown == 1)
-							{
-//								try {
-//									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
-//								} catch (SocketException e) {
-//									e.printStackTrace();
-//								} catch (UnknownHostException e) {
-//									e.printStackTrace();
-//								} catch (BiGXNetException e) {
-//									e.printStackTrace();
-//								} catch (BiGXInternalGamePluginExcpetion e) {
-//									e.printStackTrace();
+//		ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
+//		
+//		context = (BigxClientContext) BiGX.instance().context;
+//		if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && player.dimension != WorldProviderDark.dimID){
+//			if (ws != null && player instanceof EntityPlayerMP) {		
+//				// SET CURRENT ACTIVE QUEST DEMO
+//				if(context.getQuestManager() == null)
+//					context.setQuestManager(new QuestManager(player));
+//				else {
+//					if(System.currentTimeMillis() - questTimeStamp < 1000)
+//						return;
+//				}
+//				
+//				completed = false;
+//				questTimeStamp = System.currentTimeMillis();
+//				
+//				setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
+//				// INIT questSettings ArrayList if there is any
+//				if(context.suggestedGamePropertiesReady)
+//				{
+//					time = 0; 
+//					questSettings = new ArrayList<Integer>();
+//					StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+//					List<Stage> stageList = stagesettings.stages;
+//					
+//					for(int i=0; i<stageList.size();i++)
+//					{
+//						for(int j=0; j<stageList.get(i).duration; j++)
+//						{
+//							questSettings.add(stageList.get(i).exerciseSettings);
+//						}
+//					}
+//				}
+//				else{
+//					time = 0;
+//				}
+//				
+//				t = new Timer();
+//				t2 = new Timer();
+//				
+//				returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
+//				QuestTeleporter.teleport(player, WorldProviderDark.dimID, 1, 11, 0);
+//
+//				chasingQuestInitialPosX = 1;
+//				chasingQuestInitialPosY = 10;
+//				chasingQuestInitialPosZ = 0;
+//				
+//				// Clean up placed blocks when the quest ends
+//				final List<Vec3> blocks = new ArrayList<Vec3>();
+//				
+//				for (int z = -16; z < (int)player.posZ+64; ++z) {
+//					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+//					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+//				}
+//				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+//					ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+//				}
+//				
+//				final TimerTask t2Task = new TimerTask() {
+//					@Override
+//					public void run() {
+//						dist = player.getDistanceToEntity(npc);
+//						ratio = (initialDist-dist)/initialDist;
+//						if (!Minecraft.getMinecraft().isGamePaused()) {
+//							time++;
+//							
+//							/**
+//							 * Generates structures on sides (fence and Fake house on sides)
+//							 */
+//							for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
+//								ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+//								blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+//								ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+//								blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+//							}
+//							
+//							if(context.suggestedGamePropertiesReady)
+//							{
+//								/**
+//								 * Generates structures inside fence
+//								 */
+//								ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
+//								int currentRelativePosition = (int)player.posZ - chasingQuestInitialPosZ;
+//								int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
+//								
+//								if(currentRelativeTime > questSettings.size())
+//								{
+//									currentRelativeTime = questSettings.size() -1;
 //								}
-							}
-							else if(countdown == 9)
-							{
-								player.rotationPitch = 0f;
-								player.rotationYaw = 0f;
-							}
-							else if(countdown == 8)
-							{
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
-							}
-							
-							
-						} else {
-							initThiefStat();
-							chasingQuestOnCountDown = false;
-							System.out.println("GO!");
-							command.enableMoving(true);
-							countdown = 10;
-							t.cancel();
-							initialDist = 20; // HARD CODED
-							t2.scheduleAtFixedRate(t2Task, 0, 1000);
-						}
-					}
-				};
-				
-				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
-				}
-				
-				t.scheduleAtFixedRate(tTask, 0, 1000);
-			}
-		}
-		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-				&& player.dimension == WorldProviderDark.dimID){
-			// CHASE QUEST LOSE CONDITION
-			if (ws != null && player instanceof EntityPlayerMP) {
-				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-				virtualCurrency = 0;
-				initThiefStat();
-				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
-				completed = true;
-				goBackToTheOriginalWorld(ws, player);
-			}
-		}
+//								
+//								int currentQuestDifficulty = questSettings.get(currentRelativeTime);
+//								Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
+//
+//								if( (blockByDifficulty == Blocks.brick_block) || 
+//										(blockByDifficulty == Blocks.stone) || 
+//										(blockByDifficulty == Blocks.gravel) )
+//								{
+//									for(int idx = 0; idx<4; idx++)
+//									{
+//										areas.add(terrainBiomeFire.getRandomGateBiome());
+//									}
+//								}
+//								else if(blockByDifficulty == Blocks.grass)
+//								{
+//									for(int idx = 0; idx<4; idx++)
+//									{
+//										areas.add(terrainBiomeFire.getRandomFieldBiome());
+//									}
+//								}
+//								else if(blockByDifficulty == Blocks.sand)
+//								{
+//									for(int idx = 0; idx<4; idx++)
+//									{
+//										areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+//									}
+//								}
+//								else {
+//									System.out.println("DIFFICULTY IS OUT OF HANDLE...");
+//								}
+//								
+//								for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+//									for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
+//										ws.setBlock(x, chasingQuestInitialPosY-1, z, blockByDifficulty);
+//										blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+//									}
+//								}
+//								
+//								for(int row=0; row<1; row++)
+//								{
+//									for(int idx=0; idx<areas.size(); idx++)
+//									{
+//										int x=0;
+//										switch(idx)
+//										{
+//										case 0:
+//											x = chasingQuestInitialPosX-14;
+//											break;
+//										case 1:
+//											x = chasingQuestInitialPosX-7;
+//											break;
+//										case 2:
+//											x = chasingQuestInitialPosX+1;
+//											break;
+//										case 3:
+//											x = chasingQuestInitialPosX+9;
+//											break;
+//										}
+//										int y = chasingQuestInitialPosY;
+//										int z = (int)player.posZ+49 + row*9;
+//										
+//										TerrainBiomeArea terrainBiomeArea = areas.get(idx);
+//										
+//										for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+//										{
+//											if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+//												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+//											else
+//												ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+//										}
+//									}
+//								}
+//								/**
+//								 * END OF Generates structures inside fence
+//								 */
+//								
+//								/**
+//								 * Terrain Cleaning
+//								 */
+//								if(areas.size() != 0)
+//									areas.clear();
+//								
+//								cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
+//								/**
+//								 * END OF Terrain Cleaning
+//								 */
+//							}
+//							else{
+//								if (ratio > 0.4) {
+//									for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+//										for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
+//											ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+//											blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+//											ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+//										}
+//									}
+//								}
+//							}
+//						}
+//						
+//						// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
+////						if (BiGX.instance().context.getSpeed() < chaseRunBaseSpeed) {
+//						speedchange = 0f;
+//						float speedchangerate = 0.025f;
+//						
+//						// Handling Player heart rate and rpm as mechanics for Chase Quest
+//						BiGXPatientPrescription playerperscription;
+//						try{
+//							playerperscription = context.suggestedGameProperties.getPlayerProperties().getPatientPrescriptions().get(0);
+//						}
+//						catch (Exception e)
+//						{
+//							playerperscription = new BiGXPatientPrescription();
+//							playerperscription.setTargetMin(100);
+//							playerperscription.setTargetMax(100);
+//							System.out.println("[BiGX] player prescription is not avilable.");
+//						}
+//						
+//						// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
+//						if (thiefHealthCurrent <= 0) {
+//							try {
+//								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
+//							} catch (SocketException e) {
+//								e.printStackTrace();
+//							} catch (UnknownHostException e) {
+//								e.printStackTrace();
+//							} catch (BiGXNetException e) {
+//								e.printStackTrace();
+//							} catch (BiGXInternalGamePluginExcpetion e) {
+//								e.printStackTrace();
+//							}
+//							
+//
+//							player.worldObj.playSoundAtEntity(player, "win", 1.0f, 1.0f);
+//							endingZ = (int)player.posZ;
+//							LeaderboardRow row = new LeaderboardRow();
+//							row.name = context.BiGXUserName;
+//							row.level = Integer.toString(thiefLevel);
+//							row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
+//							GuiLeaderBoard.writeToLeaderboard(row);
+//
+//							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//
+//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
+//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+//							
+//							completed = true;
+//							goBackToTheOriginalWorld(ws, player);
+//							
+//							return;
+//						}
+//
+//						if (ratio < 0) {
+//							warningMsgBlinkingTime = System.currentTimeMillis();
+//							timeFallBehind++;
+//						}
+//						else{
+//							timeFallBehind = 0;
+//						}
+//
+//						// CHASE QUEST LOSE CONDITION
+//						if(timeFallBehind >= 30)
+//						{
+//							try {
+//								context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
+//							} catch (SocketException e) {
+//								e.printStackTrace();
+//							} catch (UnknownHostException e) {
+//								e.printStackTrace();
+//							} catch (BiGXNetException e) {
+//								e.printStackTrace();
+//							} catch (BiGXInternalGamePluginExcpetion e) {
+//								e.printStackTrace();
+//							}
+//							
+//							BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//							if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
+//								thiefLevelUp();
+//							completed = true;
+//							goBackToTheOriginalWorld(ws, player);
+//						}
+//					}
+//				};
+//
+//				final TimerTask tTask = new TimerTask() {
+//					@Override
+//					public void run() {
+//						if (countdown > 0) {
+//							chasingQuestOnGoing = true;
+//							chasingQuestOnCountDown = true;
+//							System.out.println(countdown-- + "...");
+//							
+//							if (countdown == 7) {
+//								for (Object o : player.worldObj.loadedEntityList) {
+//									if (((Entity)o) instanceof EntityCustomNpc) {
+////										System.out.println(((EntityCustomNpc)o).display.name);
+//										((EntityCustomNpc)o).delete();
+//									}
+//								}
+//								for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderDark.dimID)) {
+//									System.out.println(((EntityCustomNpc)o).display.name);
+////									((EntityCustomNpc)o).delete();
+//								}
+//							}
+//							if (countdown == 0) {
+//								elapsedTime = System.currentTimeMillis();
+//								dist = 0;
+//								startingZ = (int)player.posZ;
+//								endingZ = (int)player.posZ;
+//							}
+//							if (countdown == 5) {
+////								npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+////								npc.ai.stopAndInteract = false;
+////								command = new NpcCommand(npc);
+////								command.setSpeed(10);
+////								command.enableMoving(false);
+////								command.runInDirection(ForgeDirection.SOUTH);
+//								NpcCommand.triggerSpawnTheifOnFireChaseQuest();								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+//								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
+//							}
+//							else if (countdown == 1)
+//							{
+////								try {
+////									context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
+////								} catch (SocketException e) {
+////									e.printStackTrace();
+////								} catch (UnknownHostException e) {
+////									e.printStackTrace();
+////								} catch (BiGXNetException e) {
+////									e.printStackTrace();
+////								} catch (BiGXInternalGamePluginExcpetion e) {
+////									e.printStackTrace();
+////								}
+//							}
+//							else if(countdown == 9)
+//							{
+//								player.rotationPitch = 0f;
+//								player.rotationYaw = 0f;
+//							}
+//							else if(countdown == 8)
+//							{
+//								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
+//							}
+//							
+//							
+//						} else {
+//							initThiefStat();
+//							chasingQuestOnCountDown = false;
+//							System.out.println("GO!");
+//							command.enableMoving(true);
+//							countdown = 10;
+//							t.cancel();
+//							initialDist = 20; // HARD CODED
+//							t2.scheduleAtFixedRate(t2Task, 0, 1000);
+//						}
+//					}
+//				};
+//				
+//				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+//					ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+//					ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+//				}
+//				
+//				t.scheduleAtFixedRate(tTask, 0, 1000);
+//			}
+//		}
+//		else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
+//				&& player.dimension == WorldProviderDark.dimID){
+//			// CHASE QUEST LOSE CONDITION
+//			if (ws != null && player instanceof EntityPlayerMP) {
+//				BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//				virtualCurrency = 0;
+//				initThiefStat();
+//				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+//				completed = true;
+//				goBackToTheOriginalWorld(ws, player);
+//			}
+//		}
 	}
 	
 	public static float getPlayerPitch() {
 		return playerQuestPitch;
 	}
+	
 	public static float getPlayerYaw() {
 		return playerQuestYaw;
 	}
@@ -716,5 +673,4 @@ public class QuestTaskChasingFire implements IQuestTask {
 	public String getTaskName() {
 		return null;
 	}
-	
 }
