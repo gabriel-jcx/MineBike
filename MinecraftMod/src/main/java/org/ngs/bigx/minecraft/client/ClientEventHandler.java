@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,8 +53,6 @@ public class ClientEventHandler {
 		
 		private static ClientEventHandler handler;
 		
-		private static int demo =0;
-		
 		public ClientEventHandler(BigxClientContext con) {
 			context = con;
 			handler = this;
@@ -92,6 +91,22 @@ public class ClientEventHandler {
 			{
 				Minecraft mc = Minecraft.getMinecraft();
 				GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+				
+				guiQuestlistManager.resetQuestReferences();
+				
+				try {
+					Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
+					
+					for(Quest quest : questlist)
+					{
+						guiQuestlistManager.addQuestReference(quest);
+					}
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (GuiQuestlistException e) {
+					e.printStackTrace();
+				}
+				
 				// TODO populate guiQuestlistManager with playerQuestManager quest list items
 //				String[] demoquestreq = new String[5];
 //				demoquestreq[0] = "quest[" + demo + "] req 1";

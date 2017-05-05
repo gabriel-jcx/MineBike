@@ -16,7 +16,6 @@ public class Quest implements Runnable {
 	
 	private QuestManager questManager;
 	private String name, description;
-	private String[] requirements;
 	private List<EntityPlayer> players;
 	private EntityPlayer thePlayer;
 	private List<QuestTask> tasks;
@@ -79,15 +78,6 @@ public class Quest implements Runnable {
 		return returnValue;
 	}
 	
-	public Quest(String id, String n, String d, String[] requirements) {
-		this.id = id;
-		tasks = new ArrayList<QuestTask>();
-		rewardItems = new ArrayList<ItemStack>();
-		name = n;
-		description = d;
-		this.requirements = requirements;
-	}
-	
 	public String getQuestId()
 	{
 		return id;
@@ -102,7 +92,14 @@ public class Quest implements Runnable {
 	}
 
 	public String[] getRequirements() {
-		return requirements;
+		String[] returnValue = new String[tasks.size()];
+		
+		for(int i=0; i<tasks.size(); i++)
+		{
+			returnValue[i] = tasks.get(i).getTaskDescription();
+		}
+		
+		return returnValue;
 	}
 
 	public void AddPlayer(EntityPlayer player) {

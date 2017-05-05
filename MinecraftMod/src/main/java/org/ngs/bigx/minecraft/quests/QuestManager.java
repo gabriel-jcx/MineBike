@@ -176,6 +176,8 @@ public class QuestManager {
 	public BigxContext getContext() {
 		return context;
 	}
-	
-	
+
+	public HashMap<String, Quest> getAvailableQuestList() {
+		return availableQuestList;
+	}
 }
