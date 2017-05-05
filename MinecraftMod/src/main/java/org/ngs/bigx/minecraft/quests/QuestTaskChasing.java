@@ -779,8 +779,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		completed = false;
 		countdown = 10;
 		
-		chasingQuestOnGoing = true;
-		chasingQuestOnCountDown = true;
+		chasingQuestOnGoing = false;
+		chasingQuestOnCountDown = false;
 		
 		questSettings = new ArrayList<Integer>();
 		StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
@@ -864,6 +864,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
 						blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
 					}
+					
+					chasingQuestOnGoing = true;
+					chasingQuestOnCountDown = true; 
 				}
 				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == WorldProviderFlats.dimID)

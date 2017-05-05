@@ -197,7 +197,6 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void entityInteractEvent(EntityInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
-		System.out.println("Entity Interact Event");
 		NpcEvents.InteractWithNPC(player, e);
 	}
 

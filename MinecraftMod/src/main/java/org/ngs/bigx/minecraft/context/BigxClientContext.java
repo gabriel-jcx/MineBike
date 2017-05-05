@@ -238,6 +238,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 							Gson gson = new Gson();
 							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 							suggestedGamePropertiesReady = true;
+							
+							sendPatientProfileToServer(questDesignString);
 						}
 						catch (Exception ee){
 							suggestedGameProperties = null;
@@ -419,5 +421,14 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	public void onMessageReceive(Event event, eyeTrackerUDPData trackerData) {
 		this.rotationX = (float) trackerData.X;
 		this.rotationY = (float) trackerData.Y;
+	}
+	
+	// TODO: NEED TO REVISE THIS FUNCTION VERY UNSTABLE
+	public void sendPatientProfileToServer(String questDesignString)
+	{
+		BigxServerContext bigxServerContext = BiGX.instance().serverContext;
+		Gson gson = new Gson();
+		bigxServerContext.suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
+		bigxServerContext.suggestedGamePropertiesReady = true;
 	}
 }
