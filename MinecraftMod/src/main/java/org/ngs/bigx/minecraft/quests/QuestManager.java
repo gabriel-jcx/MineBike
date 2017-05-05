@@ -169,6 +169,7 @@ public class QuestManager {
 	public void questTick()
 	{
 		synchronized (this) {
+//			System.out.println("[BiGX] Multi thred Task Tick");
 			this.notifyAll();
 		}
 	}

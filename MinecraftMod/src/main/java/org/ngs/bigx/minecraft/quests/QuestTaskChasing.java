@@ -553,8 +553,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void handleCountdown()
 	{
+		if (Minecraft.getMinecraft().isGamePaused())
+		{
+			pausedTime += (QuestEventHandler.tickCountUpperLimit*20);
+			return;
+		}
+		
 		// COUNT DOWN TIME
-		countdown = (int) ((System.currentTimeMillis() - questTimeStamp)/1000);
+		countdown = 10 - (int) ((System.currentTimeMillis() - questTimeStamp - pausedTime)/1000);
 		
 		if(countdown > 0){	
 			if (countdown == 7) {
@@ -609,6 +615,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			countdown = 10;
 			t.cancel();
 			initialDist = 20; // HARD CODED
+			pausedTime = 0;
 		}
 	}
 	
@@ -623,7 +630,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 		else
 		{
-			if( (System.currentTimeMillis() - lastTickTime + pausedTime) < 1000 )
+			if( (System.currentTimeMillis() - lastTickTime - pausedTime) < 1000 )
 			{
 			}
 			else
@@ -741,9 +748,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			{
 				if(chasingQuestOnGoing)
 				{
-					dist = player.getDistanceToEntity(npc);
-					ratio = (initialDist-dist)/initialDist;
-					
 					if(chasingQuestOnCountDown)
 					{
 						handleCountdown();
@@ -778,6 +782,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		initThiefStat();
 		completed = false;
 		countdown = 10;
+		pausedTime = 0;
 		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
@@ -808,10 +813,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	@Override
 	public void onItemUse(Start event) {
 		synchronized (questManager) {
-			questTimeStamp = System.currentTimeMillis();
-			
-			if(!ws.isRemote)
+			if(!player.worldObj.isRemote)
 			{
+				ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
+				
 				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
 						&& player.dimension != WorldProviderFlats.dimID)
 				{
@@ -867,6 +872,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					
 					chasingQuestOnGoing = true;
 					chasingQuestOnCountDown = true; 
+					questTimeStamp = System.currentTimeMillis();
 				}
 				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == WorldProviderFlats.dimID)
@@ -880,6 +886,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						completed = false;
 						goBackToTheOriginalWorld(ws, player);
 					}
+					
+					chasingQuestOnGoing = false;
+					chasingQuestOnCountDown = false; 
 				}
 			}
 		}
