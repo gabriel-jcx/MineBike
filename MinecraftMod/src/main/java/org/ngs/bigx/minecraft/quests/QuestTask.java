@@ -61,6 +61,12 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 		new Thread(this).start();
 	}
 	
+	public void reactivateTask()
+	{
+		this.isActive = true;
+		new Thread(this).start();
+	}
+	
 	public void deactivateTask()
 	{
 		this.isActive = false;

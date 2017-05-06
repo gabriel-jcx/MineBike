@@ -170,7 +170,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	}
 	
 	public void goBackToTheOriginalWorld(World world, Entity entity)
-	{		
+	{
+		deactivateTask();
+		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
@@ -876,6 +878,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
 						&& player.dimension != this.questDimensionId)
 				{
+					boolean isReboot = !isActive;
+					
 					time = 0;
 					initThiefStat();
 					countdown = 11;
@@ -933,9 +937,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					chasingQuestOnGoing = true;
 					chasingQuestOnCountDown = true; 
 					questTimeStamp = System.currentTimeMillis();
+					
+					if(isReboot)
+						reactivateTask();
 				}
 				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-						&& player.dimension == WorldProviderFlats.dimID)
+						&& player.dimension == this.questDimensionId)
 				{
 					// CHASE QUEST LOSE CONDITION
 					if (ws != null && player instanceof EntityPlayerMP) {
@@ -972,24 +979,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 
 	@Override
 	public void unregisterEvents() {
-		synchronized (questManager) {
-			QuestEventHandler.unregisterQuestEventAttack(this);
-			QuestEventHandler.unregisterQuestEventItemUse(this);
-
-			if(!player.worldObj.isRemote)
-				QuestEventHandler.unregisterQuestEventCheckComplete(this);
-		}
+		QuestEventHandler.unregisterQuestEventAttack(this);
+		QuestEventHandler.unregisterQuestEventItemUse(this);
+		if(!player.worldObj.isRemote)
+			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 	}
 	
 	@Override
 	public void registerEvents() {
-		synchronized (questManager) {
-			QuestEventHandler.registerQuestEventAttack(this);
-			QuestEventHandler.registerQuestEventItemUse(this);
-
-			if(!player.worldObj.isRemote)
-				QuestEventHandler.registerQuestEventCheckComplete(this);
-		}
+		QuestEventHandler.registerQuestEventAttack(this);
+		QuestEventHandler.registerQuestEventItemUse(this);
+		if(!player.worldObj.isRemote)
+			QuestEventHandler.registerQuestEventCheckComplete(this);
 	}
 
 	@Override

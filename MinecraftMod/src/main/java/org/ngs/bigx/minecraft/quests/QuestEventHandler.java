@@ -39,68 +39,95 @@ public class QuestEventHandler {
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionList = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteList = new ArrayList<IQuestEventCheckComplete>();
 	
+	private static List<IQuestEventAttack> questEventAttackListAdd = new ArrayList<IQuestEventAttack>();
+	private static List<IQuestEventItemUse> questEventItemUseListAdd = new ArrayList<IQuestEventItemUse>();
+	private static List<IQuestEventNpcInteraction> questEventNpcInteractionListAdd = new ArrayList<IQuestEventNpcInteraction>();
+	private static List<IQuestEventCheckComplete> questEventCheckCompleteListAdd = new ArrayList<IQuestEventCheckComplete>();
+	
+	private static List<IQuestEventAttack> questEventAttackListDel = new ArrayList<IQuestEventAttack>();
+	private static List<IQuestEventItemUse> questEventItemUseListDel = new ArrayList<IQuestEventItemUse>();
+	private static List<IQuestEventNpcInteraction> questEventNpcInteractionListDel = new ArrayList<IQuestEventNpcInteraction>();
+	private static List<IQuestEventCheckComplete> questEventCheckCompleteListDel = new ArrayList<IQuestEventCheckComplete>();
+	
 	public QuestEventHandler()
 	{
 	}
 	
 	public static void registerQuestEventAttack(IQuestEventAttack questEventAttack)
 	{
-		questEventAttackList.add(questEventAttack);
+		synchronized (questEventAttackListAdd) {
+			questEventAttackListAdd.add(questEventAttack);
+		}
 	}
 	
 	public static void unregisterQuestEventAttack(IQuestEventAttack questEventAttack)
 	{
-		questEventAttackList.remove(questEventAttack);
+		synchronized (questEventAttackListDel) {
+			questEventAttackListDel.remove(questEventAttack);
+		}
 	}
 	
 	public static void registerQuestEventItemUse(IQuestEventItemUse questEventItemUse)
 	{
-		questEventItemUseList.add(questEventItemUse);
+		synchronized (questEventItemUseListAdd) {
+			questEventItemUseListAdd.add(questEventItemUse);
+		}
 	}
 	
 	public static void unregisterQuestEventItemUse(IQuestEventItemUse questEventItemUse)
 	{
-		questEventItemUseList.remove(questEventItemUse);
+		synchronized (questEventItemUseListDel) {
+			questEventItemUseListDel.remove(questEventItemUse);
+		}
 	}
 
 	public static void registerQuestEventNpcInteraction(IQuestEventNpcInteraction questEventNpcInteraction)
 	{
-		questEventNpcInteractionList.add(questEventNpcInteraction);
+		synchronized (questEventNpcInteractionListAdd) {
+			questEventNpcInteractionListAdd.add(questEventNpcInteraction);
+		}
 	}
 	
 	public static void unregisterQuestEventNpcInteraction(IQuestEventNpcInteraction questEventNpcInteraction)
 	{
-		questEventNpcInteractionList.remove(questEventNpcInteraction);
+		synchronized (questEventNpcInteractionListDel) {
+			questEventNpcInteractionListDel.remove(questEventNpcInteraction);
+		}
 	}
 	
 	public static void registerQuestEventCheckComplete(IQuestEventCheckComplete questEventCheckComplete)
 	{
-		questEventCheckCompleteList.add(questEventCheckComplete);
+		synchronized (questEventCheckCompleteListAdd) {
+			questEventCheckCompleteListAdd.add(questEventCheckComplete);
+		}
 	}
 	
 	public static void unregisterQuestEventCheckComplete(IQuestEventCheckComplete questEventCheckComplete)
 	{
-		questEventCheckCompleteList.remove(questEventCheckComplete);
+		synchronized (questEventCheckCompleteListDel) {
+			questEventCheckCompleteListDel.remove(questEventCheckComplete);
+		}
 	}
 
 	@SubscribeEvent
 	public void onItemUse(PlayerUseItemEvent.Start event) {
-		try{
+		synchronized (questEventItemUseList) {
 			for(IQuestEventItemUse questEventItemUse : questEventItemUseList)
 			{
-				if(questEventItemUse == null)
-					System.out.println("WHAT");
-				if(event == null)
-					System.out.println("WHAT");
-				if(questEventItemUseList == null)
-					System.out.println("WHAT");
-				
 				questEventItemUse.onItemUse(event);
 			}
 		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
+		synchronized (questEventItemUseListAdd) {
+			for(IQuestEventItemUse questEventItemUse : questEventItemUseListAdd)
+			{
+				questEventItemUseList.add(questEventItemUse);
+			}
+		}
+		synchronized (questEventItemUseListDel) {
+			for(IQuestEventItemUse questEventItemUse : questEventItemUseListDel)
+			{
+				questEventItemUseList.remove(questEventItemUse);
+			}
 		}
 	}
 
@@ -112,17 +139,33 @@ public class QuestEventHandler {
 		if(tickCountOneSecond >= 50)
 		{
 			tickCountOneSecond = 0;
-			
+
 			if(questEventCheckCompleteList != null)
 			{
-				for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteList)
-				{
-					if(questEventCheckComplete != null)
-						questEventCheckComplete.onCheckCompleteEvent();
+				synchronized (questEventCheckCompleteList) {
+					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteList)
+					{
+						if(questEventCheckComplete != null)
+							questEventCheckComplete.onCheckCompleteEvent();
+					}
+				}
+				synchronized (questEventCheckCompleteListAdd) {
+					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListAdd)
+					{
+						if(questEventCheckComplete != null)
+							questEventCheckCompleteList.add(questEventCheckComplete);
+					}
+				}
+				synchronized (questEventCheckCompleteListDel) {
+					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListDel)
+					{
+						if(questEventCheckComplete != null)
+							questEventCheckCompleteList.remove(questEventCheckComplete);
+					}
 				}
 			}
 		}
-		
+			
 		// Every 200 ms
 		if(tickCount >= tickCountUpperLimit)
 		{
@@ -170,10 +213,24 @@ public class QuestEventHandler {
 				
 				Random r = new Random();
 				int hit = r.nextInt(4)+1;
-				
-				for(IQuestEventAttack questEventAttack : questEventAttackList)
-				{
-					questEventAttack.onAttackEntityEvent(event);
+
+				synchronized (questEventAttackList) {
+					for(IQuestEventAttack questEventAttack : questEventAttackList)
+					{
+						questEventAttack.onAttackEntityEvent(event);
+					}
+				}
+				synchronized (questEventAttackListAdd) {
+					for(IQuestEventAttack questEventAttack : questEventAttackListAdd)
+					{
+						questEventAttackList.add(questEventAttack);
+					}
+				}
+				synchronized (questEventAttackListDel) {
+					for(IQuestEventAttack questEventAttack : questEventAttackListDel)
+					{
+						questEventAttackList.remove(questEventAttack);
+					}
 				}
 				
 				event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);
