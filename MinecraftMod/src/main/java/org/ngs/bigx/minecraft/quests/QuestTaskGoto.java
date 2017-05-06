@@ -22,11 +22,6 @@ public class QuestTaskGoto extends QuestTask {
 	}
 
 	@Override
-	public void run(final LevelSystem levelSys) {
-		
-	}
-
-	@Override
 	public void CheckComplete() {
 		if ((player.posX >= edge1.xCoord && player.posX <= edge2.xCoord || player.posX <= edge1.xCoord && player.posX >= edge2.xCoord) &&
 				(player.posY >= edge1.yCoord && player.posY <= edge2.yCoord || player.posY <= edge1.yCoord && player.posY >= edge2.yCoord) &&

@@ -12,9 +12,4 @@ public interface IQuestTask {
 	public boolean IsMainTask();
 	public String getTaskDescription();
 	public String getTaskName();
-	
-	/**
-	 * Allows the quest event to execute any timer-based mechanics, or anything that needs waiting
-	 */
-	public void run(LevelSystem levelsys);
 }

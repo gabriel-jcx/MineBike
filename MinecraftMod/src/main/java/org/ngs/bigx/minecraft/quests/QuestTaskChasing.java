@@ -116,9 +116,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
-	public QuestTaskChasing(QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
+	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
 		
+		this.levelSys = levelSys;
 		player = p;
 		ws = worldServer;
 		thiefLevel = level;
@@ -138,8 +139,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 	}
 	
-	public QuestTaskChasing(QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
-		this(questManager, p, worldServer, level, maxLevel, QuestChaseTypeEnum.REGULAR);
+	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
+		this(levelSys, questManager, p, worldServer, level, maxLevel, QuestChaseTypeEnum.REGULAR);
 	}
 	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
 		return  player.posX >= x1 && player.posX <= x2 &&
@@ -542,13 +543,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			goBackToTheOriginalWorld(ws, player);
 		}
 	}
-
-	@Override
-	public void run(LevelSystem levelSys) {
-		this.levelSys = levelSys;
-		
-		// MAKE A TIMER AND RUN AND REGISTER
-	}
 	
 	public void countdownTick()
 	{
@@ -566,7 +560,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						((EntityCustomNpc)o).delete();
 					}
 				}
-				for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID)) {
+				for (Object o : NpcCommand.getCustomNpcsInDimension(this.questDimensionId)) {
 //					System.out.println(((EntityCustomNpc)o).display.name);
 				}
 			}
@@ -581,6 +575,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				}
 				else
 				{
+					System.out.println("if (countdown == 5)");
+					
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 					
@@ -878,7 +874,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
 				
 				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
-						&& player.dimension != WorldProviderFlats.dimID)
+						&& player.dimension != this.questDimensionId)
 				{
 					time = 0;
 					initThiefStat();
@@ -908,7 +904,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					}
 
 					returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-					QuestTeleporter.teleport(player, WorldProviderFlats.dimID, 1, 11, 0);
+					QuestTeleporter.teleport(player, this.questDimensionId, 1, 11, 0);
 
 					chasingQuestInitialPosX = 1;
 					chasingQuestInitialPosY = 10;
@@ -979,7 +975,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		synchronized (questManager) {
 			QuestEventHandler.unregisterQuestEventAttack(this);
 			QuestEventHandler.unregisterQuestEventItemUse(this);
-			QuestEventHandler.unregisterQuestEventCheckComplete(this);
+
+			if(!player.worldObj.isRemote)
+				QuestEventHandler.unregisterQuestEventCheckComplete(this);
 		}
 	}
 	
@@ -988,7 +986,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		synchronized (questManager) {
 			QuestEventHandler.registerQuestEventAttack(this);
 			QuestEventHandler.registerQuestEventItemUse(this);
-			QuestEventHandler.registerQuestEventCheckComplete(this);
+
+			if(!player.worldObj.isRemote)
+				QuestEventHandler.registerQuestEventCheckComplete(this);
 		}
 	}
 

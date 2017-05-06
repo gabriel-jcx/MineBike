@@ -20,11 +20,6 @@ public class QuestTaskTalk extends QuestTask {
 		npc = n;
 		isRequired = required;
 	}
-
-	@Override
-	public void run(LevelSystem levelSys) {
-		
-	}
 	
 	@Override
 	public void CheckComplete() {
