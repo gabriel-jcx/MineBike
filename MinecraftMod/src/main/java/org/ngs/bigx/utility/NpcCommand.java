@@ -79,7 +79,8 @@ public class NpcCommand {
 		if(theifOnRegularChaseQuestSpawnFlag)
 		{
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskChasing questTaskChasing = (QuestTaskChasing)bigxContext.getQuestManager().getActiveQuestTask();			EntityCustomNpc npc;
+			QuestTaskChasing questTaskChasing = (QuestTaskChasing)bigxContext.getQuestManager().getActiveQuestTask();
+			EntityCustomNpc npc;
 			NpcCommand command;
 			
 			if(questTaskChasing == null)

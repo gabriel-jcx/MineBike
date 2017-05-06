@@ -28,15 +28,13 @@ public class QuestEventHandler {
 
 	public static final int tickCountUpperLimit = 17;
 	
-	private static List<IQuestEventAttack> questEventAttackList;
-	private static List<IQuestEventItemUse> questEventItemUseList;
-	private static List<IQuestEventNpcInteraction> questEventNpcInteractionList;
+	private static List<IQuestEventAttack> questEventAttackList = new ArrayList<IQuestEventAttack>();
+	private static List<IQuestEventItemUse> questEventItemUseList = new ArrayList<IQuestEventItemUse>();
+	private static List<IQuestEventNpcInteraction> questEventNpcInteractionList = new ArrayList<IQuestEventNpcInteraction>();
 	
 	
 	public QuestEventHandler()
 	{
-		questEventAttackList = new ArrayList<IQuestEventAttack>();
-		questEventItemUseList = new ArrayList<IQuestEventItemUse>();
 	}
 	
 	public static void registerQuestEventAttack(IQuestEventAttack questEventAttack)
@@ -71,9 +69,21 @@ public class QuestEventHandler {
 
 	@SubscribeEvent
 	public void onItemUse(PlayerUseItemEvent.Start event) {
-		for(IQuestEventItemUse questEventItemUse : questEventItemUseList)
+		try{
+			for(IQuestEventItemUse questEventItemUse : questEventItemUseList)
+			{
+				if(questEventItemUse == null)
+					System.out.println("WHAT");
+				if(event == null)
+					System.out.println("WHAT");
+				if(questEventItemUseList == null)
+					System.out.println("WHAT");
+				questEventItemUse.onItemUse(event);
+			}
+		}
+		catch(Exception e)
 		{
-			questEventItemUse.onItemUse(event);
+			e.printStackTrace();
 		}
 	}
 
