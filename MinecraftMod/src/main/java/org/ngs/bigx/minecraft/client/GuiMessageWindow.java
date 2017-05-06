@@ -29,10 +29,12 @@ public class GuiMessageWindow extends GuiScreen {
 
 	private ResourceLocation MESSAGE_WINDOW_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/dialog.png");
 	private ResourceLocation GOLDBAR_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/goldbar.png");
+	private ResourceLocation BOOK_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
 	
 	private BigxClientContext context;
 	private static long timestampLastShowWindowCall = 0;
 	private static long timestampLastShowGoldbarCall = 0;
+	private static long timestampLastShowBookCall = 0;
 	private static String[] textLinesToBeShown = null;
 	
 	private final long durationShowWindow = 5000;
@@ -120,6 +122,9 @@ public class GuiMessageWindow extends GuiScreen {
 		{
 			timestampLastShowGoldbarCall = timestampLastShowWindowCall;
 		}
+		else if (message.substring(0,1).equals("B")) {
+			timestampLastShowBookCall = timestampLastShowWindowCall;
+		}
 		else{
 			timestampLastShowGoldbarCall = 0;
 		}
@@ -128,6 +133,16 @@ public class GuiMessageWindow extends GuiScreen {
 	public static void showGoldBar(String message)
 	{
 		textList.add("G" + message);
+		
+		if(timestampLastShowWindowCall == 0)
+		{
+			timestampLastShowWindowCall = System.currentTimeMillis();
+		}
+	}
+	
+	public static void showBook(String message)
+	{
+		textList.add("B" + message);
 		
 		if(timestampLastShowWindowCall == 0)
 		{
@@ -219,16 +234,29 @@ public class GuiMessageWindow extends GuiScreen {
 		        	
 		        	GL11.glPopMatrix();
 	        	}
+	        	else if (timestampLastShowBookCall != 0){
+	        		GL11.glPushMatrix();
+			    	
+					    GL11.glTranslatef(mcWidth/2, mcHeight-165f, 0); 
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(BOOK_TEXTURE);
+				        drawTexturedModalRect(-75, -53, 0, 0, 150 , 105);
+		        	
+		        	GL11.glPopMatrix();
+		        }
 	    	}
 	    	else{
 	    		timestampLastShowWindowCall = 0;
 	    		timestampLastShowGoldbarCall = 0;
+	    		timestampLastShowBookCall = 0;
 	    		textLinesToBeShown = null;
 	    	}
     	}
     	else{
     		timestampLastShowWindowCall = 0;
     		timestampLastShowGoldbarCall = 0;
+    		timestampLastShowBookCall = 0;
     		textLinesToBeShown = null;
     	}
     }

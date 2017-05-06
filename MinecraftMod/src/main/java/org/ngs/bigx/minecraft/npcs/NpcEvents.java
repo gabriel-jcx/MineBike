@@ -17,6 +17,7 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
 
 
@@ -41,8 +42,14 @@ public class NpcEvents {
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
 		///Give player the mysterious key
 //		BiGXEventTriggers.givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
-		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg))
+		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
+		else{
+			if (!player.worldObj.isRemote){
+				GuiMessageWindow.showBook(BiGXTextBoxDialogue.questBookObtained);
+				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
+			}
+		}
 		
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
