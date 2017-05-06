@@ -122,12 +122,14 @@ public class QuestEventHandler {
 			{
 				questEventItemUseList.add(questEventItemUse);
 			}
+			questEventItemUseListAdd.clear();
 		}
 		synchronized (questEventItemUseListDel) {
 			for(IQuestEventItemUse questEventItemUse : questEventItemUseListDel)
 			{
 				questEventItemUseList.remove(questEventItemUse);
 			}
+			questEventItemUseListDel.clear();
 		}
 	}
 
@@ -155,6 +157,7 @@ public class QuestEventHandler {
 						if(questEventCheckComplete != null)
 							questEventCheckCompleteList.add(questEventCheckComplete);
 					}
+					questEventCheckCompleteListAdd.clear();
 				}
 				synchronized (questEventCheckCompleteListDel) {
 					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListDel)
@@ -162,6 +165,7 @@ public class QuestEventHandler {
 						if(questEventCheckComplete != null)
 							questEventCheckCompleteList.remove(questEventCheckComplete);
 					}
+					questEventCheckCompleteListDel.clear();
 				}
 			}
 		}
@@ -225,12 +229,14 @@ public class QuestEventHandler {
 					{
 						questEventAttackList.add(questEventAttack);
 					}
+					questEventAttackListAdd.clear();
 				}
 				synchronized (questEventAttackListDel) {
 					for(IQuestEventAttack questEventAttack : questEventAttackListDel)
 					{
 						questEventAttackList.remove(questEventAttack);
 					}
+					questEventAttackListDel.clear();
 				}
 				
 				event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);

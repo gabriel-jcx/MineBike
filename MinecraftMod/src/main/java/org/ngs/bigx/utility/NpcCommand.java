@@ -146,14 +146,16 @@ public class NpcCommand {
 			// NPC CHECKING
 			for (String name : NpcDatabase.NpcNames()) {
 				int found = 0;
-				for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
+				List listOfNpc = NpcCommand.getCustomNpcsInDimension(0);
+				for (Object obj : listOfNpc)
 					if (((EntityCustomNpc)obj).display.name.equals(name))
 						++found;
+				
 				if (found == 0) {
 					NpcDatabase.spawn(worldServer, name);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
-					for (Object obj : NpcCommand.getCustomNpcsInDimension(0))
+					for (Object obj : listOfNpc)
 						if (((EntityCustomNpc)obj).display.name.equals(name))
 							list.add((EntityCustomNpc)obj);
 					NpcDatabase.sortFurthestSpawn(list);

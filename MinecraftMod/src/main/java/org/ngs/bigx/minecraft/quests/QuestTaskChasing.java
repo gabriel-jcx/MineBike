@@ -171,6 +171,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
+//		System.out.println("goBackToTheOriginalWorld");
 		deactivateTask();
 		
 		chasingQuestOnGoing = false;
@@ -538,18 +539,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 	}
 	
-	public void goBackToOriginalWorld(){
-		if (ws != null && player instanceof EntityPlayerMP) {
-			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-			virtualCurrency = 0;
-			initThiefStat();
-			cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
-//			teleporter.teleport(player, MinecraftServer.getServer().worldServerForDimension(0), (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
-//			completed = true;
-			goBackToTheOriginalWorld(ws, player);
-		}
-	}
-	
 	public void countdownTick()
 	{
 		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
@@ -739,45 +728,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			speedchange += speedchangerate/2;
 		else if (context.rpm <= 40)
 			speedchange -= speedchangerate;
-		
-		// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
-		if (thiefHealthCurrent <= 0) {
-			try {
-				context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
-			} catch (SocketException e) {
-				e.printStackTrace();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (BiGXNetException e) {
-				e.printStackTrace();
-			} catch (BiGXInternalGamePluginExcpetion e) {
-				e.printStackTrace();
-			}
-			
-
-			player.worldObj.playSoundAtEntity(player, "win", 1.0f, 1.0f);
-			endingZ = (int)player.posZ;
-			LeaderboardRow row = new LeaderboardRow();
-			row.name = context.BiGXUserName;
-			row.level = Integer.toString(thiefLevel);
-			row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
-			GuiLeaderBoard.writeToLeaderboard(row);
-
-			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
-			
-			System.out.println("[BiGX] increased exp: " + levelSys.incExp(50));
-			if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
-				levelSys.giveLevelUpRewards(player);
-			}
-			
-			completed = true;
-			goBackToTheOriginalWorld(ws, player);
-			
-			return;
-		}
 	}
 
 
@@ -818,6 +768,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				}
 			}
 
+			time = 0;
+			initThiefStat();
+			countdown = 11;
+			pausedTime = 0;
 			((BigxServerContext)context).updateQuestInformationToClient(null);
 		}
 	}
@@ -950,6 +904,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				{
 					// CHASE QUEST LOSE CONDITION
 					if (ws != null && player instanceof EntityPlayerMP) {
+						isActive = false;
 						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 						virtualCurrency = 0;
 						time = 0;
@@ -984,17 +939,21 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	@Override
 	public void unregisterEvents() {
 		QuestEventHandler.unregisterQuestEventAttack(this);
-		QuestEventHandler.unregisterQuestEventItemUse(this);
-		if(!player.worldObj.isRemote)
+		
+		if(!player.worldObj.isRemote){
+			QuestEventHandler.unregisterQuestEventItemUse(this);
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
+		}
 	}
 	
 	@Override
 	public void registerEvents() {
 		QuestEventHandler.registerQuestEventAttack(this);
-		QuestEventHandler.registerQuestEventItemUse(this);
 		if(!player.worldObj.isRemote)
+		{
+			QuestEventHandler.registerQuestEventItemUse(this);
 			QuestEventHandler.registerQuestEventCheckComplete(this);
+		}
 	}
 
 	@Override
