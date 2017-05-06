@@ -68,20 +68,21 @@ public class QuestManager {
 	}
 	
 	public void setActiveQuest(String questid) throws QuestException {
-		if(activeQuestId == "NONE" || this.availableQuestList.get(questid) == null)
+		if(this.availableQuestList.get(questid) == null)
 		{
 			throw new QuestException("The requeseted Quest is not available");
 		}
 		
 		Quest quest = this.availableQuestList.get(this.activeQuestId);
-		quest.stop();
+		if(quest != null)
+			quest.stop();
 		
 		quest = this.availableQuestList.get(questid);
 		this.activateQuest(quest);
 		activeQuestId = questid;
 	}
 	
-	public void deactivateQuest(Quest quest) throws QuestException
+	private void deactivateQuest(Quest quest) throws QuestException
 	{
 		if(quest == null)
 		{
@@ -91,7 +92,7 @@ public class QuestManager {
 		quest.stop();
 	}
 	
-	public void activateQuest(Quest quest) throws QuestException
+	private void activateQuest(Quest quest) throws QuestException
 	{
 		if(quest == null)
 		{
