@@ -144,9 +144,10 @@ public class NpcCommand {
 			npcSpawnFlag = false;
 			
 			// NPC CHECKING
+			List listOfNpc = NpcCommand.getCustomNpcsInDimension(0);
+			
 			for (String name : NpcDatabase.NpcNames()) {
 				int found = 0;
-				List listOfNpc = NpcCommand.getCustomNpcsInDimension(0);
 				for (Object obj : listOfNpc)
 					if (((EntityCustomNpc)obj).display.name.equals(name))
 						++found;
@@ -283,12 +284,15 @@ public class NpcCommand {
 	public static List getCustomNpcsInDimension(int dimID) {
 		List list = new ArrayList();
 		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(dimID);
-		Iterator iter = ws.loadedEntityList.iterator();
-		while (iter.hasNext()) {
-			Entity entity = (Entity)iter.next();
-	         if(entity instanceof EntityNPCInterface) {
-	            list.add((EntityNPCInterface)entity);
-	         }
+		
+		synchronized (ws.loadedEntityList) {
+			Iterator iter = ws.loadedEntityList.iterator();
+			while (iter.hasNext()) {
+				Entity entity = (Entity)iter.next();
+		         if(entity instanceof EntityNPCInterface) {
+		            list.add((EntityNPCInterface)entity);
+		         }
+			}
 		}
 		
 		return list;
