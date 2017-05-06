@@ -99,6 +99,19 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 		}
 	}
 	
+	public void adjustSpeedBaseOnRPM(float rpm){
+		//TODO: modify numbers speed is set to.
+//		System.out.println(rpm);
+		if (rpm <= 0)
+			this.speedRate = 1;
+		else if (rpm <= 15)
+			this.speedRate = 10;
+		else if (rpm <= 40)
+			this.speedRate = 20;
+		else if (rpm > 40)
+			this.speedRate = 30;
+	}
+	
 	public void changeSpeedRateby(float numofincrease){
 		this.speedRate += numofincrease;
 	}

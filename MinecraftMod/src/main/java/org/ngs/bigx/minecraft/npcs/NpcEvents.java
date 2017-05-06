@@ -27,6 +27,9 @@ public class NpcEvents {
 	
 	//NPC Interactions
 	public 	static void InteractWithNPC(EntityPlayer player, EntityInteractEvent event){
+		System.out.println(event.target.posX);
+		System.out.println(event.target.posY);
+		System.out.println(event.target.posZ);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.dad, NpcLocations.dad.addVector(1, 1, 1))) //checks to see if NPC is Dad
 			InteractWithFather(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch
@@ -37,7 +40,7 @@ public class NpcEvents {
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
 		///Give player the mysterious key
-		BiGXEventTriggers.givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
+//		BiGXEventTriggers.givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
 		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg))
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 		
@@ -86,8 +89,8 @@ public class NpcEvents {
 			createBlacksmithCurrency(traderInterface.inventoryCurrency);
 		if (traderInterface.inventorySold.items.isEmpty())
 			createBlacksmithSold(traderInterface.inventorySold);
-		System.out.println(traderInterface.inventoryCurrency.items);
-		System.out.println(traderInterface.inventoryCurrency.getInventoryStackLimit());
+//		System.out.println(traderInterface.inventoryCurrency.items);
+//		System.out.println(traderInterface.inventoryCurrency.getInventoryStackLimit());
 	}
 	
 	
@@ -112,13 +115,13 @@ public class NpcEvents {
 	//////////Blacksmith Market
 	private static void createBlacksmithCurrency(NpcMiscInventory inventoryCurrency){
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
-		inventoryCurrency.setInventorySlotContents(18, new ItemStack(Item.getItemById(4420))); //water elemental
+		inventoryCurrency.setInventorySlotContents(18, new ItemStack(Item.getItemById(4616)));//new ItemStack(Item.getItemById(4420))); //water elemental
 		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(268)));
-		inventoryCurrency.setInventorySlotContents(19, new ItemStack(Item.getItemById(4421))); //fire elemental
+		inventoryCurrency.setInventorySlotContents(19, new ItemStack(Item.getItemById(4771)));//4421))); //fire elemental
 		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(268)));
-		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4419))); //earth elemental
+		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4667)));//4419))); //earth elemental
 		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(268)));
-		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4422))); //air elemental
+		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4703)));//4422))); //air elemental
 	}
 	
 	private static void createBlacksmithSold(NpcMiscInventory inventorySold){
