@@ -622,6 +622,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			countdown = 11;
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
+//			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0;
 		}
 	}
 	
@@ -956,7 +957,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 
 	@Override
 	public String getTaskDescription() {
-		return "QuestTaskChasing Description";
+		return "Defeat the Thief and retrive the gold.";
 	}
 
 	@Override

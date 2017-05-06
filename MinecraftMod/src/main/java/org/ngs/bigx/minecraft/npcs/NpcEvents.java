@@ -58,7 +58,7 @@ public class NpcEvents {
 			if(player.worldObj.isRemote)
 			{
 				System.out.println("InteractWithFather Quest Generation: CLIENT");
-				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().clientContext.getQuestManager());
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
 				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
@@ -66,7 +66,7 @@ public class NpcEvents {
 			else
 			{
 				System.out.println("InteractWithFather Quest Generation: SERVER");
-				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, "Chasing Quest", "Chasing Quest Description", BiGX.instance().serverContext.getQuestManager());
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
 				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
 				if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);

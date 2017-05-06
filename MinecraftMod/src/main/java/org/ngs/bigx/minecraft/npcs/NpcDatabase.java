@@ -22,7 +22,7 @@ public class NpcDatabase {
 		map.put("Dad", NpcLocations.dad);
 		map.put("Weapons Merchant", NpcLocations.weaponsMerchant);
 		map.put("Blacksmith", NpcLocations.blacksmith);
-		map.put("Potions Seller", NpcLocations.potionSeller);
+//		map.put("Potions Seller", NpcLocations.potionSeller);
 		return map;
 	}
 	

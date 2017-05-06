@@ -54,6 +54,12 @@ public class BiGXTextBoxDialogue {
 	public static final String level1MsgTitle = "The Start of Your Journey";
 	public static final String level1Msg = "Super Intense and Inspiring Message.... You're Welcome.";
 	
+	//First Chase Quest Messages
+	public static final String questChase1Title = "Defeat Thief";
+	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
+	
+	
+	
 	// Tutorial Message
 	/***
 	 * 
