@@ -57,7 +57,6 @@ public class QuestManager {
 	private String activeQuestId;
 	private EntityPlayer player;
 	private BigxContext context;
-	private List<IQuestTask> activeTasks;
 	
 	public QuestManager(BigxContext context, EntityPlayer p) {
 		player = p;

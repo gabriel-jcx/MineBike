@@ -3,12 +3,13 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
-public abstract class QuestTask implements IQuestTask, Runnable {
+public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete, Runnable {
 	protected boolean completed;
 	public EntityPlayer player;
 	protected boolean isRequired;

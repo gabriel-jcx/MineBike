@@ -174,6 +174,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
 		time = 0;
+		initThiefStat();
+		countdown = 11;
+		pausedTime = 0;
 		
 		if(world.isRemote)
 			((BigxClientContext)context).setSpeed(0);
@@ -496,6 +499,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				levelSys.giveLevelUpRewards(player);
 			}
 			
+			isActive = false;
 			completed = true;
 			goBackToTheOriginalWorld(ws, player);
 			
@@ -520,6 +524,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 			if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 				thiefLevelUp();
+			
+			isActive = false;
 			completed = false;
 			goBackToTheOriginalWorld(ws, player);
 		}
@@ -973,6 +979,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		synchronized (questManager) {
 			QuestEventHandler.unregisterQuestEventAttack(this);
 			QuestEventHandler.unregisterQuestEventItemUse(this);
+			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 		}
 	}
 	
@@ -981,6 +988,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		synchronized (questManager) {
 			QuestEventHandler.registerQuestEventAttack(this);
 			QuestEventHandler.registerQuestEventItemUse(this);
+			QuestEventHandler.registerQuestEventCheckComplete(this);
 		}
 	}
 
@@ -1041,6 +1049,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 
 	public float getSpeedchange() {
 		return speedchange;
+	}
+
+	@Override
+	public void onCheckCompleteEvent() {
+		CheckComplete();
 	}
 	
 	

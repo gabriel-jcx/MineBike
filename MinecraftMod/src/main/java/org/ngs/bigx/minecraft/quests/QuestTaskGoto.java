@@ -51,9 +51,21 @@ public class QuestTaskGoto extends QuestTask {
 	public void init() { }
 
 	@Override
-	public void unregisterEvents() { }
+	public void unregisterEvents() { 
+		synchronized (questManager) {
+			QuestEventHandler.unregisterQuestEventCheckComplete(this);
+		}
+	}
 
 	@Override
 	public void registerEvents() {
+		synchronized (questManager) {
+			QuestEventHandler.registerQuestEventCheckComplete(this);
+		}
+	}
+
+	@Override
+	public void onCheckCompleteEvent() {
+		CheckComplete();
 	}
 }

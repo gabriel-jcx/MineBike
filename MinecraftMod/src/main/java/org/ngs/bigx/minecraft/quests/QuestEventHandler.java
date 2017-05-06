@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -28,6 +29,7 @@ import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServer
 
 public class QuestEventHandler {
 	private int tickCount = 0;
+	private int tickCountOneSecond = 0;
 	private static long duplicateAttackEventPreventorTimeStamp = 0;
 
 	public static final int tickCountUpperLimit = 10;
@@ -35,7 +37,7 @@ public class QuestEventHandler {
 	private static List<IQuestEventAttack> questEventAttackList = new ArrayList<IQuestEventAttack>();
 	private static List<IQuestEventItemUse> questEventItemUseList = new ArrayList<IQuestEventItemUse>();
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionList = new ArrayList<IQuestEventNpcInteraction>();
-	
+	private static List<IQuestEventCheckComplete> questEventCheckCompleteList = new ArrayList<IQuestEventCheckComplete>();
 	
 	public QuestEventHandler()
 	{
@@ -70,6 +72,16 @@ public class QuestEventHandler {
 	{
 		questEventNpcInteractionList.remove(questEventNpcInteraction);
 	}
+	
+	public static void registerQuestEventCheckComplete(IQuestEventCheckComplete questEventCheckComplete)
+	{
+		questEventCheckCompleteList.add(questEventCheckComplete);
+	}
+	
+	public static void unregisterQuestEventCheckComplete(IQuestEventCheckComplete questEventCheckComplete)
+	{
+		questEventCheckCompleteList.remove(questEventCheckComplete);
+	}
 
 	@SubscribeEvent
 	public void onItemUse(PlayerUseItemEvent.Start event) {
@@ -95,8 +107,23 @@ public class QuestEventHandler {
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 		this.tickCount++;
+		this.tickCountOneSecond++;
 		
-		// Every 300 ms
+		if(tickCountOneSecond >= 50)
+		{
+			tickCountOneSecond = 0;
+			
+			if(questEventCheckCompleteList != null)
+			{
+				for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteList)
+				{
+					if(questEventCheckComplete != null)
+						questEventCheckComplete.onCheckCompleteEvent();
+				}
+			}
+		}
+		
+		// Every 200 ms
 		if(tickCount >= tickCountUpperLimit)
 		{
 			tickCount = 0;

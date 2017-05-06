@@ -50,15 +50,21 @@ public class QuestTaskTalk extends QuestTask {
 
 
 	@Override
-	public void unregisterEvents() {
-		// TODO Auto-generated method stub
-		
+	public void unregisterEvents() { 
+		synchronized (questManager) {
+			QuestEventHandler.unregisterQuestEventCheckComplete(this);
+		}
 	}
-
 
 	@Override
 	public void registerEvents() {
-		// TODO Auto-generated method stub
-		
+		synchronized (questManager) {
+			QuestEventHandler.registerQuestEventCheckComplete(this);
+		}
+	}
+
+	@Override
+	public void onCheckCompleteEvent() {
+		CheckComplete();
 	}
 }
