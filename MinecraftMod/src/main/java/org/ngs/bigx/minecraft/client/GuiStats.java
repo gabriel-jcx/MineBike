@@ -124,7 +124,7 @@ public class GuiStats extends GuiScreen {
 	    	
 	    	if(bigxServerContext.getQuestManager() == null)
 	    	{
-	    		bigxServerContext.setQuestManager(new QuestManager(bigxServerContext, p));
+	    		return;
 	    	}
 	    	
 	    	synchronized (bigxServerContext.getQuestManager()) {

@@ -99,12 +99,23 @@ public class QuestEventHandler {
 			if (!event.player.worldObj.isRemote)
 			{
 				// SERVER CODE
-				// This tick will trigger to check each quest tasks of active quest
-				BiGX.instance().serverContext.getQuestManager().questTick();
+				if(BiGX.instance().serverContext.getQuestManager() != null)
+				{
+					// This tick will trigger to check each quest tasks of active quest
+					BiGX.instance().serverContext.getQuestManager().questTick();	
+				}
+				else
+				{
+					BiGX.instance().serverContext.setQuestManager(new QuestManager(BiGX.instance().serverContext, event.player));
+				}
 			}
 			else
 			{
 				// CLIENT CODE
+				if(BiGX.instance().clientContext.getQuestManager() == null)
+				{
+					BiGX.instance().clientContext.setQuestManager(new QuestManager(BiGX.instance().clientContext, event.player));
+				}
 			}
 		}
 	}

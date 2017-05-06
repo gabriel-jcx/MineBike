@@ -250,21 +250,15 @@ public class CommonEventHandler {
 			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
 			server_tick++;
 			
-			//20 ticks = 1 second
-			if (server_tick==20) {
+			//200 ticks = 10 second
+			if (server_tick==200) {
 				server_tick = 0;
-//				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
-//				NpcCommand.spawnTheifOnRegularChaseQuest();
-//				NpcCommand.spawnTheifOnFireChaseQuest();
 				
-				// SET BLOCK EVERY ONE SECOND IN QUEST
-				
-			}
-			
-			//Making sure it remains daytime all the time
-			World current_world = MinecraftServer.getServer().getEntityWorld();
+				//Making sure it remains daytime all the time
+				World current_world = MinecraftServer.getServer().getEntityWorld();
 
-			current_world.setWorldTime(8000);
+				current_world.setWorldTime(8000);
+			}
 		}
 	}
 }
