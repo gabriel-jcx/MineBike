@@ -239,19 +239,23 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	{
 		int deduction = 1;
 		if (itemOnHands != null) {
-			if(itemOnHands.getUnlocalizedName().equals("item.hoeStone"))
+			if(itemOnHands.getUnlocalizedName().equals("item.swordWood"))
 			{
 				deduction = 3;
 			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.hoeIron"))
+			else if(itemOnHands.getUnlocalizedName().equals("item.swordIron"))
 			{
 				deduction = 9;
 			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.hoeGold"))
+			else if(itemOnHands.getUnlocalizedName().equals("item.npcBronzeSword"))
 			{
 				deduction = 27;
 			}
-			else if(itemOnHands.getUnlocalizedName().equals("item.hoeDiamond"))
+			else if(itemOnHands.getUnlocalizedName().equals("item.npcMithrilSword"))
+			{
+				deduction = 81;
+			}
+			else if(itemOnHands.getUnlocalizedName().equals("item.npcEmeraldSword"))
 			{
 				deduction = 81;
 			}

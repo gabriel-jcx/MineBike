@@ -71,6 +71,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import noppes.npcs.CustomItems;
 import noppes.npcs.entity.EntityCustomNpc;
 
 

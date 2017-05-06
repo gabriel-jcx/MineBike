@@ -7,7 +7,7 @@ public class BiGXTextBoxDialogue {
 	public static final String wakeUpMsg = "Steve: Dad is calling\nme. Let’s go talk\nto him";
 	public static final String fatherMsg = "Dad: Someone gave me\nthese for you.";
 	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";
-	public static final String postCapture = "ARGH! You caught me!";
+	
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
 	public static final String soundComment = "Where's that sound coming\nfrom?";
@@ -20,6 +20,7 @@ public class BiGXTextBoxDialogue {
 	public static final String questChaseBeginning = "Well...\nI guess someone's here...\nLet's find out who...";
 	public static final String questChaseShowup = "The man showed up!";
 	public static final String questChaseHintWeapon = "Hint: Buy weapon to\nincrease damage";
+	public static final String postCapture = "ARGH! You caught me!";
 	
 	public static final String questAdded = "New Quest Added!\nPress K for details";
 	public static final String questBookInstructions = "Press K to open and\nclose the quest book.";
@@ -32,6 +33,7 @@ public class BiGXTextBoxDialogue {
 	public static final String placeCave = "\n   < Cave >";
 	public static final String placeCaveHiddenRoom = "\n   < Hidden Room >";
 	public static final String placeContinentPangea = "\n   < Pangea Continent >";
+	public static final String placeQuestRoom = "\n   < Quest Room >";
 	
 	//Chest Box Message
 	public static final String questChasePotionInfo = "Use different potions\nto challenge different\nthieves";
