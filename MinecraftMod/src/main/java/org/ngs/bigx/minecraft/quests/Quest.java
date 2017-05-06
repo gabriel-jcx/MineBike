@@ -3,34 +3,79 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public class Quest {
+public class Quest implements Runnable {
+	public static final String QUEST_ID_STRING_CHASE_REG = "ID_QUEST_CHASE_REG";
+	public static final String QUEST_ID_STRING_CHASE_FIRE = "ID_QUEST_CHASE_FIRE";
+	
 	protected String id; 		// Quest ID by type
 	
+	private QuestManager questManager;
 	private String name, description;
-	private String[] requirements;
 	private List<EntityPlayer> players;
-	public List<IQuestEvent> events;
+	private EntityPlayer thePlayer;
+	private List<QuestTask> tasks;
 	private List<ItemStack> rewardItems;
 	private int rewardXP, rewardCoins;
 	
-	public Quest(String id) {
-		this(id, "Quest", "I'm a quest!");
+	public Quest(String id, QuestManager questManager) {
+		this(id, "Quest", "I'm a quest!", questManager);
 	}
 	
-	public Quest(String id, String n, String d) {
-		this(id, n, d, new String[1]);
-	}
-	
-	public Quest(String id, String n, String d, String[] requirements) {
+	public Quest(String id, String n, String d, QuestManager questManager) {
 		this.id = id;
-		events = new ArrayList<IQuestEvent>();
-		rewardItems = new ArrayList<ItemStack>();
-		name = n;
-		description = d;
-		this.requirements = requirements;
+		this.name = n;
+		this.description = d;
+		this.questManager = questManager;
+		this.tasks = new ArrayList<QuestTask>();
+	}
+	
+	public List<QuestTask> getTasks()
+	{
+		return this.tasks;
+	}
+	
+	public void addTasks(QuestTask questTask) throws QuestException
+	{
+		if(questTask == null)
+			throw new QuestException("Task is null");
+		
+		if(questTask.getQuestManager() != this.questManager)
+		{
+			questTask.setQuestManager(this.questManager);
+		}
+		
+		this.tasks.add(questTask);
+	}
+	
+	/**
+	 * Returns the progress of a Quest in percentage
+	 * @return 0-100 in percentage
+	 * @throws QuestException
+	 */
+	public int getQuestProgress() throws QuestException // returns 0-100% 
+	{
+		if(this.tasks.size() == 0)
+		{
+			throw new QuestException("Quest with no task detected");
+		}
+		
+		int returnValue = 0;
+		int countTaskDone = 0;
+		
+		for(QuestTask task : this.tasks)
+		{
+			if(task.IsComplete())
+				countTaskDone++;
+		}
+		
+		returnValue = countTaskDone / this.tasks.size();
+		
+		return returnValue;
 	}
 	
 	public String getQuestId()
@@ -47,15 +92,22 @@ public class Quest {
 	}
 
 	public String[] getRequirements() {
-		return requirements;
+		String[] returnValue = new String[tasks.size()];
+		
+		for(int i=0; i<tasks.size(); i++)
+		{
+			returnValue[i] = tasks.get(i).getTaskDescription();
+		}
+		
+		return returnValue;
 	}
 
 	public void AddPlayer(EntityPlayer player) {
 		players.add(player);
 	}
 	
-	public IQuestEvent getCurrentQuestEvent() {
-		for (IQuestEvent e : events) {
+	public IQuestTask getCurrentQuestTask() {
+		for (IQuestTask e : this.tasks) {
 			if (!e.IsComplete())
 				return e;
 		}
@@ -63,9 +115,11 @@ public class Quest {
 	}
 	
 	public boolean IsComplete() {
-		for (IQuestEvent questEvent : events) {
-			if (!questEvent.IsComplete())
+		for (IQuestTask questTask : this.tasks) {
+			if (!questTask.IsComplete() && (questTask.IsMainTask()) )
+			{
 				return false;
+			}
 		}
 		return true;
 	}
@@ -80,5 +134,35 @@ public class Quest {
 	
 	public int GetRewardCoins() {
 		return rewardCoins;
+	}
+	
+	public void stop()
+	{
+		for(QuestTask questTask : this.tasks)
+		{	
+			questTask.deactivateTask();
+		}
+	}
+
+	@Override
+	public void run() {
+		synchronized(questManager)
+		{
+			if(this.tasks.size() == 0)
+			{
+				try {
+					throw new QuestException("The current Quest has not tasks");
+				} catch (QuestException e) {
+					e.printStackTrace();
+				}
+				return;
+			}
+			
+			for(QuestTask questTask : this.tasks)
+			{
+				questTask.setQuestManager(questManager);
+				questTask.activateTask();
+			}
+		}
 	}
 }

@@ -21,14 +21,16 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
-import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
+import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -100,33 +102,28 @@ public class CommonEventHandler {
 	static float playerQuestPitch, playerQuestYaw;
 	
 	int server_tick = 0;
-	boolean serverQuestTest = true;
 	int serverQuestTestTickCount = 10;
 	
 	private static int thiefMaxLevel = 1;
 	
 	public static LevelSystem levelSys = new LevelSystem();
-	public static QuestEventChasing chaseQuest = new QuestEventChasing();
-	public static QuestEventChasingFire chaseQuestFire = new QuestEventChasingFire();
+//	public static QuestTaskChasing chaseQuest = new QuestTaskChasing();
+//	public static QuestTaskChasingFire chaseQuestFire = new QuestTaskChasingFire();
 	boolean chaseQuestInProgress = false;
 	
 	private static int onPlayerTickEventCount = 0;
+	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151)) &&
 				event.player.dimension == 0) {
-			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID));
-			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), 0, 64, 0);
+			QuestTeleporter.teleport(event.player, WorldProviderDungeon.dimID, 0, 64, 0);
 		}
 		else if (inBounds(event.player, Vec3.createVectorHelper(3, 63, 10), Vec3.createVectorHelper(-3, 68, 20)) &&
 				event.player.dimension == WorldProviderDungeon.dimID) {
-			QuestTeleporter teleporter = new QuestTeleporter(MinecraftServer.getServer().worldServerForDimension(0));
-			teleporter.teleport(event.player, MinecraftServer.getServer().worldServerForDimension(0), 121, 163, -145);
+			QuestTeleporter.teleport(event.player, 0, 121, 163, -145);
 		}
 		
-		/**
-		 * TODO: IMPLEMENT PLAYER STATE RESET FEATURE HERE.
-		 */
 		if (!event.player.worldObj.isRemote)
 		{
 			try {
@@ -141,7 +138,7 @@ public class CommonEventHandler {
 					{
 						if(EVENT_PLAYERSTATE_LOAD)
 						{
-							GameSaveManager.sendCustomCommand(BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
+							GameSaveManager.sendCustomCommand((BigxClientContext)BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
 							EVENT_PLAYERSTATE_LOAD = false;
 						}
 						if(EVENT_PLAYERSTATE_RESET)
@@ -158,7 +155,7 @@ public class CommonEventHandler {
 						}
 						if(EVENT_PLAYERSTATE_SAVE)
 						{
-							GameSaveManager.sendCustomCommand(BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
+							GameSaveManager.sendCustomCommand((BigxClientContext)BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
 							EVENT_PLAYERSTATE_SAVE = false;
 						}
 						
@@ -188,7 +185,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
-		BigxClientContext context = BiGX.instance().context;
+//		BigxContext context = BiGX.instance().context;
 		
 		//TODO: Implement proper cleanup when the game is exited
 		//The event which is called by the server shutting down needs to be located and used
@@ -200,7 +197,6 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void entityInteractEvent(EntityInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
-		System.out.println("Entity Interact Event");
 		NpcEvents.InteractWithNPC(player, e);
 	}
 
@@ -217,24 +213,24 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		System.out.println(event.item.getDisplayName());
-		if (event.item.getDisplayName().contains("Teleportation Potion")) {
-			EntityPlayer player = event.entityPlayer;
-			QuestEventChasing.player = event.entityPlayer;
-			QuestEventChasingFire.player = event.entityPlayer;
-			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasing.checkPlayerInArea(player, 94, 53, -54, 99, 58, -48))
-			{
-				chaseQuest.Run(levelSys);
-				chaseQuestInProgress = true;
-			}
-			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestEventChasingFire.checkPlayerInArea(player, -50, 50, -50, 50, 100, 50))
-			{
-				chaseQuestFire.Run(levelSys);
-				chaseQuestInProgress = true;
-			}
-			else if (chaseQuestInProgress)
-				chaseQuest.goBackToOriginalWorld(); //probably want to make this a part of the template class or something
-		}
+//		System.out.println(event.item.getDisplayName());
+//		if (event.item.getDisplayName().contains("Teleportation Potion")) {
+//			EntityPlayer player = event.entityPlayer;
+//			QuestTaskChasing.player = event.entityPlayer;
+//			QuestTaskChasingFire.player = event.entityPlayer;
+//			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasing.checkPlayerInArea(player, 94, 53, -54, 99, 58, -48))
+//			{
+//				chaseQuest.Run(levelSys);
+//				chaseQuestInProgress = true;
+//			}
+//			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasingFire.checkPlayerInArea(player, -50, 50, -50, 50, 100, 50))
+//			{
+//				chaseQuestFire.Run(levelSys);
+//				chaseQuestInProgress = true;
+//			}
+//			else if (chaseQuestInProgress)
+//				chaseQuest.goBackToOriginalWorld(); //probably want to make this a part of the template class or something
+//		}
 	}
 	
 	
@@ -257,30 +253,18 @@ public class CommonEventHandler {
 			//20 ticks = 1 second
 			if (server_tick==20) {
 				server_tick = 0;
-				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
-				NpcCommand.spawnTheifOnRegularChaseQuest();
-				NpcCommand.spawnTheifOnFireChaseQuest();
+//				NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
+//				NpcCommand.spawnTheifOnRegularChaseQuest();
+//				NpcCommand.spawnTheifOnFireChaseQuest();
+				
+				// SET BLOCK EVERY ONE SECOND IN QUEST
+				
 			}
 			
 			//Making sure it remains daytime all the time
 			World current_world = MinecraftServer.getServer().getEntityWorld();
 
 			current_world.setWorldTime(8000);
-			
-			// Test Purpose Code
-			if(this.serverQuestTest)
-			{
-				if(this.serverQuestTestTickCount > 0)
-				{
-					if(server_tick == 0)
-					{
-						this.serverQuestTestTickCount--;
-					}
-				}
-				else{
-					this.serverQuestTest = false;
-				}
-			}
 		}
 	}
 }

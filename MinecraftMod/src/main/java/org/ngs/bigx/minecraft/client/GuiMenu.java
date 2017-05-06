@@ -3,7 +3,7 @@ package org.ngs.bigx.minecraft.client;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.ngs.bigx.minecraft.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonLanguage;

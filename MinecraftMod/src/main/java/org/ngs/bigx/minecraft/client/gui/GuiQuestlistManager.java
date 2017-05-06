@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.ngs.bigx.minecraft.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

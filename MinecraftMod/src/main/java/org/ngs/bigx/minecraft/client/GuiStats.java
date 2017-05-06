@@ -5,10 +5,11 @@ import java.text.DecimalFormat;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
-import org.ngs.bigx.minecraft.BigxClientContext;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
+import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -119,187 +120,196 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
-	    	if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing )
+	    	BigxServerContext bigxServerContext = BiGX.instance().serverContext;
+	    	
+	    	if(bigxServerContext.getQuestManager() == null)
 	    	{
-		    	GL11.glPushMatrix();
-		    	
-				    GL11.glTranslatef(mcWidth/2, 12f, 0); 
-				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				    GL11.glEnable(GL11.GL_BLEND);
-				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
-			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
-			        
-				    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
-			        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
-			        
-				    mc.renderEngine.bindTexture(THIEF_TEXTURE);
-			        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
-	        	
-	        	GL11.glPopMatrix();
-	        	
-	        	int time = 0;
-	        	
-	        	QuestEventChasing quest = (QuestEventChasing) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
-	        	if(quest.chasingQuestOnCountDown)
-	        	{
-	        		time = quest.getCountdown();
-	        	}
-	        	else
-	        	{
-	        		time = quest.getTime();
-	        	}
-	        	
-	        	int minuteLeft = time/60;
-				int secondLeft = time%60;
-				
-				String chainsgQuestTimeLeft = "";
-				
-				if(minuteLeft<10)
-				{
-					chainsgQuestTimeLeft = "0";
-				}
-				
-				chainsgQuestTimeLeft += minuteLeft + ":";
-				
-				if(secondLeft<10)
-				{
-					chainsgQuestTimeLeft += "0";
-				}
-				
-				chainsgQuestTimeLeft += secondLeft;
-	        	
-	        	text = chainsgQuestTimeLeft;
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
-	        	
-	    		text = "" + new DecimalFormat("###.#").format(quest.dist);
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
-	        	
-	    		text = "Lv: " + quest.getThiefLevel();
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
-	        	
-	    		text = "HP: " + quest.getThiefHealthCurrent();
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
-	    		
-	    		if(quest.getTimeFallBehind() > 0)
-	    		{
-	    			if( (System.currentTimeMillis() - quest.warningMsgBlinkingTime) < 700)
-	    			{
-	    				GL11.glPushMatrix();
-						    GL11.glTranslatef(mcWidth/2, 0, 0);
-					    	GL11.glScalef(2F, 2F, 2F);
-					    	
-				    		text = "WARNING";
-		
-				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
-					    	
-				    		text = "THIEF IS GETTING AWAY";
-		
-				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
-			    		GL11.glPopMatrix();
-	    			}
-	    		}
+	    		bigxServerContext.setQuestManager(new QuestManager(bigxServerContext, p));
 	    	}
-	    	else if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire )
-	    	{
-		    	GL11.glPushMatrix();
-		    	
-				    GL11.glTranslatef(mcWidth/2, 12f, 0); 
-				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-				    GL11.glEnable(GL11.GL_BLEND);
-				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
-			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
-			        
-				    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
-			        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
-			        
-				    mc.renderEngine.bindTexture(THIEF_TEXTURE);
-			        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
-	        	
-	        	GL11.glPopMatrix();
-	        	
-	        	int time = 0;
-	        	
-	        	QuestEventChasingFire quest = (QuestEventChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
-	        	if(quest.chasingQuestOnCountDown)
-	        	{
-	        		time = quest.getCountdown();
-	        	}
-	        	else
-	        	{
-	        		time = quest.getTime();
-	        	}
-	        	
-	        	int minuteLeft = time/60;
-				int secondLeft = time%60;
-				
-				String chainsgQuestTimeLeft = "";
-				
-				if(minuteLeft<10)
-				{
-					chainsgQuestTimeLeft = "0";
-				}
-				
-				chainsgQuestTimeLeft += minuteLeft + ":";
-				
-				if(secondLeft<10)
-				{
-					chainsgQuestTimeLeft += "0";
-				}
-				
-				chainsgQuestTimeLeft += secondLeft;
-	        	
-	        	text = chainsgQuestTimeLeft;
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
-	        	
-	    		text = "" + new DecimalFormat("###.#").format(quest.dist);
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
-	        	
-	    		text = "Lv: " + quest.getThiefLevel();
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
-	        	
-	    		text = "HP: " + quest.getThiefHealthCurrent();
-
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
-	    		
-	    		if(quest.getTimeFallBehind() > 0)
-	    		{
-	    			if( (System.currentTimeMillis() - quest.warningMsgBlinkingTime) < 700)
-	    			{
-	    				GL11.glPushMatrix();
-						    GL11.glTranslatef(mcWidth/2, 0, 0);
-					    	GL11.glScalef(2F, 2F, 2F);
-					    	
-				    		text = "WARNING";
-		
-				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
-					    	
-				    		text = "THIEF IS GETTING AWAY";
-		
-				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
-			    		GL11.glPopMatrix();
-	    			}
-	    		}
+	    	
+	    	synchronized (bigxServerContext.getQuestManager()) {
+		    	if(bigxServerContext.getQuestManager() != null && bigxServerContext.getQuestManager().getActiveQuest() != null && 
+		    			bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask() instanceof QuestTaskChasing )
+		    	{
+			    	GL11.glPushMatrix();
+			    	
+					    GL11.glTranslatef(mcWidth/2, 12f, 0); 
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
+				        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
+				        
+					    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
+				        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
+				        
+					    mc.renderEngine.bindTexture(THIEF_TEXTURE);
+				        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
+		        	
+		        	GL11.glPopMatrix();
+		        	
+		        	int time = 0;
+		        	
+		        	QuestTaskChasing quest = (QuestTaskChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();
+		        	if(quest.isChasingQuestOnCountDown())
+		        	{
+		        		time = quest.getCountdown();
+		        	}
+		        	else
+		        	{
+		        		time = quest.getTime();
+		        	}
+		        	
+		        	int minuteLeft = time/60;
+					int secondLeft = time%60;
+					
+					String chainsgQuestTimeLeft = "";
+					
+					if(minuteLeft<10)
+					{
+						chainsgQuestTimeLeft = "0";
+					}
+					
+					chainsgQuestTimeLeft += minuteLeft + ":";
+					
+					if(secondLeft<10)
+					{
+						chainsgQuestTimeLeft += "0";
+					}
+					
+					chainsgQuestTimeLeft += secondLeft;
+		        	
+		        	text = chainsgQuestTimeLeft;
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
+		        	
+		    		text = "" + new DecimalFormat("###.#").format(quest.getDist());
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
+		        	
+		    		text = "Lv: " + quest.getThiefLevel();
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
+		        	
+		    		text = "HP: " + quest.getThiefHealthCurrent();
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
+		    		
+		    		if(quest.getTimeFallBehind() > 0)
+		    		{
+		    			if( (System.currentTimeMillis() - quest.getWarningMsgBlinkingTime()) < 700)
+		    			{
+		    				GL11.glPushMatrix();
+							    GL11.glTranslatef(mcWidth/2, 0, 0);
+						    	GL11.glScalef(2F, 2F, 2F);
+						    	
+					    		text = "WARNING";
+			
+					        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+					    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
+						    	
+					    		text = "THIEF IS GETTING AWAY";
+			
+					        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+					    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
+				    		GL11.glPopMatrix();
+		    			}
+		    		}
+		    	}
+	//	    	else if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
+	//	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire )
+	//	    	{
+	//		    	GL11.glPushMatrix();
+	//		    	
+	//				    GL11.glTranslatef(mcWidth/2, 12f, 0); 
+	//				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+	//				    GL11.glEnable(GL11.GL_BLEND);
+	//				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
+	//			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
+	//			        
+	//				    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
+	//			        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
+	//			        
+	//				    mc.renderEngine.bindTexture(THIEF_TEXTURE);
+	//			        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
+	//	        	
+	//	        	GL11.glPopMatrix();
+	//	        	
+	//	        	int time = 0;
+	//	        	
+	//	        	QuestTaskChasingFire quest = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
+	//	        	if(quest.chasingQuestOnCountDown)
+	//	        	{
+	//	        		time = quest.getCountdown();
+	//	        	}
+	//	        	else
+	//	        	{
+	//	        		time = quest.getTime();
+	//	        	}
+	//	        	
+	//	        	int minuteLeft = time/60;
+	//				int secondLeft = time%60;
+	//				
+	//				String chainsgQuestTimeLeft = "";
+	//				
+	//				if(minuteLeft<10)
+	//				{
+	//					chainsgQuestTimeLeft = "0";
+	//				}
+	//				
+	//				chainsgQuestTimeLeft += minuteLeft + ":";
+	//				
+	//				if(secondLeft<10)
+	//				{
+	//					chainsgQuestTimeLeft += "0";
+	//				}
+	//				
+	//				chainsgQuestTimeLeft += secondLeft;
+	//	        	
+	//	        	text = chainsgQuestTimeLeft;
+	//
+	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
+	//	        	
+	//	    		text = "" + new DecimalFormat("###.#").format(quest.dist);
+	//
+	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
+	//	        	
+	//	    		text = "Lv: " + quest.getThiefLevel();
+	//
+	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
+	//	        	
+	//	    		text = "HP: " + quest.getThiefHealthCurrent();
+	//
+	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
+	//	    		
+	//	    		if(quest.getTimeFallBehind() > 0)
+	//	    		{
+	//	    			if( (System.currentTimeMillis() - quest.warningMsgBlinkingTime) < 700)
+	//	    			{
+	//	    				GL11.glPushMatrix();
+	//						    GL11.glTranslatef(mcWidth/2, 0, 0);
+	//					    	GL11.glScalef(2F, 2F, 2F);
+	//					    	
+	//				    		text = "WARNING";
+	//		
+	//				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	//				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
+	//					    	
+	//				    		text = "THIEF IS GETTING AWAY";
+	//		
+	//				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	//				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
+	//			    		GL11.glPopMatrix();
+	//	    			}
+	//	    		}
+	//	    	}
 	    	}
 	    	
 	    	Vec3 playerlook = mc.thePlayer.getLookVec();

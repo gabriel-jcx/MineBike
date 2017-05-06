@@ -23,11 +23,14 @@
 /MinecraftMod/bin/com/example/examplemod/ExampleMod.class
 /MinecraftMod/bin/mcmod.info
 /MinecraftMod/bin/*
+/MinecraftMod/.metadata/*
 /MinecraftMod/eclipse/saves/*
 /MinecraftMod/eclipse/logs/*
 /MinecraftMod/eclipse/.metadata/*
+/MinecraftMod/eclipse/.recommenders/*
+/MinecraftMod/eclipse/customnpcs/assets/customnpcs/textures/cache/*
+/MinecraftMod/eclipse/screenshots/*
 /MinecraftMod/eclipse/asm/*
-/MinecraftMod/eclipse/config/*
 /MinecraftMod/eclipse/ForgeEssentials/*
 /MinecraftMod/eclipse/config/forge.cfg
 /MinecraftMod/eclipse/config/forgeChunkLoading.cfg

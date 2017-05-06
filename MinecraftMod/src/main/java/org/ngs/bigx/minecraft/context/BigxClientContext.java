@@ -1,65 +1,50 @@
-package org.ngs.bigx.minecraft;
+package org.ngs.bigx.minecraft.context;
 
 import java.awt.Event;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Random;
-import java.util.Spliterator;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
 import org.ngs.bigx.dictionary.objects.game.GameServerList;
 import org.ngs.bigx.dictionary.objects.game.GameServerStatus;
-import org.ngs.bigx.dictionary.protocol.Specification;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
-import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
-import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.dictionary.protocol.Specification.Command;
 import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
+import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
+import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
+import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
+import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
+import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import com.google.gson.Gson;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenBase;
 
-public class BigxClientContext implements eyeTrackerListner {
+public class BigxClientContext extends BigxContext implements eyeTrackerListner {
 	// CLIENT
-	public BiGX main = null;
-	public static BigxClientContext self = null;
-	
 	public static BiGXNetClient bigxclient;
 	private Timer bigxclientTimer;
 	private static int bigxclientConnectionTryCount = 0;
@@ -77,8 +62,6 @@ public class BigxClientContext implements eyeTrackerListner {
 	private Hashtable<Integer, byte[]> bufferQuestDesign = new Hashtable<Integer, byte[]>();
 	private int bufferQuestDesignFragmentationNumber = 0;
 	private int bufferQuestDesignChunkNumber = 0;
-	public BiGXSuggestedGameProperties suggestedGameProperties = null;
-	public boolean suggestedGamePropertiesReady = false;
 	
 	private static boolean isMiddlwareIPFileAvailable = false;
 	private static boolean isMiddlwareIPAvailable = false;
@@ -139,9 +122,11 @@ public class BigxClientContext implements eyeTrackerListner {
 	public eyeTracker eTracker;
 	
 	public BigxClientContext(BiGX main) {
+		super(main);
+		
 		self = this;
-		this.main = main;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		
 		ClientAreaEvent.initArea();
 				
 		resistances.put(Blocks.air, Resistance.NONE);
@@ -164,7 +149,7 @@ public class BigxClientContext implements eyeTrackerListner {
 		}
 	}
 	
-	public static BigxClientContext getInstance()
+	public static BigxContext getInstance()
 	{
 		return self;
 	}
@@ -253,6 +238,8 @@ public class BigxClientContext implements eyeTrackerListner {
 							Gson gson = new Gson();
 							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 							suggestedGamePropertiesReady = true;
+							
+							sendPatientProfileToServer(questDesignString);
 						}
 						catch (Exception ee){
 							suggestedGameProperties = null;
@@ -434,5 +421,14 @@ public class BigxClientContext implements eyeTrackerListner {
 	public void onMessageReceive(Event event, eyeTrackerUDPData trackerData) {
 		this.rotationX = (float) trackerData.X;
 		this.rotationY = (float) trackerData.Y;
+	}
+	
+	// TODO: NEED TO REVISE THIS FUNCTION VERY UNSTABLE
+	public void sendPatientProfileToServer(String questDesignString)
+	{
+		BigxServerContext bigxServerContext = BiGX.instance().serverContext;
+		Gson gson = new Gson();
+		bigxServerContext.suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
+		bigxServerContext.suggestedGamePropertiesReady = true;
 	}
 }

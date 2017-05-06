@@ -32,4 +32,18 @@ public class GameSaveList {
 		
 		return true;
 	}
+	
+	public boolean resetGameSave(GameSave gamesave) {
+		if (gamesave == null)
+			return false;
+		
+		if (this.gameSaves == null)
+			this.gameSaves = new ArrayList<GameSave>();
+		
+		this.gameSaves.remove(gamesave);
+		gamesave = new GameSave();
+		this.gameSaves.add(gamesave);
+		
+		return true;
+	}
 }

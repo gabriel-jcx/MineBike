@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

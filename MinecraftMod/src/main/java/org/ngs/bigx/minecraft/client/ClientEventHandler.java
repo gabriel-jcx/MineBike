@@ -1,28 +1,24 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
-import java.util.Random;
+import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.BigxClientContext;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestDemo;
-import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventGoto;
+import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
-import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -36,22 +32,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import noppes.npcs.entity.EntityCustomNpc;
 
 public class ClientEventHandler {
-	
-	public static QuestDemo questDemo;
-	
 		private BigxClientContext context;
 		public static KeyBinding keyBindingTogglePedalingMode;
 		public static KeyBinding keyBindingMoveForward;
@@ -64,8 +52,6 @@ public class ClientEventHandler {
 		private static final MouseHelper defaultMouseHelper = new MouseHelper();
 		
 		private static ClientEventHandler handler;
-		
-		private static int demo =0;
 		
 		public ClientEventHandler(BigxClientContext con) {
 			context = con;
@@ -104,22 +90,39 @@ public class ClientEventHandler {
 			if(keyBindingToggleQuestListGui.isPressed())
 			{
 				Minecraft mc = Minecraft.getMinecraft();
-				GuiQuestlistManager guiQuestlistManager =new GuiQuestlistManager(BigxClientContext.self, mc);
-				String[] demoquestreq = new String[5];
-				demoquestreq[0] = "quest[" + demo + "] req 1";
-				demoquestreq[1] = "quest[" + demo + "] req 2";
-				demoquestreq[2] = "quest[" + demo + "] req 3";
-				demoquestreq[3] = "quest[" + demo + "] req 4";
-				demoquestreq[4] = "quest[" + demo + "] req 5";
+				GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+				
+				guiQuestlistManager.resetQuestReferences();
 				
 				try {
-					guiQuestlistManager.addQuestReference(new Quest(QuestEventChasing.id + demo, "demo chasing quest", "demo chasing quest desc", demoquestreq));
-					demo++;
+					Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
+					
+					for(Quest quest : questlist)
+					{
+						guiQuestlistManager.addQuestReference(quest);
+					}
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				} catch (GuiQuestlistException e) {
 					e.printStackTrace();
 				}
+				
+				// TODO populate guiQuestlistManager with playerQuestManager quest list items
+//				String[] demoquestreq = new String[5];
+//				demoquestreq[0] = "quest[" + demo + "] req 1";
+//				demoquestreq[1] = "quest[" + demo + "] req 2";
+//				demoquestreq[2] = "quest[" + demo + "] req 3";
+//				demoquestreq[3] = "quest[" + demo + "] req 4";
+//				demoquestreq[4] = "quest[" + demo + "] req 5";
+//				
+//				try {
+//					guiQuestlistManager.addQuestReference(new Quest(QuestEventChasing.id + demo, "demo chasing quest", "demo chasing quest desc", demoquestreq));
+//					demo++;
+//				} catch (NullPointerException e) {
+//					e.printStackTrace();
+//				} catch (GuiQuestlistException e) {
+//					e.printStackTrace();
+//				}
 				
 				if(mc.currentScreen == null)
 					mc.displayGuiScreen(guiQuestlistManager);
@@ -161,17 +164,24 @@ public class ClientEventHandler {
 		public void onClientTick(TickEvent.ClientTickEvent event) {
 			if ((Minecraft.getMinecraft().thePlayer!=null) 
 					&& (event.phase==TickEvent.Phase.END)) {
+				if(context.getQuestManager() == null)
+				{
+					context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
+				}
 				
-				if (questDemo != null && questDemo.getQuest() != null) {
-					if (questDemo.CheckQuestEventCompleted()) {
-						if (questDemo.getQuest().IsComplete()) {
-							System.out.println("questDemo.getQuest().IsComplete()");
+				QuestManager playerQuestManager = context.getQuestManager();
+				
+				if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
+					try {
+						if (playerQuestManager.CheckActiveQuestCompleted()) {
 							// QUEST DONE!
-							for (ItemStack i : questDemo.getQuest().GetRewardItems())
-								questDemo.getPlayer().inventory.addItemStackToInventory(i);
-							questDemo.getPlayer().addExperience(questDemo.getQuest().GetRewardXP());
-							questDemo.setActiveQuest(null); // 1 quest at a time for now (demo code)
+							for (ItemStack i : playerQuestManager.getActiveQuestRewards())
+								playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
+							playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
+							playerQuestManager.setActiveQuest("NONE");
 						}
+					} catch (QuestException e) {
+						e.printStackTrace();
 					}
 				}
 				

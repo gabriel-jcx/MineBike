@@ -7,8 +7,9 @@ import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
-import org.ngs.bigx.minecraft.quests.QuestEventChasing;
-import org.ngs.bigx.minecraft.quests.QuestEventChasingFire;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -21,7 +22,7 @@ public class BiGXPacketHandler {
 	public static boolean Handle(BiGXNetClient client, BiGXNetPacket packet) {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
-		BigxClientContext context = BiGX.instance().context;
+		BigxClientContext context = (BigxClientContext) BiGX.instance().clientContext;
 		
 //		System.out.println("Receiving Data");
 
@@ -44,20 +45,23 @@ public class BiGXPacketHandler {
 					boolean chasingQuestOnCountDown = false;
 					float speedchange = 0f;
 					
-					if ((ClientEventHandler.getHandler().questDemo != null) && (ClientEventHandler.getHandler().questDemo.getQuest() != null) )
+					QuestManager questManager = context.getQuestManager(); 
+					
+					if ((questManager != null) && (questManager.getActiveQuest() != null) )
 					{
-						if (ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasing)
+						if (questManager.getActiveQuest().getCurrentQuestTask() instanceof QuestTaskChasing)
 						{
-							chasingQuestOnGoing = ((QuestEventChasing)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestEventChasing)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnCountDown;
-							speedchange = QuestEventChasing.speedchange;
+							QuestTaskChasing questTaskChasing = (QuestTaskChasing) questManager.getActiveQuest().getCurrentQuestTask();
+							chasingQuestOnGoing = questTaskChasing.isChasingQuestOnGoing();
+							chasingQuestOnCountDown = questTaskChasing.isChasingQuestOnCountDown();
+							speedchange = questTaskChasing.getSpeedchange();
 						}
-						else if (ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestEventChasingFire)
-						{
-							chasingQuestOnGoing = ((QuestEventChasingFire)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnGoing;
-							chasingQuestOnCountDown = ((QuestEventChasingFire)ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent()).chasingQuestOnCountDown;
-							speedchange = QuestEventChasingFire.speedchange;
-						}
+//						else if (questManager.getCurrentQuestEvent().getCurrentQuestTask() instanceof QuestTaskChasingFire)
+//						{
+//							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
+//							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
+//							speedchange = QuestTaskChasingFire.speedchange;
+//						}
 					}
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
@@ -65,7 +69,7 @@ public class BiGXPacketHandler {
 					{
 						if(!chasingQuestOnCountDown)
 						{
-							maxSpeed = QuestEventChasing.chaseRunBaseSpeed + speedchange;
+							maxSpeed = QuestTaskChasing.chaseRunBaseSpeed + speedchange;
 							
 							if(context.getSpeed() + ((double)change) >= 0){
 								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );

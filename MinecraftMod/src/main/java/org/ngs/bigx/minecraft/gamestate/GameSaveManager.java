@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 
-import org.ngs.bigx.minecraft.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 
 import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;

@@ -3,6 +3,9 @@ package org.ngs.bigx.minecraft;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
 import org.ngs.bigx.minecraft.entity.item.MysteriousKey;
@@ -15,9 +18,11 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
+import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -59,8 +64,9 @@ import net.minecraftforge.common.MinecraftForge;
 	    
 	    public static CharacterProperty characterProperty;
 	    public static BikeProperty bikeProperty;	
-	    
-	    public BigxClientContext context;
+
+	    public BigxClientContext clientContext; // BigxClientContext for client and BigxServerContext for server
+	    public BigxServerContext serverContext; // BigxClientContext for client and BigxServerContext for server
 	    
 	    public static MouseHelper disableMouseHelper;
 	    
@@ -87,7 +93,9 @@ import net.minecraftforge.common.MinecraftForge;
 	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
 	    	
 	    	instance = this;
-	    	context = new BigxClientContext(this);
+	    	clientContext = new BigxClientContext(this);
+	    	serverContext = new BigxServerContext(this);
+	    	
 	    	proxy.preInit(e);
 	    	network = NetworkRegistry.INSTANCE.newSimpleChannel("BikeChannel");
 	    	network.registerMessage(HandleHungerMessageOnServer.Handler.class,HandleHungerMessageOnServer.class,0,Side.SERVER);
@@ -105,7 +113,9 @@ import net.minecraftforge.common.MinecraftForge;
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
 	    	
-	    	MinecraftForge.EVENT_BUS.register(new QuestEventHandler());
+	    	QuestEventHandler questEventHandler = new QuestEventHandler();
+			FMLCommonHandler.instance().bus().register(questEventHandler);
+	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
 	    	
 	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	
