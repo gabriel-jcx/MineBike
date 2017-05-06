@@ -216,11 +216,6 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		System.out.println(event.item.getItem().getUnlocalizedName());
-		System.out.println(Item.getItemById(267).getUnlocalizedName());
-		System.out.println(Item.getItemById(268).getUnlocalizedName());
-		System.out.println(CustomItems.swordBronze.getUnlocalizedName());
-		System.out.println(CustomItems.swordEmerald.getUnlocalizedName());
 //		System.out.println(event.item.getDisplayName());
 //		if (event.item.getDisplayName().contains("Teleportation Potion")) {
 //			EntityPlayer player = event.entityPlayer;

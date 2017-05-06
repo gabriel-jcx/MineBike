@@ -65,11 +65,11 @@ public class LevelSystem {
 		switch(playerLevel)
 		{
 		case 2:
-			reward = new ItemStack(Item.getItemById(4616));
+			reward = new ItemStack(Item.getItemById(4421));
 			System.out.println("Level2");
 			break;
 		case 3:
-			reward = new ItemStack(Item.getItemById(4771));
+			reward = new ItemStack(Item.getItemById(4420));
 			System.out.println("Level3");
 			break;
 		}
