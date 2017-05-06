@@ -172,7 +172,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
 //		System.out.println("goBackToTheOriginalWorld");
-		deactivateTask();
+//		deactivateTask();
 		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
@@ -734,6 +734,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	@Override
 	public void run()
 	{
+		System.out.println("[BiGX] Quest Chasing Task Started");
 		synchronized (questManager) {
 			init();
 			
@@ -786,9 +787,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		completed = false;
 		countdown = 11;
 		pausedTime = 0;
-		
-		chasingQuestOnGoing = false;
-		chasingQuestOnCountDown = false;
 		
 		questSettings = new ArrayList<Integer>();
 		StageSettings stagesettings;
