@@ -63,8 +63,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	private float playerQuestPitch, playerQuestYaw;
 	
 	protected long questTimeStamp = 0;
-
-	protected int countdown = 10;
+	 
+	protected long lastCountdownTickTimestamp = 0;
+	protected int countdown = 11;
+	
 	protected int time = 0;
 	protected double elapsedTime = 0;
 	protected double pausedTime = 0;
@@ -97,9 +99,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int chasingQuestInitialPosX = 0;
 	protected int chasingQuestInitialPosY = 0;
 	protected int chasingQuestInitialPosZ = 0;
-	
-	protected Timer t = null;
-	protected Timer t2 = null;
 
 	protected int thiefHealthMax = 50;
 	protected int thiefHealthCurrent = thiefHealthMax;
@@ -179,17 +178,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-
-		if(t != null)
-		{
-			t.cancel();
-			t = null;
-		}
-		if(t2 != null)
-		{
-			t2.cancel();
-			t2 = null;
-		}
 
 		returnLocation = Vec3.createVectorHelper(96, 72, -8);
 
@@ -551,16 +539,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		// MAKE A TIMER AND RUN AND REGISTER
 	}
 	
-	public void handleCountdown()
+	public void countdownTick()
 	{
-		if (Minecraft.getMinecraft().isGamePaused())
-		{
-			pausedTime += (QuestEventHandler.tickCountUpperLimit*20);
-			return;
-		}
+//		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
+		
+		long timeNow = System.currentTimeMillis();
 		
 		// COUNT DOWN TIME
-		countdown = 10 - (int) ((System.currentTimeMillis() - questTimeStamp - pausedTime)/1000);
+		countdown --;
 		
 		if(countdown > 0){	
 			if (countdown == 7) {
@@ -570,19 +556,35 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					}
 				}
 				for (Object o : NpcCommand.getCustomNpcsInDimension(WorldProviderFlats.dimID)) {
-					System.out.println(((EntityCustomNpc)o).display.name);
+//					System.out.println(((EntityCustomNpc)o).display.name);
 				}
 			}
 			if (countdown == 0) {
-				elapsedTime = System.currentTimeMillis();
+				elapsedTime = timeNow;
 				dist = 0;
 				startingZ = (int)player.posZ;
 				endingZ = (int)player.posZ;
 			}
 			if (countdown == 5) {
-				NpcCommand.triggerSpawnTheifOnChaseQuest();
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
+				if(player.worldObj.isRemote) {
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
+				}
+				else
+				{
+//					NpcCommand.triggerSpawnTheifOnChaseQuest();
+					npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+					npc.ai.stopAndInteract = false;
+					
+					setNpc(npc);
+					
+					command = new NpcCommand(context, npc);
+					command.setSpeed(10);
+					command.enableMoving(false);
+					command.runInDirection(ForgeDirection.SOUTH);
+					
+					setNpcCommand(command);
+				}
 			}
 			else if (countdown == 1)
 			{
@@ -598,25 +600,60 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //					e.printStackTrace();
 //				}
 			}
-			else if(countdown == 9)
+			if(countdown == 9)
 			{
 				player.rotationPitch = 0f;
 				player.rotationYaw = 0f;
 			}
-			else if(countdown == 8)
+			if(countdown == 8)
 			{
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
+				if(player.worldObj.isRemote) {
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
+				}
 			}
 		} else {
 			initThiefStat();
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
 			command.enableMoving(true);
-			countdown = 10;
-			t.cancel();
+			countdown = 11;
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
 		}
+	}
+	
+	public void handleCountdown()
+	{
+		if (Minecraft.getMinecraft().isGamePaused())
+		{
+			questTimeStamp += System.currentTimeMillis() - lastCountdownTickTimestamp;
+			return;
+		}
+		
+		int tickCount = 0;
+		long timeNow = System.currentTimeMillis();
+		
+		// Calulate Tick Numbers
+		if(countdown == 11)
+		{
+			pausedTime = 0;
+			questTimeStamp = timeNow;
+			countdown = 10;
+			tickCount ++;
+		}
+		else
+		{
+			tickCount = (int) ((timeNow - lastCountdownTickTimestamp)/1000);
+			System.out.println("[BiGX] TICKCOUNT [" + tickCount + "]");
+			
+		}
+
+		if(tickCount != 0)
+			lastCountdownTickTimestamp = timeNow;
+		
+		// Tick Countdown
+		for(int i=0; i<tickCount; i++)
+			countdownTick();
 	}
 	
 	public void handlePlayTimeOnServer()
@@ -769,6 +806,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				System.out.println("Wait is done");
 			}
 		}
 	}
@@ -781,7 +820,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		virtualCurrency = 0;
 		initThiefStat();
 		completed = false;
-		countdown = 10;
+		countdown = 11;
 		pausedTime = 0;
 		
 		chasingQuestOnGoing = false;
@@ -813,6 +852,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	@Override
 	public void onItemUse(Start event) {
 		synchronized (questManager) {
+			player = event.entityPlayer;
+			
 			if(!player.worldObj.isRemote)
 			{
 				ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
