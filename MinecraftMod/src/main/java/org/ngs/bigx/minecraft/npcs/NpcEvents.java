@@ -35,6 +35,8 @@ public class NpcEvents {
 			InteractWithWeaponsMerchant(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
 			InteractWithBlacksmith(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.potionSeller, NpcLocations.potionSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
+			InteractWithPotionSeller(player, event);
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
@@ -81,9 +83,9 @@ public class NpcEvents {
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
 		if (traderInterface.inventoryCurrency.items.isEmpty())
-			createMarketCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
+			createWeaponsCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
 		if (traderInterface.inventorySold.items.isEmpty())
-			createMarketSold(traderInterface.inventorySold);
+			createWeaponsSold(traderInterface.inventorySold);
 	}
 	
 	private static void InteractWithBlacksmith(EntityPlayer player, EntityInteractEvent event){
@@ -98,10 +100,22 @@ public class NpcEvents {
 			createBlacksmithSold(traderInterface.inventorySold);
 	}
 	
+	private static void InteractWithPotionSeller(EntityPlayer player, EntityInteractEvent event){
+		System.out.println("Interacting with Potion Seller NPC");
+		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		npc.advanced.setRole(1);
+		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
+		
+		if (traderInterface.inventoryCurrency.items.isEmpty())
+			createPotionCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
+		if (traderInterface.inventorySold.items.isEmpty())
+			createPotionSold(traderInterface.inventorySold);
+	}
+	
 	
 	//////Private Helper Methods: Traders
 	//////////WeaponsMerchant Market
-	private static void createMarketCurrency(NpcMiscInventory inventoryCurrency, Item currency){
+	private static void createWeaponsCurrency(NpcMiscInventory inventoryCurrency, Item currency){
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency));
 		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,3));
 		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,9));
@@ -109,7 +123,7 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(4, new ItemStack(currency,81));
 	}
 	
-	private static void createMarketSold(NpcMiscInventory inventorySold){
+	private static void createWeaponsSold(NpcMiscInventory inventorySold){
 		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(268)));
 		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(267)));
 		inventorySold.setInventorySlotContents(2, new ItemStack(CustomItems.swordBronze));
@@ -134,5 +148,20 @@ public class NpcEvents {
 		inventorySold.addItemStack(new ItemStack(CustomItems.swordDemonic));
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveFrost));
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
+	}
+	
+	//////////Potion Seller Market
+	private static void createPotionCurrency(NpcMiscInventory inventoryCurrency, Item currency){
+		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency,10));
+		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,10));
+		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,10));
+		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,10));
+	}
+	
+	private static void createPotionSold(NpcMiscInventory inventorySold){
+//		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(8194))); //Swiftness Potion
+//		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(8202))); //Slowness Potion
+//		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(8197))); //Healing Potion
+//		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(8201))); // Strength Potion
 	}
 }

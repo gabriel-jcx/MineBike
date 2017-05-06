@@ -22,6 +22,7 @@ public class NpcDatabase {
 		map.put("Dad", NpcLocations.dad);
 		map.put("Weapons Merchant", NpcLocations.weaponsMerchant);
 		map.put("Blacksmith", NpcLocations.blacksmith);
+		map.put("Potions Seller", NpcLocations.potionSeller);
 		return map;
 	}
 	
@@ -54,7 +55,7 @@ public class NpcDatabase {
 	}
 	
 	private static String getRole(String name){
-		if (name.contains("Merchant") || name.contains("Blacksmith"))
+		if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller"))
 			return "Trader";
 		return "No Role";
 	}
