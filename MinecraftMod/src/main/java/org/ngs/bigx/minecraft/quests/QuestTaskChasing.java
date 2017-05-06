@@ -339,7 +339,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			int currentRelativePosition = (int)player.posZ - chasingQuestInitialPosZ;
 			int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
 			
-			if(currentRelativeTime > questSettings.size())
+			if(currentRelativeTime >= questSettings.size())
 			{
 				currentRelativeTime = questSettings.size() -1;
 			}
@@ -572,11 +572,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 			if (countdown == 5) {
 				if(player.worldObj.isRemote) {
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 				}
 				else
 				{
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
+					
 //					NpcCommand.triggerSpawnTheifOnChaseQuest();
 					npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 					npc.ai.stopAndInteract = false;
@@ -681,15 +682,17 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
+				
+				if (ratio < 0) {
+					warningMsgBlinkingTime = System.currentTimeMillis();
+					timeFallBehind++;
+				}
+				else{
+					timeFallBehind = 0;
+				}
+				
+				this.time++;
 			}
-		}
-		
-		if (ratio < 0) {
-			warningMsgBlinkingTime = System.currentTimeMillis();
-			timeFallBehind++;
-		}
-		else{
-			timeFallBehind = 0;
 		}
 	}
 	
@@ -766,14 +769,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			goBackToTheOriginalWorld(ws, player);
 			
 			return;
-		}
-
-		if (ratio < 0) {
-			warningMsgBlinkingTime = System.currentTimeMillis();
-			timeFallBehind++;
-		}
-		else{
-			timeFallBehind = 0;
 		}
 	}
 

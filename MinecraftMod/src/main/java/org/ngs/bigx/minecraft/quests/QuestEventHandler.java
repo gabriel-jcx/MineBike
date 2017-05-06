@@ -26,7 +26,7 @@ public class QuestEventHandler {
 	private int tickCount = 0;
 	private static long duplicateAttackEventPreventorTimeStamp = 0;
 
-	public static final int tickCountUpperLimit = 17;
+	public static final int tickCountUpperLimit = 10;
 	
 	private static List<IQuestEventAttack> questEventAttackList = new ArrayList<IQuestEventAttack>();
 	private static List<IQuestEventItemUse> questEventItemUseList = new ArrayList<IQuestEventItemUse>();
