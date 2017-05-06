@@ -68,9 +68,12 @@ public class QuestManager {
 	}
 	
 	public void setActiveQuest(String questid) throws QuestException {
-		if(this.availableQuestList.get(questid) == null)
+		if(!questid.equals(Quest.QUEST_ID_STRING_NONE))
 		{
-			throw new QuestException("The requeseted Quest is not available");
+			if(this.availableQuestList.get(questid) == null)
+			{
+				throw new QuestException("The requeseted Quest is not available");
+			}
 		}
 		
 		Quest quest = this.availableQuestList.get(this.activeQuestId);

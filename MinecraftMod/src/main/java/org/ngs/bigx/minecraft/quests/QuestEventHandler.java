@@ -22,7 +22,9 @@ import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
 public class QuestEventHandler {
 	private int tickCount = 0;
@@ -152,42 +154,32 @@ public class QuestEventHandler {
 		}
 	}
 	
-//	@SubscribeEvent
-//	public void unloadingWorld (WorldEvent.Unload event)
-//	{
-//		System.out.println("logOut(PlayerEvent.PlayerLoggedOutEvent event)");
-//		
-//		for(Object playerObj : event.world.playerEntities)
-//		{
-//			EntityPlayer player = (EntityPlayer) playerObj;
-//			
-//			if(!player.worldObj.isRemote)
-//			{
-//				if(BiGX.instance().serverContext == null)
-//					return;
-//				
-//				if(BiGX.instance().serverContext.getQuestManager() == null)
-//					return;
-//				
-//				try {
-//					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
-//				} catch (QuestException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//			else{
-//				if(BiGX.instance().clientContext == null)
-//					return;
-//				
-//				if(BiGX.instance().clientContext.getQuestManager() == null)
-//					return;
-//				
-//				try {
-//					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
-//				} catch (QuestException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//	}
+	@SubscribeEvent
+	public void onQuit(ClientDisconnectionFromServerEvent event) {
+		System.out.println("onQuit(ClientDisconnectionFromServerEvent event)");
+		
+		if(BiGX.instance().serverContext == null)
+			return;
+		
+		if(BiGX.instance().serverContext.getQuestManager() == null)
+			return;
+		
+		try {
+			BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
+		} catch (QuestException e) {
+			e.printStackTrace();
+		}
+		
+		if(BiGX.instance().clientContext == null)
+			return;
+		
+		if(BiGX.instance().clientContext.getQuestManager() == null)
+			return;
+		
+		try {
+			BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
+		} catch (QuestException e) {
+			e.printStackTrace();
+		}
+	}
 }

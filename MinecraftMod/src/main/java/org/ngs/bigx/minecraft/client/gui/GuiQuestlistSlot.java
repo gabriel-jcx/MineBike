@@ -1,5 +1,8 @@
 package org.ngs.bigx.minecraft.client.gui;
 
+import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.quests.QuestException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -34,6 +37,17 @@ public class GuiQuestlistSlot extends GuiScrollingList {
 	@Override
 	protected void elementClicked(int i, boolean doubleclick) {
 		parent.selectQuestlist(i);
+		
+		if(doubleclick)
+		{
+			try {
+				BiGX.instance().serverContext.getQuestManager().setActiveQuest(parent.getSelectedQuest().getQuestId());
+				BiGX.instance().clientContext.getQuestManager().setActiveQuest(parent.getSelectedQuest().getQuestId());
+			} catch (QuestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
