@@ -806,7 +806,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				try {
 					questManager.wait();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -830,14 +829,25 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		chasingQuestOnCountDown = false;
 		
 		questSettings = new ArrayList<Integer>();
-		StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
-		List<Stage> stageList = stagesettings.stages;
+		StageSettings stagesettings;
+		List<Stage> stageList;
+		stageList = new ArrayList<Stage>();
+		questSettings.add(0);
 		
-		for(int i=0; i<stageList.size();i++)
+		if(context.suggestedGameProperties != null)
 		{
-			for(int j=0; j<stageList.get(i).duration; j++)
+			if(context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().size() != 0)
 			{
-				questSettings.add(stageList.get(i).exerciseSettings);
+				stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+				stageList = stagesettings.stages;
+				
+				for(int i=0; i<stageList.size();i++)
+				{
+					for(int j=0; j<stageList.get(i).duration; j++)
+					{
+						questSettings.add(stageList.get(i).exerciseSettings);
+					}
+				}
 			}
 		}
 		

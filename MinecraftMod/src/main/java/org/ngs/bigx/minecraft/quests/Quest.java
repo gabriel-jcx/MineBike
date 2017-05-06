@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class Quest implements Runnable {
+	public static final String QUEST_ID_STRING_NONE = "ID_QUEST_NONE";
 	public static final String QUEST_ID_STRING_CHASE_REG = "ID_QUEST_CHASE_REG";
 	public static final String QUEST_ID_STRING_CHASE_FIRE = "ID_QUEST_CHASE_FIRE";
 	

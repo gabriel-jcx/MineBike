@@ -9,10 +9,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
@@ -78,6 +80,7 @@ public class QuestEventHandler {
 					System.out.println("WHAT");
 				if(questEventItemUseList == null)
 					System.out.println("WHAT");
+				
 				questEventItemUse.onItemUse(event);
 			}
 		}
@@ -148,4 +151,43 @@ public class QuestEventHandler {
 			}
 		}
 	}
+	
+//	@SubscribeEvent
+//	public void unloadingWorld (WorldEvent.Unload event)
+//	{
+//		System.out.println("logOut(PlayerEvent.PlayerLoggedOutEvent event)");
+//		
+//		for(Object playerObj : event.world.playerEntities)
+//		{
+//			EntityPlayer player = (EntityPlayer) playerObj;
+//			
+//			if(!player.worldObj.isRemote)
+//			{
+//				if(BiGX.instance().serverContext == null)
+//					return;
+//				
+//				if(BiGX.instance().serverContext.getQuestManager() == null)
+//					return;
+//				
+//				try {
+//					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
+//				} catch (QuestException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			else{
+//				if(BiGX.instance().clientContext == null)
+//					return;
+//				
+//				if(BiGX.instance().clientContext.getQuestManager() == null)
+//					return;
+//				
+//				try {
+//					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
+//				} catch (QuestException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
 }

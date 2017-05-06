@@ -62,7 +62,7 @@ public class QuestManager {
 	public QuestManager(BigxContext context, EntityPlayer p) {
 		player = p;
 		this.availableQuestList = new HashMap<String, Quest>();
-		activeQuestId = "NONE";
+		activeQuestId = Quest.QUEST_ID_STRING_NONE;
 		this.context = context;
 		this.context.setQuestManager(this);
 	}
@@ -76,10 +76,14 @@ public class QuestManager {
 		Quest quest = this.availableQuestList.get(this.activeQuestId);
 		if(quest != null)
 			quest.stop();
+
+		activeQuestId = questid;
+		
+		if(questid.equals(Quest.QUEST_ID_STRING_NONE))
+			return;
 		
 		quest = this.availableQuestList.get(questid);
 		this.activateQuest(quest);
-		activeQuestId = questid;
 	}
 	
 	private void deactivateQuest(Quest quest) throws QuestException
@@ -153,7 +157,7 @@ public class QuestManager {
 	}
 	
 	public boolean CheckActiveQuestCompleted() throws QuestException {
-		if (activeQuestId == "NONE") {
+		if (activeQuestId == Quest.QUEST_ID_STRING_NONE) {
 			return false;
 		}
 		
@@ -170,7 +174,6 @@ public class QuestManager {
 	public void questTick()
 	{
 		synchronized (this) {
-//			System.out.println("[BiGX] Multi thred Task Tick");
 			this.notifyAll();
 		}
 	}

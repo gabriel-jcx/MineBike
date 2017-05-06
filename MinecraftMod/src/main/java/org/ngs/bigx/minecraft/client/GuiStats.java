@@ -139,6 +139,11 @@ public class GuiStats extends GuiScreen {
 		    	if(bigxServerContext.getQuestManager() != null && bigxServerContext.getQuestManager().getActiveQuest() != null && 
 		    			bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask() instanceof QuestTaskChasing )
 		    	{
+		    		QuestTaskChasing questTaskChasing = (QuestTaskChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();
+		    		
+		    		if(!questTaskChasing.isChasingQuestOnGoing())
+		    			return;
+		    		
 			    	GL11.glPushMatrix();
 			    	
 					    GL11.glTranslatef(mcWidth/2, 12f, 0); 
@@ -227,13 +232,6 @@ public class GuiStats extends GuiScreen {
 		    			}
 		    		}
 		    	}
-		    	else 
-		    	{
-//		    		System.out.println("Went into Certain mode");
-		    	}
-	    	
-		    	Vec3 playerlook = mc.thePlayer.getLookVec();
-		    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();
 	    	}
     	}
     }
