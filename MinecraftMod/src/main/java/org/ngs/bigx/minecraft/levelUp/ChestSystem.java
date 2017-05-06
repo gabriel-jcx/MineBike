@@ -67,22 +67,22 @@ public class ChestSystem {
 		}
 		
 		if (keyName == "Burnt Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.fireLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.fireLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.fireLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.fireLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 4", 0);	
 		}
 		
 		if (keyName == "Damp Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.waterLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.waterLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.waterLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.waterLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 5", 0);	
 		}
 		
 		if (keyName == "Dusty Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.earthLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.earthLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.earthLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.earthLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 6", 0);	
 		}
 		
 		if (keyName == "Light Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.airLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.airLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.airLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.airLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 7", 0);	
 		}
 		

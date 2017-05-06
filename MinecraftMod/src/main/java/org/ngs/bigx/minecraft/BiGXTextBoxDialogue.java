@@ -22,7 +22,7 @@ public class BiGXTextBoxDialogue {
 	public static final String questChaseHintWeapon = "Hint: Buy weapon to\nincrease damage";
 	
 	public static final String questAdded = "New Quest Added!\nPress K for details";
-	public static final String questBookInstructions = "Press K to open or\nclose the quest book.";
+	public static final String questBookInstructions = "Press K to open and\nclose the quest book.";
 	public static final String questBookObtained = "Quest Book Obtained!";
 	
 	//Area Names

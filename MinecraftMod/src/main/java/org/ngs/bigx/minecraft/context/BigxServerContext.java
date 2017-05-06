@@ -65,4 +65,9 @@ public class BigxServerContext extends BigxContext {
 	{
 		super(main);
 	}
+	
+	public void updateQuestInformationToClient()
+	{
+		
+	}
 }

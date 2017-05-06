@@ -326,6 +326,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	}
 	
 	private void generateTerrainByPatientProfile() {
+		ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
+		
 		if(context.isSuggestedGamePropertiesReady())
 		{
 			/**
@@ -644,8 +646,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		else
 		{
 			tickCount = (int) ((timeNow - lastCountdownTickTimestamp)/1000);
-			System.out.println("[BiGX] TICKCOUNT [" + tickCount + "]");
-			
 		}
 
 		if(tickCount != 0)
@@ -806,8 +806,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				System.out.println("Wait is done");
 			}
 		}
 	}

@@ -96,8 +96,6 @@ public class NpcEvents {
 			createBlacksmithCurrency(traderInterface.inventoryCurrency);
 		if (traderInterface.inventorySold.items.isEmpty())
 			createBlacksmithSold(traderInterface.inventorySold);
-//		System.out.println(traderInterface.inventoryCurrency.items);
-//		System.out.println(traderInterface.inventoryCurrency.getInventoryStackLimit());
 	}
 	
 	

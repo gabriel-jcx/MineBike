@@ -63,25 +63,25 @@ public class ClientAreaEvent {
 //		addArea(new Area(Vec3.createVectorHelper(-167, 70, 343), Vec3.createVectorHelper(-166, 74, 346), 
 //				BiGXTextBoxDialogue.soundComment, AreaTypeEnum.ROOM, 0), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(81, 74, 178), Vec3.createVectorHelper(85, 80, 181), 
+		addArea(new Area(Vec3.createVectorHelper(88, 74, 241), Vec3.createVectorHelper(91, 80, 244), 
 				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(90, 65, 180), Vec3.createVectorHelper(95, 75, 185), 
+		addArea(new Area(Vec3.createVectorHelper(93, 65, 230), Vec3.createVectorHelper(97, 75, 235), 
 				BiGXTextBoxDialogue.directionMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 //		addArea(new Area(Vec3.createVectorHelper(-175, 65, 335), Vec3.createVectorHelper(-172, 73, 337), 
 //				BiGXTextBoxDialogue.questChasePotionInfo, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(74, 45, 175), Vec3.createVectorHelper(92, 100, 193), 
+		addArea(new Area(Vec3.createVectorHelper(86, 45, 235), Vec3.createVectorHelper(103, 100, 250), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(107, 45, 187), Vec3.createVectorHelper(131, 100, 212), 
+		addArea(new Area(Vec3.createVectorHelper(100, 45, 199), Vec3.createVectorHelper(118, 100, 215), 
 				BiGXTextBoxDialogue.placeMarket, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(66, 45, 166), Vec3.createVectorHelper(187, 100, 214), 
+		addArea(new Area(Vec3.createVectorHelper(78, 45, 151), Vec3.createVectorHelper(119, 100, 224), 
 				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
 		
-		addArea(new Area(Vec3.createVectorHelper(93, 54, -48), Vec3.createVectorHelper(99, 74, -9), 
+		addArea(new Area(Vec3.createVectorHelper(93, 54, -55), Vec3.createVectorHelper(99, 74, -8), 
 				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
 		
 		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 

@@ -72,7 +72,7 @@ public class BiGXEventTriggers {
 	
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
 		ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
-		key.setStackDisplayName(name);
+		key.setStackDisplayName(name); 
 		if (!player.inventory.hasItemStack(key)){
 			if (message != "" && !player.worldObj.isRemote)
 				GuiMessageWindow.showMessage(message);
