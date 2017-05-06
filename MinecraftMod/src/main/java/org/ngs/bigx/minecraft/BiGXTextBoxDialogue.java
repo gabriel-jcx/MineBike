@@ -15,9 +15,15 @@ public class BiGXTextBoxDialogue {
 	public static final String gotReward = "Congrats! You collected\n";
 	public static final String goldBarInfo = "Gold bars can be exchanged\nfor useful items at\nMarket Place";
 	public static final String goldSpendWisely = "Spend your gold\nwisely!";
+	
+	//General Quest Stuff
 	public static final String questChaseBeginning = "Well...\nI guess someone's here...\nLet's find out who...";
 	public static final String questChaseShowup = "The man showed up!";
 	public static final String questChaseHintWeapon = "Hint: Buy weapon to\nincrease damage";
+	
+	public static final String questAdded = "New Quest Added!\nPress K for details";
+	public static final String questBookInstructions = "Press K to open and\nclose the quest book.";
+	public static final String questBookObtained = "Quest Book Obtained!";
 	
 	//Area Names
 	public static final String placeMarket = "\n   < Market Place >";
@@ -45,14 +51,6 @@ public class BiGXTextBoxDialogue {
 	public static final String levelUpMsg = "Level Up! New Quests Unlocked!"; 
 	public static final String level1MsgTitle = "The Start of Your Journey";
 	public static final String level1Msg = "Super Intense and Inspiring Message.... You're Welcome.";
-	public static final String fireLevelMsgTitle = "The Fire Level";
-	public static final String fireLevelMsg = "Burn baby burn";
-	public static final String waterLevelMsgTitle = "The Frost Level";
-	public static final String waterLevelMsg = "Ice Ice Baby";
-	public static final String earthLevelMsgTitle = "The Forest Level";
-	public static final String earthLevelMsg = "Make like a tree and leaf!!";
-	public static final String airLevelMsgTitle = "The Flighty Level";
-	public static final String airLevelMsg = "Heads in the Clouds";
 	
 	// Tutorial Message
 	/***

@@ -31,7 +31,7 @@ public class ChestSystem {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Mysterious Key");
 		map.put(Vec3.createVectorHelper(-10, 63, 1).toString(), "Burnt Key");
-		map.put(Vec3.createVectorHelper(-10, 63, 0).toString(), "Burnt Key");
+//		map.put(Vec3.createVectorHelper(-10, 63, 0).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
 		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); ////Change coordinates later
 		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); ////Change coordinates later
@@ -67,22 +67,22 @@ public class ChestSystem {
 		}
 		
 		if (keyName == "Burnt Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.fireLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.fireLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.fireLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.fireLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 4", 0);	
 		}
 		
 		if (keyName == "Damp Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.waterLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.waterLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.waterLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.waterLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 5", 0);	
 		}
 		
 		if (keyName == "Dusty Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.earthLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.earthLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.earthLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.earthLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 6", 0);	
 		}
 		
 		if (keyName == "Light Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.airLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.airLevelMsgTitle);
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.airLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.airLevelMsgTitle);
 			putPotionInChest(c, "Teleportation Potion 7", 0);	
 		}
 		

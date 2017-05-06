@@ -188,8 +188,8 @@ public class ClientEventHandler {
 				// Handling Player Skills
 				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 				// Degrade the current player's speed
-				BiGX.characterProperty.decreaseSpeedByTime();
-				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+//				BiGX.characterProperty.decreaseSpeedByTime();
+//				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 				
 				//Dealing with locking keys
 				if (enableLock) {

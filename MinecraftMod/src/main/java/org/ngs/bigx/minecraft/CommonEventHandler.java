@@ -180,7 +180,9 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		event.world.provider.setWorldTime(0);
+		event.world.provider.resetRainAndThunder();
 		NpcCommand.setNpcSpawnFlag();
+		NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
 	}
 	
 	@SubscribeEvent
