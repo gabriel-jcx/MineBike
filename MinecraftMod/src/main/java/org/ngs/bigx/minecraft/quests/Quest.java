@@ -50,6 +50,15 @@ public class Quest implements Runnable {
 			questTask.setQuestManager(this.questManager);
 		}
 		
+		for(QuestTask task : this.tasks)
+		{
+			if(task.getClass().equals(questTask.getClass()))
+			{
+				System.out.println("[BiGX] Duplicate Quest Task Detected");
+				return;
+			}
+		}
+		
 		this.tasks.add(questTask);
 	}
 	

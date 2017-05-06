@@ -57,7 +57,6 @@ public class QuestManager {
 	private String activeQuestId;
 	private EntityPlayer player;
 	private BigxContext context;
-	private List<IQuestTask> activeTasks;
 	
 	public QuestManager(BigxContext context, EntityPlayer p) {
 		player = p;
@@ -109,14 +108,20 @@ public class QuestManager {
 		quest.run();
 	}
 	
-	public void addAvailableQuestList(Quest quest) throws QuestException
+	public boolean addAvailableQuestList(Quest quest) throws QuestException
 	{
 		if( (quest == null) || (quest.getQuestId().equals("")) )
 		{
 			throw new QuestException("Failed to add a quest to the available quest list");
 		}
 		
-		this.availableQuestList.put(quest.getQuestId(), quest);	
+		if(this.availableQuestList.get(quest.getQuestId()) != null)
+		{
+			return false;
+		}
+		
+		this.availableQuestList.put(quest.getQuestId(), quest);
+		return true;
 	}
 	
 	public String getActiveQuestId() {

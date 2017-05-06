@@ -58,17 +58,22 @@ public class LevelSystem {
 	
 	///Rewards based on levels
 	public void giveLevelUpRewards(EntityPlayer player){
-		ItemStack reward = null;
 		System.out.println(playerLevel);
+		
+		ItemStack reward = null;
+		
 		switch(playerLevel)
 		{
 		case 2:
-			reward = new ItemStack(Item.getItemById(4420));
+			reward = new ItemStack(Item.getItemById(4616));
 			System.out.println("Level2");
+			break;
 		case 3:
-			reward = new ItemStack(Item.getItemById(4421));
+			reward = new ItemStack(Item.getItemById(4771));
 			System.out.println("Level3");
+			break;
 		}
+		
 		if (reward != null){
 			player.inventory.addItemStackToInventory(reward);
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.gotReward + reward.getDisplayName());	
