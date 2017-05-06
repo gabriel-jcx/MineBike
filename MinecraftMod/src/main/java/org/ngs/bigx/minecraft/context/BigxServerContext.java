@@ -43,6 +43,7 @@ import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
@@ -66,8 +67,8 @@ public class BigxServerContext extends BigxContext {
 		super(main);
 	}
 	
-	public void updateQuestInformationToClient()
+	public void updateQuestInformationToClient(BigxServerContext bigxContext)
 	{
-		
+		GuiStats.setServerContext(bigxContext);
 	}
 }

@@ -19,9 +19,11 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
@@ -370,6 +372,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 			else {
 				System.out.println("DIFFICULTY IS OUT OF OUR HAND...");
+				blockByDifficulty = Blocks.stone;
 			}
 			
 			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
@@ -543,7 +546,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void countdownTick()
 	{
-//		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
+		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
 		
 		long timeNow = System.currentTimeMillis();
 		
@@ -782,7 +785,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			init();
 			
 			while(isActive)
-			{
+			{	
 				if(chasingQuestOnGoing)
 				{
 					if(chasingQuestOnCountDown)
@@ -793,11 +796,16 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					{
 						// BUILD CENTER
 						// BUILD SIDE
-						if(!ws.isRemote)
+						if(!player.worldObj.isRemote)
 							handlePlayTimeOnServer();
 						else
 							handlePlayTimeOnClient();
 					}
+				}
+				
+				if(!player.worldObj.isRemote)
+				{
+					((BigxServerContext)context).updateQuestInformationToClient((BigxServerContext)context);
 				}
 				
 				try {
@@ -807,13 +815,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					e.printStackTrace();
 				}
 			}
+
+			((BigxServerContext)context).updateQuestInformationToClient(null);
 		}
 	}
 	
 	@Override
 	public void init()
 	{
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
+		World world = player.worldObj;
 		time = 0;
 		virtualCurrency = 0;
 		initThiefStat();
@@ -836,7 +846,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 		}
 		
-		if(ws.isRemote)
+		if(world.isRemote)
 		{
 			context = BiGX.instance().clientContext;
 		}
@@ -859,6 +869,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
 						&& player.dimension != WorldProviderFlats.dimID)
 				{
+					time = 0;
+					initThiefStat();
+					countdown = 11;
+					pausedTime = 0;
 					completed = false;
 					setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
 					
@@ -920,12 +934,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					if (ws != null && player instanceof EntityPlayerMP) {
 						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 						virtualCurrency = 0;
+						time = 0;
+						countdown = 11;
+						pausedTime = 0;
 						initThiefStat();
 						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 						completed = false;
 						goBackToTheOriginalWorld(ws, player);
 					}
-					
+
 					chasingQuestOnGoing = false;
 					chasingQuestOnCountDown = false; 
 				}

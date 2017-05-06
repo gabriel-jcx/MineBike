@@ -43,8 +43,9 @@ public class GuiStats extends GuiScreen {
 	
 	public static float gauge_01_percentile = 0;
 	public static float gauge_02_percentile = 0;
-	
+
 	private BigxClientContext context;
+	private static BigxServerContext serverContext = null;
 	
 	public GuiStats(Minecraft mc) {
 		super();
@@ -120,10 +121,17 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 	    	
-	    	BigxServerContext bigxServerContext = BiGX.instance().serverContext;
+	    	
+	    	if(serverContext == null)
+	    	{
+	    		return;
+	    	}
+
+	    	BigxServerContext bigxServerContext = serverContext;
 	    	
 	    	if(bigxServerContext.getQuestManager() == null)
 	    	{
+	    		System.out.println("bigxServerContext.getQuestManager() is null");
 	    		return;
 	    	}
 	    	
@@ -219,101 +227,14 @@ public class GuiStats extends GuiScreen {
 		    			}
 		    		}
 		    	}
-	//	    	else if(ClientEventHandler.getHandler().questDemo != null && ClientEventHandler.getHandler().questDemo.getQuest() != null && 
-	//	    			ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent() instanceof QuestTaskChasingFire )
-	//	    	{
-	//		    	GL11.glPushMatrix();
-	//		    	
-	//				    GL11.glTranslatef(mcWidth/2, 12f, 0); 
-	//				    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	//				    GL11.glEnable(GL11.GL_BLEND);
-	//				    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
-	//			        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
-	//			        
-	//				    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
-	//			        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
-	//			        
-	//				    mc.renderEngine.bindTexture(THIEF_TEXTURE);
-	//			        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
-	//	        	
-	//	        	GL11.glPopMatrix();
-	//	        	
-	//	        	int time = 0;
-	//	        	
-	//	        	QuestTaskChasingFire quest = (QuestTaskChasingFire) ClientEventHandler.getHandler().questDemo.getQuest().getCurrentQuestEvent();
-	//	        	if(quest.chasingQuestOnCountDown)
-	//	        	{
-	//	        		time = quest.getCountdown();
-	//	        	}
-	//	        	else
-	//	        	{
-	//	        		time = quest.getTime();
-	//	        	}
-	//	        	
-	//	        	int minuteLeft = time/60;
-	//				int secondLeft = time%60;
-	//				
-	//				String chainsgQuestTimeLeft = "";
-	//				
-	//				if(minuteLeft<10)
-	//				{
-	//					chainsgQuestTimeLeft = "0";
-	//				}
-	//				
-	//				chainsgQuestTimeLeft += minuteLeft + ":";
-	//				
-	//				if(secondLeft<10)
-	//				{
-	//					chainsgQuestTimeLeft += "0";
-	//				}
-	//				
-	//				chainsgQuestTimeLeft += secondLeft;
-	//	        	
-	//	        	text = chainsgQuestTimeLeft;
-	//
-	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
-	//	        	
-	//	    		text = "" + new DecimalFormat("###.#").format(quest.dist);
-	//
-	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
-	//	        	
-	//	    		text = "Lv: " + quest.getThiefLevel();
-	//
-	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
-	//	        	
-	//	    		text = "HP: " + quest.getThiefHealthCurrent();
-	//
-	//	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	//	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
-	//	    		
-	//	    		if(quest.getTimeFallBehind() > 0)
-	//	    		{
-	//	    			if( (System.currentTimeMillis() - quest.warningMsgBlinkingTime) < 700)
-	//	    			{
-	//	    				GL11.glPushMatrix();
-	//						    GL11.glTranslatef(mcWidth/2, 0, 0);
-	//					    	GL11.glScalef(2F, 2F, 2F);
-	//					    	
-	//				    		text = "WARNING";
-	//		
-	//				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	//				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
-	//					    	
-	//				    		text = "THIEF IS GETTING AWAY";
-	//		
-	//				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	//				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
-	//			    		GL11.glPopMatrix();
-	//	    			}
-	//	    		}
-	//	    	}
-	    	}
+		    	else 
+		    	{
+//		    		System.out.println("Went into Certain mode");
+		    	}
 	    	
-	    	Vec3 playerlook = mc.thePlayer.getLookVec();
-	    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();
+		    	Vec3 playerlook = mc.thePlayer.getLookVec();
+		    	ChunkCoordinates playerLocation = mc.thePlayer.getPlayerCoordinates();
+	    	}
     	}
     }
 	
@@ -327,5 +248,9 @@ public class GuiStats extends GuiScreen {
 		
 		
 		return 0f;
+	}
+
+	public static void setServerContext(BigxServerContext serverContext) {
+		GuiStats.serverContext = serverContext;
 	}
 }
