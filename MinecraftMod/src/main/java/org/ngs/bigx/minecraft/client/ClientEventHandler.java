@@ -11,6 +11,8 @@ import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
@@ -46,6 +48,7 @@ public class ClientEventHandler {
 		public static KeyBinding keyBindingMoveBackward;
 		public static KeyBinding keyBindingToggleMouse;
 		public static KeyBinding keyBindingToggleQuestListGui;
+		public static KeyBinding keyBindingToggleChasingQuestGui;
 		public static KeyBinding keyBindingToggleBike;
 		
 		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
@@ -127,6 +130,33 @@ public class ClientEventHandler {
 				if(mc.currentScreen == null)
 					mc.displayGuiScreen(guiQuestlistManager);
 				System.out.println("Display Quest List");
+			}
+			if(keyBindingToggleChasingQuestGui.isPressed())
+			{
+				Minecraft mc = Minecraft.getMinecraft();
+				GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+				
+				guiChasingQuest.resetChasingQuestLevels();
+				
+				try {
+					for(int i=0; i<5; i++)
+					{
+						boolean islocked = false;
+						if(i>2)
+							islocked = true;
+						GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+						
+						guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+					}
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (GuiQuestlistException e) {
+					e.printStackTrace();
+				}
+				
+				if(mc.currentScreen == null)
+					mc.displayGuiScreen(guiChasingQuest);
+				System.out.println("Display Chasing Quest Gui");
 			}
 		}
 		
