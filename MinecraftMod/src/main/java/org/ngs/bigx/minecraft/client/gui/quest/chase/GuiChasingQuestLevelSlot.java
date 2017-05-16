@@ -31,7 +31,7 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	}
 
 	public GuiChasingQuestLevelSlot(GuiChasingQuest parent) {
-		this(170, ((parent.height - parent.getTopMargin())>=90)?90:(parent.height - parent.getTopMargin()), parent.getTopMargin(), 0, 17);
+		this(150, ((parent.height - parent.getTopMargin())>=90)?90:(parent.height - parent.getTopMargin()), parent.getTopMargin(), 0, 17);
 		this.parent = parent;
 	}
 

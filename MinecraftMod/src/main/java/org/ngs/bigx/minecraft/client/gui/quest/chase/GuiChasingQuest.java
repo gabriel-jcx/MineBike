@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.client.Leaderboard;
+import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.gui.CustomGuiButton;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistDescriptionSlot;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
@@ -39,6 +41,8 @@ public class GuiChasingQuest extends GuiScreen {
 	private static ArrayList<GuiChasingQuestLevelSlotItem> chasingQuestLevelList;
 	private static int selectedQuestLevelIndex = -1;
 	private static ChasingQuestDifficultyEnum chasingQuestDifficulty = ChasingQuestDifficultyEnum.MEDIUM;
+	
+	private static ArrayList<Leaderboard> leaderboards = new ArrayList<Leaderboard>(); 
 
 	private GuiChasingQuestLevelSlot guiChasingQuestLevelSlot;
 	
@@ -107,8 +111,7 @@ public class GuiChasingQuest extends GuiScreen {
 		this.buttonList.add(btn);
 	
 		CustomGuiButton cbtn = new CustomGuiButton(4, 0 , height - 40 , chasingquestlevelslotWidth , 40 , 
-				I18n.format("gui.chasingquest.start", new Object[0]), "/textures/items/entityRacingCar.png");
-		cbtn.packedFGColour = 0x2db92d;
+				"", "/textures/GUI/startbutton.png");
 		this.buttonList.add(cbtn);
 		/**
 		 * END OF Difficulty Buttons
@@ -123,9 +126,15 @@ public class GuiChasingQuest extends GuiScreen {
 		int chasingquestlevelslotHeight = guiChasingQuestLevelSlot.getHeight();
 		
 		drawRect(0, 0, width, getTopMargin(), 0xCC0072BB); // The Box on top
-		drawRect(chasingquestlevelslotWidth, getTopMargin(), chasingquestlevelslotWidth+3, height, 0xFF000000); // The Seperator (left and right)
-		drawRect(0, getTopMargin() + chasingquestlevelslotHeight, chasingquestlevelslotWidth, getTopMargin() + chasingquestlevelslotHeight + 22, 0xCC0072BB); // The Seperator (level and difficulty)
+		drawRect(0, getTopMargin() + chasingquestlevelslotHeight, chasingquestlevelslotWidth, getTopMargin() + chasingquestlevelslotHeight + 22, 0xFF000000); // The Seperator (level and difficulty) Background
+		drawRect(1, getTopMargin() + chasingquestlevelslotHeight + 1, chasingquestlevelslotWidth - 1, getTopMargin() + chasingquestlevelslotHeight + 21, 0xCC0072BB); // The Seperator (level and difficulty)
 		drawRect(0, getTopMargin() + chasingquestlevelslotHeight + 82, chasingquestlevelslotWidth, height, 0xFF000000); // The START!
+		drawRect(chasingquestlevelslotWidth+3, getTopMargin()+3, width, getTopMargin() + 25, 0xCC0072BB); // Leader Board Title Bar
+		drawRect(chasingquestlevelslotWidth+3, getTopMargin()+25, width, height, 0x88000000); // Leader Board Background
+		
+		drawRect(chasingquestlevelslotWidth, getTopMargin(), chasingquestlevelslotWidth+3, height, 0xFF000000); // The Seperator (left and right)
+		drawRect(0, getTopMargin(), width, getTopMargin()+3, 0xFF000000); // The Seperator (top and contents)
+		
 
 		int x=0;
 		int y=0;
@@ -133,8 +142,8 @@ public class GuiChasingQuest extends GuiScreen {
 		FontRenderer font = Minecraft.getMinecraft().fontRenderer;
 		
 		text = "Chasing Quest Menu";
-		x = 50;
-		y = 5;
+		x = 5;
+		y = 4;
 		
 		GL11.glPushMatrix();
     		GL11.glScalef(2F, 2F, 2F);
@@ -143,11 +152,100 @@ public class GuiChasingQuest extends GuiScreen {
 		
 		text = "Difficulty";
 		x = 10;
-		y = getTopMargin() + chasingquestlevelslotHeight + 5;
+		y = getTopMargin() + chasingquestlevelslotHeight + 6;
 
+		font.drawStringWithShadow(text, x, y, 0xFFFFFF);
+		
+		/**
+		 * Draw Leader Board
+		 */
+		int level = 1;
+		
+		if(this.getSelectedQuestlevel() != null)
+			level = this.getSelectedQuestlevel().level;
+		
+		text = "Level " + level + "  Leaderboard";
+		x = chasingquestlevelslotWidth + 13;
+		y = getTopMargin() + 9;
+
+		font.drawStringWithShadow(text, x, y, 0xFFFFFF);
+		
 		GL11.glPushMatrix();
-			font.drawStringWithShadow(text, x, y, 0xFFFFFF);
-    	GL11.glPopMatrix();
+		    GL11.glTranslatef(chasingquestlevelslotWidth + 13, getTopMargin() + 31, 0); 
+		
+	        ArrayList<LeaderboardRow> leaderboardRows = new ArrayList<LeaderboardRow>();
+	        
+	        if( (this.leaderboards != null) && (this.leaderboards.size() >= level) )
+	        	leaderboardRows = this.leaderboards.get(level-1).leaderboardRows;
+	        else{
+	        	LeaderboardRow leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "Level";
+	        	leaderboardRow.name = "Name";
+	        	leaderboardRow.rank = "Rank";
+	        	leaderboardRow.time_elapsed = "Time";
+	        	leaderboardRows.add(leaderboardRow);
+	        	
+	        	leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "" + level;
+	        	leaderboardRow.name = "John Lennon";
+	        	leaderboardRow.rank = "1";
+	        	leaderboardRow.time_elapsed = "1 min 2 secs";
+	        	leaderboardRows.add(leaderboardRow);
+	        	
+	        	leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "" + level;
+	        	leaderboardRow.name = "Mc Donald";
+	        	leaderboardRow.rank = "2";
+	        	leaderboardRow.time_elapsed = "1 min 3 secs";
+	        	leaderboardRows.add(leaderboardRow);
+	        	
+	        	leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "" + level;
+	        	leaderboardRow.name = "Mc Donald";
+	        	leaderboardRow.rank = "2";
+	        	leaderboardRow.time_elapsed = "1 min 3 secs";
+	        	leaderboardRows.add(leaderboardRow);
+	        	
+	        	leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "" + level;
+	        	leaderboardRow.name = "Mc Donald";
+	        	leaderboardRow.rank = "2";
+	        	leaderboardRow.time_elapsed = "1 min 3 secs";
+	        	leaderboardRows.add(leaderboardRow);
+	        	
+	        	leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "" + level;
+	        	leaderboardRow.name = "Mc Donald";
+	        	leaderboardRow.rank = "2";
+	        	leaderboardRow.time_elapsed = "1 min 3 secs";
+	        	leaderboardRows.add(leaderboardRow);
+	        	
+	        	leaderboardRow =new LeaderboardRow();
+	        	leaderboardRow.level = "" + level;
+	        	leaderboardRow.name = "Mc Donald";
+	        	leaderboardRow.rank = "2";
+	        	leaderboardRow.time_elapsed = "1 min 3 secs";
+	        	leaderboardRows.add(leaderboardRow);
+	        }
+	        
+	    	for(int i=0; i<leaderboardRows.size(); i++)
+	    	{
+	    		String rank = leaderboardRows.get(i).rank;
+	    		String name = leaderboardRows.get(i).name;
+	    		String levelstr = leaderboardRows.get(i).level;
+	    		String time_elapsed = leaderboardRows.get(i).time_elapsed;
+	
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(rank, 0, i*14, 0xFFFFFF);
+	    		fontRendererObj.drawString(name, 30, i*14, 0xFFFFFF);
+	    		fontRendererObj.drawString(levelstr, 140, i*14, 0xFFFFFF);
+	    		fontRendererObj.drawString(time_elapsed, 180, i*14, 0xFFFFFF);
+	    	}
+		
+		GL11.glPopMatrix();
+		/**
+		 * END OF Draw Leader Board
+		 */
 		
 		super.drawScreen(mx, my, partialTicks);
 	}
@@ -279,5 +377,31 @@ public class GuiChasingQuest extends GuiScreen {
 	public ChasingQuestDifficultyEnum getDifficulty()
 	{
 		return this.chasingQuestDifficulty;
+	}
+	
+	public void resetLeaderboards()
+	{
+		this.leaderboards = new ArrayList<Leaderboard>();
+	}
+	
+	public void addLeaderboard(Leaderboard leaderboard)
+	{
+		if(leaderboard == null)
+			throw new NullPointerException();
+		
+		this.leaderboards.add(leaderboard);
+	}
+	
+	public void addLeaderboards(List<Leaderboard> leaderboards)
+	{
+		if(leaderboards == null)
+			throw new NullPointerException();
+		
+		this.resetLeaderboards();
+		
+		for(Leaderboard leaderboard : leaderboards)
+		{
+			this.leaderboards.add(leaderboard);
+		}
 	}
 }
