@@ -7,6 +7,8 @@ import java.util.List;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 
+import com.ibm.icu.impl.ICUService.Key;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -81,6 +83,11 @@ public class GuiQuestlistManager extends GuiScreen {
     public void keyTyped(char c, int i)
     {
     	super.keyTyped(c, i);
+    	
+    	if( (c == 'K') || (c=='k') )
+    	{
+    		Minecraft.getMinecraft().thePlayer.closeScreen();
+    	}
     }
 	
 	public Quest getQuestReference(String id)
