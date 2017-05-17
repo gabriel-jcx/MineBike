@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft;
 import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -31,6 +32,9 @@ public class CommonProxy {
 		
 		DimensionManager.registerProviderType(WorldProviderDungeon.fireQuestDimID, WorldProviderDungeon.class, true);
 		DimensionManager.registerDimension(WorldProviderDungeon.fireQuestDimID, WorldProviderDungeon.fireQuestDimID);
+		
+		DimensionManager.registerProviderType(WorldProviderEmpty.dimID, WorldProviderEmpty.class, true);
+		DimensionManager.registerDimension(WorldProviderEmpty.dimID, WorldProviderEmpty.dimID);
 		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);

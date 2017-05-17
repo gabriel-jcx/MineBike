@@ -23,7 +23,7 @@ public class BiGXTextBoxDialogue {
 	public static final String postCapture = "ARGH! You caught me!";
 	
 	public static final String questAdded = "New Quest Added!\nPress K for details";
-	public static final String questBookInstructions = "Press K to open and\nclose the quest book.";
+	public static final String questBookInstructions = "Press DPAD UP to open and\nclose the quest book.";
 	public static final String questBookObtained = "Quest Book Obtained!";
 	
 	//Area Names
