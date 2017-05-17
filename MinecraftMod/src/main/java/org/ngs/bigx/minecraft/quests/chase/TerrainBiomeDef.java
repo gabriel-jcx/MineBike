@@ -14,10 +14,14 @@ public class TerrainBiomeDef {
 		int randomNumber = -1;
 		
 		if(size != 0)
-			randomNumber = rand.nextInt(size);
+		{
+			randomNumber = rand.nextInt((int)(size*1.5));
+		}
 		
 		if(randomNumber == -1)
 			return null;
+		else if(randomNumber >= size)
+			return new TerrainBiomeArea();
 		else
 			return this.areas.get(randomNumber);
 	}

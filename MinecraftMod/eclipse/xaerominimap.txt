@@ -1,7 +1,7 @@
 ignoreUpdate:135
 updateNotification:true
 settingsButton:true
-minimap:true
+minimap:false
 caveMaps:true
 showPlayers:true
 showHostile:true

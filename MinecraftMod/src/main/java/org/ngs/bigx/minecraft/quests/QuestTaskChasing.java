@@ -75,6 +75,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected double elapsedTime = 0;
 	protected double pausedTime = 0;
 	protected double lastTickTime = 0;
+	protected int lastTickStage = 0;
 	protected int timeFallBehind = 0;
 	protected NpcCommand activecommand;
 	
@@ -190,7 +191,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 
-		returnLocation = Vec3.createVectorHelper(96, 72, -8);
+		returnLocation = Vec3.createVectorHelper(96, 73, -8);
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
@@ -206,7 +207,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				world.setBlock(dx, initY-1, dz, Blocks.grass);
 				for(int dy= initY; dy<initY+16; dy++)
 				{
-					world.setBlock(dx, dy, dz, Blocks.air);
+					if(!(world.getBlock(dx, dy, dz) == Blocks.air))
+						world.setBlock(dx, dy, dz, Blocks.air);
 				}
 			}
 			world.setBlock(chasingQuestInitialPosX-16, initY, dz, Blocks.air);
@@ -429,19 +431,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					}
 				}
 			}
-			/**
-			 * END OF Generates structures inside fence
-			 */
 			
-			/**
-			 * Terrain Cleaning
-			 */
 			if(areas.size() != 0)
 				areas.clear();
-			
-			cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
 			/**
-			 * END OF Terrain Cleaning
+			 * END OF Generates structures inside fence
 			 */
 		}
 		else{
@@ -676,11 +670,34 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 		else
 		{
-			if( (System.currentTimeMillis() - lastTickTime - pausedTime) < 1000 )
+			long timeNow = System.currentTimeMillis();
+			if( (timeNow - lastTickTime - pausedTime) < 500 )
 			{
 			}
-			else
+			else if(lastTickStage == 0)
 			{
+				System.out.println("CLEANING");
+				
+				lastTickStage++;
+
+				this.pausedTime = 0;
+				this.lastTickTime = System.currentTimeMillis();
+				
+				// CLEAN the terrain behind
+				/**
+				 * Terrain Cleaning
+				 */
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
+				/**
+				 * END OF Terrain Cleaning
+				 */
+			}
+			else if(lastTickStage == 1)
+			{
+				System.out.println("GENERATING");
+				
+				lastTickStage = 0;
+				
 				// Make Obstacles and structures on the side
 				this.generateStructuresOnSides();
 				this.generateTerrainByPatientProfile();
