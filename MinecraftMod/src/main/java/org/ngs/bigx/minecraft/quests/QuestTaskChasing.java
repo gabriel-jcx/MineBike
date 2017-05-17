@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.quests;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -495,7 +497,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			row.name = player.getDisplayName();
 			row.level = Integer.toString(thiefLevel);
 			row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
-			GuiLeaderBoard.writeToLeaderboard(row);
+			
+			try {
+				GuiLeaderBoard.writeToLeaderboard(row);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);

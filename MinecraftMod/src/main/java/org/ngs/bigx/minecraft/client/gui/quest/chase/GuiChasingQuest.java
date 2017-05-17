@@ -173,7 +173,7 @@ public class GuiChasingQuest extends GuiScreen {
 		GL11.glPushMatrix();
 		    GL11.glTranslatef(chasingquestlevelslotWidth + 13, getTopMargin() + 31, 0); 
 		
-	        ArrayList<LeaderboardRow> leaderboardRows = new ArrayList<LeaderboardRow>();
+	        List<LeaderboardRow> leaderboardRows = new ArrayList<LeaderboardRow>();
 	        
 	        if( (this.leaderboards != null) && (this.leaderboards.size() >= level) )
 	        	leaderboardRows = this.leaderboards.get(level-1).leaderboardRows;

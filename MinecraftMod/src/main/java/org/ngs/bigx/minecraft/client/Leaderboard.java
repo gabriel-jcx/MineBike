@@ -1,9 +1,10 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Leaderboard {
-	public ArrayList<LeaderboardRow> leaderboardRows;
+	public List<LeaderboardRow> leaderboardRows;
 	
 	public Leaderboard()
 	{

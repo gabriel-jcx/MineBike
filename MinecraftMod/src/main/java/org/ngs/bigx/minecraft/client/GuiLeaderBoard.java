@@ -1,8 +1,13 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,10 +15,11 @@ import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 
-import betterquesting.utils.JsonIO;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -46,71 +52,7 @@ public class GuiLeaderBoard extends GuiScreen {
 		context = c;
 	}
 	
-	public static void writeToLeaderboard(LeaderboardRow row) {
-		
-		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
-		if (!leaderboardFile.exists()) {
-			try {
-				leaderboardFile.createNewFile();
-			} catch (IOException e) {
-				System.out.println(new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json"));
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		row.rank = getRowRank(row);
-		if (row.rank.equals("RANK") || Integer.parseInt(row.rank) > 10 || Integer.parseInt(row.rank) < 1) {
-			return;
-		}
-		
-		JsonObject j = new JsonObject();
-		j = JsonIO.ReadFromFile(leaderboardFile);
-		if(j != null)
-		{
-			if (j.get(row.rank) != null) {
-				// Shift every leaderboard item >= rank (lesser scores) down one to make room for the new row
-				JsonObject newJ = new JsonObject();
-				
-				for(int i=9; i>=Integer.parseInt(row.rank); i--)
-				{
-					JsonElement tempJsonElement = j.get(""+i);
-					
-					if(tempJsonElement != null)
-					{
-						JsonObject tempRow = tempJsonElement.getAsJsonObject();
-						tempRow.addProperty("rank", Integer.toString(i + 1));
-						newJ.add(""+(i+1), tempRow);
-					}
-				}
-				
-				j = newJ;
-
-				JsonObject jsonRow = new JsonObject();
-				jsonRow.addProperty("rank", row.rank);
-				jsonRow.addProperty("name", row.name);
-				jsonRow.addProperty("level", row.level);
-//				jsonRow.addProperty("stat_1", row.stat_1);
-				jsonRow.addProperty("time_elapsed", row.time_elapsed);
-				j.add(row.rank, jsonRow);
-			}
-		}
-		else{
-			j = new JsonObject();
-
-			JsonObject jsonRow = new JsonObject();
-			jsonRow.addProperty("rank", row.rank);
-			jsonRow.addProperty("name", row.name);
-			jsonRow.addProperty("level", row.level);
-//			jsonRow.addProperty("stat_1", row.stat_1);
-			jsonRow.addProperty("time_elapsed", row.time_elapsed);
-			j.add(row.rank, jsonRow);
-		}
-		
-		JsonIO.WriteToFile(leaderboardFile, j);
-	}
-	
-	public static void refreshLeaderBoard()
+	public static boolean writeToLeaderboard(LeaderboardRow row) throws IOException
 	{
 		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
 		if (!leaderboardFile.exists()) {
@@ -121,61 +63,98 @@ public class GuiLeaderBoard extends GuiScreen {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			JsonObject j = new JsonObject();
-			j = JsonIO.ReadFromFile(leaderboardFile);
+		}
+		
+		Gson gson = new Gson();
+		JsonReader reader = new JsonReader(new FileReader(leaderboardFile));
+		Leaderboard leaderboard = gson.fromJson(reader, Leaderboard.class);
+		
+		ArrayList<LeaderboardRow> leaderboardRowToBeRemoved = new ArrayList<LeaderboardRow>();
+		
+		leaderboard.leaderboardRows.add(row);
+		
+		Collections.sort(leaderboard.leaderboardRows);
+		
+		for(int i=0; i< leaderboard.leaderboardRows.size(); i++)
+		{
+			LeaderboardRow leaderboardRow = leaderboard.leaderboardRows.get(i);
 			
-			if (j != null) {
-				
-				boolean foundFirst = false;
-				int place = 1;
-				for (int i = 0; i < 10; ++i) {
-					if (j.get(""+(i+1)) != null) {
-						if (!foundFirst) {
-							foundFirst = true;
-						} else {
-							++place;
-						}
-						JsonObject jobj = j.getAsJsonObject(""+(i+1));
-						jobj.addProperty("rank", Integer.toString(place));
-						j.remove(""+(i+1));
-						j.add(Integer.toString(place), jobj);
-					}
-				}
-				
-				leaderboardRows = new ArrayList<LeaderboardRow>();
-				LeaderboardRow row = new LeaderboardRow();
-				row.rank = "Rank";
-				row.name = "Name";
-				row.level = "Level";
-//				row.stat_1 = "Blocks";
-				row.time_elapsed = "Time";
-				leaderboardRows.add(row);
-				
-				for(int i=0; i< 10; i++)
-				{
-					if(j.get(""+(i+1)) != null)
-					{
-						JsonObject entries = j.get(""+(i+1)).getAsJsonObject();
-						row = new LeaderboardRow();
-						row.rank = entries.get("rank").getAsString();
-						row.name = entries.get("name").getAsString();
-						if(row.name.length() > 15)
-						{
-							row.name = row.name.substring(0, 12) + "...";
-						}
-						row.level = entries.get("level").getAsString();
-//						row.stat_1 = entries.get("stat_1").getAsString();
-						row.time_elapsed = entries.get("time_elapsed").getAsString();
-						leaderboardRows.add(row);
-					}
-				}
+			leaderboardRow.rank = "" + (i+1);
+			
+			if(i>=10)
+			{
+				leaderboardRowToBeRemoved.add(leaderboardRow);
 			}
+		}
+		
+		for(LeaderboardRow leaderboardRow : leaderboardRowToBeRemoved)
+		{
+			leaderboard.leaderboardRows.remove(leaderboardRow);
+		}
+		
+		reader.close();
+		
+		/***
+		 * Write it back
+		 */
+		FileOutputStream fOut = new FileOutputStream(leaderboardFile);
+        OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+        myOutWriter.append(gson.toJson(leaderboard));
+        myOutWriter.close();
+        fOut.close();
+		
+		return leaderboard.leaderboardRows.contains(row);
+	}
+	
+	public static void refreshLeaderBoard() throws IOException
+	{
+		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
+		if (!leaderboardFile.exists()) {
+			try {
+				leaderboardFile.createNewFile();
+			} catch (IOException e) {
+				System.out.println(new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json"));
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		Gson gson = new Gson();
+		JsonReader reader = new JsonReader(new FileReader(leaderboardFile));
+		Leaderboard leaderboard = gson.fromJson(reader, Leaderboard.class);
+		
+		Collections.sort(leaderboard.leaderboardRows);
+		
+		for(int i=0; i< leaderboard.leaderboardRows.size(); i++)
+		{
+			LeaderboardRow leaderboardRow = leaderboard.leaderboardRows.get(i);
+			
+			leaderboardRow.rank = "" + (i+1);
+		}
+		
+		reader.close();
+		
+		leaderboardRows = new ArrayList<LeaderboardRow>();
+		LeaderboardRow row = new LeaderboardRow();
+		row.rank = "Rank";
+		row.name = "Name";
+		row.level = "Level";
+//		row.stat_1 = "Blocks";
+		row.time_elapsed = "Time";
+		leaderboardRows.add(row);
+		
+		for(LeaderboardRow leaderboardRow : leaderboard.leaderboardRows)
+		{
+			leaderboardRows.add(leaderboardRow);
 		}
 	}
 	
 	private static String getRowRank(LeaderboardRow row) {
-		refreshLeaderBoard();
+		try {
+			refreshLeaderBoard();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		for (LeaderboardRow r : leaderboardRows) {
 			System.out.println(r.time_elapsed + " " + row.time_elapsed);
 			if(!r.time_elapsed.equals("Time"))
@@ -193,13 +172,23 @@ public class GuiLeaderBoard extends GuiScreen {
 	public static void showLeaderBoard(boolean isShown)
 	{
 		if (isShown)
-			refreshLeaderBoard();
+		{
+			try {
+				refreshLeaderBoard();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		GuiLeaderBoard.isShown = isShown;
 	}
 	
 	public static void addLeaderBoardRows(ArrayList<LeaderboardRow> rows)
 	{
-		refreshLeaderBoard();
+		try {
+			refreshLeaderBoard();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		if(rows == null)
 		{
