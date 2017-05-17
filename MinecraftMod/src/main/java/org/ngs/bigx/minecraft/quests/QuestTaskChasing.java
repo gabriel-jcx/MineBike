@@ -408,10 +408,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						x = chasingQuestInitialPosX-14;
 						break;
 					case 1:
-						x = chasingQuestInitialPosX-7;
+						x = chasingQuestInitialPosX-8;
 						break;
 					case 2:
-						x = chasingQuestInitialPosX+1;
+						x = chasingQuestInitialPosX+2;
 						break;
 					case 3:
 						x = chasingQuestInitialPosX+9;
