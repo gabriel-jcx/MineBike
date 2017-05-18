@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.quests.interfaces;
 
-public interface IQuestEventNpcInteraction {
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
+public interface IQuestEventNpcInteraction {
+	public void onNpcInteraction(EntityInteractEvent e);
 }

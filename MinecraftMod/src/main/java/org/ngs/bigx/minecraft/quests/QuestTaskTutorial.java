@@ -1,6 +1,8 @@
 package org.ngs.bigx.minecraft.quests;
 
+import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.npcs.NpcLocations;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
 
 import net.minecraft.block.Block;
@@ -8,9 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
-public class QuestTaskTutorial extends QuestTask {
+public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcInteraction {
 	private EntityCustomNpc npc;
 	
 	public QuestTaskTutorial(QuestManager questManager, EntityPlayer p, EntityCustomNpc n) {
@@ -27,6 +30,10 @@ public class QuestTaskTutorial extends QuestTask {
 	
 	@Override
 	public void CheckComplete() {
+	}
+	
+	public boolean isAllItemPossessed()
+	{
 		boolean allItemPossessed = true;
 		
 		// CHECK IF THE PLAYER HAS THE FOLLOWING ITEMS
@@ -43,7 +50,7 @@ public class QuestTaskTutorial extends QuestTask {
 			allItemPossessed &= false;
 		}
 		
-		this.completed = allItemPossessed;
+		return allItemPossessed;
 	}
 
 	@Override
@@ -80,5 +87,17 @@ public class QuestTaskTutorial extends QuestTask {
 	@Override
 	public void onCheckCompleteEvent() {
 		CheckComplete();
+	}
+
+
+	@Override
+	public void onNpcInteraction(EntityInteractEvent e) {
+		if(BiGXEventTriggers.checkEntityInArea(e.target, NpcLocations.scientists, NpcLocations.scientists.addVector(1, 1, 1)))
+		{
+			if(isAllItemPossessed())
+			{
+				this.completed = true;
+			}
+		}
 	}
 }

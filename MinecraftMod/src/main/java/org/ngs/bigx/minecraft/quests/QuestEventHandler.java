@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -15,6 +16,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
+import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
@@ -241,6 +243,33 @@ public class QuestEventHandler {
 				
 				event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void entityInteractEvent(EntityInteractEvent e) {
+		synchronized (questEventNpcInteractionList) {
+			for(IQuestEventNpcInteraction questEventNpcInteraction : questEventNpcInteractionList)
+			{
+				if(questEventNpcInteraction != null)
+					questEventNpcInteraction.onNpcInteraction(e);;
+			}
+		}
+		synchronized (questEventNpcInteractionListAdd) {
+			for(IQuestEventNpcInteraction questEventNpcInteraction : questEventNpcInteractionListAdd)
+			{
+				if(questEventNpcInteraction != null)
+					questEventNpcInteractionList.add(questEventNpcInteraction);
+			}
+			questEventNpcInteractionListAdd.clear();
+		}
+		synchronized (questEventNpcInteractionListDel) {
+			for(IQuestEventNpcInteraction questEventNpcInteraction : questEventNpcInteractionListDel)
+			{
+				if(questEventNpcInteraction != null)
+					questEventNpcInteractionList.remove(questEventNpcInteraction);
+			}
+			questEventNpcInteractionListDel.clear();
 		}
 	}
 	
