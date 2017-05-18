@@ -10,6 +10,7 @@ import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -133,6 +134,7 @@ public class NpcEvents {
 	
 	//////////Blacksmith Market
 	private static void createBlacksmithCurrency(NpcMiscInventory inventoryCurrency){
+		//Exchanges for Swords
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
 		inventoryCurrency.setInventorySlotContents(18, new ItemStack(Item.getItemById(4420)));//water elemental
 		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(268)));
@@ -141,27 +143,37 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4419)));//earth elemental
 		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(268)));
 		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4422)));//air elemental
+		//Exchanges for Quest Keys
+		ItemStack key = new ItemStack(Item.getItemById(4424)); //key
+		key.setStackDisplayName("Mysterious Key");
+		inventoryCurrency.setInventorySlotContents(4, key);
+		inventoryCurrency.setInventorySlotContents(22, new ItemStack(Item.getItemById(4421)));//fire elemental
 	}
+		
 	
 	private static void createBlacksmithSold(NpcMiscInventory inventorySold){
+		//Swords
 		inventorySold.addItemStack(new ItemStack(CustomItems.swordFrost));
 		inventorySold.addItemStack(new ItemStack(CustomItems.swordDemonic));
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveFrost));
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
+		//Quest Keys
+		ItemStack key = new ItemStack(Item.getItemById(4424));
+		key.setStackDisplayName("Burnt Key");
+		inventorySold.addItemStack(key);
 	}
 	
 	//////////Potion Seller Market
 	private static void createPotionCurrency(NpcMiscInventory inventoryCurrency, Item currency){
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency,10));
-		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,10));
-		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,10));
-		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,10));
+//		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,10));
+//		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,10));
+//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,10));
 	}
 	
 	private static void createPotionSold(NpcMiscInventory inventorySold){
-//		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(8194))); //Swiftness Potion
-//		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(8202))); //Slowness Potion
-//		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(8197))); //Healing Potion
-//		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(8201))); // Strength Potion
+		ItemStack p = new ItemStack(Items.potionitem);
+		p.setStackDisplayName("Teleportation Potion - Village");
+		inventorySold.setInventorySlotContents(0, p);
 	}
 }

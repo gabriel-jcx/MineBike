@@ -216,24 +216,13 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-//		System.out.println(event.item.getDisplayName());
-//		if (event.item.getDisplayName().contains("Teleportation Potion")) {
-//			EntityPlayer player = event.entityPlayer;
-//			QuestTaskChasing.player = event.entityPlayer;
-//			QuestTaskChasingFire.player = event.entityPlayer;
-//			if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasing.checkPlayerInArea(player, 94, 53, -54, 99, 58, -48))
-//			{
-//				chaseQuest.Run(levelSys);
-//				chaseQuestInProgress = true;
-//			}
-//			else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && QuestTaskChasingFire.checkPlayerInArea(player, -50, 50, -50, 50, 100, 50))
-//			{
-//				chaseQuestFire.Run(levelSys);
-//				chaseQuestInProgress = true;
-//			}
-//			else if (chaseQuestInProgress)
-//				chaseQuest.goBackToOriginalWorld(); //probably want to make this a part of the template class or something
-//		}
+		if (event.item.getDisplayName().contains("Teleportation Potion")){
+			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
+		}
+		if (event.item.getDisplayName().contains(""))
+			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 242);
+		if (event.item.getDisplayName().contains("Key"))
+			QuestTeleporter.teleport(event.entityPlayer, 102, 0, 64, 0);
 	}
 	
 	

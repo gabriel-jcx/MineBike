@@ -23,17 +23,20 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateNormalChests(){
 		Map<String, String> map = new HashMap<String, String>();
+		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "TutorialChestWater"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "TutorialChestAir"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "level123Chest");
 		return map;
 	}
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
+//		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Test Reward Key"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Mysterious Key");
 		map.put(Vec3.createVectorHelper(20, 77, -76).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
-		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); ////Change coordinates later
-		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); ////Change coordinates later
+		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); //TODO: change coords
 		return map;
 	}
 	
@@ -50,7 +53,13 @@ public class ChestSystem {
 		System.out.println("CHEST FOUND");
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
-		if (chestName == "level123Chest")
+		if (chestName == "TutorialChestWater")
+			c.setInventorySlotContents(0, new ItemStack(Items.stone_pickaxe)); //TODO: Change item
+		
+		else if (chestName == "TutorialChestAir")
+			c.setInventorySlotContents(0, new ItemStack(Items.stone_pickaxe)); //TODO: Change item
+		
+		else if (chestName == "level123Chest")
 			putMessageInChest(c, 0, BiGXTextBoxDialogue.caveChestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.caveChestMsgTitle);
 	}
 	

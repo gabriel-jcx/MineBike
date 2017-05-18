@@ -3,10 +3,10 @@ package org.ngs.bigx.minecraft;
 
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
-	public static final String directionMsg = "Steve: I heard there's\na cave northward...";
-	public static final String wakeUpMsg = "Steve: Dad is calling\nme. Let’s go talk\nto him";
-	public static final String fatherMsg = "Dad: Someone gave me\nthese for you.";
-	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";
+	public static final String directionMsg = "I heard there's\na cave northward...";
+	public static final String wakeUpMsg = "Dad is calling me.\nLet’s go talk to him";
+	public static final String fatherMsg = "Dad:\nSomeone gave me\nthese for you.";
+	public static final String fatherMsgMap = "Dad:\nDon't forget\nto use your map!";
 	
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
@@ -58,10 +58,31 @@ public class BiGXTextBoxDialogue {
 	public static final String questChase1Title = "Defeat Thief";
 	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
 	
-	
+	//Instructions
+	public static final String instructionsInteractNPC = "Press right bumper to interact\nwith characters.";
+	//public static final String instructionsHitNPC = "Press [] to hit enemies.";??
+	public static final String instructionsJump = "Press A to jump.";
+	public static final String instructionsInteractEnvironment = "Press [] to interact with\nlevers, doors, etc.";
+	public static final String instructionsChestOpen = "Press [] to open the chest.";
+	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
+	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	
 	// Tutorial Message
-	/***
-	 * 
-	 */
+	public static final String scientist1 = "Scientist:\nThere you are! We need\nto begin your training.";
+	public static final String scientist2 = "Scientist:\nWe are sending you into\nthe past with your dad.";
+	public static final String scientist3 = "Scientist:\nThe Demon King went there to\nobtain The Ultimate Power.";
+	public static final String scientist4 = "Scientist:\nHe can only be defeated\nusing the Sword of Legend.";
+	public static final String scientist5 = "Scientist:\nYou'll need to use the\nFour Elements to find it.";
+	public static final String scientist6 = "Scientist:\nYou need to run through some\ntests to prove you can survive.";
+	public static final String scientist7 = "Scientist:\nThe past is a dangerous place, you know!";
+	public static final String scientist8 = "Scientist:\nWe will direct you on your\njourney through this. Here, take it.";
+	public static final String scientistQuestUnfinished = "I will give you the key to\nthis chest when you finish.";
+	public static final String scientistQuestFinished1 = "Great job! The chest has a\nteleportation potion and some gold.";
+	public static final String scientistQuestFinished2 = "The merchants in the past love that\nstuff! Here, the key is yours.";
+	public static final String scientistPotionInstructions = "Drink the potion in the chest\nto teleport to the past.";
+	
+	public static final String fireRoomEntrance = "That Minion Bot must\nhave what I need...";
+	public static final String earthRoomEntrance = "I might be able to\ncraft what I need...";
+	public static final String waterRoomEntrance = "What I need might be\nin that chest...";
+	public static final String airRoomEntrance = "There has to be a way\nto get over there...";
 }
