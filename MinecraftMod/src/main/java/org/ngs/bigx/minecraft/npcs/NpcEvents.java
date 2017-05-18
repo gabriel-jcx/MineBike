@@ -143,11 +143,6 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4419)));//earth elemental
 		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(268)));
 		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4422)));//air elemental
-		//Exchanges for Quest Keys
-		ItemStack key = new ItemStack(Item.getItemById(4424)); //key
-		key.setStackDisplayName("Mysterious Key");
-		inventoryCurrency.setInventorySlotContents(4, key);
-		inventoryCurrency.setInventorySlotContents(22, new ItemStack(Item.getItemById(4421)));//fire elemental
 	}
 		
 	
@@ -157,10 +152,6 @@ public class NpcEvents {
 		inventorySold.addItemStack(new ItemStack(CustomItems.swordDemonic));
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveFrost));
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
-		//Quest Keys
-		ItemStack key = new ItemStack(Item.getItemById(4424));
-		key.setStackDisplayName("Burnt Key");
-		inventorySold.addItemStack(key);
 	}
 	
 	//////////Potion Seller Market

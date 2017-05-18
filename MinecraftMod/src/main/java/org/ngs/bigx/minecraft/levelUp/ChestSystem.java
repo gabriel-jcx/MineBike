@@ -10,6 +10,7 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.Vec3;
@@ -54,10 +55,10 @@ public class ChestSystem {
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
 		if (chestName == "TutorialChestWater")
-			c.setInventorySlotContents(0, new ItemStack(Items.stone_pickaxe)); //TODO: Change item
+			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 8198, 1)); //Health potion? TODO: Double check ids
 		
 		else if (chestName == "TutorialChestAir")
-			c.setInventorySlotContents(0, new ItemStack(Items.stone_pickaxe)); //TODO: Change item
+			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 8195, 1)); //Swiftness potion? TODO: Double check ids
 		
 		else if (chestName == "level123Chest")
 			putMessageInChest(c, 0, BiGXTextBoxDialogue.caveChestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.caveChestMsgTitle);
@@ -69,29 +70,25 @@ public class ChestSystem {
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
 		if (keyName == "Mysterious Key"){
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.secretRoomMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.secretRoomMsgTitle);
-			for (int i = 1; i <= levelSys.getPlayerLevel() && i <= 3; ++i)
-				putPotionInChest(c, ("Teleportation Potion "+i), i);
+//			for (int i = 1; i <= levelSys.getPlayerLevel() && i <= 3; ++i)
+//				putPotionInChest(c, ("Teleportation Potion "+i), i-1);
+			putPotionInChest(c, "Teleportation Potion 1", 0);	
 		}
 		
 		if (keyName == "Burnt Key"){
-//			putMessageInChest(c, 0, BiGXTextBoxDialogue.fireLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.fireLevelMsgTitle);
-			putPotionInChest(c, "Teleportation Potion 4", 0);	
+			putPotionInChest(c, "Teleportation Potion 2", 0);	
 		}
 		
 		if (keyName == "Damp Key"){
-//			putMessageInChest(c, 0, BiGXTextBoxDialogue.waterLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.waterLevelMsgTitle);
-			putPotionInChest(c, "Teleportation Potion 5", 0);	
+			putPotionInChest(c, "Teleportation Potion 3", 0);	
 		}
 		
 		if (keyName == "Dusty Key"){
-//			putMessageInChest(c, 0, BiGXTextBoxDialogue.earthLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.earthLevelMsgTitle);
-			putPotionInChest(c, "Teleportation Potion 6", 0);	
+			putPotionInChest(c, "Teleportation Potion 4", 0);	
 		}
 		
 		if (keyName == "Light Key"){
-//			putMessageInChest(c, 0, BiGXTextBoxDialogue.airLevelMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.airLevelMsgTitle);
-			putPotionInChest(c, "Teleportation Potion 7", 0);	
+			putPotionInChest(c, "Teleportation Potion 5", 0);	
 		}
 		
 	}

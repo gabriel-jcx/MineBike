@@ -50,6 +50,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -109,7 +110,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int chasingQuestInitialPosY = 0;
 	protected int chasingQuestInitialPosZ = 0;
 
-	protected int thiefHealthMax = 50;
+	protected int thiefHealthMax = 15;
 	protected int thiefHealthCurrent = thiefHealthMax;
 	protected int thiefLevel = 1;
 	protected int thiefMaxLevel = 1;
@@ -239,7 +240,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void initThiefStat()
 	{
-		thiefHealthMax = 50;
+		thiefHealthMax = 15;
 		thiefHealthCurrent = thiefHealthMax;
 		thiefLevel = 1;
 	}
@@ -249,7 +250,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		thiefLevel ++;
 		thiefMaxLevel ++;
 		
-		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
+		thiefHealthMax = 15 + (int) Math.pow(3, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
@@ -257,7 +258,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	{
 		thiefLevel = level;
 		
-		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
+		thiefHealthMax = 15 + (int) Math.pow(3, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
@@ -267,23 +268,23 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if (itemOnHands != null) {
 			if(itemOnHands.getUnlocalizedName().equals("item.swordWood"))
 			{
-				deduction = 3;
+				deduction = 2;
 			}
 			else if(itemOnHands.getUnlocalizedName().equals("item.swordIron"))
 			{
-				deduction = 9;
+				deduction = 3;
 			}
 			else if(itemOnHands.getUnlocalizedName().equals("item.npcBronzeSword"))
 			{
-				deduction = 27;
+				deduction = 4;
 			}
 			else if(itemOnHands.getUnlocalizedName().equals("item.npcMithrilSword"))
 			{
-				deduction = 81;
-			}
+				deduction = 5;
+			} 
 			else if(itemOnHands.getUnlocalizedName().equals("item.npcEmeraldSword"))
 			{
-				deduction = 81;
+				deduction = 6;
 			}
 		}
 		
@@ -556,11 +557,16 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			
-			System.out.println("[BiGX] increased exp: " + levelSys.incExp(50));
-			if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
-				levelSys.giveLevelUpRewards(player);
+			if (thiefLevel == 1){
+				BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
+				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element 
 			}
+			
+			System.out.println("[BiGX] increased exp: " + levelSys.incExp(50));
+//			if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
+//				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
+//				levelSys.giveLevelUpRewards(player);
+//			}
 			
 			isActive = false;
 			completed = true;
