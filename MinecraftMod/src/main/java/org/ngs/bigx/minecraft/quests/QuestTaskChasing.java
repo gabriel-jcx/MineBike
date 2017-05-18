@@ -240,7 +240,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void initThiefStat()
 	{
-		thiefHealthMax = 50;
+		thiefHealthMax = 15;
 		thiefHealthCurrent = thiefHealthMax;
 		thiefLevel = 1;
 	}
@@ -250,7 +250,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		thiefLevel ++;
 		thiefMaxLevel ++;
 		
-		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
+		thiefHealthMax = 15 + (int) Math.pow(3, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
@@ -258,7 +258,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	{
 		thiefLevel = level;
 		
-		thiefHealthMax = 50 + (int) Math.pow(3, thiefLevel);
+		thiefHealthMax = 15 + (int) Math.pow(3, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
