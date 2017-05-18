@@ -31,6 +31,7 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -62,6 +63,8 @@ import noppes.npcs.entity.EntityNpcCrystal;
 
 public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
+
+	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
 	
 	private String id = "QUEST_TASK_CHASE";
 	
@@ -99,6 +102,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected long warningMsgBlinkingTime = System.currentTimeMillis();
 
 	protected TerrainBiome terrainBiome = new TerrainBiome();
+	protected TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
 	
 	protected ArrayList<Integer> questSettings = null;
 
@@ -113,12 +117,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected boolean thiefLevelUpFlag = false;
 	
 	private WorldServer ws;
-	private int questDimensionId = -1;
+	private int questDestinationDimensionId = -1;
+	private int questSourceDimensionId = -1;
 	
 	protected LevelSystem levelSys;
 	
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
+	
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
@@ -133,14 +139,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		switch(questChaseType)
 		{
 		case REGULAR:
-			this.questDimensionId = WorldProviderFlats.dimID;
+			this.questDestinationDimensionId = WorldProviderFlats.dimID;
+			this.questSourceDimensionId = 0;
 			break;
 		case FIRE:
-			this.questDimensionId = WorldProviderDark.dimID;
+			this.questDestinationDimensionId = WorldProviderDark.dimID;
+			this.questSourceDimensionId = 105;
 			break;
 		default:
 			break;
 		}
+		
+		this.questChaseType = questChaseType;
 	}
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
@@ -192,11 +202,22 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 
-		returnLocation = Vec3.createVectorHelper(96, 73, -8);
+		switch(this.questChaseType)
+		{
+		case REGULAR:
+			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+			break;
+		case FIRE:
+			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+			break;
+		default:
+			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+			break;	
+		};
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
-		QuestTeleporter.teleport(entity, 0, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
@@ -344,7 +365,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	}
 	
 	private void generateTerrainByPatientProfile() {
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
+		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 		
 		if(context.isSuggestedGamePropertiesReady())
 		{
@@ -369,21 +390,54 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			{
 				for(int idx = 0; idx<4; idx++)
 				{
-					areas.add(terrainBiome.getRandomCityBiome());
+					switch(this.questChaseType)
+					{
+					case REGULAR:
+						areas.add(terrainBiome.getRandomCityBiome());
+						break;
+					case FIRE:
+						areas.add(terrainBiomeFire.getRandomFieldBiome());
+						break;
+					default:
+						areas.add(new TerrainBiomeArea());
+						break;
+					}
 				}
 			}
 			else if(blockByDifficulty == Blocks.grass)
 			{
 				for(int idx = 0; idx<4; idx++)
 				{
-					areas.add(terrainBiome.getRandomGrassBiome());
+					switch(this.questChaseType)
+					{
+					case REGULAR:
+						areas.add(terrainBiome.getRandomGrassBiome());
+						break;
+					case FIRE:
+						areas.add(terrainBiomeFire.getRandomGateBiome());
+						break;
+					default:
+						areas.add(new TerrainBiomeArea());
+						break;
+					}
 				}
 			}
 			else if(blockByDifficulty == Blocks.sand)
 			{
 				for(int idx = 0; idx<4; idx++)
 				{
-					areas.add(terrainBiome.getRandomDesertBiome());
+					switch(this.questChaseType)
+					{
+					case REGULAR:
+						areas.add(terrainBiome.getRandomDesertBiome());
+						break;
+					case FIRE:
+						areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+						break;
+					default:
+						areas.add(new TerrainBiomeArea());
+						break;
+					}
 				}
 			}
 			else {
@@ -562,7 +616,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						((EntityCustomNpc)o).delete();
 					}
 				}
-				for (Object o : NpcCommand.getCustomNpcsInDimension(this.questDimensionId)) {
+				for (Object o : NpcCommand.getCustomNpcsInDimension(this.questDestinationDimensionId)) {
 //					System.out.println(((EntityCustomNpc)o).display.name);
 				}
 			}
@@ -582,9 +636,22 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 					
-//					NpcCommand.triggerSpawnTheifOnChaseQuest();
-					npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-					npc.ai.stopAndInteract = false;
+					switch(this.questChaseType)
+					{
+					case REGULAR:
+						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+						npc.ai.stopAndInteract = false;
+						break;
+					case FIRE:
+						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
+						npc.ai.stopAndInteract = false;
+						npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
+						break;
+					default:
+						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+						npc.ai.stopAndInteract = false;
+						break;
+					};
 					
 					setNpc(npc);
 					
@@ -860,10 +927,27 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			if(!player.worldObj.isRemote)
 			{
-				ws = MinecraftServer.getServer().worldServerForDimension(this.questDimensionId);
+				ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 				
-				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, 94, 53, -54, 99, 58, -48)
-						&& player.dimension != this.questDimensionId)
+				int x1,y1,z1;
+				int x2,y2,z2;
+				
+				switch(questChaseType)
+				{
+				case REGULAR:
+					x1=94; y1=53; z1=-54; x2=99; y2=58; z2=-48;
+					break;
+				case FIRE:
+					x1=18; y1=77; z1=-76; x2=23; y2=79; z2=-73;
+					break;
+				default:
+					x1=94; y1=53; z1=-54; x2=99; y2=58; z2=-48;
+					break;
+				};
+				
+				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
+						&& player.dimension != this.questDestinationDimensionId
+						&& player.dimension == this.questSourceDimensionId)
 				{
 					boolean isReboot = !isActive;
 					
@@ -895,7 +979,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					}
 
 					returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-					QuestTeleporter.teleport(player, this.questDimensionId, 1, 11, 0);
+					QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
 
 					chasingQuestInitialPosX = 1;
 					chasingQuestInitialPosY = 10;
@@ -929,7 +1013,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						reactivateTask();
 				}
 				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
-						&& player.dimension == this.questDimensionId)
+						&& player.dimension == this.questDestinationDimensionId)
 				{
 					// CHASE QUEST LOSE CONDITION
 					if (ws != null && player instanceof EntityPlayerMP) {
