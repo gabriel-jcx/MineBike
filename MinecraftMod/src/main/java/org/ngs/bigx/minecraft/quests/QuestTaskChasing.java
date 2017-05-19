@@ -546,7 +546,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			LeaderboardRow row = new LeaderboardRow();
 			row.name = player.getDisplayName();
 			row.level = Integer.toString(thiefLevel);
-			row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
+			row.time_elapsed = "" + time;
 			
 			try {
 				GuiLeaderBoard.writeToLeaderboard(row);
