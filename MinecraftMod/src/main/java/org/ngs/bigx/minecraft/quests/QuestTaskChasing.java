@@ -558,7 +558,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			
 			if (thiefLevel == 1){
-				BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
+				ItemStack key = new ItemStack(Item.getItemById(4424));
+				key.setStackDisplayName("Burnt Key"); 
+				player.inventory.addItemStackToInventory(key);
 				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element 
 			}
 			

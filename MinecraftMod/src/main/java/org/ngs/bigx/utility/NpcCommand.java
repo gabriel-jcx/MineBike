@@ -140,20 +140,20 @@ public class NpcCommand {
 		if(!npcSpawnFlag)
 			return;
 		
-		if (world.provider.dimensionId == 0){
+		//if (world.provider.dimensionId == 0){
 			npcSpawnFlag = false;
 			
 			// NPC CHECKING
-			List listOfNpc = NpcCommand.getCustomNpcsInDimension(0);
+			List listOfNpc = NpcCommand.getCustomNpcsInDimension(worldServer.provider.dimensionId);//0);
 			
-			for (String name : NpcDatabase.NpcNames()) {
+			for (String name : NpcDatabase.NpcNames(worldServer.provider.dimensionId)) {
 				int found = 0;
 				for (Object obj : listOfNpc)
 					if (((EntityCustomNpc)obj).display.name.equals(name))
 						++found;
 				
 				if (found == 0) {
-					NpcDatabase.spawn(worldServer, name);
+					NpcDatabase.spawn(worldServer, name, worldServer.provider.dimensionId);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
 					for (Object obj : listOfNpc)
@@ -164,7 +164,7 @@ public class NpcCommand {
 						list.get(i).delete();
 				}
 			}
-		}
+		//}
 	}
 	
 	public List getPath() {
