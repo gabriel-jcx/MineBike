@@ -80,6 +80,23 @@ public class ClientAreaEvent {
 		
 		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
 				BiGXTextBoxDialogue.placeContinentPangea, AreaTypeEnum.WORLD, 0), AreaTypeEnum.WORLD);
+		
+		//Tutorial Areas
+		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 74, 30), 
+				BiGXTextBoxDialogue.placeFireRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		
+		addArea(new Area(Vec3.createVectorHelper(-30, 55, 64), Vec3.createVectorHelper(30, 75, 126), 
+				BiGXTextBoxDialogue.placeWaterRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		
+		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 75, -64), 
+				BiGXTextBoxDialogue.placeEarthRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		
+		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(126, 75, 30), 
+				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		
+		addArea(new Area(Vec3.createVectorHelper(-64, 54, -64), Vec3.createVectorHelper(64, 74, 64), 
+				BiGXTextBoxDialogue.placeLabratory, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		
 	}
 	
 	public static void addArea(Area areaToAdd, AreaTypeEnum areaType)

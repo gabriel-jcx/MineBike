@@ -46,6 +46,7 @@ public class NpcDatabase {
 	}
 	
 	public static void spawn(WorldServer world, String name, int dimID) {
+		System.out.println("System is remote in DIMID " + dimID + ": " + world.isRemote);
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(0), name);
@@ -59,6 +60,7 @@ public class NpcDatabase {
 			System.out.println("[BiGX] NPC SPAWN FUNCTION [" + name + "]");
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
+			System.out.println("NPC Placed!");
 		}
 	}
 	

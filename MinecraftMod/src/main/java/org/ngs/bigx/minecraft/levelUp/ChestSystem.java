@@ -24,15 +24,17 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateNormalChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "TutorialChestWater"); //TODO: change coords
-		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "TutorialChestAir"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(0, 72, 117).toString(), "TutorialChestWater");
+		map.put(Vec3.createVectorHelper(1, 72, 117).toString(), "TutorialChestWater");
+		map.put(Vec3.createVectorHelper(95, 79, 0).toString(), "TutorialChestAir"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(96, 79, 0).toString(), "TutorialChestAir"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "level123Chest");
 		return map;
 	}
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-//		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Test Reward Key"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(1, 63, 0).toString(), "Shiny Key"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Mysterious Key");
 		map.put(Vec3.createVectorHelper(20, 77, -76).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
@@ -44,6 +46,7 @@ public class ChestSystem {
 	public static void interactWithChests(PlayerInteractEvent e, LevelSystem levelSys){
 		System.out.println("Interacting with Chest");
 		String chestCoords = Vec3.createVectorHelper(e.x, e.y, e.z).toString();
+		System.out.println(chestCoords);
 		if (normalChests.containsKey(chestCoords))
 			interactWithNormalChest(e, normalChests.get(chestCoords));
 		else if (lockedChests.containsKey(chestCoords))
@@ -55,10 +58,10 @@ public class ChestSystem {
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
 		if (chestName == "TutorialChestWater")
-			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 8198, 1)); //Health potion? TODO: Double check ids
+			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 1, 1)); //Health potion? TODO: Double check ids
 		
 		else if (chestName == "TutorialChestAir")
-			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 8195, 1)); //Swiftness potion? TODO: Double check ids
+			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 1, 8194)); //Swiftness potion? TODO: Double check ids
 		
 		else if (chestName == "level123Chest")
 			putMessageInChest(c, 0, BiGXTextBoxDialogue.caveChestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.caveChestMsgTitle);
@@ -68,6 +71,10 @@ public class ChestSystem {
 		System.out.println("LOCKED CHEST FOUND");
 		ChestLocked(e, e.entityPlayer, keyName);
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
+		
+		if (keyName == "Shiny Key"){
+			putPotionInChest(c, "Teleportation Potion - Past", 0);	
+		}
 		
 		if (keyName == "Mysterious Key"){
 //			for (int i = 1; i <= levelSys.getPlayerLevel() && i <= 3; ++i)

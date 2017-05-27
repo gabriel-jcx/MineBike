@@ -3,6 +3,12 @@ package org.ngs.bigx.minecraft;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.levelUp.ChestSystem;
+import org.ngs.bigx.minecraft.npcs.NpcDatabase;
+import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestTask;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,8 +18,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class BiGXEventTriggers {	
@@ -68,7 +76,6 @@ public class BiGXEventTriggers {
 		b.stackTagCompound.setTag("pages", pages);
 		return b;
 	}
-	
 	
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
 		ItemStack key = new ItemStack(Item.getItemById(4424));//new ItemStack(Item.getItemById(4424));

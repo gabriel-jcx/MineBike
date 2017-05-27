@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
@@ -165,14 +166,14 @@ public class ClientEventHandler {
 		
 		@SubscribeEvent
 		public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-			if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
-				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.wooden_sword))) {
-					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.wooden_sword));
-				}
-				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.gold_ingot))) {
-					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.gold_ingot));
-				}
-			}
+//			if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
+//				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.wooden_sword))) {
+//					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.wooden_sword));
+//				}
+//				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.gold_ingot))) {
+//					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.gold_ingot));
+//				}
+//			}
 		}
 		
 		@SubscribeEvent
@@ -269,30 +270,39 @@ public class ClientEventHandler {
 				if(ClientAreaEvent.isAreaChange())
 				{
 					ClientAreaEvent.unsetAreaChangeFlag();
-
-					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
-						if (showLeaderboard) {
-							showLeaderboard = false;
-							final Timer leaderboardTimer = new Timer();
-							
-							final TimerTask leaderboardTimerTask = new TimerTask() {
-								@Override
-								public void run() {
-									GuiLeaderBoard.showLeaderBoard(true);
-									if (leaderboardSeconds++ >= 5) {
-										GuiLeaderBoard.showLeaderBoard(false);
-										leaderboardSeconds = 0;
-										leaderboardTimer.cancel();
-									}
-								}
-							};
-							leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
+//					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
+//						if (showLeaderboard) {
+//							showLeaderboard = false;
+//							final Timer leaderboardTimer = new Timer();
+//							
+//							final TimerTask leaderboardTimerTask = new TimerTask() {
+//								@Override
+//								public void run() {
+//									GuiLeaderBoard.showLeaderBoard(true);
+//									if (leaderboardSeconds++ >= 5) {
+//										GuiLeaderBoard.showLeaderBoard(false);
+//										leaderboardSeconds = 0;
+//										leaderboardTimer.cancel();
+//									}
+//								}
+//							};
+//							leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
+//						}
+//					} else {
+//						showLeaderboard = true;
+//					}
+					if(ClientAreaEvent.previousArea != null){
+						if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
+							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
+							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
+							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
+							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
+								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
 						}
-					} else {
-						showLeaderboard = true;
 					}
-					if(ClientAreaEvent.previousArea != null)
-						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					else
 						GuiMessageWindow.showMessage("Out of Continent Pangea...");
 				}
