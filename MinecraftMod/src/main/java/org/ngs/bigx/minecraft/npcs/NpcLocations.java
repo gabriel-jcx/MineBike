@@ -13,8 +13,8 @@ public class NpcLocations {
 	public static Vec3 potionSeller = Vec3.createVectorHelper(105, 71, 204);
 	
 	//Tutorial NPC
-	public static Vec3 scientists = Vec3.createVectorHelper(0, 64, 0);
-	
+	public static Vec3 scientists = Vec3.createVectorHelper(1, 64, 1);
+	public static Vec3 trainingBot = Vec3.createVectorHelper(-108, 65, 0);
 	
 	//Random NPCs
 	

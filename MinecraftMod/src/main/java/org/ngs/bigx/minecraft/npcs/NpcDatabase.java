@@ -30,6 +30,7 @@ public class NpcDatabase {
 	private static Map<String, Vec3> populateMapTutorial() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
 		map.put("Scientist", NpcLocations.scientists);
+		map.put("Training Bot", NpcLocations.trainingBot);
 		return map;
 	}
 	
@@ -50,17 +51,17 @@ public class NpcDatabase {
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(0), name);
-			npc.setPosition(npcs.get(name).xCoord, (float)npcs.get(name).yCoord, npcs.get(name).zCoord);
+//			npc.setPosition(npcs.get(name).xCoord, (float)npcs.get(name).yCoord, npcs.get(name).zCoord);
 		}
 		else if (dimID == 102){
+			System.out.println("[BiGX] NPC SPAWN FUNCTION [" + name + "]");
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, (int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name);
-			npc.setPosition(npcsTutorial.get(name).xCoord, (float)npcsTutorial.get(name).yCoord, npcsTutorial.get(name).zCoord);
+//			npc.setPosition(npcsTutorial.get(name).xCoord, (float)npcsTutorial.get(name).yCoord, npcsTutorial.get(name).zCoord);
 		}
 		if (npc != null){
-			System.out.println("[BiGX] NPC SPAWN FUNCTION [" + name + "]");
+			System.out.println("NPC Placed!");
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
-			System.out.println("NPC Placed!");
 		}
 	}
 	
@@ -75,6 +76,8 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/TraderSteve.png";
 		if (name.contains("Scientist"))
 			return "customnpcs:textures/entity/humanmale/DoctorSteve.png";
+//		if (name.contains("Training Bot"))
+//			return "customnpcs:textures/entity/humanmale/TraderSteve.png";//"customnpcs:textures/entity/humanmale/RobesBrownSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/Steve.png";
 	}
@@ -89,10 +92,10 @@ public class NpcDatabase {
 		// TODO implement
 	}
 	
-	public static void spawnVillain(int x, int y, int z, WorldServer w, String name){
-		System.out.println("Spawning Demon");
-		EntityCustomNpc npc = NpcCommand.spawnNpc(x,y,z, w, name);
-		npc.display.texture = getTexture(name);
-	}
+//	public static void spawnVillain(int x, int y, int z, WorldServer w, String name){
+//		System.out.println("Spawning Demon");
+//		EntityCustomNpc npc = NpcCommand.spawnNpc(x,y,z, w, name);
+//		npc.display.texture = getTexture(name);
+//	}
 
 }
