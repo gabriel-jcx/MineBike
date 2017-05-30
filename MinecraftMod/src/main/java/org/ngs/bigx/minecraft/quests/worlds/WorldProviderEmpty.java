@@ -93,7 +93,7 @@ public class WorldProviderEmpty extends WorldProvider {
 	@Override
 	public float calculateCelestialAngle(long var1, float var2) {
 		// Day is perpetual
-		return 0.9F;
+		return 1.22F;
 	}
 	
 	@Override
