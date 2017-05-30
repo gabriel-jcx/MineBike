@@ -52,6 +52,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -545,7 +546,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			LeaderboardRow row = new LeaderboardRow();
 			row.name = player.getDisplayName();
 			row.level = Integer.toString(thiefLevel);
-			row.time_elapsed = Double.toString((System.currentTimeMillis() - elapsedTime)/1000);
+			row.time_elapsed = "" + time;
 			
 			try {
 				GuiLeaderBoard.writeToLeaderboard(row);
@@ -558,7 +559,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			
 			if (thiefLevel == 1){
-				BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
+				ItemStack key = new ItemStack(Item.getItemById(4424));
+				key.setStackDisplayName("Burnt Key"); 
+				player.inventory.addItemStackToInventory(key);
 				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element 
 			}
 			
@@ -826,6 +829,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			speedchange += speedchangerate/2;
 		else if (context.rpm <= 40)
 			speedchange -= speedchangerate;
+		
+		Minecraft mc = Minecraft.getMinecraft();
+		
+		if(mc.getMinecraft().objectMouseOver != null) {
+			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
+			}
+		}
 	}
 
 

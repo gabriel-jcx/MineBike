@@ -1,7 +1,7 @@
 ignoreUpdate:136
 updateNotification:true
 settingsButton:true
-minimap:false
+minimap:true
 caveMaps:true
 showPlayers:true
 showHostile:true
@@ -12,8 +12,8 @@ showOtherTeam:true
 showWaypoints:true
 showIngameWaypoints:true
 displayRedstone:true
-deathpoints:true
-oldDeathpoints:true
+deathpoints:false
+oldDeathpoints:false
 distance:1
 showCoords:true
 lockNorth:false

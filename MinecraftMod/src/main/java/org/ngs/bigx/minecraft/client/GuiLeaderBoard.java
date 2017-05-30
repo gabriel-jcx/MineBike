@@ -71,6 +71,11 @@ public class GuiLeaderBoard extends GuiScreen {
 		
 		ArrayList<LeaderboardRow> leaderboardRowToBeRemoved = new ArrayList<LeaderboardRow>();
 		
+		if(leaderboard == null)
+		{
+			leaderboard = new Leaderboard();
+		}
+		
 		leaderboard.leaderboardRows.add(row);
 		
 		Collections.sort(leaderboard.leaderboardRows);
@@ -122,6 +127,11 @@ public class GuiLeaderBoard extends GuiScreen {
 		Gson gson = new Gson();
 		JsonReader reader = new JsonReader(new FileReader(leaderboardFile));
 		Leaderboard leaderboard = gson.fromJson(reader, Leaderboard.class);
+		
+		if(leaderboard == null)
+		{
+			leaderboard = new Leaderboard();
+		}
 		
 		Collections.sort(leaderboard.leaderboardRows);
 		

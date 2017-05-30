@@ -183,7 +183,7 @@ public class CommonEventHandler {
 		event.world.provider.setWorldTime(0);
 		event.world.provider.resetRainAndThunder();
 		NpcCommand.setNpcSpawnFlag();
-		NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(0), MinecraftServer.getServer().getEntityWorld());
+		NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId), MinecraftServer.getServer().getEntityWorld());
 	}
 	
 	@SubscribeEvent
@@ -216,13 +216,12 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		if (event.item.getDisplayName().contains("Teleportation Potion")){
+		if (event.item.getDisplayName().contains("Teleportation Potion - Village"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
-		}
-		if (event.item.getDisplayName().contains(""))
-			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 242);
-		if (event.item.getDisplayName().contains("Key"))
-			QuestTeleporter.teleport(event.entityPlayer, 102, 0, 64, 0);
+		if (event.item.getDisplayName().contains("Teleportation Potion - Past"))
+			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
+		if (event.item.getDisplayName().contains("Sword"))
+			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
 	}
 	
 	

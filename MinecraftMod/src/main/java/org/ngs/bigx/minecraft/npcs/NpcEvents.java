@@ -8,6 +8,7 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -38,6 +39,11 @@ public class NpcEvents {
 			InteractWithBlacksmith(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.potionSeller, NpcLocations.potionSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
 			InteractWithPotionSeller(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
+			InteractWithScientist(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
+//			InteractWithScientist(player, event);
+			System.out.println("BOT ACTIVATED");
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
@@ -52,6 +58,8 @@ public class NpcEvents {
 			}
 		}
 		
+//		BiGXEventTriggers.givePlayerQuest(player, Quest.QUEST_ID_STRING_CHASE_REG,
+//				BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description);
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
@@ -73,6 +81,61 @@ public class NpcEvents {
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 			}
 		} catch (QuestException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void InteractWithScientist(EntityPlayer player, EntityInteractEvent event){
+//		System.out.println("Interacting with Scientist");
+		try{
+			if (BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null){
+				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+				Quest quest;
+				if (player.worldObj.isRemote){
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist1);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist2);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist3);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist4);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist5);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist6);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist7);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist8);
+					GuiMessageWindow.showBook(BiGXTextBoxDialogue.questBookObtained);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
+				
+					//Give quest on Client Side
+					System.out.println("InteractWithFather Quest Generation: CLIENT");
+					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, "Collect Items", "Collect all the items. All of them.", 
+							BiGX.instance().clientContext.getQuestManager());
+					quest.addTasks(new QuestTaskTutorial(BiGX.instance().clientContext.getQuestManager(), player, 
+							(EntityCustomNpc) event.target));
+					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
+						BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
+				}
+				else{
+
+					System.out.println("InteractWithFather Quest Generation: SERVER");
+					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, "Collect Items", "Collect all the items. All of them.", 
+							BiGX.instance().serverContext.getQuestManager());
+					quest.addTasks(new QuestTaskTutorial(BiGX.instance().serverContext.getQuestManager(), player, 
+							(EntityCustomNpc) event.target));
+					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
+						BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
+				}
+			}
+			else{
+				if (player.worldObj.isRemote){
+					if (!BiGX.instance().clientContext.getQuestManager().CheckActiveQuestCompleted()){
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
+					}
+					else{
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);
+						BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
+					}	
+				}
+			}
+		}catch (QuestException e){
 			e.printStackTrace();
 		}
 	}
@@ -112,6 +175,8 @@ public class NpcEvents {
 		if (traderInterface.inventorySold.items.isEmpty())
 			createPotionSold(traderInterface.inventorySold);
 	}
+	
+	///////////Blacksmith Market
 	
 	
 	//////Private Helper Methods: Traders
@@ -167,4 +232,5 @@ public class NpcEvents {
 		p.setStackDisplayName("Teleportation Potion - Village");
 		inventorySold.setInventorySlotContents(0, p);
 	}
+	
 }

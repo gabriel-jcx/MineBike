@@ -68,21 +68,27 @@ public class BiGXTextBoxDialogue {
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	
 	// Tutorial Message
-	public static final String scientist1 = "Scientist:\nThere you are! We need\nto begin your training.";
-	public static final String scientist2 = "Scientist:\nWe are sending you into\nthe past with your dad.";
-	public static final String scientist3 = "Scientist:\nThe Demon King went there to\nobtain The Ultimate Power.";
-	public static final String scientist4 = "Scientist:\nHe can only be defeated\nusing the Sword of Legend.";
-	public static final String scientist5 = "Scientist:\nYou'll need to use the\nFour Elements to find it.";
-	public static final String scientist6 = "Scientist:\nYou need to run through some\ntests to prove you can survive.";
-	public static final String scientist7 = "Scientist:\nThe past is a dangerous place, you know!";
-	public static final String scientist8 = "Scientist:\nWe will direct you on your\njourney through this. Here, take it.";
-	public static final String scientistQuestUnfinished = "I will give you the key to\nthis chest when you finish.";
-	public static final String scientistQuestFinished1 = "Great job! The chest has a\nteleportation potion and some gold.";
-	public static final String scientistQuestFinished2 = "The merchants in the past love that\nstuff! Here, the key is yours.";
+	public static final String scientist1 = "Scientist: There you are!\nWe need to begin your\ntraining.";
+	public static final String scientist2 = "Scientist: We are sending\nyou into the past with\nyour dad.";
+	public static final String scientist3 = "Scientist: The Demon King\nwent there to obtain\nThe Ultimate Power.";
+	public static final String scientist4 = "Scientist: He can only be\ndefeated using the\nSword of Legend.";
+	public static final String scientist5 = "Scientist: You'll need to\nuse the Four Elements\nto find it.";
+	public static final String scientist6 = "Scientist: You need to run\nthrough some tests to\nprove you can survive.";
+	public static final String scientist7 = "Scientist: The past is a\ndangerous place, you know!";
+	public static final String scientist8 = "Scientist: We will direct\nyou on your journey with\nthis. Here, take it.";
+	public static final String scientistQuestUnfinished = "Scientist: I will give you\nthe key to this chest when\nyou finish.";
+	public static final String scientistQuestFinished1 = "Scientist: Great job! The\nchest has a teleportation\npotion and some gold.";
+	public static final String scientistQuestFinished2 = "Scientist: The merchants in\nthe past love that stuff!\nHere, the key is yours.";
 	public static final String scientistPotionInstructions = "Drink the potion in the chest\nto teleport to the past.";
 	
 	public static final String fireRoomEntrance = "That Minion Bot must\nhave what I need...";
 	public static final String earthRoomEntrance = "I might be able to\ncraft what I need...";
 	public static final String waterRoomEntrance = "What I need might be\nin that chest...";
 	public static final String airRoomEntrance = "There has to be a way\nto get over there...";
+	
+	public static final String placeFireRoom = "\n   < Fire Test >";
+	public static final String placeWaterRoom = "\n   < Water Test >";
+	public static final String placeEarthRoom = "\n   < Earth Test >";
+	public static final String placeAirRoom = "\n   < Air Test >";
+	public static final String placeLabratory = "\n   < Futuristic Lab >";
 }
