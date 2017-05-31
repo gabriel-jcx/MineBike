@@ -180,10 +180,16 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
+		System.out.println("[BiGX] onWorldLoad(WorldEvent.Load event)");
+		
 		event.world.provider.setWorldTime(0);
 		event.world.provider.resetRainAndThunder();
-		NpcCommand.setNpcSpawnFlag();
-		NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId), MinecraftServer.getServer().getEntityWorld());
+		
+		if(!event.world.isRemote)
+		{
+			NpcCommand.setNpcSpawnFlag();
+			NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId), MinecraftServer.getServer().getEntityWorld());
+		}
 	}
 	
 	@SubscribeEvent
