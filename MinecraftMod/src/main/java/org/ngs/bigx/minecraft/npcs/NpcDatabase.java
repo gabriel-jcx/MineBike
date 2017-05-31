@@ -91,11 +91,4 @@ public class NpcDatabase {
 	public static void sortFurthestSpawn(List<EntityCustomNpc> list) {
 		// TODO implement
 	}
-	
-//	public static void spawnVillain(int x, int y, int z, WorldServer w, String name){
-//		System.out.println("Spawning Demon");
-//		EntityCustomNpc npc = NpcCommand.spawnNpc(x,y,z, w, name);
-//		npc.display.texture = getTexture(name);
-//	}
-
 }

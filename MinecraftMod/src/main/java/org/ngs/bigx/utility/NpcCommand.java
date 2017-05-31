@@ -31,6 +31,7 @@ public class NpcCommand {
 	private int role; //0=no role, 1=transporter
 
 	private static boolean npcSpawnFlag = false;
+	private static ArrayList<Integer> npcSpawnDimensionId = new ArrayList<Integer>();
 
 	private static boolean theifOnRegularChaseQuestSpawnFlag = false;
 	private static boolean theifOnFireChaseQuestSpawnFlag = false;
@@ -59,7 +60,7 @@ public class NpcCommand {
 	    		MathHelper.floor_double(z)};
 		
 		w.spawnEntityInWorld(npc);
-	    npc.setHealth(999999999f);;
+	    npc.setHealth(999999999f);
 	    
 	    return npc;
 	}
@@ -135,18 +136,27 @@ public class NpcCommand {
 		npcSpawnFlag = true;
 	}
 	
-	public static void spawnNpcInDB(WorldServer worldServer, World world)
+	public static void addNpcSpawnDimensionId(int dimensionId)
 	{
-		if(!npcSpawnFlag)
-			return;
+		npcSpawnDimensionId.clear();
+		npcSpawnDimensionId.add(dimensionId);
+	}
+	
+	public static void spawnNpcInDB()
+	{
+//		if(!npcSpawnFlag)
+//			return;
 		
-		//if (world.provider.dimensionId == 0){
+		for(int dimensionId : npcSpawnDimensionId)
+		{
 			npcSpawnFlag = false;
 			
-			// NPC CHECKING
-			List listOfNpc = NpcCommand.getCustomNpcsInDimension(worldServer.provider.dimensionId);//0);
+			WorldServer worldServer = MinecraftServer.getServer().worldServerForDimension(dimensionId);
 			
-			for (String name : NpcDatabase.NpcNames(worldServer.provider.dimensionId)) {
+			// NPC CHECKING
+			List listOfNpc = NpcCommand.getCustomNpcsInDimension(dimensionId);
+			
+			for (String name : NpcDatabase.NpcNames(dimensionId)) {
 				int found = 0;
 				for (Object obj : listOfNpc)
 					if (((EntityCustomNpc)obj).display.name.equals(name))
@@ -154,7 +164,7 @@ public class NpcCommand {
 				
 				if (found == 0) {
 					System.out.println("No NPCs found in this dimension...");
-					NpcDatabase.spawn(worldServer, name, worldServer.provider.dimensionId);
+					NpcDatabase.spawn(worldServer, name, dimensionId);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
 					for (Object obj : listOfNpc)
@@ -165,7 +175,7 @@ public class NpcCommand {
 						list.get(i).delete();
 				}
 			}
-		//}
+		}
 	}
 	
 	public List getPath() {
