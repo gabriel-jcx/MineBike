@@ -185,10 +185,12 @@ public class CommonEventHandler {
 		event.world.provider.setWorldTime(0);
 		event.world.provider.resetRainAndThunder();
 		
-		if(!event.world.isRemote)
+		if(event.world.isRemote)
 		{
+			System.out.println("[BiGX] dimensionId [" + event.world.provider.dimensionId + "]");
+			
 			NpcCommand.setNpcSpawnFlag();
-			NpcCommand.spawnNpcInDB(MinecraftServer.getServer().worldServerForDimension(event.world.provider.dimensionId), MinecraftServer.getServer().getEntityWorld());
+			NpcCommand.addNpcSpawnDimensionId(event.world.provider.dimensionId);
 		}
 	}
 	
@@ -255,6 +257,12 @@ public class CommonEventHandler {
 				World current_world = MinecraftServer.getServer().getEntityWorld();
 
 				current_world.setWorldTime(8000);
+			}
+			
+			if( (server_tick%20) == 0 )
+			{
+				System.out.println("[biGX] Server Tick");
+				NpcCommand.spawnNpcInDB();
 			}
 		}
 	}
