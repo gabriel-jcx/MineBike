@@ -138,13 +138,14 @@ public class NpcCommand {
 	
 	public static void addNpcSpawnDimensionId(int dimensionId)
 	{
+		npcSpawnDimensionId.clear();
 		npcSpawnDimensionId.add(dimensionId);
 	}
 	
 	public static void spawnNpcInDB()
 	{
-		if(!npcSpawnFlag)
-			return;
+//		if(!npcSpawnFlag)
+//			return;
 		
 		for(int dimensionId : npcSpawnDimensionId)
 		{
@@ -153,7 +154,7 @@ public class NpcCommand {
 			WorldServer worldServer = MinecraftServer.getServer().worldServerForDimension(dimensionId);
 			
 			// NPC CHECKING
-			List listOfNpc = NpcCommand.getCustomNpcsInDimension(dimensionId);//0);
+			List listOfNpc = NpcCommand.getCustomNpcsInDimension(dimensionId);
 			
 			for (String name : NpcDatabase.NpcNames(dimensionId)) {
 				int found = 0;
@@ -175,8 +176,6 @@ public class NpcCommand {
 				}
 			}
 		}
-		
-		npcSpawnDimensionId.clear();
 	}
 	
 	public List getPath() {

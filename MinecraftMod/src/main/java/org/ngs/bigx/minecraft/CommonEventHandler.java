@@ -186,9 +186,7 @@ public class CommonEventHandler {
 		event.world.provider.resetRainAndThunder();
 		
 		if(event.world.isRemote)
-		{
-			System.out.println("[BiGX] dimensionId [" + event.world.provider.dimensionId + "]");
-			
+		{	
 			NpcCommand.setNpcSpawnFlag();
 			NpcCommand.addNpcSpawnDimensionId(event.world.provider.dimensionId);
 		}
@@ -259,9 +257,8 @@ public class CommonEventHandler {
 				current_world.setWorldTime(8000);
 			}
 			
-			if( (server_tick%20) == 0 )
+			if( (server_tick%60) == 0 )
 			{
-				System.out.println("[biGX] Server Tick");
 				NpcCommand.spawnNpcInDB();
 			}
 		}
