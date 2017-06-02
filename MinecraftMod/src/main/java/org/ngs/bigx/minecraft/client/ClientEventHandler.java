@@ -24,6 +24,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
@@ -46,75 +47,75 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ClientEventHandler {
-		private BigxClientContext context;
-		public static KeyBinding keyBindingTogglePedalingMode;
-		public static KeyBinding keyBindingMoveForward;
-		public static KeyBinding keyBindingMoveBackward;
-		public static KeyBinding keyBindingToggleMouse;
-		public static KeyBinding keyBindingToggleQuestListGui;
-		public static KeyBinding keyBindingToggleChasingQuestGui;
-		public static KeyBinding keyBindingToggleBike;
-		
-		private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
-		private static final MouseHelper defaultMouseHelper = new MouseHelper();
-		
-		private static ClientEventHandler handler;
-		
-		public ClientEventHandler(BigxClientContext con) {
-			context = con;
-			handler = this;
-		}
+	private BigxClientContext context;
+	public static KeyBinding keyBindingTogglePedalingMode;
+	public static KeyBinding keyBindingMoveForward;
+	public static KeyBinding keyBindingMoveBackward;
+	public static KeyBinding keyBindingToggleMouse;
+	public static KeyBinding keyBindingToggleQuestListGui;
+	public static KeyBinding keyBindingToggleChasingQuestGui;
+	public static KeyBinding keyBindingToggleBike;
+	
+	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
+	private static final MouseHelper defaultMouseHelper = new MouseHelper();
+	
+	private static ClientEventHandler handler;
+	
+	public ClientEventHandler(BigxClientContext con) {
+		context = con;
+		handler = this;
+	}
 
-		public static ClientEventHandler getHandler() {
-			return handler;
+	public static ClientEventHandler getHandler() {
+		return handler;
+	}
+	
+	boolean enableLock = false, enableBike = true;
+	
+	private boolean showLeaderboard;
+	private int leaderboardSeconds;
+	
+	@SubscribeEvent
+	public void onLivingJump(LivingJumpEvent event) {
+		if (enableLock)
+			event.entity.motionY = 0;
+	}
+	
+	@SubscribeEvent
+	public void onKeyInput(KeyInputEvent event) {
+		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
+			Minecraft.getMinecraft().thePlayer.setSprinting(false);
 		}
-		
-		boolean enableLock = false, enableBike = true;
-		
-		private boolean showLeaderboard;
-		private int leaderboardSeconds;
-		
-		@SubscribeEvent
-		public void onLivingJump(LivingJumpEvent event) {
-			if (enableLock)
-				event.entity.motionY = 0;
+		if (keyBindingToggleMouse.isPressed()) {
+			enableLock = !enableLock;
+			System.out.println("Movement/Look lock: " + enableLock);
+			
 		}
-		
-		@SubscribeEvent
-		public void onKeyInput(KeyInputEvent event) {
-			if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
-				Minecraft.getMinecraft().thePlayer.setSprinting(false);
-			}
-			if (keyBindingToggleMouse.isPressed()) {
-				enableLock = !enableLock;
-				System.out.println("Movement/Look lock: " + enableLock);
+		if (keyBindingToggleBike.isPressed()) {
+			enableBike = !enableBike;
+			System.out.println("Toggle Bike Movement: " + enableBike);
+		}
+		if(keyBindingToggleQuestListGui.isPressed())
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+			
+			guiQuestlistManager.resetQuestReferences();
+			
+			try {
+				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
 				
-			}
-			if (keyBindingToggleBike.isPressed()) {
-				enableBike = !enableBike;
-				System.out.println("Toggle Bike Movement: " + enableBike);
-			}
-			if(keyBindingToggleQuestListGui.isPressed())
-			{
-				Minecraft mc = Minecraft.getMinecraft();
-				GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
-				
-				guiQuestlistManager.resetQuestReferences();
-				
-				try {
-					Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
-					
-					for(Quest quest : questlist)
-					{
-						guiQuestlistManager.addQuestReference(quest);
-					}
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				} catch (GuiQuestlistException e) {
-					e.printStackTrace();
+				for(Quest quest : questlist)
+				{
+					guiQuestlistManager.addQuestReference(quest);
 				}
-				
-				// TODO populate guiQuestlistManager with playerQuestManager quest list items
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (GuiQuestlistException e) {
+				e.printStackTrace();
+			}
+			
+			// TODO populate guiQuestlistManager with playerQuestManager quest list items
 //				String[] demoquestreq = new String[5];
 //				demoquestreq[0] = "quest[" + demo + "] req 1";
 //				demoquestreq[1] = "quest[" + demo + "] req 2";
@@ -130,42 +131,42 @@ public class ClientEventHandler {
 //				} catch (GuiQuestlistException e) {
 //					e.printStackTrace();
 //				}
-				
-				if(mc.currentScreen == null)
-					mc.displayGuiScreen(guiQuestlistManager);
-				System.out.println("Display Quest List");
-			}
-			if(keyBindingToggleChasingQuestGui.isPressed())
-			{
-				Minecraft mc = Minecraft.getMinecraft();
-				GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-				
-				guiChasingQuest.resetChasingQuestLevels();
-				
-				try {
-					for(int i=0; i<5; i++)
-					{
-						boolean islocked = false;
-						if(i>2)
-							islocked = true;
-						GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-						
-						guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-					}
-				} catch (NullPointerException e) {
-					e.printStackTrace();
-				} catch (GuiQuestlistException e) {
-					e.printStackTrace();
-				}
-				
-				if(mc.currentScreen == null)
-					mc.displayGuiScreen(guiChasingQuest);
-				System.out.println("Display Chasing Quest Gui");
-			}
+			
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(guiQuestlistManager);
+			System.out.println("Display Quest List");
 		}
-		
-		@SubscribeEvent
-		public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		if(keyBindingToggleChasingQuestGui.isPressed())
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+			
+			guiChasingQuest.resetChasingQuestLevels();
+			
+			try {
+				for(int i=0; i<5; i++)
+				{
+					boolean islocked = false;
+					if(i>2)
+						islocked = true;
+					GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+					
+					guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+				}
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (GuiQuestlistException e) {
+				e.printStackTrace();
+			}
+			
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(guiChasingQuest);
+			System.out.println("Display Chasing Quest Gui");
+		}
+	}
+	
+	@SubscribeEvent
+	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 //			if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
 //				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.wooden_sword))) {
 //					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.wooden_sword));
@@ -174,102 +175,102 @@ public class ClientEventHandler {
 //					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.gold_ingot));
 //				}
 //			}
-		}
-		
-		@SubscribeEvent
-		public void entityAttacked(LivingHurtEvent event)
+	}
+	
+	@SubscribeEvent
+	public void entityAttacked(LivingHurtEvent event)
+	{
+		if(event.entityLiving.getClass().getName().equals(EntityLiving.class.getName()))
 		{
-			if(event.entityLiving.getClass().getName().equals(EntityLiving.class.getName()))
+			EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
+			DamageSource attackSource = event.source;
+			if (attackSource.getSourceOfDamage() != null)
 			{
-				EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
-				DamageSource attackSource = event.source;
-				if (attackSource.getSourceOfDamage() != null)
+				EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
+				if(player.getHeldItem() != null)
 				{
-					EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
-					if(player.getHeldItem() != null)
+					ItemStack itemstack = player.getHeldItem();
+					if (itemstack.getDisplayName().equals("Baton"))
 					{
-						ItemStack itemstack = player.getHeldItem();
-						if (itemstack.getDisplayName().equals("Baton"))
-						{
-							NBTTagCompound tag = itemstack.getTagCompound();
-							int damageAmmount = tag.getInteger("Damage");
-							event.ammount = damageAmmount;
-						}
+						NBTTagCompound tag = itemstack.getTagCompound();
+						int damageAmmount = tag.getInteger("Damage");
+						event.ammount = damageAmmount;
 					}
 				}
 			}
 		}
-		
-		//Called whenever the client ticks
-		@SubscribeEvent
-		@SideOnly(Side.CLIENT)
-		public void onClientTick(TickEvent.ClientTickEvent event) {
-			if ((Minecraft.getMinecraft().thePlayer!=null) 
-					&& (event.phase==TickEvent.Phase.END)) {
-				if(context.getQuestManager() == null)
-				{
-					context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
-				}
-				
-				QuestManager playerQuestManager = context.getQuestManager();
-				
-				if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
-					try {
-						if (playerQuestManager.CheckActiveQuestCompleted()) {
-							// QUEST DONE!
-							for (ItemStack i : playerQuestManager.getActiveQuestRewards())
-								playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
-							playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
-							playerQuestManager.setActiveQuest("NONE");
-						}
-					} catch (QuestException e) {
-						e.printStackTrace();
+	}
+	
+	//Called whenever the client ticks
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		if ((Minecraft.getMinecraft().thePlayer!=null) 
+				&& (event.phase==TickEvent.Phase.END)) {
+			if(context.getQuestManager() == null)
+			{
+				context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
+			}
+			
+			QuestManager playerQuestManager = context.getQuestManager();
+			
+			if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
+				try {
+					if (playerQuestManager.CheckActiveQuestCompleted()) {
+						// QUEST DONE!
+						for (ItemStack i : playerQuestManager.getActiveQuestRewards())
+							playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
+						playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
+						playerQuestManager.setActiveQuest("NONE");
 					}
+				} catch (QuestException e) {
+					e.printStackTrace();
 				}
-				
-				// Handling Player Skills
-				EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-				// Degrade the current player's speed
+			}
+			
+			// Handling Player Skills
+			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			// Degrade the current player's speed
 //				BiGX.characterProperty.decreaseSpeedByTime();
 //				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
-				
-				//Dealing with locking keys
-				if (enableLock) {
-					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-					//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
-					p.jumpMovementFactor = 0f;
-					p.capabilities.setPlayerWalkSpeed(0f);
-					p.capabilities.setFlySpeed(0f);
-					p.setJumping(false);
-					p.motionX = 0; p.motionZ = 0;
-					p.setSprinting(false);
-					p.rotationPitch = 0f;
-					p.rotationYaw = 0f;
-				} else {
-					p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
-					Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
-					p.capabilities.setFlySpeed(0.05F);
-					p.capabilities.setPlayerWalkSpeed(0.1F);
-				}
-				
-				/*
-				 * CHARACTER MOVEMENT LOGIC
-				 */
-				{
-					float moveSpeed = context.getSpeed()/4;
-					double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-					double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-					if (enableBike)
-						p.setVelocity(xt, p.motionY, zt);
-				}  ////// END OF "CHARACTER MOVEMENT LOGIC"
-				
-				
-				// Detect if there is area changes where the player is in
-				ClientAreaEvent.detectAreaChange(p);
-				
-				if(ClientAreaEvent.isAreaChange())
-				{
-					ClientAreaEvent.unsetAreaChangeFlag();
+			
+			//Dealing with locking keys
+			if (enableLock) {
+				p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+				//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
+				p.jumpMovementFactor = 0f;
+				p.capabilities.setPlayerWalkSpeed(0f);
+				p.capabilities.setFlySpeed(0f);
+				p.setJumping(false);
+				p.motionX = 0; p.motionZ = 0;
+				p.setSprinting(false);
+				p.rotationPitch = 0f;
+				p.rotationYaw = 0f;
+			} else {
+				p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
+				Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
+				p.capabilities.setFlySpeed(0.05F);
+				p.capabilities.setPlayerWalkSpeed(0.1F);
+			}
+			
+			/*
+			 * CHARACTER MOVEMENT LOGIC
+			 */
+			{
+				float moveSpeed = context.getSpeed()/4;
+				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+				if (enableBike)
+					p.setVelocity(xt, p.motionY, zt);
+			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
+			
+			
+			// Detect if there is area changes where the player is in
+			ClientAreaEvent.detectAreaChange(p);
+			
+			if(ClientAreaEvent.isAreaChange())
+			{
+				ClientAreaEvent.unsetAreaChangeFlag();
 //					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
 //						if (showLeaderboard) {
 //							showLeaderboard = false;
@@ -291,81 +292,101 @@ public class ClientEventHandler {
 //					} else {
 //						showLeaderboard = true;
 //					}
-					if(ClientAreaEvent.previousArea != null){
-						if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
-							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
-							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
-							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
-							if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
-								GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
-						}
+				if(ClientAreaEvent.previousArea != null){
+					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
 					}
-					else
-						GuiMessageWindow.showMessage("Out of Continent Pangea...");
 				}
-				
-				if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
-				else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
-				else {
-					p.rotationPitch += context.getRotationY();
-				}
-				context.setRotationY(0);
-				
-				//* EYE TRACKING *//
-				//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
-				if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
-					p.rotationYaw += context.getRotationX() / 8;
-				}
-				else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
-					p.rotationYaw += context.getRotationX() / 4;
-				}
-				else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
-					p.rotationYaw += context.getRotationX() / 2;
-				}
-				else {
-					p.rotationYaw += context.getRotationX();
-				}
-				
-				context.setRotationX(0);
-				
-				// Obtain the block under the main character and set the resistance
-				Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
-				if (b==Blocks.air) {
-					b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
-				}
+				else
+					GuiMessageWindow.showMessage("Out of Continent Pangea...");
+			}
+			
+			if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
+			else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
+			else {
+				p.rotationPitch += context.getRotationY();
+			}
+			context.setRotationY(0);
+			
+			//* EYE TRACKING *//
+			//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
+			if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
+				p.rotationYaw += context.getRotationX() / 8;
+			}
+			else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
+				p.rotationYaw += context.getRotationX() / 4;
+			}
+			else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
+				p.rotationYaw += context.getRotationX() / 2;
+			}
+			else {
+				p.rotationYaw += context.getRotationX();
+			}
+			
+			context.setRotationX(0);
+			
+			// Obtain the block under the main character and set the resistance
+			Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
+			if (b==Blocks.air) {
+				b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
+			}
 
-				float new_resistance = context.resistance;
-				if (b!=null) {
-					if (context.resistances.containsKey(b)) {
-						new_resistance = context.resistances.get(b).getResistance();
-					}
-					else{
-						new_resistance = 1;
-					}
+			float new_resistance = context.resistance;
+			if (b!=null) {
+				if (context.resistances.containsKey(b)) {
+					new_resistance = context.resistances.get(b).getResistance();
 				}
-				if (new_resistance!=context.resistance) {
-					System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
-					context.resistance = new_resistance;
-					ByteBuffer buf = ByteBuffer.allocate(5);
-					buf.put((byte) 0x00);
-					buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
-					buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
-					BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
-							org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
-					BiGXPacketHandler.sendPacket(context.bigxclient, packet);
+				else{
+					new_resistance = 1;
 				}
 			}
+			if (new_resistance!=context.resistance) {
+				System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
+				context.resistance = new_resistance;
+				ByteBuffer buf = ByteBuffer.allocate(5);
+				buf.put((byte) 0x00);
+				buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
+				buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
+				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
+						org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
+				BiGXPacketHandler.sendPacket(context.bigxclient, packet);
+			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event) {
+		if (event.gui instanceof GuiMainMenu) {
+			GuiMenu gui = new GuiMenu();
+			gui.setContext(context);
+			event.gui = gui;
+		}
+	}
+	
+	/**
+	 * Pedaling to Mining
+	 * @param event
+	 */
+	@SubscribeEvent
+	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
+	{
+		float damage = (((float)this.context.rpm) / 10F) - 3F;
 		
-		@SubscribeEvent
-		public void onGuiOpen(GuiOpenEvent event) {
-			if (event.gui instanceof GuiMainMenu) {
-				GuiMenu gui = new GuiMenu();
-				gui.setContext(context);
-				event.gui = gui;
-			}
+		if((float)this.context.rpm != 0)
+		{
+			damage = (((float)this.context.rpm) / 10F) - 3F;
+			damage = damage<0?0:damage;
+			damage *= 2;
+			damage += event.originalSpeed;
+			damage = damage>=15?15:damage;
+			event.newSpeed = damage;
 		}
+	}
 }

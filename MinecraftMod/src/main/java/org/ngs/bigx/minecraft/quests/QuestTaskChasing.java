@@ -832,11 +832,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		Minecraft mc = Minecraft.getMinecraft();
 		
-		if(mc.getMinecraft().objectMouseOver != null) {
-			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
-			}
-		}
+//		if(mc.getMinecraft().objectMouseOver != null) {
+//			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+//				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
+//			}
+//		}
+		player.swingItem();
 	}
 
 
