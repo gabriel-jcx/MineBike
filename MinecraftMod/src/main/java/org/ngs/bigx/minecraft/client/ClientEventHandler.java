@@ -55,6 +55,7 @@ public class ClientEventHandler {
 	public static KeyBinding keyBindingToggleQuestListGui;
 	public static KeyBinding keyBindingToggleChasingQuestGui;
 	public static KeyBinding keyBindingToggleBike;
+	public static KeyBinding keyBindingToggleBikeToMining;
 	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
@@ -70,7 +71,7 @@ public class ClientEventHandler {
 		return handler;
 	}
 	
-	boolean enableLock = false, enableBike = true;
+	boolean enableLock = false, enableBike = true, enableMining = false;
 	
 	private boolean showLeaderboard;
 	private int leaderboardSeconds;
@@ -89,6 +90,11 @@ public class ClientEventHandler {
 		if (keyBindingToggleMouse.isPressed()) {
 			enableLock = !enableLock;
 			System.out.println("Movement/Look lock: " + enableLock);
+			
+		}
+		if (keyBindingToggleBikeToMining.isPressed()) {
+			enableMining = !enableMining;
+			System.out.println("enableMining: " + enableMining);
 			
 		}
 		if (keyBindingToggleBike.isPressed()) {
@@ -260,7 +266,7 @@ public class ClientEventHandler {
 				float moveSpeed = context.getSpeed()/4;
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				if (enableBike)
+				if ( (enableBike) & (!enableMining) )
 					p.setVelocity(xt, p.motionY, zt);
 			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 			
@@ -377,6 +383,9 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
+		if(!enableMining)
+			return;
+		
 		float damage = (((float)this.context.rpm) / 10F) - 3F;
 		
 		if((float)this.context.rpm != 0)

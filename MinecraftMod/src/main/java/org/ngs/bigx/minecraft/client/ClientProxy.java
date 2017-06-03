@@ -58,9 +58,11 @@ public class ClientProxy extends CommonProxy {
     	ClientEventHandler.keyBindingToggleQuestListGui = new KeyBinding("org.ngs.bigx.keyBindingToggleQuestListGui.desc", Keyboard.KEY_K, "QuestListGui");
     	ClientEventHandler.keyBindingToggleChasingQuestGui = new KeyBinding("org.ngs.bigx.keyBindingToggleChasingQuestGui.desc", Keyboard.KEY_J, "ChasingQuestGui");
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("", Keyboard.KEY_MINUS, "ToggleBike");
+    	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("org.ngs.bigx.keyBindingToggleBikeToMining.desc", Keyboard.KEY_M, "ToggleBikeMining");
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleQuestListGui);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleChasingQuestGui);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBikeToMining);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());
