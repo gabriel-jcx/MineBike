@@ -235,137 +235,137 @@ public class ClientEventHandler {
 					e.printStackTrace();
 				}
 			}
-		}
 		
-		// Handling Player Skills
-		EntityPlayer p = Minecraft.getMinecraft().thePlayer;
-		// Degrade the current player's speed
-//					BiGX.characterProperty.decreaseSpeedByTime();
-//					p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
-		
-		//Dealing with locking keys
-		if (enableLock) {
-			p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
-			//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
-			p.jumpMovementFactor = 0f;
-			p.capabilities.setPlayerWalkSpeed(0f);
-			p.capabilities.setFlySpeed(0f);
-			p.setJumping(false);
-			p.motionX = 0; p.motionZ = 0;
-			p.setSprinting(false);
-			p.rotationPitch = 0f;
-			p.rotationYaw = 0f;
-		} else {
-			p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
-			Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
-			p.capabilities.setFlySpeed(0.05F);
-			p.capabilities.setPlayerWalkSpeed(0.1F);
-		}
-		
-		/*
-		 * CHARACTER MOVEMENT LOGIC
-		 */
-		{
-			float moveSpeed = context.getSpeed()/4;
-			double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-			double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-			if ( (enableBike) & (!enableMining) )
-				p.setVelocity(xt, p.motionY, zt);
-		}  ////// END OF "CHARACTER MOVEMENT LOGIC"
-		
-		
-		// Detect if there is area changes where the player is in
-		ClientAreaEvent.detectAreaChange(p);
-		
-		if(ClientAreaEvent.isAreaChange())
-		{
-			ClientAreaEvent.unsetAreaChangeFlag();
-//						if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
-//							if (showLeaderboard) {
-//								showLeaderboard = false;
-//								final Timer leaderboardTimer = new Timer();
-//								
-//								final TimerTask leaderboardTimerTask = new TimerTask() {
-//									@Override
-//									public void run() {
-//										GuiLeaderBoard.showLeaderBoard(true);
-//										if (leaderboardSeconds++ >= 5) {
-//											GuiLeaderBoard.showLeaderBoard(false);
-//											leaderboardSeconds = 0;
-//											leaderboardTimer.cancel();
-//										}
-//									}
-//								};
-//								leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
-//							}
-//						} else {
-//							showLeaderboard = true;
-//						}
-			if(ClientAreaEvent.previousArea != null){
-				if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
+			// Handling Player Skills
+			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			// Degrade the current player's speed
+	//					BiGX.characterProperty.decreaseSpeedByTime();
+	//					p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+			
+			//Dealing with locking keys
+			if (enableLock) {
+				p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+				//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
+				p.jumpMovementFactor = 0f;
+				p.capabilities.setPlayerWalkSpeed(0f);
+				p.capabilities.setFlySpeed(0f);
+				p.setJumping(false);
+				p.motionX = 0; p.motionZ = 0;
+				p.setSprinting(false);
+				p.rotationPitch = 0f;
+				p.rotationYaw = 0f;
+			} else {
+				p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
+				Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
+				p.capabilities.setFlySpeed(0.05F);
+				p.capabilities.setPlayerWalkSpeed(0.1F);
+			}
+			
+			/*
+			 * CHARACTER MOVEMENT LOGIC
+			 */
+			{
+				float moveSpeed = context.getSpeed()/4;
+				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
+				if ( (enableBike) & (!enableMining) )
+					p.setVelocity(xt, p.motionY, zt);
+			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
+			
+			
+			// Detect if there is area changes where the player is in
+			ClientAreaEvent.detectAreaChange(p);
+			
+			if(ClientAreaEvent.isAreaChange())
+			{
+				ClientAreaEvent.unsetAreaChangeFlag();
+	//						if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
+	//							if (showLeaderboard) {
+	//								showLeaderboard = false;
+	//								final Timer leaderboardTimer = new Timer();
+	//								
+	//								final TimerTask leaderboardTimerTask = new TimerTask() {
+	//									@Override
+	//									public void run() {
+	//										GuiLeaderBoard.showLeaderBoard(true);
+	//										if (leaderboardSeconds++ >= 5) {
+	//											GuiLeaderBoard.showLeaderBoard(false);
+	//											leaderboardSeconds = 0;
+	//											leaderboardTimer.cancel();
+	//										}
+	//									}
+	//								};
+	//								leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
+	//							}
+	//						} else {
+	//							showLeaderboard = true;
+	//						}
+				if(ClientAreaEvent.previousArea != null){
+					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
+					}
+				}
+				else
+					GuiMessageWindow.showMessage("Out of Continent Pangea...");
+			}
+			
+			if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
+			else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
+			else {
+				p.rotationPitch += context.getRotationY();
+			}
+			context.setRotationY(0);
+			
+			//* EYE TRACKING *//
+			//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
+			if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
+				p.rotationYaw += context.getRotationX() / 8;
+			}
+			else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
+				p.rotationYaw += context.getRotationX() / 4;
+			}
+			else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
+				p.rotationYaw += context.getRotationX() / 2;
+			}
+			else {
+				p.rotationYaw += context.getRotationX();
+			}
+			
+			context.setRotationX(0);
+			
+			// Obtain the block under the main character and set the resistance
+			Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
+			if (b==Blocks.air) {
+				b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
+			}
+	
+			float new_resistance = context.resistance;
+			if (b!=null) {
+				if (context.resistances.containsKey(b)) {
+					new_resistance = context.resistances.get(b).getResistance();
+				}
+				else{
+					new_resistance = 1;
 				}
 			}
-			else
-				GuiMessageWindow.showMessage("Out of Continent Pangea...");
-		}
-		
-		if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
-		else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
-		else {
-			p.rotationPitch += context.getRotationY();
-		}
-		context.setRotationY(0);
-		
-		//* EYE TRACKING *//
-		//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
-		if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
-			p.rotationYaw += context.getRotationX() / 8;
-		}
-		else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
-			p.rotationYaw += context.getRotationX() / 4;
-		}
-		else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
-			p.rotationYaw += context.getRotationX() / 2;
-		}
-		else {
-			p.rotationYaw += context.getRotationX();
-		}
-		
-		context.setRotationX(0);
-		
-		// Obtain the block under the main character and set the resistance
-		Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
-		if (b==Blocks.air) {
-			b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
-		}
-
-		float new_resistance = context.resistance;
-		if (b!=null) {
-			if (context.resistances.containsKey(b)) {
-				new_resistance = context.resistances.get(b).getResistance();
+			if (new_resistance!=context.resistance) {
+				System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
+				context.resistance = new_resistance;
+				ByteBuffer buf = ByteBuffer.allocate(5);
+				buf.put((byte) 0x00);
+				buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
+				buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
+				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
+						org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
+				BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 			}
-			else{
-				new_resistance = 1;
-			}
-		}
-		if (new_resistance!=context.resistance) {
-			System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
-			context.resistance = new_resistance;
-			ByteBuffer buf = ByteBuffer.allocate(5);
-			buf.put((byte) 0x00);
-			buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
-			buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
-			BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
-					org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
-			BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 		}
 	}
 	
