@@ -217,10 +217,11 @@ public class ClientEventHandler {
 					try {
 						if (playerQuestManager.CheckActiveQuestCompleted()) {
 							// QUEST DONE!
-							for (ItemStack i : playerQuestManager.getActiveQuestRewards())
-								playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
+							if (playerQuestManager.getActiveQuestRewards() != null)
+								for (ItemStack i : playerQuestManager.getActiveQuestRewards())
+									playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
 							playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
-							playerQuestManager.setActiveQuest("NONE");
+							playerQuestManager.setActiveQuest(Quest.QUEST_ID_STRING_NONE);
 						}
 					} catch (QuestException e) {
 						e.printStackTrace();

@@ -29,8 +29,12 @@ import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
+import org.ngs.bigx.minecraft.npcs.NpcLocations;
+import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTask;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -51,6 +55,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -66,6 +71,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
@@ -228,6 +234,30 @@ public class CommonEventHandler {
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
 		if (event.item.getDisplayName().contains("Sword"))
 			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
+	}
+	
+	@SubscribeEvent
+	public void onAttackEntityEvent(AttackEntityEvent event) {
+		System.out.println("COMMON EVENT ATTAAAACK");
+		if (event.target.worldObj.isRemote){
+			if (event.target.toString().contains("Scientist"))
+				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
+			if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
+				System.out.println("Attacking during Tutorial Quest!");
+				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
+				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
+//				if (event.target.toString().contains("Training Bot") || event.target.toString().contains("Thief")){
+//					System.out.println("Hitting bad guy!");	
+//				}
+			}
+		}
+//		if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
+//			deductThiefHealth(null);
+//		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))
+//			GuiMessageWindow.showMessage("Scientist: Stop that...");
+//		else
+//			deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 	}
 	
 	
