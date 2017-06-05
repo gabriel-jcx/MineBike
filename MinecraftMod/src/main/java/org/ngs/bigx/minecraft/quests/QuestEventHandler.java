@@ -289,11 +289,14 @@ public class QuestEventHandler {
 			e.printStackTrace();
 		}
 		
+		
 		if(BiGX.instance().clientContext == null)
 			return;
 		
+		
 		if(BiGX.instance().clientContext.getQuestManager() == null)
 			return;
+		
 		
 		try {
 			BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
