@@ -123,9 +123,14 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 			init();
 			
 			while(isActive)
-				if(player.worldObj.isRemote){
-					handlePlayTimeOnClient();	
+			{
+				try {
+					questManager.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+			}
 		}
 	}
 	

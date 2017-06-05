@@ -143,31 +143,34 @@ public class QuestEventHandler {
 		if(tickCountOneSecond >= 50)
 		{
 			tickCountOneSecond = 0;
-
-			if(questEventCheckCompleteList != null)
+			
+			if (!event.player.worldObj.isRemote)
 			{
-				synchronized (questEventCheckCompleteList) {
-					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteList)
-					{
-						if(questEventCheckComplete != null)
-							questEventCheckComplete.onCheckCompleteEvent();
+				if(questEventCheckCompleteList != null)
+				{
+					synchronized (questEventCheckCompleteList) {
+						for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteList)
+						{
+							if(questEventCheckComplete != null)
+								questEventCheckComplete.onCheckCompleteEvent();
+						}
 					}
-				}
-				synchronized (questEventCheckCompleteListAdd) {
-					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListAdd)
-					{
-						if(questEventCheckComplete != null)
-							questEventCheckCompleteList.add(questEventCheckComplete);
+					synchronized (questEventCheckCompleteListAdd) {
+						for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListAdd)
+						{
+							if(questEventCheckComplete != null)
+								questEventCheckCompleteList.add(questEventCheckComplete);
+						}
+						questEventCheckCompleteListAdd.clear();
 					}
-					questEventCheckCompleteListAdd.clear();
-				}
-				synchronized (questEventCheckCompleteListDel) {
-					for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListDel)
-					{
-						if(questEventCheckComplete != null)
-							questEventCheckCompleteList.remove(questEventCheckComplete);
+					synchronized (questEventCheckCompleteListDel) {
+						for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListDel)
+						{
+							if(questEventCheckComplete != null)
+								questEventCheckCompleteList.remove(questEventCheckComplete);
+						}
+						questEventCheckCompleteListDel.clear();
 					}
-					questEventCheckCompleteListDel.clear();
 				}
 			}
 		}

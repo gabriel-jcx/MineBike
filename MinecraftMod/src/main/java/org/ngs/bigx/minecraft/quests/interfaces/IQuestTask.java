@@ -7,7 +7,7 @@ public interface IQuestTask {
 	/**
 	 * Returns whether or not this QuestEvent is complete (the only thing the Quest needs to know) 
 	 */
-	public boolean IsComplete();
+	public boolean isCompleted();
 	public void CheckComplete();
 	public boolean IsMainTask();
 	public String getTaskDescription();

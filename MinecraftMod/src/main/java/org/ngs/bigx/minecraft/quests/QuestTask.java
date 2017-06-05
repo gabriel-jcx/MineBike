@@ -49,11 +49,6 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 		return this.isRequired;
 	}
 	
-	public boolean IsComplete()
-	{
-		return this.completed;
-	}
-	
 	public void activateTask()
 	{
 		this.isActive = true;
