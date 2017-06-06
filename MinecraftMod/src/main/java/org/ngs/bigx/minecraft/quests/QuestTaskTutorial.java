@@ -16,7 +16,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
@@ -44,31 +46,55 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	@Override
 	public void CheckComplete() {
 		System.out.println("Checking Quest as Complete");
-		completed = true;//completed = isAllItemPossessed();
+		completed = isAllItemPossessed();
+	}
+	
+	public static boolean checkItems(IInventory inventory, Item item)
+	{
+		boolean hasItems = false;
+		for (int slot = 0; slot < inventory.getSizeInventory(); ++slot)
+		{
+			ItemStack itemstack = inventory.getStackInSlot(slot);
+			if (itemstack != null && itemstack.getItem() == item)
+			{
+				hasItems = true;
+				break;
+			}
+		}
+		return hasItems;
 	}
 	
 	public boolean isAllItemPossessed()
 	{
-		System.out.println("Checking to see if player has all the items...");
+		int count = 0;
+
 		boolean allItemPossessed = true;
 		
-		// CHECK IF THE PLAYER HAS THE FOLLOWING ITEMS
-		if (!player.inventory.hasItemStack(new ItemStack(Item.getItemById(50)))){//Item.getItemFromBlock(Block.getBlockFromName("TORCH"))))) {
-			System.out.print("\nPlayer Doesn't have Torch");
+		if(!checkItems(player.inventory, Item.getItemById(Block.getIdFromBlock(Blocks.torch))))
+		{
+			System.out.println("\nPlayer Doesn't have Torch");
 			allItemPossessed &= false;
 		}
-		if(!player.inventory.hasItem(Items.potionitem)){
-			System.out.print("\nPlayer Doesn't have Potion");
+		
+		if(!checkItems(player.inventory, Item.getItemById(266)))
+		{
+			System.out.println("\nPlayer Doesn't have Gold");
 			allItemPossessed &= false;
 		}
-		if(!player.inventory.hasItem(Items.gold_ingot)){
-			System.out.print("\nPlayer Doesn't have Gold");
+		
+		if(!checkItems(player.inventory, Item.getItemById(268)))
+		{
+			System.out.println("\nPlayer Doesn't have Sword");
 			allItemPossessed &= false;
 		}
-		if(!player.inventory.hasItem(Items.wooden_sword)){
-			System.out.print("\nPlayer Doesn't have Sword");
+		
+		if(!checkItems(player.inventory, Item.getItemById(373)))
+		{
+			System.out.println("\nPlayer Doesn't have Potion");
 			allItemPossessed &= false;
 		}
+
+		System.out.println("tutorial doen["+allItemPossessed+"] count[" + (count++) + "]");
 		
 		System.out.println("Does Player have all the items?: " + allItemPossessed);
 		return allItemPossessed;
@@ -97,9 +123,14 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 			init();
 			
 			while(isActive)
-				if(player.worldObj.isRemote){
-					handlePlayTimeOnClient();	
+			{
+				try {
+					questManager.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
+			}
 		}
 	}
 	

@@ -88,7 +88,7 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithScientist(EntityPlayer player, EntityInteractEvent event){
-//		System.out.println("Interacting with Scientist");
+		System.out.println("Interacting with Scientist");
 		try{
 			System.out.println("Checking remote 1: " + player.worldObj.isRemote);
 			if (BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null){
@@ -130,23 +130,21 @@ public class NpcEvents {
 			}
 			else{
 				System.out.println("Checking remote 3: " + player.worldObj.isRemote);
-				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+				Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-				if (tutorialTask.isAllItemPossessed()){
-					tutorialTask.CheckComplete();
-					System.out.println("Tutorial Complete: " + tutorialTask.IsComplete());
-				}
-				if (!BiGX.instance().clientContext.getQuestManager().CheckActiveQuestCompleted() && player.worldObj.isRemote){
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
-				}
-				else{
+				if (tutorialTask == null){
+					System.out.println("Tutorial Completed");
+					
 					if (player.worldObj.isRemote){
 						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
 						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);	
 					}
 					System.out.println("Checking remote 4: " +player.worldObj.isRemote);
 					BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
-				}	
+				}
+				else if (player.worldObj.isRemote){
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
+				}
 			}
 		}catch (QuestException e){
 			e.printStackTrace();

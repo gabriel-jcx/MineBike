@@ -80,7 +80,7 @@ public class Quest implements Runnable {
 		
 		for(QuestTask task : this.tasks)
 		{
-			if(task.IsComplete())
+			if(task.isCompleted())
 				countTaskDone++;
 		}
 		
@@ -119,7 +119,7 @@ public class Quest implements Runnable {
 	
 	public IQuestTask getCurrentQuestTask() {
 		for (IQuestTask e : this.tasks) {
-			if (!e.IsComplete())
+			if (!e.isCompleted())
 				return e;
 		}
 		return null;
@@ -127,7 +127,7 @@ public class Quest implements Runnable {
 	
 	public boolean IsComplete() {
 		for (IQuestTask questTask : this.tasks) {
-			if (!questTask.IsComplete() && (questTask.IsMainTask()) )
+			if (!questTask.isCompleted() && (questTask.IsMainTask()) )
 			{
 				return false;
 			}
