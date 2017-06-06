@@ -129,7 +129,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
-		
+
 		this.levelSys = levelSys;
 		player = p;
 		ws = worldServer;

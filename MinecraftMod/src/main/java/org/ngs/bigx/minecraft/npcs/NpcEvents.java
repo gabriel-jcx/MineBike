@@ -8,8 +8,10 @@ import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskTalk;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -42,8 +44,8 @@ public class NpcEvents {
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
 			InteractWithScientist(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
-//			InteractWithScientist(player, event);
-			System.out.println("BOT ACTIVATED");
+			InteractWithTrainingBot(player, event);
+			
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
@@ -88,7 +90,9 @@ public class NpcEvents {
 	private static void InteractWithScientist(EntityPlayer player, EntityInteractEvent event){
 //		System.out.println("Interacting with Scientist");
 		try{
+			System.out.println("Checking remote 1: " + player.worldObj.isRemote);
 			if (BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null){
+				System.out.println("Checking remote 2: " + player.worldObj.isRemote);
 				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 				Quest quest;
 				if (player.worldObj.isRemote){
@@ -104,19 +108,20 @@ public class NpcEvents {
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
 				
 					//Give quest on Client Side
-					System.out.println("InteractWithFather Quest Generation: CLIENT");
-					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, "Collect Items", "Collect all the items. All of them.", 
-							BiGX.instance().clientContext.getQuestManager());
+					System.out.println("InteractWithScientist Quest Generation: CLIENT");
+					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
+							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().clientContext.getQuestManager());
 					quest.addTasks(new QuestTaskTutorial(BiGX.instance().clientContext.getQuestManager(), player, 
 							(EntityCustomNpc) event.target));
+//					quest.addTasks(new QuestTaskTalk(BiGX.instance().clientContext.getQuestManager(), player,
+//							(EntityCustomNpc) event.target));
 					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 						BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
 				}
 				else{
-
-					System.out.println("InteractWithFather Quest Generation: SERVER");
-					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, "Collect Items", "Collect all the items. All of them.", 
-							BiGX.instance().serverContext.getQuestManager());
+					System.out.println("InteractWithScientist Quest Generation: SERVER");
+					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
+							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().serverContext.getQuestManager());
 					quest.addTasks(new QuestTaskTutorial(BiGX.instance().serverContext.getQuestManager(), player, 
 							(EntityCustomNpc) event.target));
 					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
@@ -124,20 +129,32 @@ public class NpcEvents {
 				}
 			}
 			else{
-				if (player.worldObj.isRemote){
-					if (!BiGX.instance().clientContext.getQuestManager().CheckActiveQuestCompleted()){
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
-					}
-					else{
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);
-						BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
-					}	
+				System.out.println("Checking remote 3: " + player.worldObj.isRemote);
+				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
+				if (tutorialTask.isAllItemPossessed()){
+					tutorialTask.CheckComplete();
+					System.out.println("Tutorial Complete: " + tutorialTask.IsComplete());
 				}
+				if (!BiGX.instance().clientContext.getQuestManager().CheckActiveQuestCompleted() && player.worldObj.isRemote){
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
+				}
+				else{
+					if (player.worldObj.isRemote){
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);	
+					}
+					System.out.println("Checking remote 4: " +player.worldObj.isRemote);
+					BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
+				}	
 			}
 		}catch (QuestException e){
 			e.printStackTrace();
 		}
+	}
+	
+	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
+		GuiMessageWindow.showMessage("Press [button] to hit the bot.");//BiGXTextBoxDialogue.scientist1);
 	}
 	
 	private static void InteractWithWeaponsMerchant(EntityPlayer player, EntityInteractEvent event){
@@ -175,8 +192,6 @@ public class NpcEvents {
 		if (traderInterface.inventorySold.items.isEmpty())
 			createPotionSold(traderInterface.inventorySold);
 	}
-	
-	///////////Blacksmith Market
 	
 	
 	//////Private Helper Methods: Traders

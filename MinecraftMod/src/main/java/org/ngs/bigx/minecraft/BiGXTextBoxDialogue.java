@@ -68,6 +68,9 @@ public class BiGXTextBoxDialogue {
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	
 	// Tutorial Message
+	public static final String tutorialQuestTitle = "Collect the Assigned Items";
+	public static final String tutorialQuestDescription = "1 Regeneration Potion\n1 Gold Ingot\n1Wooden Sword\n1 Torch";
+	
 	public static final String scientist1 = "Scientist: There you are!\nWe need to begin your\ntraining.";
 	public static final String scientist2 = "Scientist: We are sending\nyou into the past with\nyour dad.";
 	public static final String scientist3 = "Scientist: The Demon King\nwent there to obtain\nThe Ultimate Power.";

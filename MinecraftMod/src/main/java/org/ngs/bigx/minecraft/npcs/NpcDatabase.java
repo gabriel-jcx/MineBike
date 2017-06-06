@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class NpcDatabase {
@@ -42,26 +43,30 @@ public class NpcDatabase {
 		else if (dimID == 102)
 			for (Map.Entry<String, Vec3> item : npcsTutorial.entrySet())
 				toReturn.add(item.getKey());
-		System.out.println(toReturn);
+//		System.out.println(toReturn);
 		return toReturn;
 	}
 	
 	public static void spawn(WorldServer world, String name, int dimID) {
-		System.out.println("System is remote in DIMID " + dimID + ": " + world.isRemote);
+//		System.out.println("System is remote in DIMID " + dimID + ": " + world.isRemote);
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(0), name);
 //			npc.setPosition(npcs.get(name).xCoord, (float)npcs.get(name).yCoord, npcs.get(name).zCoord);
 		}
 		else if (dimID == 102){
-			System.out.println("[BiGX] NPC SPAWN FUNCTION [" + name + "]");
+//			System.out.println("[BiGX] NPC SPAWN FUNCTION [" + name + "]");
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, (int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name);
 //			npc.setPosition(npcsTutorial.get(name).xCoord, (float)npcsTutorial.get(name).yCoord, npcsTutorial.get(name).zCoord);
 		}
 		if (npc != null){
-			System.out.println("NPC Placed!");
+//			System.out.println("NPC Placed!");
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
+			if (name.contains("Training Bot")){
+				npc.ai.stopAndInteract = false;
+				npc.setHealth(10);
+			}
 		}
 	}
 	
@@ -76,8 +81,8 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/TraderSteve.png";
 		if (name.contains("Scientist"))
 			return "customnpcs:textures/entity/humanmale/DoctorSteve.png";
-//		if (name.contains("Training Bot"))
-//			return "customnpcs:textures/entity/humanmale/TraderSteve.png";//"customnpcs:textures/entity/humanmale/RobesBrownSteve.png";
+		if (name.contains("Training Bot"))
+			return "customnpcs:textures/entity/humanmale/RobesBrownSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/Steve.png";
 	}

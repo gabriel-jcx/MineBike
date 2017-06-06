@@ -55,6 +55,7 @@ public class ClientEventHandler {
 	public static KeyBinding keyBindingToggleQuestListGui;
 	public static KeyBinding keyBindingToggleChasingQuestGui;
 	public static KeyBinding keyBindingToggleBike;
+	public static KeyBinding keyBindingToggleBikeToMining;
 	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
@@ -70,7 +71,7 @@ public class ClientEventHandler {
 		return handler;
 	}
 	
-	boolean enableLock = false, enableBike = true;
+	boolean enableLock = false, enableBike = true, enableMining = false;
 	
 	private boolean showLeaderboard;
 	private int leaderboardSeconds;
@@ -89,6 +90,11 @@ public class ClientEventHandler {
 		if (keyBindingToggleMouse.isPressed()) {
 			enableLock = !enableLock;
 			System.out.println("Movement/Look lock: " + enableLock);
+			
+		}
+		if (keyBindingToggleBikeToMining.isPressed()) {
+			enableMining = !enableMining;
+			System.out.println("enableMining: " + enableMining);
 			
 		}
 		if (keyBindingToggleBike.isPressed()) {
@@ -204,7 +210,8 @@ public class ClientEventHandler {
 	//Called whenever the client ticks
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onClientTick(TickEvent.ClientTickEvent event) {
+	public void onClientTick(TickEvent.ClientTickEvent event)
+	{
 		if ((Minecraft.getMinecraft().thePlayer!=null) 
 				&& (event.phase==TickEvent.Phase.END)) {
 			if(context.getQuestManager() == null)
@@ -218,21 +225,22 @@ public class ClientEventHandler {
 				try {
 					if (playerQuestManager.CheckActiveQuestCompleted()) {
 						// QUEST DONE!
-						for (ItemStack i : playerQuestManager.getActiveQuestRewards())
-							playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
+						if (playerQuestManager.getActiveQuestRewards() != null)
+							for (ItemStack i : playerQuestManager.getActiveQuestRewards())
+								playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
 						playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
-						playerQuestManager.setActiveQuest("NONE");
+						playerQuestManager.setActiveQuest(Quest.QUEST_ID_STRING_NONE);
 					}
 				} catch (QuestException e) {
 					e.printStackTrace();
 				}
 			}
-			
+		
 			// Handling Player Skills
 			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 			// Degrade the current player's speed
-//				BiGX.characterProperty.decreaseSpeedByTime();
-//				p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+	//					BiGX.characterProperty.decreaseSpeedByTime();
+	//					p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
 			
 			//Dealing with locking keys
 			if (enableLock) {
@@ -260,7 +268,7 @@ public class ClientEventHandler {
 				float moveSpeed = context.getSpeed()/4;
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				if (enableBike)
+				if ( (enableBike) & (!enableMining) )
 					p.setVelocity(xt, p.motionY, zt);
 			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 			
@@ -271,27 +279,27 @@ public class ClientEventHandler {
 			if(ClientAreaEvent.isAreaChange())
 			{
 				ClientAreaEvent.unsetAreaChangeFlag();
-//					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
-//						if (showLeaderboard) {
-//							showLeaderboard = false;
-//							final Timer leaderboardTimer = new Timer();
-//							
-//							final TimerTask leaderboardTimerTask = new TimerTask() {
-//								@Override
-//								public void run() {
-//									GuiLeaderBoard.showLeaderBoard(true);
-//									if (leaderboardSeconds++ >= 5) {
-//										GuiLeaderBoard.showLeaderBoard(false);
-//										leaderboardSeconds = 0;
-//										leaderboardTimer.cancel();
-//									}
-//								}
-//							};
-//							leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
-//						}
-//					} else {
-//						showLeaderboard = true;
-//					}
+	//						if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
+	//							if (showLeaderboard) {
+	//								showLeaderboard = false;
+	//								final Timer leaderboardTimer = new Timer();
+	//								
+	//								final TimerTask leaderboardTimerTask = new TimerTask() {
+	//									@Override
+	//									public void run() {
+	//										GuiLeaderBoard.showLeaderBoard(true);
+	//										if (leaderboardSeconds++ >= 5) {
+	//											GuiLeaderBoard.showLeaderBoard(false);
+	//											leaderboardSeconds = 0;
+	//											leaderboardTimer.cancel();
+	//										}
+	//									}
+	//								};
+	//								leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
+	//							}
+	//						} else {
+	//							showLeaderboard = true;
+	//						}
 				if(ClientAreaEvent.previousArea != null){
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
 						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
@@ -337,7 +345,7 @@ public class ClientEventHandler {
 			if (b==Blocks.air) {
 				b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
 			}
-
+	
 			float new_resistance = context.resistance;
 			if (b!=null) {
 				if (context.resistances.containsKey(b)) {
@@ -377,6 +385,9 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
+		if(!enableMining)
+			return;
+		
 		float damage = (((float)this.context.rpm) / 10F) - 3F;
 		
 		if((float)this.context.rpm != 0)
