@@ -4,6 +4,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
@@ -118,7 +119,12 @@ public class NpcEvents {
 					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 						BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
 				}
-				else{
+			}
+			else if (BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null){
+				System.out.println("Checking remote 2: " + player.worldObj.isRemote);
+				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+				Quest quest;
+				if (!player.worldObj.isRemote){
 					System.out.println("InteractWithScientist Quest Generation: SERVER");
 					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
 							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().serverContext.getQuestManager());
@@ -130,6 +136,7 @@ public class NpcEvents {
 			}
 			else{
 				System.out.println("Checking remote 3: " + player.worldObj.isRemote);
+				BigxServerContext testContext = BiGX.instance().serverContext;;
 				Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
 				if (tutorialTask == null){
