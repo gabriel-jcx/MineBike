@@ -152,7 +152,7 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
-		GuiMessageWindow.showMessage("Press [button] to hit the bot.");//BiGXTextBoxDialogue.scientist1);
+		GuiMessageWindow.showMessage("Press LEFT TRIGGER\nto hit the bot.");//BiGXTextBoxDialogue.scientist1);
 	}
 	
 	private static void InteractWithWeaponsMerchant(EntityPlayer player, EntityInteractEvent event){

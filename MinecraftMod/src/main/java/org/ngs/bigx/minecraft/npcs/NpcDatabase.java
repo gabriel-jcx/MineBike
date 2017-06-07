@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.ngs.bigx.utility.NpcCommand;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -64,8 +66,10 @@ public class NpcDatabase {
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
 			if (name.contains("Training Bot")){
+				System.out.println("Altering Training Bot");
 				npc.ai.stopAndInteract = false;
-				npc.setHealth(10);
+//				npc.setHealth(10);
+				npc.inventory.setInventorySlotContents(0, new ItemStack(Item.getItemById(50)));
 			}
 		}
 	}

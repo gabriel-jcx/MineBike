@@ -172,27 +172,31 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	}
 	
 	public void hitEntity(EntityPlayer player, EntityLivingBase target){
-		if (BiGXEventTriggers.checkEntityInArea(target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))
+		if (BiGXEventTriggers.checkEntityInArea(target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
 			if (player.inventory.mainInventory[player.inventory.currentItem] != null)
-				deductThiefHealth(player.inventory.mainInventory[player.inventory.currentItem].getItem());
+				deductThiefHealth(player.inventory.mainInventory[player.inventory.currentItem].getItem(), player.worldObj.isRemote);
 			else
-				deductThiefHealth(null);
-		if (botHealth <= 0){
-//			target.entityDropItem(new ItemStack(Item.getItemById(50)), 1);
-			target.setDead();
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(50)));
+				deductThiefHealth(null, player.worldObj.isRemote);
+
+			if (botHealth <= 0){
+				if (player.worldObj.isRemote)
+					GuiMessageWindow.showMessage("You got the torch!");
+				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(50)));
+				botHealth = 10;
+			}
 		}
 	}
 	
 	
-	private void deductThiefHealth(Item itemOnHands)
+	private void deductThiefHealth(Item itemOnHands, boolean isRemote)
 	{
 		int deduction = 1;
 		if (itemOnHands != null && itemOnHands.getUnlocalizedName().equals("item.swordWood"))
 				deduction = 2;
-	
+	 
 		botHealth -= deduction;
 		
-		GuiDamage.addDamageText(deduction, 255, 10, 10);
+		if (isRemote)
+			GuiDamage.addDamageText(deduction, 255, 10, 10);
 	}
 }

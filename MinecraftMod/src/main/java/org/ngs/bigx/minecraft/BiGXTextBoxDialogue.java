@@ -85,7 +85,7 @@ public class BiGXTextBoxDialogue {
 	public static final String scientistPotionInstructions = "Drink the potion in the chest\nto teleport to the past.";
 	
 	public static final String fireRoomEntrance = "That Minion Bot must\nhave what I need...";
-	public static final String earthRoomEntrance = "I might be able to\ncraft what I need...";
+	public static final String earthRoomEntrance = "I might be able to\nbreak that tree...";
 	public static final String waterRoomEntrance = "What I need might be\nin that chest...";
 	public static final String airRoomEntrance = "There has to be a way\nto get over there...";
 	
