@@ -82,7 +82,7 @@ public class BiGXEventTriggers {
 		key.setStackDisplayName(name);
 		//TODO: Fix so that player can get multiple keys, or make it so that it just renames that key if it's there.
 		for (ItemStack item : player.inventory.mainInventory)
-			if (item.getDisplayName().contains(name))
+			if (item != null && item.getDisplayName().contains(name))
 				return false;
 		if (message != "" && !player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(message);
