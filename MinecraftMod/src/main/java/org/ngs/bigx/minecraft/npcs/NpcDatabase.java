@@ -27,6 +27,7 @@ public class NpcDatabase {
 		map.put("Weapons Merchant", NpcLocations.weaponsMerchant);
 		map.put("Blacksmith", NpcLocations.blacksmith);
 		map.put("Potions Seller", NpcLocations.potionSeller);
+		map.put("Trader", NpcLocations.trader);
 		return map;
 	}
 	
@@ -81,7 +82,7 @@ public class NpcDatabase {
 	private static String getTexture(String name) {
 		if (name.equals("Dad"))
 			return "customnpcs:textures/entity/humanmale/VillagerSteve.png";
-		if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller"))
+		if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller") || name.contains("Trader"))
 			return "customnpcs:textures/entity/humanmale/TraderSteve.png";
 		if (name.contains("Scientist"))
 			return "customnpcs:textures/entity/humanmale/DoctorSteve.png";
