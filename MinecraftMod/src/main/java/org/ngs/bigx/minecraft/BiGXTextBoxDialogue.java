@@ -59,11 +59,11 @@ public class BiGXTextBoxDialogue {
 	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
 	
 	//Instructions
-	public static final String instructionsInteractNPC = "Press right bumper to interact\nwith characters.";
-	//public static final String instructionsHitNPC = "Press [] to hit enemies.";??
+	public static final String instructionsInteractNPC = "Press LEFT TRIGGER to interact\nwith characters.";
+	public static final String instructionsAttackNPC = "Press RIGHT TRIGGER\nto hit the bot.";
 	public static final String instructionsJump = "Press A to jump.";
-	public static final String instructionsInteractEnvironment = "Press [] to interact with\nlevers, doors, etc.";
-	public static final String instructionsChestOpen = "Press [] to open the chest.";
+	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
+	public static final String instructionsChestOpen = "Press LEFT TRIGGER to open the chest.";
 	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	

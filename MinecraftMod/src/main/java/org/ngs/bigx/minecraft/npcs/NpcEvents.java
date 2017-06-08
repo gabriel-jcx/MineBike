@@ -161,7 +161,7 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
-		GuiMessageWindow.showMessage("Press LEFT TRIGGER\nto hit the bot.");//BiGXTextBoxDialogue.scientist1);
+		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.instructionsAttackNPC);
 	}
 	
 	private static void InteractWithWeaponsMerchant(EntityPlayer player, EntityInteractEvent event){
