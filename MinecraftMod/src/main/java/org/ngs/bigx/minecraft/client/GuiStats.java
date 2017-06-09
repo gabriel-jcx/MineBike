@@ -38,6 +38,7 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation OBJECTIVE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/objective.png");
 	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/theif.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
+	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/pedalingmode.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	
@@ -120,13 +121,35 @@ public class GuiStats extends GuiScreen {
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
-	    	
-	    	
+
+	    	/**
+	    	 * Pedaling Mode Indicator Drawing
+	    	 */
+	    	GL11.glPushMatrix();
+			    GL11.glTranslatef(20, mcHeight - 100, 0); 
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			    GL11.glEnable(GL11.GL_BLEND);
+			    mc.renderEngine.bindTexture(PEDALINGMODE_TEXTURE);
+		        drawTexturedModalRect(0, 0, 0, 0, 40 , 60);
+		        
+		    	int peadlingModeY = ClientEventHandler.pedalingModeState * 20;
+				drawRect(0, peadlingModeY, 40, peadlingModeY+1, 0xFFFF0000);
+				drawRect(0, peadlingModeY, 1, peadlingModeY+20, 0xFFFF0000);
+				drawRect(39, peadlingModeY, 40, peadlingModeY+20, 0xFFFF0000);
+				drawRect(0, peadlingModeY+19, 40, peadlingModeY+20, 0xFFFF0000);
+	    	GL11.glPopMatrix();
+	    	/**
+	    	 * END OF Pedaling Mode Indicator Drawing
+	    	 */
+
+	    	/**
+	    	 * Quest Progress Indicator Drawing
+	    	 */
 	    	if(serverContext == null)
 	    	{
 	    		return;
 	    	}
-
+	    	
 	    	BigxServerContext bigxServerContext = serverContext;
 	    	
 	    	if(bigxServerContext.getQuestManager() == null)
@@ -233,6 +256,9 @@ public class GuiStats extends GuiScreen {
 		    		}
 		    	}
 	    	}
+	    	/**
+	    	 * END OF Quest Progress Indicator Drawing
+	    	 */
     	}
     }
 	
