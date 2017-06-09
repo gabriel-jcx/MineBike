@@ -71,7 +71,8 @@ public class ClientEventHandler {
 		return handler;
 	}
 	
-	boolean enableLock = false, enableBike = true, enableMining = false;
+	boolean enableLock = false, enableBike = true;
+	public static int pedalingModeState = 0; // 0: moving, 1:mining, 2:building
 	
 	private boolean showLeaderboard;
 	private int leaderboardSeconds;
@@ -93,8 +94,10 @@ public class ClientEventHandler {
 			
 		}
 		if (keyBindingToggleBikeToMining.isPressed()) {
-			enableMining = !enableMining;
-			System.out.println("enableMining: " + enableMining);
+			pedalingModeState ++;
+			pedalingModeState %= 3;
+			
+			System.out.println("pedalingModeState[" + pedalingModeState + "]");
 			
 		}
 		if (keyBindingToggleBike.isPressed()) {
@@ -268,7 +271,7 @@ public class ClientEventHandler {
 				float moveSpeed = context.getSpeed()/4;
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				if ( (enableBike) & (!enableMining) )
+				if ( (enableBike) & (pedalingModeState == 0) )
 					p.setVelocity(xt, p.motionY, zt);
 			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 			
@@ -385,7 +388,7 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
-		if(!enableMining)
+		if(pedalingModeState != 1)
 			return;
 		
 		float damage = (((float)this.context.rpm) / 10F) - 3F;
