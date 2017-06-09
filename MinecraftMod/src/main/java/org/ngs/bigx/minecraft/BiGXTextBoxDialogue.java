@@ -5,8 +5,8 @@ public class BiGXTextBoxDialogue {
 	//Event Dialogues
 	public static final String directionMsg = "I heard there's\na cave northward...";
 	public static final String wakeUpMsg = "Dad is calling me.\nLet’s go talk to him";
-	public static final String fatherMsg = "Dad:\nSomeone gave me\nthese for you.";
-	public static final String fatherMsgMap = "Dad:\nDon't forget\nto use your map!";
+	public static final String fatherMsg = "Dad: Here's the key\nfor your first mission.";//"Dad:\nSomeone gave me\nthese for you.";
+	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";
 	
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
@@ -22,7 +22,7 @@ public class BiGXTextBoxDialogue {
 	public static final String questChaseHintWeapon = "Hint: Buy weapon to\nincrease damage";
 	public static final String postCapture = "ARGH! You caught me!";
 	
-	public static final String questAdded = "New Quest Added!\nPress K for details";
+	public static final String questAdded = "New Quest Added!";
 	public static final String questBookInstructions = "Press DPAD UP to open and\nclose the quest book.";
 	public static final String questBookObtained = "Quest Book Obtained!";
 	
@@ -59,11 +59,11 @@ public class BiGXTextBoxDialogue {
 	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
 	
 	//Instructions
-	public static final String instructionsInteractNPC = "Press right bumper to interact\nwith characters.";
-	//public static final String instructionsHitNPC = "Press [] to hit enemies.";??
+	public static final String instructionsInteractNPC = "Press LEFT TRIGGER to interact\nwith characters.";
+	public static final String instructionsAttackNPC = "Press RIGHT TRIGGER\nto hit the bot.";
 	public static final String instructionsJump = "Press A to jump.";
-	public static final String instructionsInteractEnvironment = "Press [] to interact with\nlevers, doors, etc.";
-	public static final String instructionsChestOpen = "Press [] to open the chest.";
+	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
+	public static final String instructionsChestOpen = "Press LEFT TRIGGER to open the chest.";
 	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	
@@ -87,7 +87,7 @@ public class BiGXTextBoxDialogue {
 	public static final String fireRoomEntrance = "That Minion Bot must\nhave what I need...";
 	public static final String earthRoomEntrance = "I might be able to\nbreak that tree...";
 	public static final String waterRoomEntrance = "What I need might be\nin that chest...";
-	public static final String airRoomEntrance = "There has to be a way\nto get over there...";
+	public static final String airRoomEntrance = "Those signs must be\nhints!";
 	
 	public static final String placeFireRoom = "\n   < Fire Test >";
 	public static final String placeWaterRoom = "\n   < Water Test >";

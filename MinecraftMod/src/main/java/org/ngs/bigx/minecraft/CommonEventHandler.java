@@ -232,8 +232,8 @@ public class CommonEventHandler {
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
 		if (event.item.getDisplayName().contains("Teleportation Potion - Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
-		if (event.item.getDisplayName().contains("Sword"))
-			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
+//		if (event.item.getDisplayName().contains("Sword"))
+//			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
 	}
 	
 	@SubscribeEvent
