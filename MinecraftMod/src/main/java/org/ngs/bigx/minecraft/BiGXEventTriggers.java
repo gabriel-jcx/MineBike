@@ -55,6 +55,9 @@ public class BiGXEventTriggers {
 		String rewardStr = BiGXTextBoxDialogue.gotReward + numOfGold + " Gold Ingots!";
 		GuiMessageWindow.showGoldBar(rewardStr);
 		
+		System.out.println("Number of coins: " + numOfCoins);
+		System.out.println("Number of gold: " + numOfGold);
+		
 		if (numOfGold > 0)
 			for (int i = 0; i < numOfGold; i++)
 				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(266))); ///Add reward to inventory
@@ -119,7 +122,7 @@ public class BiGXEventTriggers {
 	}
 	
 	private static int convertCoinsToGold(int numCoins){
-		return Math.floorDiv(numCoins, 100);
+		return Math.floorDiv(numCoins, 5);
 	}
 	
 }

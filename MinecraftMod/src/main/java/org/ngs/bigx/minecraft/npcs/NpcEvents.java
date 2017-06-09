@@ -138,7 +138,7 @@ public class NpcEvents {
 			}
 			else{
 				System.out.println("Checking remote 3: " + player.worldObj.isRemote);
-				BigxServerContext testContext = BiGX.instance().serverContext;;
+				BigxServerContext testContext = BiGX.instance().serverContext;
 				Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
 				if (tutorialTask == null){
