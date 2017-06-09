@@ -228,9 +228,10 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		if (event.item.getDisplayName().contains("Teleportation Potion - Village"))
+		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
+		if (event.item.getDisplayName().contains("Village"))//"Teleportation Potion - Village"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
-		if (event.item.getDisplayName().contains("Teleportation Potion - Past"))
+		if (event.item.getDisplayName().contains("Past"))//("Teleportation Potion - Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
 //		if (event.item.getDisplayName().contains("Sword"))
 //			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
