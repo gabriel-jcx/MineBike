@@ -41,7 +41,7 @@ public class GuiMessageWindow extends GuiScreen {
 	private final long durationFadeIn = 250;
 	private final long durationFadeOut = 1000;
 	
-	private final long delayReplaceText = 1500;
+	private final long delayReplaceText = 2500;
 	
 	private static ArrayList<String> textList = new ArrayList<String>();
 	

@@ -228,9 +228,10 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		if (event.item.getDisplayName().contains("Teleportation Potion - Village"))
+		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
+		if (event.item.getDisplayName().contains("Village"))//"Teleportation Potion - Village"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
-		if (event.item.getDisplayName().contains("Teleportation Potion - Past"))
+		if (event.item.getDisplayName().contains("Past"))//("Teleportation Potion - Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
 //		if (event.item.getDisplayName().contains("Sword"))
 //			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
@@ -242,13 +243,15 @@ public class CommonEventHandler {
 		if (event.target.worldObj.isRemote){
 			if (event.target.toString().contains("Scientist"))
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
-			if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
+			else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
 				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
 				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
 			}
 		}
 		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
+			if (event.target.toString().contains("Scientist"))
+				return;
 			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
 			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
