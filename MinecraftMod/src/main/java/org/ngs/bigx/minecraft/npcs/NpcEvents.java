@@ -42,6 +42,8 @@ public class NpcEvents {
 			InteractWithBlacksmith(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.potionSeller, NpcLocations.potionSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
 			InteractWithPotionSeller(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
+			InteractWithTrader(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
 			InteractWithScientist(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
@@ -56,7 +58,7 @@ public class NpcEvents {
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 		else{
 			if (!player.worldObj.isRemote){
-				GuiMessageWindow.showBook(BiGXTextBoxDialogue.questBookObtained);
+				GuiMessageWindow.showBook(BiGXTextBoxDialogue.questAdded);
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
 			}
 		}
@@ -159,7 +161,7 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
-		GuiMessageWindow.showMessage("Press [button] to hit the bot.");//BiGXTextBoxDialogue.scientist1);
+		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.instructionsAttackNPC);
 	}
 	
 	private static void InteractWithWeaponsMerchant(EntityPlayer player, EntityInteractEvent event){
@@ -196,6 +198,18 @@ public class NpcEvents {
 			createPotionCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
 		if (traderInterface.inventorySold.items.isEmpty())
 			createPotionSold(traderInterface.inventorySold);
+	}
+	
+	private static void InteractWithTrader(EntityPlayer player, EntityInteractEvent event){
+		System.out.println("Interacting with Trader NPC");
+		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		npc.advanced.setRole(1);
+		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
+		
+		if (traderInterface.inventoryCurrency.items.isEmpty())
+			createTraderCurrency(traderInterface.inventoryCurrency);
+		if (traderInterface.inventorySold.items.isEmpty())
+			createTraderSold(traderInterface.inventorySold);
 	}
 	
 	
@@ -253,4 +267,24 @@ public class NpcEvents {
 		inventorySold.setInventorySlotContents(0, p);
 	}
 	
+	
+	//////////Trader Market
+	private static void createTraderCurrency(NpcMiscInventory inventoryCurrency){
+		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(266),1));
+		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(266),1));
+		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(266),1));
+		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(3),32)); //Dirt block
+		inventoryCurrency.setInventorySlotContents(4, new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
+		inventoryCurrency.setInventorySlotContents(5, new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
+	}
+	
+	private static void createTraderSold(NpcMiscInventory inventorySold){
+		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(3),32)); //Dirt block
+		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(4), 8)); //Cobblestone Block
+		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
+		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(4, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),1));
+	}
+
 }

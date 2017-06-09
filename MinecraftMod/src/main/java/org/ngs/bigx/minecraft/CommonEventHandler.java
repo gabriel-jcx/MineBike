@@ -232,8 +232,8 @@ public class CommonEventHandler {
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
 		if (event.item.getDisplayName().contains("Teleportation Potion - Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
-		if (event.item.getDisplayName().contains("Sword"))
-			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
+//		if (event.item.getDisplayName().contains("Sword"))
+//			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
 	}
 	
 	@SubscribeEvent
@@ -243,21 +243,16 @@ public class CommonEventHandler {
 			if (event.target.toString().contains("Scientist"))
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
 			if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
-				System.out.println("Attacking during Tutorial Quest!");
 				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
 				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
-//				if (event.target.toString().contains("Training Bot") || event.target.toString().contains("Thief")){
-//					System.out.println("Hitting bad guy!");	
-//				}
 			}
 		}
-//		if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
-//			deductThiefHealth(null);
-//		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))
-//			GuiMessageWindow.showMessage("Scientist: Stop that...");
-//		else
-//			deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
+			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
+			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
+		}
 	}
 	
 	

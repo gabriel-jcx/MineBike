@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.ngs.bigx.utility.NpcCommand;
 
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -25,6 +27,7 @@ public class NpcDatabase {
 		map.put("Weapons Merchant", NpcLocations.weaponsMerchant);
 		map.put("Blacksmith", NpcLocations.blacksmith);
 		map.put("Potions Seller", NpcLocations.potionSeller);
+		map.put("Trader", NpcLocations.trader);
 		return map;
 	}
 	
@@ -64,8 +67,10 @@ public class NpcDatabase {
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
 			if (name.contains("Training Bot")){
+				System.out.println("Altering Training Bot");
 				npc.ai.stopAndInteract = false;
-				npc.setHealth(10);
+//				npc.setHealth(10);
+				npc.inventory.setInventorySlotContents(0, new ItemStack(Item.getItemById(50)));
 			}
 		}
 	}
@@ -77,7 +82,7 @@ public class NpcDatabase {
 	private static String getTexture(String name) {
 		if (name.equals("Dad"))
 			return "customnpcs:textures/entity/humanmale/VillagerSteve.png";
-		if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller"))
+		if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller") || name.contains("Trader"))
 			return "customnpcs:textures/entity/humanmale/TraderSteve.png";
 		if (name.contains("Scientist"))
 			return "customnpcs:textures/entity/humanmale/DoctorSteve.png";

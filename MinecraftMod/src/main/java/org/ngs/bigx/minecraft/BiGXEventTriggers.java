@@ -79,14 +79,22 @@ public class BiGXEventTriggers {
 	
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
 		ItemStack key = new ItemStack(Item.getItemById(4424));//new ItemStack(Item.getItemById(4424));
-		key.setStackDisplayName(name); 
-		if (!player.inventory.hasItemStack(key)){
-			if (message != "" && !player.worldObj.isRemote)
-				GuiMessageWindow.showMessage(message);
-			player.inventory.addItemStackToInventory(key);
-			return true;
-		}
-		return false;
+		key.setStackDisplayName(name);
+		//TODO: Fix so that player can get multiple keys, or make it so that it just renames that key if it's there.
+		for (ItemStack item : player.inventory.mainInventory)
+			if (item != null && item.getDisplayName().contains(name))
+				return false;
+		if (message != "" && !player.worldObj.isRemote)
+			GuiMessageWindow.showMessage(message);
+		player.inventory.addItemStackToInventory(key);
+		return true;
+//		if (!player.inventory.hasItemStack(key)){
+//			if (message != "" && !player.worldObj.isRemote)
+//				GuiMessageWindow.showMessage(message);
+//			player.inventory.addItemStackToInventory(key);
+//			return true;
+//		}
+//		return false;
 	}
 	
 	public static boolean checkEntityInArea(Entity entity, double xCoord, double yCoord, double zCoord, double xCoord2, double yCoord2, double zCoord2){
