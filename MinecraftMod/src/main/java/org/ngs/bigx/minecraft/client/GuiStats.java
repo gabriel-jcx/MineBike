@@ -241,13 +241,15 @@ public class GuiStats extends GuiScreen {
 		        	int time = 0;
 		        	
 		        	QuestTaskChasing quest = (QuestTaskChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();
-		        	if(quest.isChasingQuestOnCountDown())
-		        	{
-		        		time = quest.getCountdown();
-		        	}
-		        	else
-		        	{
-		        		time = quest.getTime();
+		        	if(quest != null){
+		        		if(quest.isChasingQuestOnCountDown())
+						{
+							time = quest.getCountdown();
+						}
+						else
+						{
+							time = quest.getTime();
+						}
 		        	}
 		        	
 		        	int minuteLeft = time/60;

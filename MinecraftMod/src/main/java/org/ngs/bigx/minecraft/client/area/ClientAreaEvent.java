@@ -66,6 +66,9 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(93, 65, 230), Vec3.createVectorHelper(97, 75, 235), 
 				BiGXTextBoxDialogue.directionMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
+		addArea(new Area(Vec3.createVectorHelper(93, 65, -9), Vec3.createVectorHelper(100, 75, -4), 
+				BiGXTextBoxDialogue.readSignReminder, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
+		
 		addArea(new Area(Vec3.createVectorHelper(86, 45, 235), Vec3.createVectorHelper(103, 100, 250), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
@@ -95,10 +98,10 @@ public class ClientAreaEvent {
 				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
 		addArea(new Area(Vec3.createVectorHelper(92, 70, -27), Vec3.createVectorHelper(100, 74, -19), 
-		"Activate the Checkpoint!", AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
 
 		addArea(new Area(Vec3.createVectorHelper(114, 75, -2), Vec3.createVectorHelper(126, 80, 4), 
-		"Another Checkpoint!", AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
 
 		
 		addArea(new Area(Vec3.createVectorHelper(-64, 54, -64), Vec3.createVectorHelper(64, 74, 64), 

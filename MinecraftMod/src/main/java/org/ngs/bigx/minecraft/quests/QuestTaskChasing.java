@@ -263,7 +263,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	{
 		thiefLevel = level;
 		
-		thiefHealthMax = 15 + (int) Math.pow(3, thiefLevel);
+		thiefHealthMax = 15 + (int) Math.pow(9, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
@@ -293,9 +293,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 			else if (itemOnHands.getUnlocalizedName().equals("item.npcFrostSword")){
 					if (this.questChaseType == QuestChaseTypeEnum.FIRE)
-						deduction = 8;
+						deduction = 10;
 					else
-						deduction = 6;
+						deduction = 8;
 					//TODO: Change ^
 			}
 		}
@@ -696,6 +696,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					case REGULAR:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 						npc.ai.stopAndInteract = false;
+						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 						break;
 					case FIRE:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
@@ -705,6 +706,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					default:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 						npc.ai.stopAndInteract = false;
+						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 						break;
 					};
 					
@@ -1048,10 +1050,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					pausedTime = 0;
 					completed = false;
 					
-					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 1)
-						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex());
+					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
 					else
-						setThiefLevel(1);
+						setThiefLevel(levelSys.getPlayerLevel());
+					System.out.println(getThiefLevel());
 					
 //					switch(guiChasingQuest.getDifficulty())
 //					{
