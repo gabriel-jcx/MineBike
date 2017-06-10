@@ -216,14 +216,24 @@ public class GuiStats extends GuiScreen {
 	    		
 	    		if(PedalingToBuildEventHandler.pedalingToBuild !=null)
 	    		{
+	    			text = "Or press DPAD DOWN to reselect a building";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		
 		    		text = "" + PedalingToBuildEventHandler.pedalingToBuild.getCurrentProgress();
 	    		}
 	    		else if(PedalingToBuildEventHandler.buildingId.equals(""))
 	    		{
-		    		text = "Press N to select a building";
+		    		text = "Press DPAD DOWN to select a building";
 	    		}
 	    		else if(!PedalingToBuildEventHandler.buildingId.equals(""))
 	    		{
+	    			text = "Or press DPAD DOWN to reselect a building";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		
 		    		text = "Hit a block to start a building";
 	    		}
 
