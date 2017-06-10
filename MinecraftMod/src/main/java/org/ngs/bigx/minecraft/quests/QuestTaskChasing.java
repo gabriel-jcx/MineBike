@@ -570,7 +570,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			
-			if (thiefLevel == 2){
+			if (levelSys.getPlayerLevel() == 2){//thiefLevel == 2){
 				ItemStack key = new ItemStack(Item.getItemById(4424));
 //				key.setStackDisplayName("Burnt Key"); 
 //				player.inventory.addItemStackToInventory(key);
@@ -617,7 +617,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //				}
 			}
 			
-			System.out.println("[BiGX] increased exp: " + levelSys.incExp(50));
+			System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
 //			if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
 //				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
 //				levelSys.giveLevelUpRewards(player);

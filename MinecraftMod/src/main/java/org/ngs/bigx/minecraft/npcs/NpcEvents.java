@@ -147,6 +147,7 @@ public class NpcEvents {
 					if (player.worldObj.isRemote){
 						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
 						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);	
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistPotionInstructions);
 					}
 					System.out.println("Checking remote 4: " +player.worldObj.isRemote);
 					BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
@@ -276,15 +277,25 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(3),32)); //Dirt block
 		inventoryCurrency.setInventorySlotContents(4, new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
 		inventoryCurrency.setInventorySlotContents(5, new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
+		inventoryCurrency.setInventorySlotContents(6, new ItemStack(Item.getItemById(268))); //Wood Sword
+		inventoryCurrency.setInventorySlotContents(7, new ItemStack(Item.getItemById(267))); //Iron Sword
+		inventoryCurrency.setInventorySlotContents(8, new ItemStack(CustomItems.swordBronze)); //Bronze Sword
+		inventoryCurrency.setInventorySlotContents(9, new ItemStack(CustomItems.swordMithril)); //Mithril Sword
+		inventoryCurrency.setInventorySlotContents(10, new ItemStack(CustomItems.swordEmerald)); //Emerald Sword
 	}
 	
 	private static void createTraderSold(NpcMiscInventory inventorySold){
 		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(3),32)); //Dirt block
 		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(4), 8)); //Cobblestone Block
 		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
-		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
 		inventorySold.setInventorySlotContents(4, new ItemStack(Item.getItemById(266),1));
 		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(6, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(7, new ItemStack(Item.getItemById(266),3));
+		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),9));
+		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),27));
+		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266), 81));
 	}
 
 }
