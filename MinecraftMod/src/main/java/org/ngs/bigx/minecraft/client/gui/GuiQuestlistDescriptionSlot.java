@@ -45,17 +45,19 @@ public class GuiQuestlistDescriptionSlot extends GuiScrollingList {
 		switch(i)
 		{
 		case 0:
-			text = parent.getSelectedQuest().getQuestId();
-			break;
-		case 1:
+//			text = parent.getSelectedQuest().getQuestId();
 			text = parent.getSelectedQuest().getName();
 			break;
-		case 2:
+		case 1:
+//			text = parent.getSelectedQuest().getName();
 			text = parent.getSelectedQuest().getDescription();
 			break;
+//		case 2:
+//			text = parent.getSelectedQuest().getDescription();
+//			break;
 		default:
-			if( (i-3) < parent.getSelectedQuest().getRequirements().length)
-				text = parent.getSelectedQuest().getRequirements()[i-3];
+			if( (i-2) < parent.getSelectedQuest().getRequirements().length)
+				text = parent.getSelectedQuest().getRequirements()[i-2];
 			break;
 		};
 		
