@@ -243,6 +243,8 @@ public class CommonEventHandler {
 		if (event.target.worldObj.isRemote){
 			if (event.target.toString().contains("Scientist"))
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
+			else if (event.target.dimension == 0)
+				return;
 			else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
 				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
@@ -251,6 +253,8 @@ public class CommonEventHandler {
 		}
 		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
 			if (event.target.toString().contains("Scientist"))
+				return;
+			else if (event.target.dimension == 0)
 				return;
 			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
