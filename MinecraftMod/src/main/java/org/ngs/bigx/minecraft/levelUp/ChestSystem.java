@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 
 public class ChestSystem {
@@ -48,6 +49,8 @@ public class ChestSystem {
 		System.out.println("Interacting with Chest");
 		String chestCoords = Vec3.createVectorHelper(e.x, e.y, e.z).toString();
 		System.out.println(chestCoords);
+		if (e.action == Action.LEFT_CLICK_BLOCK)
+			e.setCanceled(true);
 		if (normalChests.containsKey(chestCoords))
 			interactWithNormalChest(e, normalChests.get(chestCoords));
 		else if (lockedChests.containsKey(chestCoords))
@@ -57,6 +60,8 @@ public class ChestSystem {
 	public static void interactWithNormalChest(PlayerInteractEvent e, String chestName){
 		System.out.println("CHEST FOUND");
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
+		if (e.action == Action.LEFT_CLICK_BLOCK)
+			e.setCanceled(true);
 		
 		if (chestName == "TutorialChestWater")
 			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 1, 1)); //Health potion? TODO: Double check ids
