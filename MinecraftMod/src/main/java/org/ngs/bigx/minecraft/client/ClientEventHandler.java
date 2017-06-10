@@ -57,6 +57,12 @@ public class ClientEventHandler {
 	public static KeyBinding keyBindingToggleBike;
 	public static KeyBinding keyBindingToggleBikeToMining;
 	
+	public static int animTickSwitch;
+	public static final int animTickSwitchLength = 5;
+	public static int animTickFade;
+	public static final int animTickFadeLength = 40;
+	public static final int animTickFadeTime = 10;
+	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
 	
@@ -96,7 +102,8 @@ public class ClientEventHandler {
 		if (keyBindingToggleBikeToMining.isPressed()) {
 			pedalingModeState ++;
 			pedalingModeState %= 3;
-			
+			animTickSwitch = 0;
+			animTickFade = 0;
 			System.out.println("pedalingModeState[" + pedalingModeState + "]");
 		}
 		if (keyBindingToggleBike.isPressed()) {
@@ -238,6 +245,21 @@ public class ClientEventHandler {
 				}
 			}
 		
+			/**
+			 * Animation for GuiStats bike mode
+			 */
+			
+			if (animTickSwitch < animTickSwitchLength) {
+				animTickSwitch++;
+			}
+			if (animTickFade < animTickFadeLength + animTickFadeTime) {
+				animTickFade++;
+			}
+			
+			/**
+			 * END OF Animation for GuiStats bike mode
+			 */
+			
 			// Handling Player Skills
 			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
 			// Degrade the current player's speed
@@ -312,6 +334,11 @@ public class ClientEventHandler {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
 						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
+						else
+							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+					}
+					else{
+						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 				}
 				else

@@ -35,6 +35,7 @@ public class LevelSystem {
 	
 	public boolean levelUp(){
 		playerLevel++;
+		playerExp = 0;
 		System.out.println("[BiGX] playerLevel[" + playerLevel + "]");
 		return true;
 	}

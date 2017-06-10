@@ -38,7 +38,7 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation OBJECTIVE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/objective.png");
 	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/theif.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
-	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/pedalingmode.png");
+	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalingmode-reverse.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	
@@ -99,6 +99,11 @@ public class GuiStats extends GuiScreen {
 	    GL11.glDisable(GL11.GL_BLEND);
 	}
 
+	private float lerp(float a, float b, float f) 
+	{
+	    return (a * (1.0f - f)) + (b * f);
+	}
+	
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
 	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
@@ -125,19 +130,69 @@ public class GuiStats extends GuiScreen {
 	    	/**
 	    	 * Pedaling Mode Indicator Drawing
 	    	 */
+	    	int texX = 64;
+    		int texY = 96;
+    		float scaleX = 0.25f;
+    		float scaleY = 0.25f*1.5f;
+    		int rectX = 256;
+	    	int rectY = (int)(256/3f);
+	    	
+	    	int peadlingModeY = 0;//ClientEventHandler.pedalingModeState * rectY;
+	    	
+	    	int blueColor =  0xFF00A0FF;
+	    	int greenColor = 0xFF00FF00;
+	    	int redColor =   0xFFFF2000;
+	    	
+	    	int chosenColor = ClientEventHandler.pedalingModeState == 0 ? blueColor : ClientEventHandler.pedalingModeState == 1 ? redColor : greenColor;
+	    	
+			float targetY = -(rectY) * (ClientEventHandler.pedalingModeState);
+		    if (ClientEventHandler.animTickSwitch < ClientEventHandler.animTickSwitchLength) {
+		    	targetY = lerp(-(rectY-2) * (ClientEventHandler.pedalingModeState - 1),
+		    			-(rectY) * (ClientEventHandler.pedalingModeState),
+		    			(float)ClientEventHandler.animTickSwitch / ClientEventHandler.animTickSwitchLength);
+		    }
+		    
+		    // TOP PORTION (unselected items, meant to fade out)
 	    	GL11.glPushMatrix();
-			    GL11.glTranslatef(20, mcHeight - 100, 0); 
+	    		
+		    	float targetAlpha = 0.0f;
+			    if (ClientEventHandler.animTickFade < (ClientEventHandler.animTickFadeLength + ClientEventHandler.animTickFadeTime)) {
+			    	if (ClientEventHandler.animTickFade >= ClientEventHandler.animTickFadeLength) {
+			    		targetAlpha = lerp(1.0f, 0.0f,
+				    			(float)(ClientEventHandler.animTickFade - ClientEventHandler.animTickFadeLength) / ClientEventHandler.animTickFadeTime);
+			    	} else {
+			    		targetAlpha = 1.0f;
+			    	}
+			    }
+	    	
+			    GL11.glTranslatef(12, mcHeight - 135, 0); 
+			    GL11.glScalef(scaleX, scaleY, 1.0f);
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
+			    GL11.glEnable(GL11.GL_BLEND);
+			    mc.renderEngine.bindTexture(PEDALINGMODE_TEXTURE);
+			    drawTexturedModalRect(0, 0, 0, (int) targetY, 256, 256-85);
+		        
+				drawRect(0, 0, rectX, rectY, (int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16)); // first item
+				drawRect(0, rectY, rectX, rectY*2, (int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16)); // second item
+	    	GL11.glPopMatrix();
+	    	
+	    	// BOTTOM PORTION (selected item, always on screen)
+	    	GL11.glPushMatrix();
+		    	GL11.glTranslatef(12, mcHeight - 135, 0); 
+			    GL11.glScalef(scaleX, scaleY, 1.0f);
 			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			    GL11.glEnable(GL11.GL_BLEND);
 			    mc.renderEngine.bindTexture(PEDALINGMODE_TEXTURE);
-		        drawTexturedModalRect(0, 0, 0, 0, 40 , 60);
+			    
+			    
+		    	drawTexturedModalRect(0, 256-86, 0, (int) targetY - 86, 256, 87);
 		        
-		    	int peadlingModeY = ClientEventHandler.pedalingModeState * 20;
-				drawRect(0, peadlingModeY, 40, peadlingModeY+1, 0xFFFF0000);
-				drawRect(0, peadlingModeY, 1, peadlingModeY+20, 0xFFFF0000);
-				drawRect(39, peadlingModeY, 40, peadlingModeY+20, 0xFFFF0000);
-				drawRect(0, peadlingModeY+19, 40, peadlingModeY+20, 0xFFFF0000);
+				drawRect(0, peadlingModeY + rectY*2, rectX, peadlingModeY+3  + rectY*2 + 1, chosenColor); // top line
+				drawRect(0, peadlingModeY + rectY*2 + 2, 4, peadlingModeY+rectY*3 + 2, chosenColor); // left line
+				drawRect(rectX-4, peadlingModeY+2 + rectY*2, rectX, peadlingModeY+rectY*3 + 2, chosenColor); // right  line
+				drawRect(0, peadlingModeY+rectY*3 + 1, rectX, peadlingModeY+rectY*3 + 5, chosenColor); // bottom line
 	    	GL11.glPopMatrix();
+	    	
 	    	/**
 	    	 * END OF Pedaling Mode Indicator Drawing
 	    	 */
