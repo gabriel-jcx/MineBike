@@ -262,9 +262,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void setThiefLevel(int level)
 	{
 		thiefLevel = level;
+		if (thiefLevel > thiefMaxLevel)
+			thiefMaxLevel = thiefLevel;
 		
 		thiefHealthMax = 15 + (int) Math.pow(9, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
+		System.out.println("Thief's level has been set!");
 	}
 	
 	public void deductThiefHealth(Item itemOnHands)
@@ -1064,7 +1067,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
 					else
 						setThiefLevel(levelSys.getPlayerLevel());
-					System.out.println(getThiefLevel());
+					System.out.println("Thief's level is: " + getThiefLevel());
 					
 //					switch(guiChasingQuest.getDifficulty())
 //					{
