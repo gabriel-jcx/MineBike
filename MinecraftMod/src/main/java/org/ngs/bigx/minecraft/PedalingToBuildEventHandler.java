@@ -14,8 +14,12 @@ public class PedalingToBuildEventHandler {
 
 	private static int onPlayerTickEventCount = 0;
 	
+	public static String buildingId = "";
+	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
+		int determineToPlaceBlockReturnValue = -1;
+		
 		if(event.player != null)
 		{
 			if(pedalingToBuild == null)
@@ -57,7 +61,7 @@ public class PedalingToBuildEventHandler {
 						// return
 						return;
 					}
-					pedalingToBuild.determineToPlaceBlock();
+					determineToPlaceBlockReturnValue = pedalingToBuild.determineToPlaceBlock();
 					List<BlockPositionMapping> tempBlockList = pedalingToBuild.getTheListOfBlockToBePlaced();
 					synchronized (tempBlockList)
 					{
@@ -68,6 +72,11 @@ public class PedalingToBuildEventHandler {
 							event.player.worldObj.setBlock(areaIndex.x + pedalingToBuild.getPosx(), areaIndex.y + pedalingToBuild.getPosy(), areaIndex.z + pedalingToBuild.getPosz(), block);
 						}
 						pedalingToBuild.emptyBlockToBePlaced();
+					}
+					
+					if(determineToPlaceBlockReturnValue == 2)
+					{
+						pedalingToBuild = null;
 					}
 				}
 			}
