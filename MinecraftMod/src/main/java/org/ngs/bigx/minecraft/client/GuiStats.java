@@ -303,7 +303,6 @@ public class GuiStats extends GuiScreen {
 					    GL11.glScalef(scaleX, scaleY, 1.0f);
 					    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
 					    GL11.glEnable(GL11.GL_BLEND);
-					    System.out.println(questTaskChasing.getCountdown());
 					    ResourceLocation chosenImage = questTaskChasing.getCountdown() > 2 && questTaskChasing.getCountdown() < 6  ? TRAFFIC_NONE :
 					    	questTaskChasing.getCountdown() == 2 ? TRAFFIC_RED :
 					    		questTaskChasing.getCountdown() == 1 ? TRAFFIC_YELLOW : 

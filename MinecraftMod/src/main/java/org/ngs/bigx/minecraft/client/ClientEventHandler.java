@@ -279,6 +279,11 @@ public class ClientEventHandler {
 			
 			// Handling Player Skills
 			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			
+			if (p.worldObj.rainingStrength > 0.0f) {
+				p.worldObj.setRainStrength(0.0f);
+			}
+			
 			// Degrade the current player's speed
 	//					BiGX.characterProperty.decreaseSpeedByTime();
 	//					p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
@@ -309,7 +314,7 @@ public class ClientEventHandler {
 				float moveSpeed = context.getSpeed()/4;
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
 				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				if ( (enableBike) & (pedalingModeState == 0) )
+				if (enableBike)
 					p.setVelocity(xt, p.motionY, zt);
 			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 			

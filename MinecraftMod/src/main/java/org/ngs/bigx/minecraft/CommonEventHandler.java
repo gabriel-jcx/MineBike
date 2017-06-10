@@ -229,9 +229,9 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
-		if (event.item.getDisplayName().contains("Village"))//"Teleportation Potion - Village"))
+		if (event.item.getDisplayName().contains("Village"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
-		if (event.item.getDisplayName().contains("Past"))//("Teleportation Potion - Past"))
+		if (event.item.getDisplayName().contains("Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
 //		if (event.item.getDisplayName().contains("Sword"))
 //			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
@@ -239,7 +239,6 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onAttackEntityEvent(AttackEntityEvent event) {
-		System.out.println("COMMON EVENT ATTAAAACK");
 		if (event.target.worldObj.isRemote){
 			if (event.target.toString().contains("Scientist"))
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");

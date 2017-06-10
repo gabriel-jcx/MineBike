@@ -45,15 +45,7 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	
 	@Override
 	public void CheckComplete() {
-		System.out.println("Checking Quest as Complete");
 		completed = isAllItemPossessed();
-//		try {
-//			if (completed)
-//				questManager.setActiveQuest(Quest.QUEST_ID_STRING_NONE);
-//		} catch (QuestException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 	
 	public static boolean checkItems(IInventory inventory, Item item)
@@ -75,47 +67,37 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	{
 		int count = 0;
 
-//		boolean allItemPossessed = true;
-		
 		if(!checkItems(player.inventory, Item.getItemById(Block.getIdFromBlock(Blocks.torch))))
 		{
 			System.out.println("Player Doesn't have Torch");
 			return false;
-//			allItemPossessed &= false;
 		}
 		
 		if(!checkItems(player.inventory, Item.getItemById(266)))
 		{
 			System.out.println("Player Doesn't have Gold");
 			return false;
-//			allItemPossessed &= false;
 		}
 		
 		if(!checkItems(player.inventory, Item.getItemById(268)))
 		{
 			System.out.println("Player Doesn't have Sword");
 			return false;
-//			allItemPossessed &= false;
 		}
 		
 		if(!checkItems(player.inventory, Item.getItemById(373)))
 		{
 			System.out.println("Player Doesn't have Potion");
 			return false;
-//			allItemPossessed &= false;
 		}
 
-//		System.out.println("tutorial doen["+allItemPossessed+"] count[" + (count++) + "]");
-		
-//		System.out.println("Does Player have all the items?: " + allItemPossessed);
 		System.out.println("Player has all the required items!");
 		return true;
-//		return allItemPossessed;
 	}
 
 	@Override
 	public String getTaskDescription() {
-		return "COLLECT SOME ITEMS";
+		return "Collect the items from each stage around the lab!";
 	}
 
 	@Override

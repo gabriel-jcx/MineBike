@@ -90,9 +90,7 @@ public class NpcEvents {
 	private static void InteractWithScientist(EntityPlayer player, EntityInteractEvent event){
 		System.out.println("Interacting with Scientist");
 		try{
-			System.out.println("Checking remote 1: " + player.worldObj.isRemote);
 			if (BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null){
-				System.out.println("Checking remote 2: " + player.worldObj.isRemote);
 				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 				Quest quest;
 				if (player.worldObj.isRemote){
@@ -108,23 +106,20 @@ public class NpcEvents {
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
 				
 					//Give quest on Client Side
-					System.out.println("InteractWithScientist Quest Generation: CLIENT");
 					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
 							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().clientContext.getQuestManager());
 					quest.addTasks(new QuestTaskTutorial(BiGX.instance().clientContext.getQuestManager(), player, 
 							(EntityCustomNpc) event.target));
-//					quest.addTasks(new QuestTaskTalk(BiGX.instance().clientContext.getQuestManager(), player,
-//							(EntityCustomNpc) event.target));
+					quest.addTasks(new QuestTaskTalk(BiGX.instance().clientContext.getQuestManager(), player,
+							(EntityCustomNpc) event.target));
 					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 						BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
 				}
 			}
 			else if (BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null){
-				System.out.println("Checking remote 2: " + player.worldObj.isRemote);
 				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 				Quest quest;
 				if (!player.worldObj.isRemote){
-					System.out.println("InteractWithScientist Quest Generation: SERVER");
 					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
 							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().serverContext.getQuestManager());
 					quest.addTasks(new QuestTaskTutorial(BiGX.instance().serverContext.getQuestManager(), player, 
@@ -134,7 +129,6 @@ public class NpcEvents {
 				}
 			}
 			else{
-				System.out.println("Checking remote 3: " + player.worldObj.isRemote);
 				BigxServerContext testContext = BiGX.instance().serverContext;
 				Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
@@ -143,10 +137,11 @@ public class NpcEvents {
 					
 					if (player.worldObj.isRemote){
 						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);	
+						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);
 						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistPotionInstructions);
 					}
-					System.out.println("Checking remote 4: " +player.worldObj.isRemote);
+					BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().remove(Quest.QUEST_ID_STRING_TUTORIAL);
+					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
 					BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
 				}
 				else if (player.worldObj.isRemote){
