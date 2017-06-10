@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client.gui.quest.chase;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.Leaderboard;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.gui.CustomGuiButton;
@@ -68,6 +70,13 @@ public class GuiChasingQuest extends GuiScreen {
 	@Override
 	public void initGui() {
 		buttonList.clear();
+		
+		try {
+			GuiLeaderBoard.refreshLeaderBoard();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(this.guiChasingQuestLevelSlot == null)
 			this.guiChasingQuestLevelSlot = new GuiChasingQuestLevelSlot(this);
@@ -178,54 +187,7 @@ public class GuiChasingQuest extends GuiScreen {
 	        if( (this.leaderboards != null) && (this.leaderboards.size() >= level) )
 	        	leaderboardRows = this.leaderboards.get(level-1).leaderboardRows;
 	        else{
-	        	LeaderboardRow leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "Level";
-	        	leaderboardRow.name = "Name";
-	        	leaderboardRow.rank = "Rank";
-	        	leaderboardRow.time_elapsed = "Time";
-	        	leaderboardRows.add(leaderboardRow);
-	        	
-	        	leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "" + level;
-	        	leaderboardRow.name = "John Lennon";
-	        	leaderboardRow.rank = "1";
-	        	leaderboardRow.time_elapsed = "1 min 2 secs";
-	        	leaderboardRows.add(leaderboardRow);
-	        	
-	        	leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "" + level;
-	        	leaderboardRow.name = "Mc Donald";
-	        	leaderboardRow.rank = "2";
-	        	leaderboardRow.time_elapsed = "1 min 3 secs";
-	        	leaderboardRows.add(leaderboardRow);
-	        	
-	        	leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "" + level;
-	        	leaderboardRow.name = "Mc Donald";
-	        	leaderboardRow.rank = "2";
-	        	leaderboardRow.time_elapsed = "1 min 3 secs";
-	        	leaderboardRows.add(leaderboardRow);
-	        	
-	        	leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "" + level;
-	        	leaderboardRow.name = "Mc Donald";
-	        	leaderboardRow.rank = "2";
-	        	leaderboardRow.time_elapsed = "1 min 3 secs";
-	        	leaderboardRows.add(leaderboardRow);
-	        	
-	        	leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "" + level;
-	        	leaderboardRow.name = "Mc Donald";
-	        	leaderboardRow.rank = "2";
-	        	leaderboardRow.time_elapsed = "1 min 3 secs";
-	        	leaderboardRows.add(leaderboardRow);
-	        	
-	        	leaderboardRow =new LeaderboardRow();
-	        	leaderboardRow.level = "" + level;
-	        	leaderboardRow.name = "Mc Donald";
-	        	leaderboardRow.rank = "2";
-	        	leaderboardRow.time_elapsed = "1 min 3 secs";
-	        	leaderboardRows.add(leaderboardRow);
+	        	leaderboardRows = GuiLeaderBoard.getLeaderboardRows();
 	        }
 	        
 	    	for(int i=0; i<leaderboardRows.size(); i++)

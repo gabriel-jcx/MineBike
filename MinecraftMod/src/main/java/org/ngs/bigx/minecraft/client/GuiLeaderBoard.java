@@ -52,6 +52,10 @@ public class GuiLeaderBoard extends GuiScreen {
 		context = c;
 	}
 	
+	public static ArrayList<LeaderboardRow> getLeaderboardRows() {
+		return leaderboardRows;
+	}
+
 	public static boolean writeToLeaderboard(LeaderboardRow row) throws IOException
 	{
 		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
