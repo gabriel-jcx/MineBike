@@ -334,6 +334,11 @@ public class ClientEventHandler {
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
 						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
 							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
+						else
+							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+					}
+					else{
+						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 				}
 				else

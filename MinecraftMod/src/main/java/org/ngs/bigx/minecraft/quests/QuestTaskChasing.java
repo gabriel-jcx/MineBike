@@ -23,6 +23,10 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest.ChasingQuestDifficultyEnum;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
@@ -566,7 +570,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			
-			if (thiefLevel == 1){
+			if (thiefLevel == 2){
 				ItemStack key = new ItemStack(Item.getItemById(4424));
 //				key.setStackDisplayName("Burnt Key"); 
 //				player.inventory.addItemStackToInventory(key);
@@ -1009,6 +1013,33 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						&& player.dimension != this.questDestinationDimensionId
 						&& player.dimension == this.questSourceDimensionId)
 				{ //TODO: Add Level selection GUI
+					////Displaying Level Selection GUI
+					Minecraft mc = Minecraft.getMinecraft();
+					GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+					
+					guiChasingQuest.resetChasingQuestLevels();
+					
+					try {
+						for(int i=0; i<5; i++)
+						{
+							boolean islocked = false;
+							if (i > levelSys.getPlayerLevel()-1)
+								islocked = true;
+							GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+							
+							guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+						}
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+					} catch (GuiQuestlistException e) {
+						e.printStackTrace();
+					}
+					
+					if(mc.currentScreen == null)
+						mc.displayGuiScreen(guiChasingQuest);
+					System.out.println("Display Chasing Quest Gui");
+					////End Displaying Level Selection GUI
+					
 					boolean isReboot = !isActive;
 					
 					time = 0;
@@ -1016,7 +1047,23 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					countdown = 11;
 					pausedTime = 0;
 					completed = false;
-					setThiefLevel(Integer.parseInt(player.getHeldItem().getDisplayName().split(" ")[2]));
+					
+					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 1)
+						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex());
+					else
+						setThiefLevel(1);
+					
+//					switch(guiChasingQuest.getDifficulty())
+//					{
+//					case EASY:
+//						break;
+//					case MEDIUM:
+//						break;
+//					case HARD:
+//						break;
+//					default:
+//						break;
+//					}
 					
 					// INIT questSettings ArrayList if there is any
 					if(context.isSuggestedGamePropertiesReady())
