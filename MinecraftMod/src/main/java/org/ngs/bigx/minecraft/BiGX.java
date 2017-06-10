@@ -118,6 +118,10 @@ import net.minecraftforge.common.MinecraftForge;
 			FMLCommonHandler.instance().bus().register(questEventHandler);
 	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
 	    	
+	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
+			FMLCommonHandler.instance().bus().register(pedalingToBuild);
+	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
+	    	
 	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	
 	    	GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");

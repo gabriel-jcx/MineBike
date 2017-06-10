@@ -84,7 +84,19 @@ public class BiGXPacketHandler {
 					}
 					else
 					{
-						context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+						switch(ClientEventHandler.pedalingModeState)
+						{
+						case 0:
+							context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+							break;
+						case 2:
+							if(change < 0)
+								change *= -1;
+							
+							if(PedalingToBuildEventHandler.pedalingToBuild != null)
+								PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
+							break;
+						};
 					}
 				}
 			break;
