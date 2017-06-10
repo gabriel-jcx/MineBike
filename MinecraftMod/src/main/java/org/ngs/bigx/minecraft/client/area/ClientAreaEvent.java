@@ -82,17 +82,24 @@ public class ClientAreaEvent {
 				BiGXTextBoxDialogue.placeContinentPangea, AreaTypeEnum.WORLD, 0), AreaTypeEnum.WORLD);
 		
 		//Tutorial Areas
-		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 74, 30), 
+		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 100, 30), 
 				BiGXTextBoxDialogue.placeFireRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(-30, 55, 64), Vec3.createVectorHelper(30, 75, 126), 
+		addArea(new Area(Vec3.createVectorHelper(-30, 55, 64), Vec3.createVectorHelper(30, 100, 126), 
 				BiGXTextBoxDialogue.placeWaterRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 75, -64), 
+		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -64), 
 				BiGXTextBoxDialogue.placeEarthRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(126, 75, 30), 
+		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(130, 100, 30), 
 				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		
+		addArea(new Area(Vec3.createVectorHelper(92, 70, -27), Vec3.createVectorHelper(100, 74, -19), 
+		"Activate the Checkpoint!", AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+
+		addArea(new Area(Vec3.createVectorHelper(114, 75, -2), Vec3.createVectorHelper(126, 80, 4), 
+		"Another Checkpoint!", AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+
 		
 		addArea(new Area(Vec3.createVectorHelper(-64, 54, -64), Vec3.createVectorHelper(64, 74, 64), 
 				BiGXTextBoxDialogue.placeLabratory, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
