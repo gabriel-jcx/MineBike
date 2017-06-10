@@ -130,6 +130,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
+	private boolean menuOpen = false;
+	private GuiChasingQuest guiChasingQuest;
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
@@ -199,6 +201,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		time = 0;
 		initThiefStat();
 		countdown = 11;
+		lastCountdownTickTimestamp = 0;
 		pausedTime = 0;
 		
 		if(world.isRemote)
@@ -662,7 +665,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		long timeNow = System.currentTimeMillis();
 		
 		// COUNT DOWN TIME
-		countdown --;
+		if (Minecraft.getMinecraft().currentScreen != guiChasingQuest) {
+			countdown --;
+		}
+			
 		
 		// PLAY SOUND
 		if (countdown == 2 || countdown == 1) {
@@ -760,6 +766,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			System.out.println("GO!");
 			command.enableMoving(true);
 			countdown = 11;
+			lastCountdownTickTimestamp = 0;
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
 			ClientEventHandler.animTickChasingFade = 0;
@@ -1027,7 +1034,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				{ //TODO: Add Level selection GUI
 					////Displaying Level Selection GUI
 					Minecraft mc = Minecraft.getMinecraft();
-					GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+					guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 					
 					guiChasingQuest.resetChasingQuestLevels();
 					
@@ -1057,6 +1064,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					time = 0;
 					initThiefStat();
 					countdown = 11;
+					lastCountdownTickTimestamp = 0;
+					dist = 0;
 					pausedTime = 0;
 					completed = false;
 					
@@ -1141,6 +1150,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 						virtualCurrency = 0;
 						time = 0;
+						chasingQuestOnCountDown = false;
+						chasingQuestOnGoing = false;
 						countdown = 11;
 						pausedTime = 0;
 						initThiefStat();
