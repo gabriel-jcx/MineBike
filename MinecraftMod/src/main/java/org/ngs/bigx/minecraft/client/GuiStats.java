@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
+import org.ngs.bigx.minecraft.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
@@ -209,6 +210,37 @@ public class GuiStats extends GuiScreen {
 	    	 * END OF Pedaling Mode Indicator Drawing
 	    	 */
 	    	
+	    	if(ClientEventHandler.pedalingModeState == 2)
+	    	{
+	    		text = "  ";
+	    		
+	    		if(PedalingToBuildEventHandler.pedalingToBuild !=null)
+	    		{
+	    			text = "Or press DPAD DOWN to reselect a building";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		
+		    		text = "" + PedalingToBuildEventHandler.pedalingToBuild.getCurrentProgress();
+	    		}
+	    		else if(PedalingToBuildEventHandler.buildingId.equals(""))
+	    		{
+		    		text = "Press DPAD DOWN to select a building";
+	    		}
+	    		else if(!PedalingToBuildEventHandler.buildingId.equals(""))
+	    		{
+	    			text = "Or press DPAD DOWN to reselect a building";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		
+		    		text = "Hit a block to start a building";
+	    		}
+
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
+	    	}
+
 	    	/**
 	    	 * Quest Progress Indicator Drawing
 	    	 */

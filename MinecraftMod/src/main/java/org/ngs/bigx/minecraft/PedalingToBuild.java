@@ -26,7 +26,7 @@ public class PedalingToBuild {
 	private int totalBlocks = 1;
 	private int builtBlocks = 0;
 	
-	private int totalBlocksCleaning = 350;
+	private int totalBlocksCleaning = 35;
 	private int cleanedBlocks = 0;
 	
 	private int currentProgress = 0;
@@ -37,7 +37,7 @@ public class PedalingToBuild {
 	private boolean isCleaningDone = false;
 	private boolean isCleaningDoneFlag = false;
 
-	public static final float scalefactor = 50; // 1 rotation
+	public static final float scalefactor = 5; // 1 rotation
 	
 	private BlockPositionMapping currentBlock = null;
 	
@@ -78,7 +78,7 @@ public class PedalingToBuild {
 		this.totalBlocks = 1;
 		this.builtBlocks = 0;
 		this.buildingLayout = null;
-		this.totalBlocksCleaning = 350;
+		this.totalBlocksCleaning = 35;
 		this.cleanedBlocks = 0;
 		this.isLoaded = false;
 		this.isCleaningDone = false;
@@ -108,8 +108,10 @@ public class PedalingToBuild {
 	{
 		if(!this.isCleaningDone)
 			return this.currentProgress + " / " + this.totalBlocksCleaning;
-		else
+		else if(this.currentBlock != null)
 			return this.currentProgress + " / " + this.getBlockHp(this.currentBlock.block);
+		else 
+			return "";
 	}
 	
 	public String getCurrentProgress()
@@ -149,10 +151,22 @@ public class PedalingToBuild {
 		this.blocksToBePlaced.clear();
 	}
 	
-	public void determineToPlaceBlock()
+	public int determineToPlaceBlock()
 	{
 		if(!this.isLoaded)
-			return;
+			return -1;
+		if(!this.isCleaningDone)
+			return -2;
+		if(this.isCleaningDoneFlag)
+			return -3;
+		if(this.currentBlock == null)
+			return -4;
+		
+		if(this.currentBlock.block == null)
+			this.setNextBlockToWorkOn();
+
+		if(this.currentBlock.block == null)
+			return -5;
 		
 		float health = this.getBlockHp(this.currentBlock.block);
 		
@@ -165,8 +179,13 @@ public class PedalingToBuild {
 				this.blocksToBePlaced.add(this.currentBlock);
 			}
 			this.currentBlock = null;
-			this.setNextBlockToWorkOn();
+			if(this.setNextBlockToWorkOn()==0)
+			{
+				return 2;
+			}
 		}
+		
+		return 1;
 	}
 	
 	private float getBlockHp(Block block)
@@ -207,11 +226,11 @@ public class PedalingToBuild {
 				return 0;
 			}
 			
-			TerrainBiomeAreaIndex[] idx = (TerrainBiomeAreaIndex[])this.buildingLayout.map.keySet().toArray();
+			ArrayList<TerrainBiomeAreaIndex> idx = new ArrayList<TerrainBiomeAreaIndex>(this.buildingLayout.map.keySet());
 			
-			this.currentBlock = new BlockPositionMapping(this.buildingLayout.map.remove(idx[0]), idx[0]);
+			this.currentBlock = new BlockPositionMapping(this.buildingLayout.map.remove(idx.get(0)), idx.get(0));
 			
-			if(idx.length > 1)
+			if(idx.size() > 1)
 				return 2;
 			else 
 				return 1;

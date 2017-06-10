@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,8 +29,11 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
+import org.ngs.bigx.minecraft.PedalingToBuild;
+import org.ngs.bigx.minecraft.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
@@ -54,6 +58,7 @@ public class ClientEventHandler {
 	public static KeyBinding keyBindingToggleMouse;
 	public static KeyBinding keyBindingToggleQuestListGui;
 	public static KeyBinding keyBindingToggleChasingQuestGui;
+	public static KeyBinding keyBindingToggleBuildingGui;
 	public static KeyBinding keyBindingToggleBike;
 	public static KeyBinding keyBindingToggleBikeToMining;
 	
@@ -112,6 +117,29 @@ public class ClientEventHandler {
 			enableBike = !enableBike;
 			System.out.println("Toggle Bike Movement: " + enableBike);
 		}
+		if(keyBindingToggleBuildingGui.isPressed())
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+			GuiBuildinglistManager guiBuildinglistManager = new GuiBuildinglistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+			
+			ArrayList<String> buildingIdList = new ArrayList<String>();
+			buildingIdList.add("default.tree");
+			buildingIdList.add("default.waterbasin");
+			buildingIdList.add("default.bush");
+			buildingIdList.add("default.store");
+			buildingIdList.add("default.cactus");
+			
+			try {
+				guiBuildinglistManager.addBuildingReferences(buildingIdList);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(guiBuildinglistManager);
+			System.out.println("Display Building Id List");
+		}
 		if(keyBindingToggleQuestListGui.isPressed())
 		{
 			Minecraft mc = Minecraft.getMinecraft();
@@ -131,23 +159,6 @@ public class ClientEventHandler {
 			} catch (GuiQuestlistException e) {
 				e.printStackTrace();
 			}
-			
-			// TODO populate guiQuestlistManager with playerQuestManager quest list items
-//				String[] demoquestreq = new String[5];
-//				demoquestreq[0] = "quest[" + demo + "] req 1";
-//				demoquestreq[1] = "quest[" + demo + "] req 2";
-//				demoquestreq[2] = "quest[" + demo + "] req 3";
-//				demoquestreq[3] = "quest[" + demo + "] req 4";
-//				demoquestreq[4] = "quest[" + demo + "] req 5";
-//				
-//				try {
-//					guiQuestlistManager.addQuestReference(new Quest(QuestEventChasing.id + demo, "demo chasing quest", "demo chasing quest desc", demoquestreq));
-//					demo++;
-//				} catch (NullPointerException e) {
-//					e.printStackTrace();
-//				} catch (GuiQuestlistException e) {
-//					e.printStackTrace();
-//				}
 			
 			if(mc.currentScreen == null)
 				mc.displayGuiScreen(guiQuestlistManager);
@@ -420,19 +431,26 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
-		if(pedalingModeState != 1)
-			return;
-		
-		float damage = (((float)this.context.rpm) / 10F) - 3F;
-		
-		if((float)this.context.rpm != 0)
+		if(pedalingModeState == 1)
 		{
-			damage = (((float)this.context.rpm) / 10F) - 3F;
-			damage = damage<0?0:damage;
-			damage *= 2;
-			damage += event.originalSpeed;
-			damage = damage>=15?15:damage;
-			event.newSpeed = damage;
+			float damage = (((float)this.context.rpm) / 10F) - 3F;
+			
+			if((float)this.context.rpm != 0)
+			{
+				damage = (((float)this.context.rpm) / 10F) - 3F;
+				damage = damage<0?0:damage;
+				damage *= 2;
+				damage += event.originalSpeed;
+				damage = damage>=15?15:damage;
+				event.newSpeed = damage;
+			}
+		}
+		else if(pedalingModeState == 2)
+		{
+			if(PedalingToBuildEventHandler.buildingId.equals(""))
+				return;
+			
+			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(event.x, event.y+1, event.z, 9, PedalingToBuildEventHandler.buildingId);
 		}
 	}
 }
