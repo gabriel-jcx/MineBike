@@ -94,6 +94,10 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -64), 
 				BiGXTextBoxDialogue.placeEarthRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
+		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -81), 
+				BiGXTextBoxDialogue.instructionsChangeMode, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+		
+		
 		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(130, 100, 30), 
 				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		

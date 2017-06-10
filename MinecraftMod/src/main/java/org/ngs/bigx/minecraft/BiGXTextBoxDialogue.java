@@ -67,6 +67,7 @@ public class BiGXTextBoxDialogue {
 	public static final String instructionsChestOpen = "Press LEFT TRIGGER to open the chest.";
 	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
+	public static final String instructionsChangeMode = "Press DPAD LEFT to\nswitch pedalling modes.";
 	
 	// Tutorial Message
 	public static final String tutorialQuestTitle = "Collect the Assigned Items";
@@ -83,7 +84,7 @@ public class BiGXTextBoxDialogue {
 	public static final String scientistQuestUnfinished = "Scientist: I will give you\nthe key to this chest when\nyou finish.";
 	public static final String scientistQuestFinished1 = "Scientist: Great job! The\nchest has a teleportation\npotion and some gold.";
 	public static final String scientistQuestFinished2 = "Scientist: The merchants in\nthe past love that stuff!\nHere, the key is yours.";
-	public static final String scientistPotionInstructions = "Drink the potion in the chest\nto teleport to the past.";
+	public static final String scientistPotionInstructions = "Scientist: Drink the potion\nto teleport to the past.";
 	
 	public static final String checkpointReminder = "Activate the Checkpoint!";
 	
