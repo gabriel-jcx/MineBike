@@ -36,7 +36,11 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation SPEEDOMETER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
 	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/timer.png");
 	private ResourceLocation OBJECTIVE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/objective.png");
-	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX,"textures/GUI/theif.png");
+	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/theif.png");
+	private ResourceLocation TRAFFIC_NONE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-none.png");
+	private ResourceLocation TRAFFIC_RED = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-red.png");
+	private ResourceLocation TRAFFIC_YELLOW = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-yellow.png");
+	private ResourceLocation TRAFFIC_GREEN = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-green.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalingmode-reverse.png");
 	private int HEART_OFFSET = 54;
@@ -130,20 +134,14 @@ public class GuiStats extends GuiScreen {
 	    	/**
 	    	 * Pedaling Mode Indicator Drawing
 	    	 */
-	    	int texX = 64;
-    		int texY = 96;
     		float scaleX = 0.25f;
     		float scaleY = 0.25f*1.5f;
     		int rectX = 256;
 	    	int rectY = (int)(256/3f);
 	    	
-	    	int peadlingModeY = 0;//ClientEventHandler.pedalingModeState * rectY;
-	    	
-	    	int blueColor =  0xFF00A0FF;
-	    	int greenColor = 0xFF00FF00;
-	    	int redColor =   0xFFFF2000;
-	    	
-	    	int chosenColor = ClientEventHandler.pedalingModeState == 0 ? blueColor : ClientEventHandler.pedalingModeState == 1 ? redColor : greenColor;
+	    	//                         bike (blue),mine (red),build (green)
+	    	int[] colors = new int[] { 0xFF00A0FF, 0xFFFF2000, 0xFF00FF00 };
+	    	int chosenColor = colors[ClientEventHandler.pedalingModeState > 2 ? 2 : ClientEventHandler.pedalingModeState];
 	    	
 			float targetY = -(rectY) * (ClientEventHandler.pedalingModeState);
 		    if (ClientEventHandler.animTickSwitch < ClientEventHandler.animTickSwitchLength) {
@@ -156,28 +154,42 @@ public class GuiStats extends GuiScreen {
 	    	GL11.glPushMatrix();
 	    		
 		    	float targetAlpha = 0.0f;
-			    if (ClientEventHandler.animTickFade < (ClientEventHandler.animTickFadeLength + ClientEventHandler.animTickFadeTime)) {
-			    	if (ClientEventHandler.animTickFade >= ClientEventHandler.animTickFadeLength) {
-			    		targetAlpha = lerp(1.0f, 0.0f,
-				    			(float)(ClientEventHandler.animTickFade - ClientEventHandler.animTickFadeLength) / ClientEventHandler.animTickFadeTime);
-			    	} else {
+			    if (ClientEventHandler.animTickFade < (ClientEventHandler.animTickFadeLength + ClientEventHandler.animTickFadeTime))
+			    	if (ClientEventHandler.animTickFade >= ClientEventHandler.animTickFadeLength)
+			    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickFade - ClientEventHandler.animTickFadeLength) / ClientEventHandler.animTickFadeTime);
+			    	else
 			    		targetAlpha = 1.0f;
-			    	}
-			    }
-	    	
+			    
+			    // Draw picture
 			    GL11.glTranslatef(12, mcHeight - 135, 0); 
 			    GL11.glScalef(scaleX, scaleY, 1.0f);
 			    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
 			    GL11.glEnable(GL11.GL_BLEND);
 			    mc.renderEngine.bindTexture(PEDALINGMODE_TEXTURE);
 			    drawTexturedModalRect(0, 0, 0, (int) targetY, 256, 256-85);
-		        
-				drawRect(0, 0, rectX, rectY, (int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16)); // first item
-				drawRect(0, rectY, rectX, rectY*2, (int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16)); // second item
+			    
+			    // Draw transparent overlays
+				drawRect(0,		0,		rectX,	rectY,		(int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16));
+				drawRect(0,		rectY,	rectX,	rectY*2,	(int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16));
+				
 	    	GL11.glPopMatrix();
 	    	
+	    	// TEXT (top of the items, fades out alongside top portion)
+		    GL11.glPushMatrix();
+		    	
+			    GL11.glTranslatef(44, 95, 0);
+		    	GL11.glScalef(1F, 1F, 1F);
+		    	GL11.glEnable(GL11.GL_BLEND);
+		    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    	int a = targetAlpha < (4/255f) ? 0x04FFFFFF : (int)Long.parseLong(String.format("%02X", (int)(targetAlpha*255)) + "FFFFFF", 16);
+		    	text = ClientEventHandler.pedalingModeState == 0 ? "Run Mode" : ClientEventHandler.pedalingModeState == 1 ? "Mine Mode" : "Build Mode";
+		    	fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 0, a, true);
+		    	
+		    GL11.glPopMatrix();
+		    
 	    	// BOTTOM PORTION (selected item, always on screen)
 	    	GL11.glPushMatrix();
+	    	
 		    	GL11.glTranslatef(12, mcHeight - 135, 0); 
 			    GL11.glScalef(scaleX, scaleY, 1.0f);
 			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -187,16 +199,16 @@ public class GuiStats extends GuiScreen {
 			    
 		    	drawTexturedModalRect(0, 256-86, 0, (int) targetY - 86, 256, 87);
 		        
-				drawRect(0, peadlingModeY + rectY*2, rectX, peadlingModeY+3  + rectY*2 + 1, chosenColor); // top line
-				drawRect(0, peadlingModeY + rectY*2 + 2, 4, peadlingModeY+rectY*3 + 2, chosenColor); // left line
-				drawRect(rectX-4, peadlingModeY+2 + rectY*2, rectX, peadlingModeY+rectY*3 + 2, chosenColor); // right  line
-				drawRect(0, peadlingModeY+rectY*3 + 1, rectX, peadlingModeY+rectY*3 + 5, chosenColor); // bottom line
+				drawRect(0, 		rectY*2,		rectX,	rectY*2 + 4, chosenColor); // top line
+				drawRect(0, 		rectY*2 + 2,	4,		rectY*3 + 2, chosenColor); // left line
+				drawRect(rectX-4,	rectY*2 + 2,	rectX,	rectY*3 + 2, chosenColor); // right  line
+				drawRect(0, 		rectY*3 + 1,	rectX,	rectY*3 + 5, chosenColor); // bottom line
+				
 	    	GL11.glPopMatrix();
-	    	
 	    	/**
 	    	 * END OF Pedaling Mode Indicator Drawing
 	    	 */
-
+	    	
 	    	/**
 	    	 * Quest Progress Indicator Drawing
 	    	 */
@@ -238,6 +250,37 @@ public class GuiStats extends GuiScreen {
 		        	
 		        	GL11.glPopMatrix();
 		        	
+		        	GL11.glPushMatrix();
+		        		
+		        		if (questTaskChasing.isChasingQuestOnCountDown() && questTaskChasing.getCountdown() < 6) {
+		        			targetAlpha = 1.0f;
+		        		} else {
+		        			targetAlpha = 0.0f;
+						    if (ClientEventHandler.animTickChasingFade < (ClientEventHandler.animTickChasingFadeLength + ClientEventHandler.animTickFadeTime))
+						    	if (ClientEventHandler.animTickChasingFade >= ClientEventHandler.animTickChasingFadeLength)
+						    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickChasingFade - ClientEventHandler.animTickChasingFadeLength) / ClientEventHandler.animTickFadeTime);
+						    	else
+						    		targetAlpha = 1.0f;
+		        		}
+			        	
+				        scaleX = 0.3f;
+			    		scaleY = 0.3f;
+			    		rectX = 256;
+				    	rectY = 256;
+				        GL11.glTranslatef(mcWidth/2 - (int)(rectX*scaleX/2f), 32, 0); 
+					    GL11.glScalef(scaleX, scaleY, 1.0f);
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    System.out.println(questTaskChasing.getCountdown());
+					    ResourceLocation chosenImage = questTaskChasing.getCountdown() > 2 && questTaskChasing.getCountdown() < 6  ? TRAFFIC_NONE :
+					    	questTaskChasing.getCountdown() == 2 ? TRAFFIC_RED :
+					    		questTaskChasing.getCountdown() == 1 ? TRAFFIC_YELLOW : 
+					    			TRAFFIC_GREEN;
+				        mc.renderEngine.bindTexture(chosenImage);
+				        drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			        
+			        GL11.glPopMatrix();
+		        
 		        	int time = 0;
 		        	
 		        	QuestTaskChasing quest = (QuestTaskChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();

@@ -664,6 +664,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		// COUNT DOWN TIME
 		countdown --;
 		
+		// PLAY SOUND
+		if (countdown == 2 || countdown == 1) {
+			player.worldObj.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
+//			player.playSound("minebike:beep-ready", 1.0f, 1.0f);
+		} else if (countdown == 0) {
+			player.worldObj.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
+//			player.playSound("minebike:beep-go", 1.0f, 1.0f);
+		}
+		
 		if(countdown > 0){	
 			if (countdown == 7) {
 				for (Object o : player.worldObj.loadedEntityList) {
@@ -751,6 +760,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			countdown = 11;
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
+			ClientEventHandler.animTickChasingFade = 0;
 //			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0;
 		}
 	}

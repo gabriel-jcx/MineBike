@@ -62,6 +62,8 @@ public class ClientEventHandler {
 	public static int animTickFade;
 	public static final int animTickFadeLength = 40;
 	public static final int animTickFadeTime = 10;
+	public static int animTickChasingFade;
+	public static final int animTickChasingFadeLength = 20;
 	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
@@ -223,6 +225,7 @@ public class ClientEventHandler {
 	{
 		if ((Minecraft.getMinecraft().thePlayer!=null) 
 				&& (event.phase==TickEvent.Phase.END)) {
+			
 			if(context.getQuestManager() == null)
 			{
 				context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
@@ -254,6 +257,9 @@ public class ClientEventHandler {
 			}
 			if (animTickFade < animTickFadeLength + animTickFadeTime) {
 				animTickFade++;
+			}
+			if (animTickChasingFade < animTickChasingFadeLength + animTickFadeTime) {
+				animTickChasingFade++;
 			}
 			
 			/**
