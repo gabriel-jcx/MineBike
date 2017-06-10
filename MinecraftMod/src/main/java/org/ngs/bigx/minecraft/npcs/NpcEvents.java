@@ -53,7 +53,6 @@ public class NpcEvents {
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
 		///Give player the mysterious key
-//		BiGXEventTriggers.givePlayerMessage(player, BiGXTextBoxDialogue.firstQuestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.firstQuestMsgTitle);
 		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 		else{
@@ -63,8 +62,6 @@ public class NpcEvents {
 			}
 		}
 		
-//		BiGXEventTriggers.givePlayerQuest(player, Quest.QUEST_ID_STRING_CHASE_REG,
-//				BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description);
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
