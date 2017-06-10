@@ -66,7 +66,7 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(93, 65, 230), Vec3.createVectorHelper(97, 75, 235), 
 				BiGXTextBoxDialogue.directionMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(93, 65, -9), Vec3.createVectorHelper(100, 75, -4), 
+		addArea(new Area(Vec3.createVectorHelper(93, 65, -9), Vec3.createVectorHelper(100, 75, 0), 
 				BiGXTextBoxDialogue.readSignReminder, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 		addArea(new Area(Vec3.createVectorHelper(86, 45, 235), Vec3.createVectorHelper(103, 100, 250), 
@@ -83,6 +83,12 @@ public class ClientAreaEvent {
 		
 		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
 				BiGXTextBoxDialogue.placeContinentPangea, AreaTypeEnum.WORLD, 0), AreaTypeEnum.WORLD);
+		
+		//Fire Cave Areas
+		addArea(new Area(Vec3.createVectorHelper(-5, 60, -5), Vec3.createVectorHelper(5, 70, 11), 
+				BiGXTextBoxDialogue.readSignReminder, AreaTypeEnum.ROOM, 105), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
+				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 105), AreaTypeEnum.PLACE);
 		
 		//Tutorial Areas
 		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 100, 30), 
