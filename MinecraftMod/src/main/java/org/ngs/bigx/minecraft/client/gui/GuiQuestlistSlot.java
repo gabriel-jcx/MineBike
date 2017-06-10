@@ -25,7 +25,7 @@ public class GuiQuestlistSlot extends GuiScrollingList {
 	}
 
 	public GuiQuestlistSlot(GuiQuestlistManager parent) {
-		this(197, parent.height - parent.getTopMargin(), parent.getTopMargin(), 0, 30);
+		this(167, parent.height - parent.getTopMargin(), parent.getTopMargin(), 0, 30);
 		this.parent = parent;
 	}
 
