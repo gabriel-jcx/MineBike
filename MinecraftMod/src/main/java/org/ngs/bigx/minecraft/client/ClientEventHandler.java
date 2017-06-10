@@ -325,27 +325,7 @@ public class ClientEventHandler {
 			if(ClientAreaEvent.isAreaChange())
 			{
 				ClientAreaEvent.unsetAreaChangeFlag();
-	//						if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM) {
-	//							if (showLeaderboard) {
-	//								showLeaderboard = false;
-	//								final Timer leaderboardTimer = new Timer();
-	//								
-	//								final TimerTask leaderboardTimerTask = new TimerTask() {
-	//									@Override
-	//									public void run() {
-	//										GuiLeaderBoard.showLeaderBoard(true);
-	//										if (leaderboardSeconds++ >= 5) {
-	//											GuiLeaderBoard.showLeaderBoard(false);
-	//											leaderboardSeconds = 0;
-	//											leaderboardTimer.cancel();
-	//										}
-	//									}
-	//								};
-	//								leaderboardTimer.scheduleAtFixedRate(leaderboardTimerTask, 0, 1000);
-	//							}
-	//						} else {
-	//							showLeaderboard = true;
-	//						}
+				
 				if(ClientAreaEvent.previousArea != null){
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
 						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)

@@ -51,8 +51,36 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	}
 
 	@Override
-	protected void drawSlot(int i, int j, int k, int l, Tessellator tessellator) {
-		String name = "Level " + parent.getSelectedQuestLevelList(i).level;
+	protected void drawSlot(int i, int j, int k, int l, Tessellator tessellator)
+	{
+		String name = "";
+		
+		switch(i)
+		{
+		case 0:
+			name = "Gold Thief";
+			break;
+		case 1:
+			name = "Element Thief";
+			break;
+		case 2:
+			name = "Key Thief";
+			break;
+		case 3:
+			name = "Thief Master";
+			break;
+		case 4:
+			name = "Thief King";
+			break;
+		case 5:
+			name = "Thief God";
+			break;
+		default:
+			name = "Random Thief";
+			break;
+		}
+		
+		
 		int fontColor = 0xFFFFFF;
 		
 		if(parent.getSelectedQuestLevelList(i).isLocked)
