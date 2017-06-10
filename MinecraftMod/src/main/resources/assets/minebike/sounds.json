@@ -22,5 +22,13 @@
   "win": {
     "category": "player",
     "sounds": ["win"]
+  },
+  "beep-ready": {
+    "category": "player",
+    "sounds": ["beep-ready"]
+  },
+  "beep-go": {
+    "category": "player",
+    "sounds": ["beep-go"]
   }
 }

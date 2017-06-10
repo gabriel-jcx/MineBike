@@ -10,6 +10,7 @@ public class BiGXTextBoxDialogue {
 	
 	public static final String doorLocked = "Hmm... The door's locked...\nThere might be another way\nout...";
 	public static final String chestLocked = "The chest is locked...";
+	public static final String readSignReminder = "Someone put a sign here.\nIt looks important...";
 	public static final String soundComment = "Where's that sound coming\nfrom?";
 	
 	public static final String gotReward = "Congrats! You collected\n";
@@ -83,6 +84,8 @@ public class BiGXTextBoxDialogue {
 	public static final String scientistQuestFinished1 = "Scientist: Great job! The\nchest has a teleportation\npotion and some gold.";
 	public static final String scientistQuestFinished2 = "Scientist: The merchants in\nthe past love that stuff!\nHere, the key is yours.";
 	public static final String scientistPotionInstructions = "Drink the potion in the chest\nto teleport to the past.";
+	
+	public static final String checkpointReminder = "Activate the Checkpoint!";
 	
 	public static final String fireRoomEntrance = "That Minion Bot must\nhave what I need...";
 	public static final String earthRoomEntrance = "I might be able to\nbreak that tree...";
