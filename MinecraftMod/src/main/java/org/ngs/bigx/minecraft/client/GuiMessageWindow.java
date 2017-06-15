@@ -30,12 +30,24 @@ public class GuiMessageWindow extends GuiScreen {
 	private ResourceLocation MESSAGE_WINDOW_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/dialog.png");
 	private ResourceLocation GOLDBAR_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/goldbar.png");
 	private ResourceLocation BOOK_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	//TODO: CHANGE TEXTURE LOCATIONS
+	public static ResourceLocation PEDAL_FORWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/heart.png");
+	public static ResourceLocation PEDAL_BACKWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation MINE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation BUILD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/heart.png");
+	public static ResourceLocation DASH_JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation POTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation CHEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
 	
 	private BigxClientContext context;
 	private static long timestampLastShowWindowCall = 0;
 	private static long timestampLastShowGoldbarCall = 0;
 	private static long timestampLastShowBookCall = 0;
+	private static long timestampLastShowTextureCall = 0;
 	private static String[] textLinesToBeShown = null;
+	private static ResourceLocation current_texture = null;
 	
 	private final long durationShowWindow = 5000;
 	private final long durationFadeIn = 250;
@@ -125,6 +137,9 @@ public class GuiMessageWindow extends GuiScreen {
 		else if (message.substring(0,1).equals("B")) {
 			timestampLastShowBookCall = timestampLastShowWindowCall;
 		}
+		else if (message.substring(0,1).equals("T")){
+			timestampLastShowTextureCall = timestampLastShowWindowCall;
+		}
 		else{
 			timestampLastShowGoldbarCall = 0;
 		}
@@ -143,6 +158,17 @@ public class GuiMessageWindow extends GuiScreen {
 	public static void showBook(String message)
 	{
 		textList.add("B" + message);
+		
+		if(timestampLastShowWindowCall == 0)
+		{
+			timestampLastShowWindowCall = System.currentTimeMillis();
+		}
+	}
+	
+	public static void showWithTexture(String message, ResourceLocation texture){
+		textList.add("T" + message);
+		
+		current_texture = texture;
 		
 		if(timestampLastShowWindowCall == 0)
 		{
@@ -245,11 +271,23 @@ public class GuiMessageWindow extends GuiScreen {
 		        	
 		        	GL11.glPopMatrix();
 		        }
+	        	else if (timestampLastShowTextureCall != 0){
+	        		GL11.glPushMatrix();
+			    	
+					    GL11.glTranslatef(mcWidth/2, mcHeight-165f, 0); 
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(current_texture);
+				        drawTexturedModalRect(-75, -53, 0, 0, 150 , 105);
+		        	
+		        	GL11.glPopMatrix();
+		        }
 	    	}
 	    	else{
 	    		timestampLastShowWindowCall = 0;
 	    		timestampLastShowGoldbarCall = 0;
 	    		timestampLastShowBookCall = 0;
+	    		timestampLastShowTextureCall = 0;
 	    		textLinesToBeShown = null;
 	    	}
     	}
@@ -257,6 +295,7 @@ public class GuiMessageWindow extends GuiScreen {
     		timestampLastShowWindowCall = 0;
     		timestampLastShowGoldbarCall = 0;
     		timestampLastShowBookCall = 0;
+    		timestampLastShowTextureCall = 0;
     		textLinesToBeShown = null;
     	}
     }

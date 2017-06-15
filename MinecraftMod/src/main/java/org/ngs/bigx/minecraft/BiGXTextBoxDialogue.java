@@ -62,14 +62,21 @@ public class BiGXTextBoxDialogue {
 	//Instructions
 	public static final String instructionsInteractNPC = "Press LEFT TRIGGER to interact\nwith characters.";
 	public static final String instructionsAttackNPC = "Press RIGHT TRIGGER\nto hit the bot.";
-	public static final String instructionsJump = "Press A to jump.";
+	public static final String instructionsPedalForward = "Pedal forward to\nmove forward!";
+	public static final String instructionsPedalBackward = "Pedal backward to\nmove back!";
+	public static final String instructionsJump = "Press A to jump!";
+	public static final String instructionsDashJump = "Pedal and press A to\nDash jump!";
+	public static final String instructionsMine = "Switch to mining mode and\npedal to mine!";
+	public static final String instructionsBuild = "Switch to building mode\nand pedal to build!";
+	public static final String instructionsDrinkPotion = "Press [BUTTON] to drink\nthe potion!";
+	
 	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
-	public static final String instructionsChestOpen = "Press LEFT TRIGGER to open the chest.";
+	public static final String instructionsChestOpen = "Press LEFT TRIGGER to\nopen the chest.";
 	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	public static final String instructionsChangeMode = "Press DPAD LEFT to\nswitch pedalling modes.";
-	
-	// Tutorial Message
+
+	// (OLD) Tutorial Message
 	public static final String tutorialQuestTitle = "Collect the Assigned Items";
 	public static final String tutorialQuestDescription = "1 Regeneration Potion\n1 Gold Ingot\n1 Wooden Sword\n1 Torch";
 	

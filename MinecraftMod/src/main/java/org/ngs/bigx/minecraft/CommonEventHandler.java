@@ -244,6 +244,9 @@ public class CommonEventHandler {
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
 			else if (event.target.dimension == 0)
 				return;
+			else if (event.target.dimension == 102){
+				BiGXEventTriggers.attackNPC(event);
+			}
 			else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
 				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
@@ -255,6 +258,8 @@ public class CommonEventHandler {
 				return;
 			else if (event.target.dimension == 0)
 				return;
+			else if (event.target.dimension == 102)
+				BiGXEventTriggers.attackNPC(event);
 			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
 			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);

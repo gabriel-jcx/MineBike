@@ -90,32 +90,46 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
 				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 105), AreaTypeEnum.PLACE);
 		
-		//Tutorial Areas
-		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 100, 30), 
-				BiGXTextBoxDialogue.placeFireRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		// Tutorial Areas 
+		// TODO: CHANGE VECTOR LOCATIONS
+		addArea(new Area(Vec3.createVectorHelper(510, 54, -4), Vec3.createVectorHelper(518, 100, 4), 
+				BiGXTextBoxDialogue.instructionsChangeMode, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(518, 54, -4), Vec3.createVectorHelper(530, 100, 4), 
+				BiGXTextBoxDialogue.instructionsPedalForward, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(530, 54, -4), Vec3.createVectorHelper(541, 100, 4), 
+				BiGXTextBoxDialogue.instructionsPedalBackward, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(541, 54, -4), Vec3.createVectorHelper(552, 100, 4), 
+				BiGXTextBoxDialogue.instructionsJump, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(552, 54, -4), Vec3.createVectorHelper(563, 100, 4), 
+				BiGXTextBoxDialogue.instructionsMine, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(563, 54, -4), Vec3.createVectorHelper(574, 100, 4), 
+				BiGXTextBoxDialogue.instructionsBuild, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(574, 54, -4), Vec3.createVectorHelper(585, 100, 4), 
+//				BiGXTextBoxDialogue.instructionsDashJump, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(574, 54, -4), Vec3.createVectorHelper(585, 100, 4), 
+				BiGXTextBoxDialogue.instructionsChestOpen, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(585, 54, -4), Vec3.createVectorHelper(596, 100, 4), 
+				BiGXTextBoxDialogue.instructionsAttackNPC, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		addArea(new Area(Vec3.createVectorHelper(596, 54, -4), Vec3.createVectorHelper(610, 100, 4), 
+				BiGXTextBoxDialogue.instructionsDrinkPotion, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(-30, 55, 64), Vec3.createVectorHelper(30, 100, 126), 
-				BiGXTextBoxDialogue.placeWaterRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-		
-		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -64), 
-				BiGXTextBoxDialogue.placeEarthRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-		
-		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -81), 
-				BiGXTextBoxDialogue.instructionsChangeMode, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
-		
-		
-		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(130, 100, 30), 
-				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-		
-		addArea(new Area(Vec3.createVectorHelper(92, 70, -27), Vec3.createVectorHelper(100, 74, -19), 
-				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
-
-		addArea(new Area(Vec3.createVectorHelper(114, 75, -2), Vec3.createVectorHelper(126, 80, 4), 
-				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
-
-		
-		addArea(new Area(Vec3.createVectorHelper(-64, 54, -64), Vec3.createVectorHelper(64, 74, 64), 
-				BiGXTextBoxDialogue.placeLabratory, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+		//(OLD) Tutorial Areas
+//		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 100, 30), 
+//				BiGXTextBoxDialogue.placeFireRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-30, 55, 64), Vec3.createVectorHelper(30, 100, 126), 
+//				BiGXTextBoxDialogue.placeWaterRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -64), 
+//				BiGXTextBoxDialogue.placeEarthRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -81), 
+//				BiGXTextBoxDialogue.instructionsChangeMode, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+//		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(130, 100, 30), 
+//				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
+//		addArea(new Area(Vec3.createVectorHelper(92, 70, -27), Vec3.createVectorHelper(100, 74, -19), 
+//				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+//		addArea(new Area(Vec3.createVectorHelper(114, 75, -2), Vec3.createVectorHelper(126, 80, 4), 
+//				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
+//		addArea(new Area(Vec3.createVectorHelper(-64, 54, -64), Vec3.createVectorHelper(64, 74, 64), 
+//				BiGXTextBoxDialogue.placeLabratory, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		
 	}
 	
