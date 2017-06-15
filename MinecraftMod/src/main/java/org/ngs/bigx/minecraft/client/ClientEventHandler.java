@@ -328,14 +328,34 @@ public class ClientEventHandler {
 				
 				if(ClientAreaEvent.previousArea != null){
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
+						// (OLD) Tutorial
+//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
+//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
+//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
+//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
+//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
+//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
+//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
+//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
+						// New Tutorial
+						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalForward)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsPedalForward, GuiMessageWindow.PEDAL_FORWARD_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalBackward)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsPedalBackward, GuiMessageWindow.PEDAL_BACKWARD_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsMine)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsMine, GuiMessageWindow.MINE_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsBuild)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsBuild, GuiMessageWindow.BUILD_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsJump)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsAttackNPC)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
+//							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.CHEST_TEXTURE);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDrinkPotion)
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDrinkPotion, GuiMessageWindow.POTION_TEXTURE);
 						else
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}

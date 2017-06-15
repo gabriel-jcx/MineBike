@@ -29,6 +29,8 @@ import noppes.npcs.roles.RoleTrader;
 
 public class NpcEvents {
 	
+	public static int botHealth = 10;
+	
 	public NpcEvents() {
 	}
 	
@@ -44,8 +46,10 @@ public class NpcEvents {
 			InteractWithPotionSeller(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
-			InteractWithScientist(player, event);
+//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
+//			InteractWithScientist(player, event);
+//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
+//			InteractWithTrainingBot(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
 			InteractWithTrainingBot(player, event);
 			

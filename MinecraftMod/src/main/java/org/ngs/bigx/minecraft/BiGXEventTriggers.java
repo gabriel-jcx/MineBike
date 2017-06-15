@@ -1,9 +1,12 @@
 package org.ngs.bigx.minecraft;
 
+import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.levelUp.ChestSystem;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
+import org.ngs.bigx.minecraft.npcs.NpcEvents;
+import org.ngs.bigx.minecraft.npcs.NpcLocations;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTask;
@@ -22,6 +25,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class BiGXEventTriggers {	
@@ -48,6 +52,25 @@ public class BiGXEventTriggers {
 	
 	public static void chestInteract(PlayerInteractEvent e, World w, LevelSystem levelSys){
 		ChestSystem.interactWithChests(e, levelSys);
+	}
+	
+	public static void attackNPC(AttackEntityEvent event){
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
+			int deduction = 1;
+			if (event.target.worldObj.isRemote){
+				GuiDamage.addDamageText(deduction, 255, 10, 10);
+				NpcEvents.botHealth -= deduction;
+			}
+			if (NpcEvents.botHealth <= 0){
+				if (event.target.worldObj.isRemote)
+					GuiMessageWindow.showMessage("You got the potion!");
+				ItemStack p = new ItemStack(Items.potionitem);
+				p.setStackDisplayName("Teleportation Potion - Past");
+				event.entityPlayer.inventory.addItemStackToInventory(p);
+				NpcEvents.botHealth = 10;
+				//event.target.setDead();
+			}
+		}
 	}
 	
 	public static void GivePlayerGoldfromCoins(EntityPlayer player, int numOfCoins){

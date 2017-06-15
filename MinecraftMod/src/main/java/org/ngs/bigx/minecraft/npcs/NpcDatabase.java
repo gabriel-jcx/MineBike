@@ -33,7 +33,7 @@ public class NpcDatabase {
 	
 	private static Map<String, Vec3> populateMapTutorial() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
-		map.put("Scientist", NpcLocations.scientists);
+//		map.put("Scientist", NpcLocations.scientists);
 		map.put("Training Bot", NpcLocations.trainingBot);
 		return map;
 	}
@@ -46,30 +46,30 @@ public class NpcDatabase {
 		else if (dimID == 102)
 			for (Map.Entry<String, Vec3> item : npcsTutorial.entrySet())
 				toReturn.add(item.getKey());
+//		else if (dimID == 100)
+//			for (Map.Entry<String, Vec3> item : npcsTutorial2.entrySet())
+//				toReturn.add(item.getKey());
 //		System.out.println(toReturn);
 		return toReturn;
 	}
 	
 	public static void spawn(WorldServer world, String name, int dimID) {
-//		System.out.println("System is remote in DIMID " + dimID + ": " + world.isRemote);
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(0), name);
-//			npc.setPosition(npcs.get(name).xCoord, (float)npcs.get(name).yCoord, npcs.get(name).zCoord);
 		}
 		else if (dimID == 102){
-//			System.out.println("[BiGX] NPC SPAWN FUNCTION [" + name + "]");
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, (int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name);
-//			npc.setPosition(npcsTutorial.get(name).xCoord, (float)npcsTutorial.get(name).yCoord, npcsTutorial.get(name).zCoord);
 		}
+//		else if (dimID == 100){
+//			npc = NpcCommand.spawnNpc((int)npcsTutorial2.get(name).xCoord, (int)npcsTutorial2.get(name).yCoord, (int)npcsTutorial2.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(100), name);
+//		}
 		if (npc != null){
-//			System.out.println("NPC Placed!");
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
 			if (name.contains("Training Bot")){
 				System.out.println("Altering Training Bot");
 				npc.ai.stopAndInteract = false;
-//				npc.setHealth(10);
 				npc.inventory.setInventorySlotContents(0, new ItemStack(Item.getItemById(50)));
 			}
 		}

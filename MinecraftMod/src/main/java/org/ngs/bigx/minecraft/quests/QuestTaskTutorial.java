@@ -156,14 +156,14 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 
 	@Override
 	public void onNpcInteraction(EntityInteractEvent e) {
-		System.out.println("Interacting with NPC!!!");
-		if(BiGXEventTriggers.checkEntityInArea(e.target, NpcLocations.scientists, NpcLocations.scientists.addVector(1, 1, 1)))
-		{
-			if(isAllItemPossessed())
-			{
-				this.completed = true;
-			}
-		}
+//		System.out.println("Interacting with NPC!!!");
+//		if(BiGXEventTriggers.checkEntityInArea(e.target, NpcLocations.scientists, NpcLocations.scientists.addVector(1, 1, 1)))
+//		{
+//			if(isAllItemPossessed())
+//			{
+//				this.completed = true;
+//			}
+//		}
 	}
 	
 	public void hitEntity(EntityPlayer player, EntityLivingBase target){
