@@ -25,18 +25,19 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateNormalChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(0, 72, 117).toString(), "TutorialChestWater");
-		map.put(Vec3.createVectorHelper(1, 72, 117).toString(), "TutorialChestWater");
-		map.put(Vec3.createVectorHelper(95, 79, 0).toString(), "TutorialChestAir"); 
-		map.put(Vec3.createVectorHelper(96, 79, 0).toString(), "TutorialChestAir");
-		map.put(Vec3.createVectorHelper(10, 63, -111).toString(), "TutorialChestEarth");
-		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "level123Chest");
+//		map.put(Vec3.createVectorHelper(0, 72, 117).toString(), "TutorialChestWater");
+//		map.put(Vec3.createVectorHelper(1, 72, 117).toString(), "TutorialChestWater");
+//		map.put(Vec3.createVectorHelper(95, 79, 0).toString(), "TutorialChestAir"); 
+//		map.put(Vec3.createVectorHelper(96, 79, 0).toString(), "TutorialChestAir");
+//		map.put(Vec3.createVectorHelper(10, 63, -111).toString(), "TutorialChestEarth");
+//		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "level123Chest");
+		map.put(Vec3.createVectorHelper(568, 65, -4).toString(), "TutorialChest");
 		return map;
 	}
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(14, 63, 9).toString(), "Shiny Key"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(604, 66, -1).toString(), "Shiny Key"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Mysterious Key");
 		map.put(Vec3.createVectorHelper(20, 77, -76).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
@@ -63,21 +64,26 @@ public class ChestSystem {
 		if (e.action == Action.LEFT_CLICK_BLOCK)
 			e.setCanceled(true);
 		
-		if (chestName == "TutorialChestWater")
-			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 1, 1)); //Health potion? TODO: Double check ids
-		
-		else if (chestName == "TutorialChestAir")
-			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(266)));//new ItemStack(Item.getItemById(373), 1, 8194)); //Swiftness potion? TODO: Double check ids
-		
-		else if (chestName == "TutorialChestEarth"){
+		if (chestName == "TutorialChest"){
 			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
-			c.setInventorySlotContents(1, new ItemStack(Item.getItemById(269))); //wood shovel
-			c.setInventorySlotContents(2, new ItemStack(Item.getItemById(270))); //wood pickaxe
-			c.setInventorySlotContents(3, new ItemStack(Item.getItemById(271))); //wood axe
+			c.setInventorySlotContents(1, new ItemStack(Item.getItemById(266)));
 		}
 		
-		else if (chestName == "level123Chest")
-			putMessageInChest(c, 0, BiGXTextBoxDialogue.caveChestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.caveChestMsgTitle);
+//		if (chestName == "TutorialChestWater")
+//			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(373), 1, 1)); //Health potion? TODO: Double check ids
+//		
+//		else if (chestName == "TutorialChestAir")
+//			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(266)));//new ItemStack(Item.getItemById(373), 1, 8194)); //Swiftness potion? TODO: Double check ids
+//		
+//		else if (chestName == "TutorialChestEarth"){
+//			c.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
+//			c.setInventorySlotContents(1, new ItemStack(Item.getItemById(269))); //wood shovel
+//			c.setInventorySlotContents(2, new ItemStack(Item.getItemById(270))); //wood pickaxe
+//			c.setInventorySlotContents(3, new ItemStack(Item.getItemById(271))); //wood axe
+//		}
+//		
+//		else if (chestName == "level123Chest")
+//			putMessageInChest(c, 0, BiGXTextBoxDialogue.caveChestMsg, BiGXTextBoxDialogue.QuestMsgAuthor, BiGXTextBoxDialogue.caveChestMsgTitle);
 	}
 	
 	public static void interactWithLockedChest(PlayerInteractEvent e, LevelSystem levelSys, String keyName){

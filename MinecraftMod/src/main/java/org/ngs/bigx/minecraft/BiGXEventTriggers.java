@@ -62,11 +62,12 @@ public class BiGXEventTriggers {
 				NpcEvents.botHealth -= deduction;
 			}
 			if (NpcEvents.botHealth <= 0){
-				if (event.target.worldObj.isRemote)
-					GuiMessageWindow.showMessage("You got the potion!");
-				ItemStack p = new ItemStack(Items.potionitem);
-				p.setStackDisplayName("Teleportation Potion - Past");
-				event.entityPlayer.inventory.addItemStackToInventory(p);
+				givePlayerKey(event.entityPlayer, "Shiny Key", "You got the\nShiny Key!");
+//				ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
+//				key.setStackDisplayName("Shiny Key");
+//				if (!event.entityPlayer.worldObj.isRemote)
+//					GuiMessageWindow.showMessage("You got the\nShiny Key!");
+//				System.out.println("Player has been given key: " + event.entityPlayer.inventory.addItemStackToInventory(key));
 				NpcEvents.botHealth = 10;
 				//event.target.setDead();
 			}
@@ -104,15 +105,17 @@ public class BiGXEventTriggers {
 	}
 	
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
-		ItemStack key = new ItemStack(Item.getItemById(4424));//new ItemStack(Item.getItemById(4424));
+		ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
 		key.setStackDisplayName(name);
-		//TODO: Fix so that player can get multiple keys, or make it so that it just renames that key if it's there.
+		System.out.println("There is a key" + (key != null));
 		for (ItemStack item : player.inventory.mainInventory)
 			if (item != null && item.getDisplayName().contains(name))
 				return false;
+		System.out.println(message != null);
+		System.out.println("Giving player key...");
 		if (message != "" && !player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(message);
-		player.inventory.addItemStackToInventory(key);
+		System.out.println("Player has been given key: " + player.inventory.addItemStackToInventory(key));
 		return true;
 //		if (!player.inventory.hasItemStack(key)){
 //			if (message != "" && !player.worldObj.isRemote)
