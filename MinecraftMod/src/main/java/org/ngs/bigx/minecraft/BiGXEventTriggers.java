@@ -57,17 +57,14 @@ public class BiGXEventTriggers {
 	public static void attackNPC(AttackEntityEvent event){
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
 			int deduction = 1;
+			if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().getDisplayName().contains("Wooden Sword"))
+				deduction = 2; //System.out.println(event.entityPlayer.getHeldItem().getDisplayName());
 			if (event.target.worldObj.isRemote){
 				GuiDamage.addDamageText(deduction, 255, 10, 10);
 				NpcEvents.botHealth -= deduction;
 			}
 			if (NpcEvents.botHealth <= 0){
-				givePlayerKey(event.entityPlayer, "Shiny Key", "You got the\nShiny Key!");
-//				ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
-//				key.setStackDisplayName("Shiny Key");
-//				if (!event.entityPlayer.worldObj.isRemote)
-//					GuiMessageWindow.showMessage("You got the\nShiny Key!");
-//				System.out.println("Player has been given key: " + event.entityPlayer.inventory.addItemStackToInventory(key));
+				givePlayerKey(event.entityPlayer, "Shiny Key", "You got the Shiny Key!");
 				NpcEvents.botHealth = 10;
 				//event.target.setDead();
 			}
@@ -107,23 +104,14 @@ public class BiGXEventTriggers {
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
 		ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
 		key.setStackDisplayName(name);
-		System.out.println("There is a key" + (key != null));
 		for (ItemStack item : player.inventory.mainInventory)
 			if (item != null && item.getDisplayName().contains(name))
 				return false;
-		System.out.println(message != null);
-		System.out.println("Giving player key...");
-		if (message != "" && !player.worldObj.isRemote)
+		System.out.println(message != "" && player.worldObj.isRemote);
+		if (message != "" && player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(message);
-		System.out.println("Player has been given key: " + player.inventory.addItemStackToInventory(key));
+		player.inventory.addItemStackToInventory(key);
 		return true;
-//		if (!player.inventory.hasItemStack(key)){
-//			if (message != "" && !player.worldObj.isRemote)
-//				GuiMessageWindow.showMessage(message);
-//			player.inventory.addItemStackToInventory(key);
-//			return true;
-//		}
-//		return false;
 	}
 	
 	public static boolean checkEntityInArea(Entity entity, double xCoord, double yCoord, double zCoord, double xCoord2, double yCoord2, double zCoord2){
