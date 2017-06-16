@@ -18,7 +18,7 @@ public class NpcLocations {
 //	public static Vec3 trainingBot = Vec3.createVectorHelper(-108, 64, 0);
 	
 	//New Tutorial NPC
-	public static Vec3 trainingBot = Vec3.createVectorHelper(591, 66, 0);
+	public static Vec3 trainingBot = Vec3.createVectorHelper(580, 66, 0);
 	
 	//Random NPCs
 	

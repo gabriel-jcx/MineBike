@@ -57,16 +57,14 @@ public class BiGXEventTriggers {
 	public static void attackNPC(AttackEntityEvent event){
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
 			int deduction = 1;
+			if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().getDisplayName().contains("Wooden Sword"))
+				deduction = 2; //System.out.println(event.entityPlayer.getHeldItem().getDisplayName());
 			if (event.target.worldObj.isRemote){
 				GuiDamage.addDamageText(deduction, 255, 10, 10);
 				NpcEvents.botHealth -= deduction;
 			}
 			if (NpcEvents.botHealth <= 0){
-				if (event.target.worldObj.isRemote)
-					GuiMessageWindow.showMessage("You got the potion!");
-				ItemStack p = new ItemStack(Items.potionitem);
-				p.setStackDisplayName("Teleportation Potion - Past");
-				event.entityPlayer.inventory.addItemStackToInventory(p);
+				givePlayerKey(event.entityPlayer, "Shiny Key", "You got the Shiny Key!");
 				NpcEvents.botHealth = 10;
 				//event.target.setDead();
 			}
@@ -104,23 +102,16 @@ public class BiGXEventTriggers {
 	}
 	
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
-		ItemStack key = new ItemStack(Item.getItemById(4424));//new ItemStack(Item.getItemById(4424));
+		ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
 		key.setStackDisplayName(name);
-		//TODO: Fix so that player can get multiple keys, or make it so that it just renames that key if it's there.
 		for (ItemStack item : player.inventory.mainInventory)
 			if (item != null && item.getDisplayName().contains(name))
 				return false;
-		if (message != "" && !player.worldObj.isRemote)
+		System.out.println(message != "" && player.worldObj.isRemote);
+		if (message != "" && player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(message);
 		player.inventory.addItemStackToInventory(key);
 		return true;
-//		if (!player.inventory.hasItemStack(key)){
-//			if (message != "" && !player.worldObj.isRemote)
-//				GuiMessageWindow.showMessage(message);
-//			player.inventory.addItemStackToInventory(key);
-//			return true;
-//		}
-//		return false;
 	}
 	
 	public static boolean checkEntityInArea(Entity entity, double xCoord, double yCoord, double zCoord, double xCoord2, double yCoord2, double zCoord2){
