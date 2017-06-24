@@ -253,16 +253,21 @@ public class CommonEventHandler {
 				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
 			}
 		}
-		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
-			if (event.target.toString().contains("Scientist"))
-				return;
-			else if (event.target.dimension == 0)
-				return;
-			else if (event.target.dimension == 102)
+//		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
+//			if (event.target.toString().contains("Scientist"))
+//				return;
+//			else if (event.target.dimension == 0)
+//				return;
+//			else if (event.target.dimension == 102)
+//				BiGXEventTriggers.attackNPC(event);
+//			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+//			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
+//			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
+//		}
+		else {
+			if (event.target.dimension == 0 || event.target.dimension == 102) {
 				BiGXEventTriggers.attackNPC(event);
-			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
-			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
+			}
 		}
 	}
 	

@@ -38,6 +38,7 @@ public class ChestSystem {
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
 		map.put(Vec3.createVectorHelper(604, 66, -1).toString(), "Shiny Key"); //TODO: change coords
+		map.put(Vec3.createVectorHelper(604, 66, 0).toString(), "Shiny Key"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "Mysterious Key");
 		map.put(Vec3.createVectorHelper(20, 77, -76).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
@@ -128,9 +129,67 @@ public class ChestSystem {
 	}
 	
 	private static void putPotionInChest(TileEntityChest c, String displayName, int slot){
+		putPotionInChest(c, displayName, slot, false);
+	}
+	
+	private static void putPotionInChest(TileEntityChest c, String displayName, int slot, boolean stack) {
 		ItemStack p = new ItemStack(Items.potionitem);
-		p.setStackDisplayName(displayName);
-		c.setInventorySlotContents(slot, p);
+		// If duplicates are allowed, do the operation and return
+		if (stack) {
+			p.setStackDisplayName(displayName);
+			c.setInventorySlotContents(slot, p);
+			return;
+		}
+		// Look for item already in chest
+		boolean found = false;
+		for (int index = 0; index < c.getSizeInventory(); ++index) {
+			if (c.getStackInSlot(index) != null) {
+				String s = c.getStackInSlot(index).getDisplayName();
+				if (s == displayName) {
+					found = true;
+					break;
+				}
+			}
+		}
+		
+		// Check for adjacent chest
+		c.checkForAdjacentChests();
+		TileEntityChest adjacent =
+			c.adjacentChestXNeg != null ? c.adjacentChestXNeg :
+			c.adjacentChestXPos != null ? c.adjacentChestXPos :
+			c.adjacentChestZNeg != null ? c.adjacentChestZNeg :
+			c.adjacentChestZPos != null ? c.adjacentChestZPos :
+			null;
+		
+		if (adjacent == null) {
+			// Add potion if not already in the chest
+			if (!found) {
+				p.setStackDisplayName(displayName);
+				c.setInventorySlotContents(slot, p);
+				return;
+			}
+		}
+		
+		// Search the adjacent chest (it exists as a separate TileEntityChest and has its own inventory)
+		boolean foundInDouble = false;
+		for (int index = 0; index < adjacent.getSizeInventory(); ++index) {
+			if (adjacent.getStackInSlot(index) != null) {
+				String s = adjacent.getStackInSlot(index).getDisplayName();
+				if (s == displayName) {
+					foundInDouble = true;
+					break;
+				}
+			}
+		}
+		
+		if (!found && !foundInDouble) {
+			p.setStackDisplayName(displayName);
+			c.setInventorySlotContents(slot, p);
+		}
+//		else if (!found && foundInDouble) {
+//			p.setStackDisplayName(displayName);
+//			c.setInventorySlotContents(slot, p);
+//		}
 	}
 	
 	private static void putMessageInChest(TileEntityChest c, int slot, String message, String author, String title){

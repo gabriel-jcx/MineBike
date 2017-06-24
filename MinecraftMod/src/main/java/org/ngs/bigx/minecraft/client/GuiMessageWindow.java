@@ -31,15 +31,15 @@ public class GuiMessageWindow extends GuiScreen {
 	private ResourceLocation GOLDBAR_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/goldbar.png");
 	private ResourceLocation BOOK_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
 	//TODO: CHANGE TEXTURE LOCATIONS
-	public static ResourceLocation PEDAL_FORWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/heart.png");
-	public static ResourceLocation PEDAL_BACKWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation MINE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation BUILD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/heart.png");
-	public static ResourceLocation DASH_JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation POTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation CHEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation PEDAL_FORWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedal-forward.png");
+	public static ResourceLocation PEDAL_BACKWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedal-backward.png");
+	public static ResourceLocation JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/jump.png");
+	public static ResourceLocation MINE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/icon-break.png");
+	public static ResourceLocation BUILD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/icon-build.png");
+	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/hit.png");
+	public static ResourceLocation DASH_JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/run-jump.png");
+	public static ResourceLocation POTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/potion.png");
+	public static ResourceLocation CHEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/chest.png");
 	
 	private BigxClientContext context;
 	private static long timestampLastShowWindowCall = 0;

@@ -350,10 +350,8 @@ public class ClientEventHandler {
 							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsAttackNPC)
 							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE);
-//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
-//							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.CHEST_TEXTURE);
+							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDrinkPotion)
 							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDrinkPotion, GuiMessageWindow.POTION_TEXTURE);
 						else
