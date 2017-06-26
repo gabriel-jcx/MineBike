@@ -71,7 +71,7 @@ public class BiGXEventTriggers {
 	public static void GivePlayerGoldfromCoins(EntityPlayer player, int numOfCoins){
 		int numOfGold = convertCoinsToGold(numOfCoins);
 		String rewardStr = BiGXTextBoxDialogue.gotReward + numOfGold + " Gold Ingots!";
-		GuiMessageWindow.showGoldBar(rewardStr);
+		GuiMessageWindow.showMessageAndImage(rewardStr, GuiMessageWindow.GOLDBAR_TEXTURE);
 		
 		System.out.println("Number of coins: " + numOfCoins);
 		System.out.println("Number of gold: " + numOfGold);
