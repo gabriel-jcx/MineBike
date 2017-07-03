@@ -61,7 +61,7 @@ public class NpcEvents {
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 		else{
 			if (!player.worldObj.isRemote){
-				GuiMessageWindow.showBook(BiGXTextBoxDialogue.questAdded);
+				GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questAdded, GuiMessageWindow.BOOK_TEXTURE);
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
 			}
 		}
@@ -106,7 +106,7 @@ public class NpcEvents {
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist6);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist7);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist8);
-					GuiMessageWindow.showBook(BiGXTextBoxDialogue.questBookObtained);
+					GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questBookObtained, GuiMessageWindow.BOOK_TEXTURE);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
 				
 					//Give quest on Client Side

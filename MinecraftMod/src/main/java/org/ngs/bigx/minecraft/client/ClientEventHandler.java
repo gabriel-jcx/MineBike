@@ -339,23 +339,21 @@ public class ClientEventHandler {
 //							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
 						// New Tutorial
 						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalForward)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsPedalForward, GuiMessageWindow.PEDAL_FORWARD_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalForward, GuiMessageWindow.PEDAL_FORWARD_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalBackward)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsPedalBackward, GuiMessageWindow.PEDAL_BACKWARD_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalBackward, GuiMessageWindow.PEDAL_BACKWARD_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsMine)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsMine, GuiMessageWindow.MINE_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsMine, GuiMessageWindow.MINE_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsBuild)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsBuild, GuiMessageWindow.BUILD_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsBuild, GuiMessageWindow.BUILD_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsJump)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsAttackNPC)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE);
-//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
-//							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.CHEST_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDrinkPotion)
-							GuiMessageWindow.showWithTexture(BiGXTextBoxDialogue.instructionsDrinkPotion, GuiMessageWindow.POTION_TEXTURE);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDrinkPotion, GuiMessageWindow.POTION_TEXTURE, false);
 						else
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}

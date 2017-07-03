@@ -70,7 +70,7 @@ public class NpcDatabase {
 			if (name.contains("Training Bot")){
 				System.out.println("Altering Training Bot");
 				npc.ai.stopAndInteract = false;
-				npc.inventory.setInventorySlotContents(0, new ItemStack(Item.getItemById(50)));
+				npc.inventory.setOffHand(new ItemStack(Item.getItemById(50)));
 			}
 		}
 	}

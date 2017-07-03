@@ -1,61 +1,59 @@
 package org.ngs.bigx.minecraft.client;
 
-import java.text.DecimalFormat;
+import java.awt.Image;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.utility.Pair;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class GuiMessageWindow extends GuiScreen {	
 	private Minecraft mc;
 
-	private ResourceLocation MESSAGE_WINDOW_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/dialog.png");
-	private ResourceLocation GOLDBAR_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/goldbar.png");
-	private ResourceLocation BOOK_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
 	//TODO: CHANGE TEXTURE LOCATIONS
-	public static ResourceLocation PEDAL_FORWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/heart.png");
-	public static ResourceLocation PEDAL_BACKWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation MINE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation BUILD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/heart.png");
-	public static ResourceLocation DASH_JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation POTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
-	public static ResourceLocation CHEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation MESSAGE_WINDOW_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/dialog.png");
+	public static ResourceLocation GOLDBAR_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/goldbar.png");
+	public static ResourceLocation BOOK_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/book.png");
+	public static ResourceLocation PEDAL_FORWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedal-forward.png");
+	public static ResourceLocation PEDAL_BACKWARD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedal-backward.png");
+	public static ResourceLocation JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/jump.png");
+	public static ResourceLocation MINE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/icon-break.png");
+	public static ResourceLocation BUILD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/icon-build.png");
+	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/hit.png");
+	public static ResourceLocation DASH_JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/run-jump.png");
+	public static ResourceLocation POTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/potion.png");
+	public static ResourceLocation CHEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/chest.png");
 	
 	private BigxClientContext context;
 	private static long timestampLastShowWindowCall = 0;
-	private static long timestampLastShowGoldbarCall = 0;
-	private static long timestampLastShowBookCall = 0;
-	private static long timestampLastShowTextureCall = 0;
-	private static String[] textLinesToBeShown = null;
-	private static ResourceLocation current_texture = null;
+	private static String[] textLineArray = null;
+	private static ResourceLocation currentImage = null;
 	
+	// Fixed animation times for various stages of showing messages/images
 	private final long durationShowWindow = 5000;
 	private final long durationFadeIn = 250;
 	private final long durationFadeOut = 1000;
-	
 	private final long delayReplaceText = 2500;
 	
-	private static ArrayList<String> textList = new ArrayList<String>();
+	// Enable for image that use the 256x256 limitation, otherwise disable
+	private static boolean isImageFixed;
+	
+	private static ArrayList<Pair<String, ResourceLocation>> messages = new ArrayList<Pair<String, ResourceLocation>>();
 	
 	public GuiMessageWindow(Minecraft mc) {
 		super();
@@ -70,8 +68,7 @@ public class GuiMessageWindow extends GuiScreen {
 	/**
 	 * Draws a solid color rectangle with the specified coordinates and color. Args: x1, y1, x2, y2, color
 	 */
-	public static void drawRect(int par0, int par1, int par2, int par3, int par4)
-	{
+	public static void drawRect(int par0, int par1, int par2, int par3, int par4) {
 	    int j1;
 
 	    if (par0 < par2)
@@ -108,117 +105,86 @@ public class GuiMessageWindow extends GuiScreen {
 	    GL11.glDisable(GL11.GL_BLEND);
 	}
 	
-	public static void showMessage(String message)
-	{
-		textList.add("M" + message);
-		
-		if(timestampLastShowWindowCall == 0)
-			timestampLastShowWindowCall = System.currentTimeMillis();
-	}
-	
-	public static void updateMessageFromQueue()
-	{
-		if(textList == null)
+	public static void updateMessageFromQueue() {
+		if (messages == null)
 			return;
 		
-		if(textList.size() == 0)
+		if (messages.size() == 0)
 			return;
 		
-		String message = textList.remove(0);
+		Pair message = messages.remove(0);
 		
-		// Line Break Every 30 Chars
-		textLinesToBeShown = message.substring(1).split("\n");
+		String messageText = (String) message.getKey();
+		ResourceLocation messageImage = (ResourceLocation) message.getValue();
+		
+		// Line break every 30 chars
+		textLineArray = messageText.split("\n");
 		timestampLastShowWindowCall = System.currentTimeMillis();
 		
-		if(message.substring(0, 1).equals("G"))
-		{
-			timestampLastShowGoldbarCall = timestampLastShowWindowCall;
-		}
-		else if (message.substring(0,1).equals("B")) {
-			timestampLastShowBookCall = timestampLastShowWindowCall;
-		}
-		else if (message.substring(0,1).equals("T")){
-			timestampLastShowTextureCall = timestampLastShowWindowCall;
-		}
-		else{
-			timestampLastShowGoldbarCall = 0;
-		}
+		currentImage = messageImage;
 	}
 	
-	public static void showGoldBar(String message)
-	{
-		textList.add("G" + message);
+	public static void showMessage(String message) {
+		messages.add(new Pair<String, ResourceLocation>(message, null));
 		
-		if(timestampLastShowWindowCall == 0)
-		{
+		if (timestampLastShowWindowCall == 0)
 			timestampLastShowWindowCall = System.currentTimeMillis();
-		}
 	}
 	
-	public static void showBook(String message)
-	{
-		textList.add("B" + message);
-		
-		if(timestampLastShowWindowCall == 0)
-		{
-			timestampLastShowWindowCall = System.currentTimeMillis();
-		}
+	public static void showMessageAndImage(String message, ResourceLocation image) {
+		showMessageAndImage(message, image, true);
 	}
 	
-	public static void showWithTexture(String message, ResourceLocation texture){
-		textList.add("T" + message);
+	public static void showMessageAndImage(String message, ResourceLocation image, boolean fixed) {
+		messages.add(new Pair<String, ResourceLocation>(message, image));
 		
-		current_texture = texture;
+		isImageFixed = fixed;
 		
-		if(timestampLastShowWindowCall == 0)
-		{
+		if (timestampLastShowWindowCall == 0)
 			timestampLastShowWindowCall = System.currentTimeMillis();
-		}
 	}
 
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
+	    if (event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }
 	    
     	FontRenderer fontRendererObj;
 
-    	if (mc.thePlayer != null) {
+    	if (mc.thePlayer != null)
+    	{
 	    	EntityPlayer p = mc.thePlayer;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();
 	    	long timeDifference = (System.currentTimeMillis() - timestampLastShowWindowCall);
 	    	float windowAlphaValue = 0f;
-	    	int windowAlphaValueInBytes = 0;
 	    	
-	    	if(timestampLastShowWindowCall == 0)
-	    	{
+	    	if (timestampLastShowWindowCall == 0)
 	    		return;
-	    	}
 	    	
-	    	if(textLinesToBeShown == null)
+	    	if (textLineArray == null)
 	    	{
 	    		updateMessageFromQueue();
 	    	}
-	    	else if(textList.size() != 0)
+	    	else if (messages.size() != 0)
 	    	{
-	    		if(timeDifference > delayReplaceText)
+	    		if (timeDifference > delayReplaceText)
 	    		{
 	    			updateMessageFromQueue();
 	    	    	timeDifference = (System.currentTimeMillis() - timestampLastShowWindowCall);
 	    		}
 	    	}
 	    	
-	    	if(timeDifference < durationShowWindow)
+	    	if (timeDifference < durationShowWindow)
 	    	{
-	    		if(timeDifference <= durationFadeIn)
+	    		if (timeDifference <= durationFadeIn)
 	    		{
 	    			windowAlphaValue = ((float)timeDifference/(float)durationFadeIn);
 	    		}
-	    		else if(timeDifference > (durationShowWindow-durationFadeOut))
+	    		else if (timeDifference > (durationShowWindow-durationFadeOut))
 	    		{
 	    			windowAlphaValue = (float)(durationShowWindow-timeDifference)/(float)durationFadeOut;
 	    		}
@@ -226,9 +192,6 @@ public class GuiMessageWindow extends GuiScreen {
 	    		{
 	    			windowAlphaValue = 1f;
 	    		}
-	    		
-	    		// Convert windowAlphaValue to two bytes value
-	    		windowAlphaValueInBytes = (int) (255 - (255f / windowAlphaValue));
 	    		
 		    	GL11.glPushMatrix();
 		    	
@@ -238,65 +201,71 @@ public class GuiMessageWindow extends GuiScreen {
 				    mc.renderEngine.bindTexture(MESSAGE_WINDOW_TEXTURE);
 			        drawTexturedModalRect(-80, -20, 0, 0, 160 , 40);
 	        	
-		        	for(int i=0; i<textLinesToBeShown.length; i++)
+		        	for (int i = 0; i < textLineArray.length; i++)
 		        	{
-		        		String text = textLinesToBeShown[i];
+		        		String text = textLineArray[i];
 		
 			        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-			    		fontRendererObj.drawString(text, -65, -15 + i*10, 0xFFFFFF + ((windowAlphaValueInBytes&0xFF)<<24));
+			        	// If alpha for text drops below 4, for some reason the text gets shown as full opacity (visible) for the small time it's still visible.
+			        	int alpha = windowAlphaValue < (4/255f) ? 0x04FFFFFF : (int)Long.parseLong(String.format("%02X", (int)(windowAlphaValue*255)) + "FFFFFF", 16);
+			    		fontRendererObj.drawString(text, -65, -15 + i*10, alpha);
 		        	}
 	        	
 	        	GL11.glPopMatrix();
 	        	
-	        	if(timestampLastShowGoldbarCall != 0)
+	        	if (currentImage != null)
 	        	{
-	        		GL11.glPushMatrix();
-			    	
-					    GL11.glTranslatef(mcWidth/2, mcHeight-165f, 0); 
-					    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
-					    GL11.glEnable(GL11.GL_BLEND);
-					    mc.renderEngine.bindTexture(GOLDBAR_TEXTURE);
-				        drawTexturedModalRect(-75, -53, 0, 0, 150 , 105);
+	        		if(isImageFixed) {
+	        			// OLD WAY - Fixing images to a 256x256 transparent image and placing them somewhere on there
+	        			GL11.glPushMatrix();
+				    	
+						    GL11.glTranslatef(mcWidth/2, mcHeight-165f, 0); 
+						    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
+						    GL11.glEnable(GL11.GL_BLEND);
+						    mc.renderEngine.bindTexture(currentImage);
+					        drawTexturedModalRect(-75, -53, 0, 0, 150 , 105);
 		        	
-		        	GL11.glPopMatrix();
-	        	}
-	        	else if (timestampLastShowBookCall != 0){
-	        		GL11.glPushMatrix();
-			    	
-					    GL11.glTranslatef(mcWidth/2, mcHeight-165f, 0); 
-					    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
-					    GL11.glEnable(GL11.GL_BLEND);
-					    mc.renderEngine.bindTexture(BOOK_TEXTURE);
-				        drawTexturedModalRect(-75, -53, 0, 0, 150 , 105);
-		        	
-		        	GL11.glPopMatrix();
-		        }
-	        	else if (timestampLastShowTextureCall != 0){
-	        		GL11.glPushMatrix();
-			    	
-					    GL11.glTranslatef(mcWidth/2, mcHeight-165f, 0); 
-					    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
-					    GL11.glEnable(GL11.GL_BLEND);
-					    mc.renderEngine.bindTexture(current_texture);
-				        drawTexturedModalRect(-75, -53, 0, 0, 150 , 105);
-		        	
-		        	GL11.glPopMatrix();
+				        GL11.glPopMatrix();
+	        		} else {
+	        			// NEW WAY - Scaling and placing images center of the screen regardless of resolution
+	        			try {
+	        				GL11.glPushMatrix();
+	        				
+	        					// Obtain image height & width to determine which is larger, for scaling purposes
+		        				InputStream stream = mc.getResourceManager().getResource(currentImage).getInputStream();
+		        				Image image = ImageIO.read(stream);
+		        				int height = image.getHeight(null);
+		        				int width = image.getWidth(null);
+		        				
+		        				float scaleX = width > height ? 0.45f : 0.45f * ((float)width/height);
+		        				float scaleY = height > width ? 0.45f : 0.45f * ((float)height/width);
+		        				
+			        			GL11.glTranslatef(mcWidth/2, mcHeight/2, 0); 
+							    GL11.glColor4f(1.0F, 1.0F, 1.0F, windowAlphaValue);
+							    GL11.glScalef(scaleX, scaleY, 1f);
+							    GL11.glEnable(GL11.GL_BLEND);
+							    mc.renderEngine.bindTexture(currentImage);
+						        drawTexturedModalRect(-128, -256+24, 0, 0, 256, 256);
+	        			
+					        GL11.glPopMatrix();
+	        			} catch (IOException e) {
+	        				e.printStackTrace();
+	        			}
+	        			
+	        		}
+	        		
 		        }
 	    	}
-	    	else{
+	    	else
+	    	{
 	    		timestampLastShowWindowCall = 0;
-	    		timestampLastShowGoldbarCall = 0;
-	    		timestampLastShowBookCall = 0;
-	    		timestampLastShowTextureCall = 0;
-	    		textLinesToBeShown = null;
+	    		textLineArray = null;
 	    	}
     	}
-    	else{
+    	else
+    	{
     		timestampLastShowWindowCall = 0;
-    		timestampLastShowGoldbarCall = 0;
-    		timestampLastShowBookCall = 0;
-    		timestampLastShowTextureCall = 0;
-    		textLinesToBeShown = null;
+    		textLineArray = null;
     	}
     }
 }

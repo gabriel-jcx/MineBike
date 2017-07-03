@@ -4,14 +4,8 @@ import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.levelUp.ChestSystem;
-import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.npcs.NpcLocations;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestException;
-import org.ngs.bigx.minecraft.quests.QuestTask;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
-import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,16 +15,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class BiGXEventTriggers {	
 	
 	private boolean soundTriggerEntered = false;
+	private static boolean botHitClient = false, botHitServer = false;
 	
 	public static void onRightClick(PlayerInteractEvent event, EntityPlayer player){
 		DoorLocked(event, player);
@@ -65,7 +58,11 @@ public class BiGXEventTriggers {
 			}
 			if (NpcEvents.botHealth <= 0){
 				givePlayerKey(event.entityPlayer, "Shiny Key", "You got the Shiny Key!");
-				NpcEvents.botHealth = 10;
+				if (botHitClient && botHitServer) {
+					NpcEvents.botHealth = 10;
+					botHitClient = false;
+					botHitServer = false;
+				}
 				//event.target.setDead();
 			}
 		}
@@ -74,7 +71,7 @@ public class BiGXEventTriggers {
 	public static void GivePlayerGoldfromCoins(EntityPlayer player, int numOfCoins){
 		int numOfGold = convertCoinsToGold(numOfCoins);
 		String rewardStr = BiGXTextBoxDialogue.gotReward + numOfGold + " Gold Ingots!";
-		GuiMessageWindow.showGoldBar(rewardStr);
+		GuiMessageWindow.showMessageAndImage(rewardStr, GuiMessageWindow.GOLDBAR_TEXTURE);
 		
 		System.out.println("Number of coins: " + numOfCoins);
 		System.out.println("Number of gold: " + numOfGold);
@@ -101,16 +98,21 @@ public class BiGXEventTriggers {
 		return b;
 	}
 	
-	public static boolean givePlayerKey(EntityPlayer player, String name, String message){
-		ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
-		key.setStackDisplayName(name);
-		for (ItemStack item : player.inventory.mainInventory)
-			if (item != null && item.getDisplayName().contains(name))
-				return false;
-		System.out.println(message != "" && player.worldObj.isRemote);
-		if (message != "" && player.worldObj.isRemote)
+	public static boolean givePlayerKey(EntityPlayer player, String name, String message) {
+		if (message != "" && player.worldObj.isRemote) {
 			GuiMessageWindow.showMessage(message);
-		player.inventory.addItemStackToInventory(key);
+			botHitClient = true;
+		}
+		System.out.println(message != "" && player.worldObj.isRemote);
+		if (!player.worldObj.isRemote) {
+			ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
+			key.setStackDisplayName(name);
+			for (ItemStack item : player.inventory.mainInventory)
+				if (item != null && item.getDisplayName().contains(name))
+					return false;
+			player.inventory.addItemStackToInventory(key);
+			botHitServer = true;
+		}
 		return true;
 	}
 	
