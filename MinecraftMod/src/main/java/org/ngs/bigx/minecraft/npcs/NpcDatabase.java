@@ -28,6 +28,7 @@ public class NpcDatabase {
 		map.put("Blacksmith", NpcLocations.blacksmith);
 		map.put("Potions Seller", NpcLocations.potionSeller);
 		map.put("Trader", NpcLocations.trader);
+		map.put("Police Officer", NpcLocations.officer);
 		return map;
 	}
 	
@@ -46,10 +47,6 @@ public class NpcDatabase {
 		else if (dimID == 102)
 			for (Map.Entry<String, Vec3> item : npcsTutorial.entrySet())
 				toReturn.add(item.getKey());
-//		else if (dimID == 100)
-//			for (Map.Entry<String, Vec3> item : npcsTutorial2.entrySet())
-//				toReturn.add(item.getKey());
-//		System.out.println(toReturn);
 		return toReturn;
 	}
 	
@@ -61,9 +58,6 @@ public class NpcDatabase {
 		else if (dimID == 102){
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, (int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name);
 		}
-//		else if (dimID == 100){
-//			npc = NpcCommand.spawnNpc((int)npcsTutorial2.get(name).xCoord, (int)npcsTutorial2.get(name).yCoord, (int)npcsTutorial2.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(100), name);
-//		}
 		if (npc != null){
 			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
