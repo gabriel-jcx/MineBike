@@ -60,7 +60,7 @@ public class GuiQuestlistManager extends GuiScreen {
 		guiQuestlistSlot.drawScreen(mx, my, partialTicks);
 		guiQuestlistDescriptionSlot.drawScreen(mx, my, partialTicks);
 		drawRect(0, 0, width, getTopMargin(), 0xCC663300); // The Box on top
-		drawRect(197, getTopMargin(), 200, height, 0xFF000000); // The Seperator
+		drawRect(167, getTopMargin(), 170, height, 0xFF000000); // The Seperator
 
 		int x=0;
 		int y=0;
@@ -73,7 +73,7 @@ public class GuiQuestlistManager extends GuiScreen {
 		font.drawStringWithShadow(text, x, y, 0xFFFFFF);
 		
 		text = "Detail";
-		x = 210;
+		x = 180;
 		font.drawStringWithShadow(text, x, y, 0xFFFFFF);
 		
 		super.drawScreen(mx, my, partialTicks);

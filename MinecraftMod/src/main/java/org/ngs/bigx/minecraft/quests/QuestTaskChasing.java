@@ -50,9 +50,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -624,6 +626,55 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 	}
 	
+	private void generateDroppedItems() {
+		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		
+		Random randomNumber = new Random();
+		
+		int x = (int)player.posX;
+		int y = (int)player.posY+10;
+		int z = (int)player.posZ+56;
+		
+		double randDouble = 0;
+		
+		Item randomItem;
+		
+		// Decision to place or not (66% chance spawn)
+		if(randomNumber.nextDouble() > 0.66)
+		{
+			return;
+		}
+		
+		// Select Region (left, right (1 out of 3 regions)
+		randDouble = randomNumber.nextDouble();
+		if(randDouble < 0.33)
+		{
+			x -= 8;
+		}
+		else if(randDouble > 0.66)
+		{
+			x += 8;
+		}
+		
+		// Select What Item (Gold Ingot(10%), Blaze Powder(35%) or feather(55%))
+		randDouble = randomNumber.nextDouble();
+		if(randDouble < 0.1)
+		{
+			randomItem = Items.gold_ingot;
+		}
+		else if(randDouble < 0.45)
+		{
+			randomItem = Items.blaze_powder;
+		}
+		else
+		{
+			randomItem = Items.feather;
+		}
+		
+		EntityItem item = new EntityItem(ws, x, y, z, new ItemStack(randomItem,1));
+		ws.spawnEntityInWorld(item);
+	}
+	
 	public float getPlayerPitch() {
 		return playerQuestPitch;
 	}
@@ -951,6 +1002,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				// Make Obstacles and structures on the side
 				this.generateStructuresOnSides();
 				this.generateTerrainByPatientProfile();
+				this.generateDroppedItems();
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();

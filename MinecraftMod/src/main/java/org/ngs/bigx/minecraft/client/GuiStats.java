@@ -219,7 +219,7 @@ public class GuiStats extends GuiScreen {
 	    			text = "Or press DPAD DOWN to reselect a building";
 
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
 		    		
 		    		text = "" + PedalingToBuildEventHandler.pedalingToBuild.getCurrentProgress();
 	    		}
@@ -232,13 +232,13 @@ public class GuiStats extends GuiScreen {
 	    			text = "Or press DPAD DOWN to reselect a building";
 
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
 		    		
 		    		text = "Hit a block to start a building";
 	    		}
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
+	    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
 	    	}
 
 	    	/**
