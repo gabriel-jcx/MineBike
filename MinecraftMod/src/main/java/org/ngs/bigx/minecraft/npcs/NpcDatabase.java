@@ -82,6 +82,8 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/DoctorSteve.png";
 		if (name.contains("Training Bot"))
 			return "customnpcs:textures/entity/humanmale/RobesBrownSteve.png";
+		if (name.contains("Police"))
+			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/Steve.png";
 	}
