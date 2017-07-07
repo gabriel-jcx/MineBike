@@ -129,7 +129,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	private int questDestinationDimensionId = -1;
 	private int questSourceDimensionId = -1;
 	
-	protected LevelSystem levelSys;
+	public LevelSystem levelSys;
 	
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
@@ -219,18 +219,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 
-		switch(this.questChaseType)
-		{
-		case REGULAR:
-			returnLocation = Vec3.createVectorHelper(96, 58, -52);
-			break;
-		case FIRE:
-			returnLocation = Vec3.createVectorHelper(96, 73, -8);
-			break;
-		default:
-			returnLocation = Vec3.createVectorHelper(96, 73, -8);
-			break;	
-		};
+//		switch(this.questChaseType)
+//		{
+//		case REGULAR:
+//			returnLocation = Vec3.createVectorHelper(96, 58, -52);
+//			break;
+//		case FIRE:
+//			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+//			break;
+//		default:
+//			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+//			break;	
+//		};
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
@@ -334,6 +334,106 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		GuiDamage.addDamageText(deduction, 255, 10, 10);
 	}
 
+	public void handleQuestStart(){
+//		showLevelSelectionGui();
+		////Displaying Level Selection GUI
+		Minecraft mc = Minecraft.getMinecraft();
+		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		
+		guiChasingQuest.resetChasingQuestLevels();
+		
+		try {
+			for(int i=0; i<5; i++)
+			{
+				boolean islocked = false;
+				if (i > levelSys.getPlayerLevel()-1)
+					islocked = true;
+				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+				
+				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (GuiQuestlistException e) {
+			e.printStackTrace();
+		}
+		
+		if(mc.currentScreen == null)
+			mc.displayGuiScreen(guiChasingQuest);
+		System.out.println("Display Chasing Quest Gui");
+		////End Displaying Level Selection GUI
+		
+		boolean isReboot = !isActive;
+		
+		time = 0;
+		initThiefStat();
+		countdown = 11;
+		lastCountdownTickTimestamp = 0;
+		dist = 0;
+		pausedTime = 0;
+		completed = false;
+		
+		if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+			setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
+		else
+			setThiefLevel(levelSys.getPlayerLevel());
+		System.out.println("Thief's level is: " + getThiefLevel());
+		
+		// INIT questSettings ArrayList if there is any
+		if(context.isSuggestedGamePropertiesReady())
+		{
+			time = 0; 
+			questSettings = new ArrayList<Integer>();
+			StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+			List<Stage> stageList = stagesettings.stages;
+			
+			for(int i=0; i<stageList.size();i++)
+			{
+				for(int j=0; j<stageList.get(i).duration; j++)
+				{
+					questSettings.add(stageList.get(i).exerciseSettings);
+				}
+			}
+		}
+		else{
+			time = 0;
+		}
+
+		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
+		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+
+		chasingQuestInitialPosX = 1;
+		chasingQuestInitialPosY = 10;
+		chasingQuestInitialPosZ = 0;
+		
+		blocks = new ArrayList<Vec3>();
+		
+		for (int z = -16; z < (int)player.posZ+64; ++z) {
+			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+		}
+		for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+			ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+		}
+		
+		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+		}
+		
+		chasingQuestOnGoing = true;
+		chasingQuestOnCountDown = true; 
+		questTimeStamp = System.currentTimeMillis();
+		
+		if(isReboot)
+			reactivateTask();
+	}
+	
 	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
 		for (int x = origX; x < origX + 7; ++x) {
 			if (x == origX || x == origX + 6) {
@@ -1111,118 +1211,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					break;
 				};
 				
-				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
+				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") //&& checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
 						&& player.dimension != this.questDestinationDimensionId
 						&& player.dimension == this.questSourceDimensionId)
-				{ //TODO: Add Level selection GUI
-					////Displaying Level Selection GUI
-					Minecraft mc = Minecraft.getMinecraft();
-					guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-					
-					guiChasingQuest.resetChasingQuestLevels();
-					
-					try {
-						for(int i=0; i<5; i++)
-						{
-							boolean islocked = false;
-							if (i > levelSys.getPlayerLevel()-1)
-								islocked = true;
-							GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-							
-							guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-						}
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					} catch (GuiQuestlistException e) {
-						e.printStackTrace();
-					}
-					
-					if(mc.currentScreen == null)
-						mc.displayGuiScreen(guiChasingQuest);
-					System.out.println("Display Chasing Quest Gui");
-					////End Displaying Level Selection GUI
-					
-					boolean isReboot = !isActive;
-					
-					time = 0;
-					initThiefStat();
-					countdown = 11;
-					lastCountdownTickTimestamp = 0;
-					dist = 0;
-					pausedTime = 0;
-					completed = false;
-					
-					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-					else
-						setThiefLevel(levelSys.getPlayerLevel());
-					System.out.println("Thief's level is: " + getThiefLevel());
-					
-//					switch(guiChasingQuest.getDifficulty())
-//					{
-//					case EASY:
-//						break;
-//					case MEDIUM:
-//						break;
-//					case HARD:
-//						break;
-//					default:
-//						break;
-//					}
-					
-					// INIT questSettings ArrayList if there is any
-					if(context.isSuggestedGamePropertiesReady())
-					{
-						time = 0; 
-						questSettings = new ArrayList<Integer>();
-						StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
-						List<Stage> stageList = stagesettings.stages;
-						
-						for(int i=0; i<stageList.size();i++)
-						{
-							for(int j=0; j<stageList.get(i).duration; j++)
-							{
-								questSettings.add(stageList.get(i).exerciseSettings);
-							}
-						}
-					}
-					else{
-						time = 0;
-					}
-
-					returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-					QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
-
-					chasingQuestInitialPosX = 1;
-					chasingQuestInitialPosY = 10;
-					chasingQuestInitialPosZ = 0;
-					
-					blocks = new ArrayList<Vec3>();
-					
-					for (int z = -16; z < (int)player.posZ+64; ++z) {
-						ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-						ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
-					}
-					for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-						ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
-					}
-					
-					for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-						ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-						ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
-					}
-					
-					chasingQuestOnGoing = true;
-					chasingQuestOnCountDown = true; 
-					questTimeStamp = System.currentTimeMillis();
-					
-					if(isReboot)
-						reactivateTask();
+				{
+					handleQuestStart();
 				}
 				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == this.questDestinationDimensionId)
@@ -1330,6 +1323,34 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public static int getDamageBoostTickCountLeft() // Each ticks are 50 ms
 	{
 		return damageUpEffectTickCount;
+	}
+	public void showLevelSelectionGui(){
+		////Displaying Level Selection GUI
+		Minecraft mc = Minecraft.getMinecraft();
+		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		
+		guiChasingQuest.resetChasingQuestLevels();
+		
+		try {
+			for(int i=0; i<5; i++)
+			{
+				boolean islocked = false;
+				if (i > levelSys.getPlayerLevel()-1)
+					islocked = true;
+				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+				
+				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (GuiQuestlistException e) {
+			e.printStackTrace();
+		}
+		
+		if(mc.currentScreen == null)
+			mc.displayGuiScreen(guiChasingQuest);
+		System.out.println("Display Chasing Quest Gui");
+		////End Displaying Level Selection GUI
 	}
 
 	public boolean isChasingQuestOnGoing() {

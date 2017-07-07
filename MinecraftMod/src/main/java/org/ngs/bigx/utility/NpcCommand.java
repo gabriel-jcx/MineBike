@@ -155,7 +155,6 @@ public class NpcCommand {
 			
 			// NPC CHECKING
 			List listOfNpc = NpcCommand.getCustomNpcsInDimension(dimensionId);
-			
 			for (String name : NpcDatabase.NpcNames(dimensionId)) {
 				int found = 0;
 				for (Object obj : listOfNpc)
@@ -163,7 +162,7 @@ public class NpcCommand {
 						++found;
 				
 				if (found == 0) {
-					System.out.println("No NPCs found in this dimension...");
+					System.out.println("No " + name + "s found in this dimension...");
 					NpcDatabase.spawn(worldServer, name, dimensionId);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
