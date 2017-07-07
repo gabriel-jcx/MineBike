@@ -52,8 +52,6 @@ public class NpcEvents {
 			InteractWithPotionSeller(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
-//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
-//			InteractWithScientist(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
 			InteractWithTrainingBot(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
@@ -134,73 +132,7 @@ public class NpcEvents {
 				GuiMessageWindow.showMessage("Take this and help me\nchase down these theives!");
 		}
 		else if (!player.worldObj.isRemote)
-			GuiMessageWindow.showMessage("Drink the Teleportation\nPotion to chase those\ntheives!");	
-	}
-	
-	private static void InteractWithScientist(EntityPlayer player, EntityInteractEvent event){
-		System.out.println("Interacting with Scientist");
-		try{
-			if (BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null){
-				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-				Quest quest;
-				if (player.worldObj.isRemote){
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist1);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist2);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist3);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist4);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist5);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist6);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist7);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist8);
-					GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questBookObtained, GuiMessageWindow.BOOK_TEXTURE);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
-				
-					//Give quest on Client Side
-					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
-							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().clientContext.getQuestManager());
-					quest.addTasks(new QuestTaskTutorial(BiGX.instance().clientContext.getQuestManager(), player, 
-							(EntityCustomNpc) event.target));
-					quest.addTasks(new QuestTaskTalk(BiGX.instance().clientContext.getQuestManager(), player,
-							(EntityCustomNpc) event.target));
-					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
-						BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
-				}
-			}
-			else if (BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null){
-				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-				Quest quest;
-				if (!player.worldObj.isRemote){
-					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
-							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().serverContext.getQuestManager());
-					quest.addTasks(new QuestTaskTutorial(BiGX.instance().serverContext.getQuestManager(), player, 
-							(EntityCustomNpc) event.target));
-					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
-						BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
-				}
-			}
-			else{
-				BigxServerContext testContext = BiGX.instance().serverContext;
-				Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
-				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-				if (tutorialTask == null){
-					System.out.println("Tutorial Completed");
-					
-					if (player.worldObj.isRemote){
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistPotionInstructions);
-					}
-					BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().remove(Quest.QUEST_ID_STRING_TUTORIAL);
-					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
-					BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
-				}
-				else if (player.worldObj.isRemote){
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
-				}
-			}
-		}catch (QuestException e){
-			e.printStackTrace();
-		}
+			GuiMessageWindow.showMessage("Drink the Teleportation\nPotion to chase those\ntheives!");
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
