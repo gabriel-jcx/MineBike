@@ -37,6 +37,7 @@ import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
@@ -64,11 +65,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse {
+public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
@@ -134,6 +136,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	private boolean menuOpen = false;
 	private GuiChasingQuest guiChasingQuest;
+
+	public static final int speedUpEffectTickCountMax = 60;
+	public static final int damageUpEffectTickCountMax = 60;
+	private static int speedUpEffectTickCount = 0;
+	private static int damageUpEffectTickCount = 0;
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
@@ -306,6 +313,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						deduction = 8;
 					//TODO: Change ^
 			}
+		}
+		
+		if(damageUpEffectTickCount > 0)
+		{
+			System.out.println("DAMAGE BOOST");
+			deduction *= 2f;
 		}
 		
 		thiefHealthCurrent -= deduction;
@@ -871,6 +884,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 		else
 		{
+			if(speedUpEffectTickCount > 0)
+				speedUpEffectTickCount--;
+			
+			if(damageUpEffectTickCount > 0)
+				damageUpEffectTickCount--;
+			
 			long timeNow = System.currentTimeMillis();
 			if( (timeNow - lastTickTime - pausedTime) < 500 )
 			{
@@ -956,6 +975,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		else if (context.rpm <= 40)
 			speedchange -= speedchangerate;
 		
+		if(speedUpEffectTickCount > 0)
+		{
+			System.out.println("SPEED BOOST");
+			speedchange *= 1.5f;
+		}
+		
 		Minecraft mc = Minecraft.getMinecraft();
 		
 //		if(mc.getMinecraft().objectMouseOver != null) {
@@ -963,7 +988,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
 //			}
 //		}
-		player.swingItem();
+//		player.swingItem();
 	}
 
 
@@ -989,7 +1014,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						if(!player.worldObj.isRemote)
 							handlePlayTimeOnServer();
 						else
+						{
+							System.out.println("handlePlayTimeOnClient");
 							handlePlayTimeOnClient();
+						}
 					}
 				}
 				
@@ -1242,6 +1270,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if(!player.worldObj.isRemote){
 			QuestEventHandler.unregisterQuestEventItemUse(this);
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
+			QuestEventHandler.unregisterQuestEventItemPickUp(this);
 		}
 	}
 	
@@ -1252,6 +1281,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		{
 			QuestEventHandler.registerQuestEventItemUse(this);
 			QuestEventHandler.registerQuestEventCheckComplete(this);
+			QuestEventHandler.registerQuestEventItemPickUp(this);
 		}
 	}
 
@@ -1293,6 +1323,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		return thiefLevel;
 	}
 
+	public static int getSpeedBoostTickCountLeft(){
+		return speedUpEffectTickCount;
+	}
+	
+	public static int getDamageBoostTickCountLeft() // Each ticks are 50 ms
+	{
+		return damageUpEffectTickCount;
+	}
 
 	public boolean isChasingQuestOnGoing() {
 		return chasingQuestOnGoing;
@@ -1318,6 +1356,21 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void onCheckCompleteEvent() {
 		CheckComplete();
 	}
+
 	
-	
+	@Override
+	public void onItemPickUp(EntityItemPickupEvent event) {
+		if(event.item.getEntityItem().getItem() == Items.feather)
+		{
+			System.out.println("speedUpEffectTickCount refresh");
+			// Speed Up Effect On
+			speedUpEffectTickCount = speedUpEffectTickCountMax;
+		}
+		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
+		{
+			System.out.println("damageUpEffectTickCount refresh");
+			// Power Up Effect On
+			damageUpEffectTickCount = damageUpEffectTickCountMax;
+		}
+	}
 }
