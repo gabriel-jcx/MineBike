@@ -32,6 +32,7 @@ import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
@@ -92,6 +93,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int timeFallBehind = 0;
 	protected NpcCommand activecommand;
 	
+	protected int obstacleTime = 0; // 0 to init selection -3 to spawn
+	protected int obstacleId = -1;
+	protected int obstacleRefreshed = 7;
+	
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
 	private boolean doMakeBlocks;
@@ -111,6 +116,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected long warningMsgBlinkingTime = System.currentTimeMillis();
 
 	protected TerrainBiome terrainBiome = new TerrainBiome();
+	protected ObstacleBiome obstacleBiome = new ObstacleBiome();
 	protected TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
 	
 	protected ArrayList<Integer> questSettings = null;
@@ -636,6 +642,37 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					}
 				}
 			}
+		}
+	}
+	
+	private void generateObstacles()
+	{
+		// Check if the game is running
+		if(!chasingQuestOnGoing)
+			return;
+		
+		if(chasingQuestOnCountDown)
+			return;
+		
+		// Obstacle Timer Check
+		if(obstacleTime > -3)
+			return;
+		else if(obstacleTime == 0)  // Start spawn an Obstacle
+		{
+			// Select Obstacle
+			Random rand = new Random();
+
+			this.obstacleId = rand.nextInt(50) + 1;
+		}
+		else if(obstacleTime == -3)  // Start spawn an Obstacle
+		{
+			// Refresh Obstacle Spawn Time
+			this.obstacleTime = obstacleRefreshed;
+			
+			// Get Obstacle
+			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIdex(this.obstacleId);
+			
+			// Spawn Obstacle
 		}
 	}
 	

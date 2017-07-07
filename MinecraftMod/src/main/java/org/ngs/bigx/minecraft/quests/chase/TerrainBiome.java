@@ -10,7 +10,6 @@ public class TerrainBiome {
 	
 	public TerrainBiome()
 	{
-		TerrainBiomeArea biomeArea;
 		this.grassBiome = new TerrainBiomeDef();
 		this.cityBiome = new TerrainBiomeDef();
 		this.desertBiome = new TerrainBiomeDef();
