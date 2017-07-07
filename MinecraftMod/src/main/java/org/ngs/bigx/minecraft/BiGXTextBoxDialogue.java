@@ -61,15 +61,15 @@ public class BiGXTextBoxDialogue {
 	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
 	
 	//Instructions
-	public static final String instructionsInteractNPC = "Press LEFT TRIGGER(LT) to interact\nwith characters.";
-	public static final String instructionsAttackNPC = "Press RIGHT TRIGGER(RT)\nto hit the bot.";
+	public static final String instructionsInteractNPC = "Press LEFT TRIGGER to\ninteract with characters.";
+	public static final String instructionsAttackNPC = "Press RIGHT TRIGGER\nto hit the bot.";
 	public static final String instructionsPedalForward = "Pedal forward to\nmove forward!";
 	public static final String instructionsPedalBackward = "Pedal backward to\nmove back!";
 	public static final String instructionsJump = "Press A to jump!";
 	public static final String instructionsDashJump = "Pedal and press A to\nDash jump!";
-	public static final String instructionsMine = "Press Y or RT for \nmining!";
-	public static final String instructionsBuild = "Press X or LT for \nplacing blocks to proceed!";
-	public static final String instructionsDrinkPotion = "Open chest with the key and\npress X or LT to drink\nthe potion!";
+	public static final String instructionsMine = "Press Y or RIGHT TRIGGER\nfor mining!";
+	public static final String instructionsBuild = "Press X or LEFT TRIGGER\nfor placing blocks to\nproceed!";
+	public static final String instructionsDrinkPotion = "Open chest with the key and\npress X or LEFT TRIGGER\nto drink the potion!";
 	
 	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
 	public static final String instructionsChestOpen = "Press LEFT TRIGGER to\nopen the chest.";
