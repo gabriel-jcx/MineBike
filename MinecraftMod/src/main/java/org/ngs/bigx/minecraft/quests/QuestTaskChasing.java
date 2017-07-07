@@ -670,7 +670,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			this.obstacleTime = obstacleRefreshed;
 			
 			// Get Obstacle
-			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIdex(this.obstacleId);
+			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIndex(this.obstacleId);
 			
 			// Spawn Obstacle
 		}
