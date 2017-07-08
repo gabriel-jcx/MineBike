@@ -20,7 +20,7 @@ public class ObstacleBiome {
 		if(this.obstacleBiomeDef.areas == null)
 			return null;
 		
-		if(this.obstacleBiomeDef.areas.size() >= index)
+		if(this.obstacleBiomeDef.areas.size() <= index)
 			return null;
 		
 		return this.obstacleBiomeDef.areas.get(index);

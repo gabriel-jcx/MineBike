@@ -92,10 +92,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int lastTickStage = 0;
 	protected int timeFallBehind = 0;
 	protected NpcCommand activecommand;
-	
-	protected int obstacleTime = 0; // 0 to init selection -3 to spawn
-	protected int obstacleId = -1;
+
 	protected int obstacleRefreshed = 7;
+	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
+	protected int obstacleId = -1;
 	
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
@@ -655,24 +655,37 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			return;
 		
 		// Obstacle Timer Check
-		if(obstacleTime > -3)
-			return;
-		else if(obstacleTime == 0)  // Start spawn an Obstacle
+		if(obstacleTime == 0)  // Start spawn an Obstacle
 		{
 			// Select Obstacle
 			Random rand = new Random();
 
-			this.obstacleId = rand.nextInt(50) + 1;
+			this.obstacleId = rand.nextInt(this.obstacleBiome.obstacleBiomeDef.areas.size());
 		}
+		else if(obstacleTime > -3)
+			return;
 		else if(obstacleTime == -3)  // Start spawn an Obstacle
 		{
 			// Refresh Obstacle Spawn Time
 			this.obstacleTime = obstacleRefreshed;
 			
+			System.out.println("this.obstacleId["+this.obstacleId+"]");;
+			
 			// Get Obstacle
 			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIdex(this.obstacleId);
 			
 			// Spawn Obstacle
+			int x=0;
+			int y = chasingQuestInitialPosY;
+			int z = (int)npc.posZ-1;
+			
+			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+			{
+				if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+					ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+				else
+					ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+			}
 		}
 	}
 	
@@ -1051,6 +1064,17 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 			else if(lastTickStage == 1)
 			{
+				if(thiefHealthCurrent > (thiefHealthMax*.8f))
+					obstacleRefreshed = 7;
+				else if(thiefHealthCurrent > (thiefHealthMax*.6f))
+					obstacleRefreshed = 6;
+				else if(thiefHealthCurrent > (thiefHealthMax*.4f))
+					obstacleRefreshed = 5;
+				else if(thiefHealthCurrent > (thiefHealthMax*.2f))
+					obstacleRefreshed = 4;
+				else
+					obstacleRefreshed = 3;
+					
 				System.out.println("GENERATING");
 				
 				lastTickStage = 0;
@@ -1059,6 +1083,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				this.generateStructuresOnSides();
 				this.generateTerrainByPatientProfile();
 				this.generateDroppedItems();
+				this.generateObstacles();
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
@@ -1072,6 +1097,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				}
 				
 				this.time++;
+				this.obstacleTime--;
 			}
 		}
 	}
