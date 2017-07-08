@@ -129,10 +129,10 @@ public class NpcEvents {
 		if (!player.inventory.hasItemStack(p)){
 			player.inventory.addItemStackToInventory(p);
 			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Take this and help me\nchase down these theives!");
+				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerRequestHelp);
 		}
 		else if (!player.worldObj.isRemote)
-			GuiMessageWindow.showMessage("Drink the Teleportation\nPotion to chase those\ntheives!");
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){

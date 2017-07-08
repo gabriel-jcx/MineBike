@@ -12,7 +12,10 @@ public class NpcLocations {
 	
 	//Quest-giving NPCs
 	public static Vec3 dad= Vec3.createVectorHelper(90, 71, 240);
-	public static Vec3 officer = Vec3.createVectorHelper(98, 71, 189); //TODO: Change coords
+	public static Vec3 officer = Vec3.createVectorHelper(110, 71, 185); //TODO: Change coords
+	
+	//Misc NPCs
+	public static Vec3 jailedthief1 = Vec3.createVectorHelper(123, 65, 177);
 
 	//New Tutorial NPC
 	public static Vec3 trainingBot = Vec3.createVectorHelper(580, 66, 0);
