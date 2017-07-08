@@ -677,7 +677,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			// Spawn Obstacle
 			int x=0;
 			int y = chasingQuestInitialPosY;
-			int z = (int)npc.posZ-1;
+			int z = (int)npc.posZ-7;
 			
 			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 			{
