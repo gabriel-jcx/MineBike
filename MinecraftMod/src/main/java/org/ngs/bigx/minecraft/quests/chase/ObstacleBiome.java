@@ -40,39 +40,45 @@ public class ObstacleBiome {
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//1 - Dirt Wall
-		biomeArea.map.clear();
+		biomeArea = new TerrainBiomeArea();
+		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.dirt);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.dirt);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.dirt);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//2 - Bush
-		biomeArea.map.clear();
+		biomeArea = new TerrainBiomeArea();
+		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.deadbush);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.deadbush);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.deadbush);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//3 - Water
-		biomeArea.map.clear();
+		biomeArea = new TerrainBiomeArea();
+		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.water);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.water);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//4 - Trap
-		biomeArea.map.clear();
+		biomeArea = new TerrainBiomeArea();
+		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.cactus);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.cactus);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//5 - Spring
-		biomeArea.map.clear();
+		biomeArea = new TerrainBiomeArea();
+		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.lava);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,2), Blocks.lava);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//6 - Fire
-		biomeArea.map.clear();
+		biomeArea = new TerrainBiomeArea();
+		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,2,2), Blocks.fire);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.fire);
 		this.obstacleBiomeDef.areas.add(biomeArea);
