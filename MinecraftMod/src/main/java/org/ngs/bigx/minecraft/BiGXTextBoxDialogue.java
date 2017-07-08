@@ -4,7 +4,7 @@ package org.ngs.bigx.minecraft;
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
 	public static final String directionMsg = "I heard there's\na cave northward...";
-	public static final String policeDirection = "The Police Station is North.\nI should go help them.";
+	public static final String policeDirection = "The Police Station is up ahead.\nI should go help them.";
 	public static final String wakeUpMsg = "Dad is calling me.\nLet’s go talk to him";
 	public static final String fatherMsg = "Dad: There's a lot of\ntheives lately. The Police\nOfficer needs help.";
 	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";
@@ -17,6 +17,10 @@ public class BiGXTextBoxDialogue {
 	public static final String gotReward = "Congrats! You collected\n";
 	public static final String goldBarInfo = "Gold bars can be exchanged\nfor useful items at\nMarket Place";
 	public static final String goldSpendWisely = "Spend your gold\nwisely!";
+	
+	//Officer Dialogue
+	public static final String officerRequestHelp = "Could you help me out?\nTake this and help me\nchase down these theives!";
+	public static final String officerPotionHelp = "Drink the Teleportation\nPotion to chase those\ntheives!";
 	
 	//General Quest Stuff
 	public static final String questChaseBeginning = "Well...\nI guess someone's here...\nLet's find out who...";
@@ -36,6 +40,8 @@ public class BiGXTextBoxDialogue {
 	public static final String placeCaveHiddenRoom = "\n   < Hidden Room >";
 	public static final String placeContinentPangea = "\n   < Pangea Continent >";
 	public static final String placeQuestRoom = "\n   < Quest Room >";
+	public static final String placePoliceDepartment = "\n   < Police Department >";
+	public static final String placeJail = "\n   < Jail >";
 	
 	//Chest Box Message
 	public static final String questChasePotionInfo = "Use different potions\nto challenge different\nthieves";

@@ -29,6 +29,7 @@ public class NpcDatabase {
 		map.put("Potions Seller", NpcLocations.potionSeller);
 		map.put("Trader", NpcLocations.trader);
 		map.put("Police Officer", NpcLocations.officer);
+//		map.put("Thief", NpcLocations.jailedthief1);
 		return map;
 	}
 	
@@ -84,8 +85,10 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/RobesBrownSteve.png";
 		if (name.contains("Police"))
 			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
+		if (name.contains("Thief"))
+			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
 		
-		return "customnpcs:textures/entity/humanmale/Steve.png";
+		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}
 	
 	private static String getRole(String name){
