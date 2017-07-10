@@ -4,6 +4,10 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.Quest;
@@ -12,6 +16,7 @@ import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskTalk;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -36,6 +41,7 @@ public class NpcEvents {
 	
 	//NPC Interactions
 	public 	static void InteractWithNPC(EntityPlayer player, EntityInteractEvent event){
+//		System.out.println(event.target.posX + " " + event.target.posY + " " + event.target.posZ);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.dad, NpcLocations.dad.addVector(1, 1, 1))) //checks to see if NPC is Dad
 			InteractWithFather(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch
@@ -46,33 +52,60 @@ public class NpcEvents {
 			InteractWithPotionSeller(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
-//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.scientists.addVector(0, -1, 0), NpcLocations.scientists.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
-//			InteractWithScientist(player, event);
-//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
-//			InteractWithTrainingBot(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is Scientist
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
 			InteractWithTrainingBot(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
+			InteractWithOfficer(player, event);
 			
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
 		///Give player the mysterious key
-		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
-		else{
-			if (!player.worldObj.isRemote){
-				GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questAdded, GuiMessageWindow.BOOK_TEXTURE);
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
-			}
-		}
+		if (!player.worldObj.isRemote)
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
 		
+//		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
+//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
+//		else{
+//			if (!player.worldObj.isRemote){
+//				GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questAdded, GuiMessageWindow.BOOK_TEXTURE);
+//				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
+//			}
+//		}
+		
+//		try {
+//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+//			Quest quest;
+//			
+//			if(player.worldObj.isRemote)
+//			{
+//				System.out.println("InteractWithFather Quest Generation: CLIENT");
+//				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+//				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
+//				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
+//					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+//			}
+//			else
+//			{
+//				System.out.println("InteractWithFather Quest Generation: SERVER");
+//				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+//				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
+//				if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
+//					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+//			}
+//		} catch (QuestException e) {
+//			e.printStackTrace();
+//		}
+	}
+	
+	private static void InteractWithOfficer(EntityPlayer player, EntityInteractEvent event){
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
 			
 			if(player.worldObj.isRemote)
 			{
-				System.out.println("InteractWithFather Quest Generation: CLIENT");
+				System.out.println("InteractWithOfficer Quest Generation: CLIENT");
 				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
 				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
@@ -80,7 +113,7 @@ public class NpcEvents {
 			}
 			else
 			{
-				System.out.println("InteractWithFather Quest Generation: SERVER");
+				System.out.println("InteractWithOfficer Quest Generation: SERVER");
 				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
 				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
 				if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
@@ -89,72 +122,17 @@ public class NpcEvents {
 		} catch (QuestException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private static void InteractWithScientist(EntityPlayer player, EntityInteractEvent event){
-		System.out.println("Interacting with Scientist");
-		try{
-			if (BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null){
-				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-				Quest quest;
-				if (player.worldObj.isRemote){
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist1);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist2);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist3);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist4);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist5);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist6);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist7);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientist8);
-					GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questBookObtained, GuiMessageWindow.BOOK_TEXTURE);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
-				
-					//Give quest on Client Side
-					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
-							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().clientContext.getQuestManager());
-					quest.addTasks(new QuestTaskTutorial(BiGX.instance().clientContext.getQuestManager(), player, 
-							(EntityCustomNpc) event.target));
-					quest.addTasks(new QuestTaskTalk(BiGX.instance().clientContext.getQuestManager(), player,
-							(EntityCustomNpc) event.target));
-					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
-						BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
-				}
-			}
-			else if (BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null){
-				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-				Quest quest;
-				if (!player.worldObj.isRemote){
-					quest = new Quest(Quest.QUEST_ID_STRING_TUTORIAL, BiGXTextBoxDialogue.tutorialQuestTitle,
-							BiGXTextBoxDialogue.tutorialQuestDescription, BiGX.instance().serverContext.getQuestManager());
-					quest.addTasks(new QuestTaskTutorial(BiGX.instance().serverContext.getQuestManager(), player, 
-							(EntityCustomNpc) event.target));
-					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
-						BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_TUTORIAL);
-				}
-			}
-			else{
-				BigxServerContext testContext = BiGX.instance().serverContext;
-				Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
-				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-				if (tutorialTask == null){
-					System.out.println("Tutorial Completed");
-					
-					if (player.worldObj.isRemote){
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished1);
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestFinished2);
-						GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistPotionInstructions);
-					}
-					BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().remove(Quest.QUEST_ID_STRING_TUTORIAL);
-					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_NONE);
-					BiGXEventTriggers.givePlayerKey(player, "Shiny Key", "");
-				}
-				else if (player.worldObj.isRemote){
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.scientistQuestUnfinished);
-				}
-			}
-		}catch (QuestException e){
-			e.printStackTrace();
+		
+		//Giving player teleportation potion
+		ItemStack p = new ItemStack(Items.potionitem);
+		p.setStackDisplayName("Teleportation Potion");
+		if (!player.inventory.hasItemStack(p)){
+			player.inventory.addItemStackToInventory(p);
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerRequestHelp);
 		}
+		else if (!player.worldObj.isRemote)
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){

@@ -38,6 +38,8 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/timer.png");
 	private ResourceLocation OBJECTIVE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/objective.png");
 	private ResourceLocation THIEF_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/theif.png");
+	private ResourceLocation DAMAGEUP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/damageup.png");
+	private ResourceLocation SPEEDUP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/speedup.png");
 	private ResourceLocation TRAFFIC_NONE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-none.png");
 	private ResourceLocation TRAFFIC_RED = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-red.png");
 	private ResourceLocation TRAFFIC_YELLOW = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-yellow.png");
@@ -207,7 +209,7 @@ public class GuiStats extends GuiScreen {
 				
 	    	GL11.glPopMatrix();
 	    	/**
-	    	 * END OF Pedaling Mode Indicator Drawing
+	    	 * END OF Pedaling Mode Indicator Drawinge
 	    	 */
 	    	
 	    	if(ClientEventHandler.pedalingModeState == 2)
@@ -219,7 +221,7 @@ public class GuiStats extends GuiScreen {
 	    			text = "Or press DPAD DOWN to reselect a building";
 
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
 		    		
 		    		text = "" + PedalingToBuildEventHandler.pedalingToBuild.getCurrentProgress();
 	    		}
@@ -232,13 +234,13 @@ public class GuiStats extends GuiScreen {
 	    			text = "Or press DPAD DOWN to reselect a building";
 
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 67, 0xFFFFFF);
 		    		
 		    		text = "Hit a block to start a building";
 	    		}
 
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
+	    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
 	    	}
 
 	    	/**
@@ -279,6 +281,18 @@ public class GuiStats extends GuiScreen {
 				        
 					    mc.renderEngine.bindTexture(THIEF_TEXTURE);
 				        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
+				        
+				        if(QuestTaskChasing.getSpeedBoostTickCountLeft() > 0)
+				        {
+						    mc.renderEngine.bindTexture(SPEEDUP_TEXTURE);
+					        drawTexturedModalRect(50, -10, 0, 0, 20 , 20);
+				        }
+				        
+				        if(QuestTaskChasing.getDamageBoostTickCountLeft() > 0)
+				        {
+						    mc.renderEngine.bindTexture(DAMAGEUP_TEXTURE);
+					        drawTexturedModalRect(80, -10, 0, 0, 20 , 20);
+				        }
 		        	
 		        	GL11.glPopMatrix();
 		        	
@@ -359,6 +373,62 @@ public class GuiStats extends GuiScreen {
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
+			        
+			        if(QuestTaskChasing.getSpeedBoostTickCountLeft() > 0)
+			        {
+			        	time = QuestTaskChasing.getSpeedBoostTickCountLeft() * 50;
+			        	minuteLeft = time/1000;
+						secondLeft = (time%1000)/10;
+						
+						chainsgQuestTimeLeft = "";
+						
+						if(minuteLeft<10)
+						{
+							chainsgQuestTimeLeft = "0";
+						}
+						
+						chainsgQuestTimeLeft += minuteLeft + ":";
+						
+						if(secondLeft<10)
+						{
+							chainsgQuestTimeLeft += "0";
+						}
+						
+						chainsgQuestTimeLeft += secondLeft;
+			        	
+			        	text = chainsgQuestTimeLeft;
+		
+			        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 60, 22, 0);
+			        }
+			        
+			        if(QuestTaskChasing.getDamageBoostTickCountLeft() > 0)
+			        {
+			        	time = QuestTaskChasing.getDamageBoostTickCountLeft() * 50;
+			        	minuteLeft = time/1000;
+						secondLeft = (time%1000)/10;
+						
+						chainsgQuestTimeLeft = "";
+						
+						if(minuteLeft<10)
+						{
+							chainsgQuestTimeLeft = "0";
+						}
+						
+						chainsgQuestTimeLeft += minuteLeft + ":";
+						
+						if(secondLeft<10)
+						{
+							chainsgQuestTimeLeft += "0";
+						}
+						
+						chainsgQuestTimeLeft += secondLeft;
+			        	
+			        	text = chainsgQuestTimeLeft;
+		
+			        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 90, 22, 0);
+			        }
 		        	
 		    		text = "HP: " + quest.getThiefHealthCurrent();
 	

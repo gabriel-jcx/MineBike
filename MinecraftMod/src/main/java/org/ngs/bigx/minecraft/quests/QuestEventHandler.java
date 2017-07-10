@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -19,12 +22,14 @@ import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -40,16 +45,19 @@ public class QuestEventHandler {
 	private static List<IQuestEventItemUse> questEventItemUseList = new ArrayList<IQuestEventItemUse>();
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionList = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteList = new ArrayList<IQuestEventCheckComplete>();
+	private static List<IQuestEventItemPickUp> questEventItemPickUpList = new ArrayList<IQuestEventItemPickUp>();
 	
 	private static List<IQuestEventAttack> questEventAttackListAdd = new ArrayList<IQuestEventAttack>();
 	private static List<IQuestEventItemUse> questEventItemUseListAdd = new ArrayList<IQuestEventItemUse>();
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionListAdd = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteListAdd = new ArrayList<IQuestEventCheckComplete>();
+	private static List<IQuestEventItemPickUp> questEventItemPickUpListAdd = new ArrayList<IQuestEventItemPickUp>();
 	
 	private static List<IQuestEventAttack> questEventAttackListDel = new ArrayList<IQuestEventAttack>();
 	private static List<IQuestEventItemUse> questEventItemUseListDel = new ArrayList<IQuestEventItemUse>();
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionListDel = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteListDel = new ArrayList<IQuestEventCheckComplete>();
+	private static List<IQuestEventItemPickUp> questEventItemPickUpListDel = new ArrayList<IQuestEventItemPickUp>();
 	
 	public QuestEventHandler()
 	{
@@ -111,6 +119,20 @@ public class QuestEventHandler {
 		}
 	}
 
+	public static void registerQuestEventItemPickUp(IQuestEventItemPickUp questEventItemPickUp)
+	{
+		synchronized (questEventItemPickUpListAdd) {
+			questEventItemPickUpListAdd.add(questEventItemPickUp);
+		}
+	}
+	
+	public static void unregisterQuestEventItemPickUp(IQuestEventItemPickUp questEventItemPickUp)
+	{
+		synchronized (questEventItemPickUpListDel) {
+			questEventItemPickUpListDel.remove(questEventItemPickUp);
+		}
+	}
+	
 	@SubscribeEvent
 	public void onItemUse(PlayerUseItemEvent.Start event) {
 		synchronized (questEventItemUseList) {
@@ -307,4 +329,29 @@ public class QuestEventHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	@SubscribeEvent
+	public void onItemPickUp(EntityItemPickupEvent event) // Server only event isremote is always flase
+    {
+		synchronized (questEventItemPickUpList) {
+			for(IQuestEventItemPickUp questEventItemPickUp : questEventItemPickUpList)
+			{
+				questEventItemPickUp.onItemPickUp(event);
+			}
+		}
+		synchronized (questEventItemPickUpListAdd) {
+			for(IQuestEventItemPickUp questEventItemPickUp : questEventItemPickUpListAdd)
+			{
+				questEventItemPickUpList.add(questEventItemPickUp);
+			}
+			questEventItemPickUpListAdd.clear();
+		}
+		synchronized (questEventItemPickUpListDel) {
+			for(IQuestEventItemPickUp questEventItemPickUp : questEventItemPickUpListDel)
+			{
+				questEventItemPickUpList.remove(questEventItemPickUp);
+			}
+			questEventItemPickUpListDel.clear();
+		}
+    }
 }

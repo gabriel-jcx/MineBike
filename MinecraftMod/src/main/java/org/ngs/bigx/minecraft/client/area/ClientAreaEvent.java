@@ -64,7 +64,7 @@ public class ClientAreaEvent {
 				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 		addArea(new Area(Vec3.createVectorHelper(93, 65, 230), Vec3.createVectorHelper(97, 75, 235), 
-				BiGXTextBoxDialogue.directionMsg, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
+				BiGXTextBoxDialogue.policeDirection, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
 		
 		addArea(new Area(Vec3.createVectorHelper(93, 65, -9), Vec3.createVectorHelper(100, 75, 0), 
 				BiGXTextBoxDialogue.readSignReminder, AreaTypeEnum.EVENT, 0), AreaTypeEnum.EVENT);
@@ -74,6 +74,12 @@ public class ClientAreaEvent {
 		
 		addArea(new Area(Vec3.createVectorHelper(100, 45, 199), Vec3.createVectorHelper(118, 100, 215), 
 				BiGXTextBoxDialogue.placeMarket, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
+		
+		addArea(new Area(Vec3.createVectorHelper(99, 45, 179), Vec3.createVectorHelper(120, 100, 192), 
+				BiGXTextBoxDialogue.placePoliceDepartment, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
+		
+		addArea(new Area(Vec3.createVectorHelper(99, 45, 176), Vec3.createVectorHelper(132, 69, 192), 
+				BiGXTextBoxDialogue.placeJail, AreaTypeEnum.BUILDING, 0), AreaTypeEnum.BUILDING);
 		
 		addArea(new Area(Vec3.createVectorHelper(78, 45, 151), Vec3.createVectorHelper(119, 100, 224), 
 				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE, 0), AreaTypeEnum.PLACE);
@@ -104,33 +110,12 @@ public class ClientAreaEvent {
 				BiGXTextBoxDialogue.instructionsBuild, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		addArea(new Area(Vec3.createVectorHelper(563, 54, -4), Vec3.createVectorHelper(574, 100, 4), 
 				BiGXTextBoxDialogue.instructionsChestOpen, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-//		addArea(new Area(Vec3.createVectorHelper(574, 54, -4), Vec3.createVectorHelper(585, 100, 4), 
-//				BiGXTextBoxDialogue.instructionsDashJump, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		addArea(new Area(Vec3.createVectorHelper(574, 54, -4), Vec3.createVectorHelper(585, 100, 4), 
 				BiGXTextBoxDialogue.instructionsAttackNPC, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		addArea(new Area(Vec3.createVectorHelper(585, 54, -4), Vec3.createVectorHelper(596, 100, 4), 
 				BiGXTextBoxDialogue.instructionsDashJump, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
 		addArea(new Area(Vec3.createVectorHelper(596, 54, -4), Vec3.createVectorHelper(610, 100, 4), 
 				BiGXTextBoxDialogue.instructionsDrinkPotion, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-		
-		//(OLD) Tutorial Areas
-//		addArea(new Area(Vec3.createVectorHelper(-126, 54, -30), Vec3.createVectorHelper(-64, 100, 30), 
-//				BiGXTextBoxDialogue.placeFireRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-//		addArea(new Area(Vec3.createVectorHelper(-30, 55, 64), Vec3.createVectorHelper(30, 100, 126), 
-//				BiGXTextBoxDialogue.placeWaterRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-//		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -64), 
-//				BiGXTextBoxDialogue.placeEarthRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-//		addArea(new Area(Vec3.createVectorHelper(-30, 55, -126), Vec3.createVectorHelper(30, 100, -81), 
-//				BiGXTextBoxDialogue.instructionsChangeMode, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
-//		addArea(new Area(Vec3.createVectorHelper(64, 55, -30), Vec3.createVectorHelper(130, 100, 30), 
-//				BiGXTextBoxDialogue.placeAirRoom, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-//		addArea(new Area(Vec3.createVectorHelper(92, 70, -27), Vec3.createVectorHelper(100, 74, -19), 
-//				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
-//		addArea(new Area(Vec3.createVectorHelper(114, 75, -2), Vec3.createVectorHelper(126, 80, 4), 
-//				BiGXTextBoxDialogue.checkpointReminder, AreaTypeEnum.EVENT, 102), AreaTypeEnum.EVENT);
-//		addArea(new Area(Vec3.createVectorHelper(-64, 54, -64), Vec3.createVectorHelper(64, 74, 64), 
-//				BiGXTextBoxDialogue.placeLabratory, AreaTypeEnum.ROOM, 102), AreaTypeEnum.ROOM);
-		
 	}
 	
 	public static void addArea(Area areaToAdd, AreaTypeEnum areaType)

@@ -44,6 +44,7 @@ public class BiGXPacketHandler {
 					boolean chasingQuestOnGoing = false;
 					boolean chasingQuestOnCountDown = false;
 					float speedchange = 0f;
+					int speedBoostTickCountLeft = 0;
 					
 					QuestManager questManager = context.getQuestManager(); 
 					
@@ -55,13 +56,8 @@ public class BiGXPacketHandler {
 							chasingQuestOnGoing = questTaskChasing.isChasingQuestOnGoing();
 							chasingQuestOnCountDown = questTaskChasing.isChasingQuestOnCountDown();
 							speedchange = questTaskChasing.getSpeedchange();
+							speedBoostTickCountLeft = questTaskChasing.getSpeedBoostTickCountLeft();
 						}
-//						else if (questManager.getCurrentQuestEvent().getCurrentQuestTask() instanceof QuestTaskChasingFire)
-//						{
-//							chasingQuestOnGoing = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnGoing;
-//							chasingQuestOnCountDown = ((QuestTaskChasingFire)questManager.getCurrentQuestEvent()).chasingQuestOnCountDown;
-//							speedchange = QuestTaskChasingFire.speedchange;
-//						}
 					}
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
@@ -70,6 +66,12 @@ public class BiGXPacketHandler {
 						if(!chasingQuestOnCountDown)
 						{
 							maxSpeed = QuestTaskChasing.chaseRunBaseSpeed + speedchange;
+							
+							if(speedBoostTickCountLeft > 0)
+							{
+								maxSpeed *= 1.3f;
+								change *= 1.3f;
+							}
 							
 							if(context.getSpeed() + ((double)change) >= 0){
 								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );

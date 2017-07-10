@@ -32,11 +32,13 @@ import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
@@ -66,11 +68,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse {
+public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
@@ -91,6 +94,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int lastTickStage = 0;
 	protected int timeFallBehind = 0;
 	protected NpcCommand activecommand;
+
+	protected int obstacleRefreshed = 7;
+	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
+	protected int obstacleId = -1;
 	
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
@@ -111,6 +118,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected long warningMsgBlinkingTime = System.currentTimeMillis();
 
 	protected TerrainBiome terrainBiome = new TerrainBiome();
+	protected ObstacleBiome obstacleBiome = new ObstacleBiome();
 	protected TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
 	
 	protected ArrayList<Integer> questSettings = null;
@@ -129,7 +137,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	private int questDestinationDimensionId = -1;
 	private int questSourceDimensionId = -1;
 	
-	protected LevelSystem levelSys;
+	public LevelSystem levelSys;
 	
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
@@ -138,6 +146,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	private boolean menuOpen = false;
 	private GuiChasingQuest guiChasingQuest;
+
+	public static final int speedUpEffectTickCountMax = 60;
+	public static final int damageUpEffectTickCountMax = 60;
+	private static int speedUpEffectTickCount = 0;
+	private static int damageUpEffectTickCount = 0;
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
@@ -217,18 +230,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
 
-		switch(this.questChaseType)
-		{
-		case REGULAR:
-			returnLocation = Vec3.createVectorHelper(96, 58, -52);
-			break;
-		case FIRE:
-			returnLocation = Vec3.createVectorHelper(96, 73, -8);
-			break;
-		default:
-			returnLocation = Vec3.createVectorHelper(96, 73, -8);
-			break;	
-		};
+//		switch(this.questChaseType)
+//		{
+//		case REGULAR:
+//			returnLocation = Vec3.createVectorHelper(96, 58, -52);
+//			break;
+//		case FIRE:
+//			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+//			break;
+//		default:
+//			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+//			break;	
+//		};
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
@@ -313,6 +326,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 		}
 		
+		if(damageUpEffectTickCount > 0)
+		{
+			System.out.println("DAMAGE BOOST");
+			deduction *= 2f;
+		}
+		
 		thiefHealthCurrent -= deduction;
 		
 		virtualCurrency += deduction;
@@ -326,6 +345,106 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		GuiDamage.addDamageText(deduction, 255, 10, 10);
 	}
 
+	public void handleQuestStart(){
+//		showLevelSelectionGui();
+		////Displaying Level Selection GUI
+		Minecraft mc = Minecraft.getMinecraft();
+		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		
+		guiChasingQuest.resetChasingQuestLevels();
+		
+		try {
+			for(int i=0; i<5; i++)
+			{
+				boolean islocked = false;
+				if (i > levelSys.getPlayerLevel()-1)
+					islocked = true;
+				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+				
+				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (GuiQuestlistException e) {
+			e.printStackTrace();
+		}
+		
+		if(mc.currentScreen == null)
+			mc.displayGuiScreen(guiChasingQuest);
+		System.out.println("Display Chasing Quest Gui");
+		////End Displaying Level Selection GUI
+		
+		boolean isReboot = !isActive;
+		
+		time = 0;
+		initThiefStat();
+		countdown = 11;
+		lastCountdownTickTimestamp = 0;
+		dist = 0;
+		pausedTime = 0;
+		completed = false;
+		
+		if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+			setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
+		else
+			setThiefLevel(levelSys.getPlayerLevel());
+		System.out.println("Thief's level is: " + getThiefLevel());
+		
+		// INIT questSettings ArrayList if there is any
+		if(context.isSuggestedGamePropertiesReady())
+		{
+			time = 0; 
+			questSettings = new ArrayList<Integer>();
+			StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+			List<Stage> stageList = stagesettings.stages;
+			
+			for(int i=0; i<stageList.size();i++)
+			{
+				for(int j=0; j<stageList.get(i).duration; j++)
+				{
+					questSettings.add(stageList.get(i).exerciseSettings);
+				}
+			}
+		}
+		else{
+			time = 0;
+		}
+
+		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
+		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+
+		chasingQuestInitialPosX = 1;
+		chasingQuestInitialPosY = 10;
+		chasingQuestInitialPosZ = 0;
+		
+		blocks = new ArrayList<Vec3>();
+		
+		for (int z = -16; z < (int)player.posZ+64; ++z) {
+			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+		}
+		for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+			ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+		}
+		
+		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+		}
+		
+		chasingQuestOnGoing = true;
+		chasingQuestOnCountDown = true; 
+		questTimeStamp = System.currentTimeMillis();
+		
+		if(isReboot)
+			reactivateTask();
+	}
+	
 	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
 		for (int x = origX; x < origX + 7; ++x) {
 			if (x == origX || x == origX + 6) {
@@ -529,6 +648,99 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				}
 			}
 		}
+	}
+	
+	private void generateObstacles()
+	{
+		// Check if the game is running
+		if(!chasingQuestOnGoing)
+			return;
+		
+		if(chasingQuestOnCountDown)
+			return;
+		
+		// Obstacle Timer Check
+		if(obstacleTime == 0)  // Start spawn an Obstacle
+		{
+			// Select Obstacle
+			Random rand = new Random();
+
+			this.obstacleId = rand.nextInt(this.obstacleBiome.obstacleBiomeDef.areas.size());
+		}
+		else if(obstacleTime > -3)
+			return;
+		else if(obstacleTime == -3)  // Start spawn an Obstacle
+		{
+			// Refresh Obstacle Spawn Time
+			this.obstacleTime = obstacleRefreshed;
+			
+			System.out.println("this.obstacleId["+this.obstacleId+"]");;
+			
+			// Get Obstacle
+			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIndex(this.obstacleId);
+			
+			// Spawn Obstacle
+			int x=0;
+			int y = chasingQuestInitialPosY;
+			int z = (int)npc.posZ-7;
+			
+			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+			{
+				if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+					ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+				else
+					ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+			}
+		}
+	}
+	
+	private void generateDroppedItems() {
+		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		
+		Random randomNumber = new Random();
+		
+		int x = (int)player.posX;
+		int y = (int)player.posY+10;
+		int z = (int)player.posZ+56;
+		
+		double randDouble = 0;
+		
+		Item randomItem;
+		
+		// Decision to place or not (66% chance spawn)
+		if(randomNumber.nextDouble() > 0.66)
+		{
+			return;
+		}
+		
+		// Select Region (left, right (1 out of 3 regions)
+		randDouble = randomNumber.nextDouble();
+		if(randDouble < 0.33)
+		{
+			x -= 8;
+		}
+		else if(randDouble > 0.66)
+		{
+			x += 8;
+		}
+		
+		// Select What Item (Gold Ingot(10%), Blaze Powder(35%) or feather(55%))
+		randDouble = randomNumber.nextDouble();
+		if(randDouble < 0.1)
+		{
+			randomItem = Items.gold_ingot;
+		}
+		else if(randDouble < 0.45)
+		{
+			randomItem = Items.blaze_powder;
+		}
+		else
+		{
+			randomItem = Items.feather;
+		}
+		
+		EntityItem item = new EntityItem(ws, x, y, z, new ItemStack(randomItem,1));
+		ws.spawnEntityInWorld(item);
 	}
 	
 	public float getPlayerPitch() {
@@ -860,6 +1072,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 		else
 		{
+			if(speedUpEffectTickCount > 0)
+				speedUpEffectTickCount--;
+			
+			if(damageUpEffectTickCount > 0)
+				damageUpEffectTickCount--;
+			
 			long timeNow = System.currentTimeMillis();
 			if( (timeNow - lastTickTime - pausedTime) < 500 )
 			{
@@ -884,6 +1102,17 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 			else if(lastTickStage == 1)
 			{
+				if(thiefHealthCurrent > (thiefHealthMax*.8f))
+					obstacleRefreshed = 7;
+				else if(thiefHealthCurrent > (thiefHealthMax*.6f))
+					obstacleRefreshed = 6;
+				else if(thiefHealthCurrent > (thiefHealthMax*.4f))
+					obstacleRefreshed = 5;
+				else if(thiefHealthCurrent > (thiefHealthMax*.2f))
+					obstacleRefreshed = 4;
+				else
+					obstacleRefreshed = 3;
+					
 				System.out.println("GENERATING");
 				
 				lastTickStage = 0;
@@ -891,6 +1120,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				// Make Obstacles and structures on the side
 				this.generateStructuresOnSides();
 				this.generateTerrainByPatientProfile();
+				this.generateDroppedItems();
+				this.generateObstacles();
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
@@ -904,6 +1135,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				}
 				
 				this.time++;
+				this.obstacleTime--;
 			}
 		}
 	}
@@ -944,6 +1176,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		else if (context.rpm <= 40)
 			speedchange -= speedchangerate;
 		
+		if(speedUpEffectTickCount > 0)
+		{
+			System.out.println("SPEED BOOST");
+			speedchange *= 1.5f;
+		}
+		
 		Minecraft mc = Minecraft.getMinecraft();
 		
 //		if(mc.getMinecraft().objectMouseOver != null) {
@@ -951,7 +1189,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
 //			}
 //		}
-		player.swingItem();
+//		player.swingItem();
 	}
 
 
@@ -977,7 +1215,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						if(!player.worldObj.isRemote)
 							handlePlayTimeOnServer();
 						else
+						{
+							System.out.println("handlePlayTimeOnClient");
 							handlePlayTimeOnClient();
+						}
 					}
 				}
 				
@@ -1071,118 +1312,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					break;
 				};
 				
-				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") && checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
+				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") //&& checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
 						&& player.dimension != this.questDestinationDimensionId
 						&& player.dimension == this.questSourceDimensionId)
-				{ //TODO: Add Level selection GUI
-					////Displaying Level Selection GUI
-					Minecraft mc = Minecraft.getMinecraft();
-					guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-					
-					guiChasingQuest.resetChasingQuestLevels();
-					
-					try {
-						for(int i=0; i<5; i++)
-						{
-							boolean islocked = false;
-							if (i > levelSys.getPlayerLevel()-1)
-								islocked = true;
-							GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-							
-							guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-						}
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					} catch (GuiQuestlistException e) {
-						e.printStackTrace();
-					}
-					
-					if(mc.currentScreen == null)
-						mc.displayGuiScreen(guiChasingQuest);
-					System.out.println("Display Chasing Quest Gui");
-					////End Displaying Level Selection GUI
-					
-					boolean isReboot = !isActive;
-					
-					time = 0;
-					initThiefStat();
-					countdown = 11;
-					lastCountdownTickTimestamp = 0;
-					dist = 0;
-					pausedTime = 0;
-					completed = false;
-					
-					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-					else
-						setThiefLevel(levelSys.getPlayerLevel());
-					System.out.println("Thief's level is: " + getThiefLevel());
-					
-//					switch(guiChasingQuest.getDifficulty())
-//					{
-//					case EASY:
-//						break;
-//					case MEDIUM:
-//						break;
-//					case HARD:
-//						break;
-//					default:
-//						break;
-//					}
-					
-					// INIT questSettings ArrayList if there is any
-					if(context.isSuggestedGamePropertiesReady())
-					{
-						time = 0; 
-						questSettings = new ArrayList<Integer>();
-						StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
-						List<Stage> stageList = stagesettings.stages;
-						
-						for(int i=0; i<stageList.size();i++)
-						{
-							for(int j=0; j<stageList.get(i).duration; j++)
-							{
-								questSettings.add(stageList.get(i).exerciseSettings);
-							}
-						}
-					}
-					else{
-						time = 0;
-					}
-
-					returnLocation = Vec3.createVectorHelper(player.posX-1, player.posY-1, player.posZ);
-					QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
-
-					chasingQuestInitialPosX = 1;
-					chasingQuestInitialPosY = 10;
-					chasingQuestInitialPosZ = 0;
-					
-					blocks = new ArrayList<Vec3>();
-					
-					for (int z = -16; z < (int)player.posZ+64; ++z) {
-						ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-						ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
-					}
-					for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-						ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
-					}
-					
-					for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-						ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-						ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-						blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
-					}
-					
-					chasingQuestOnGoing = true;
-					chasingQuestOnCountDown = true; 
-					questTimeStamp = System.currentTimeMillis();
-					
-					if(isReboot)
-						reactivateTask();
+				{
+					handleQuestStart();
 				}
 				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == this.questDestinationDimensionId)
@@ -1230,6 +1364,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if(!player.worldObj.isRemote){
 			QuestEventHandler.unregisterQuestEventItemUse(this);
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
+			QuestEventHandler.unregisterQuestEventItemPickUp(this);
 		}
 	}
 	
@@ -1240,6 +1375,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		{
 			QuestEventHandler.registerQuestEventItemUse(this);
 			QuestEventHandler.registerQuestEventCheckComplete(this);
+			QuestEventHandler.registerQuestEventItemPickUp(this);
 		}
 	}
 
@@ -1281,6 +1417,42 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		return thiefLevel;
 	}
 
+	public static int getSpeedBoostTickCountLeft(){
+		return speedUpEffectTickCount;
+	}
+	
+	public static int getDamageBoostTickCountLeft() // Each ticks are 50 ms
+	{
+		return damageUpEffectTickCount;
+	}
+	public void showLevelSelectionGui(){
+		////Displaying Level Selection GUI
+		Minecraft mc = Minecraft.getMinecraft();
+		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		
+		guiChasingQuest.resetChasingQuestLevels();
+		
+		try {
+			for(int i=0; i<5; i++)
+			{
+				boolean islocked = false;
+				if (i > levelSys.getPlayerLevel()-1)
+					islocked = true;
+				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+				
+				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		} catch (GuiQuestlistException e) {
+			e.printStackTrace();
+		}
+		
+		if(mc.currentScreen == null)
+			mc.displayGuiScreen(guiChasingQuest);
+		System.out.println("Display Chasing Quest Gui");
+		////End Displaying Level Selection GUI
+	}
 
 	public boolean isChasingQuestOnGoing() {
 		return chasingQuestOnGoing;
@@ -1306,6 +1478,21 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void onCheckCompleteEvent() {
 		CheckComplete();
 	}
+
 	
-	
+	@Override
+	public void onItemPickUp(EntityItemPickupEvent event) {
+		if(event.item.getEntityItem().getItem() == Items.feather)
+		{
+			System.out.println("speedUpEffectTickCount refresh");
+			// Speed Up Effect On
+			speedUpEffectTickCount = speedUpEffectTickCountMax;
+		}
+		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
+		{
+			System.out.println("damageUpEffectTickCount refresh");
+			// Power Up Effect On
+			damageUpEffectTickCount = damageUpEffectTickCountMax;
+		}
+	}
 }

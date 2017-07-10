@@ -23,7 +23,7 @@ public class GuiQuestlistDescriptionSlot extends GuiScrollingList {
 	}
 
 	public GuiQuestlistDescriptionSlot(GuiQuestlistManager parent) {
-		this(parent.width - 200, parent.height - parent.getTopMargin(), parent.getTopMargin(), 200, 40);
+		this(parent.width - 170, parent.height - parent.getTopMargin(), parent.getTopMargin(), 170, 40);
 		this.parent = parent;
 	}
 
@@ -45,19 +45,14 @@ public class GuiQuestlistDescriptionSlot extends GuiScrollingList {
 		switch(i)
 		{
 		case 0:
-//			text = parent.getSelectedQuest().getQuestId();
-			text = parent.getSelectedQuest().getName();
+			text = "[Quest] " + parent.getSelectedQuest().getName();
 			break;
 		case 1:
-//			text = parent.getSelectedQuest().getName();
-			text = parent.getSelectedQuest().getDescription();
+			text = "[Story] " + parent.getSelectedQuest().getDescription();
 			break;
-//		case 2:
-//			text = parent.getSelectedQuest().getDescription();
-//			break;
 		default:
 			if( (i-2) < parent.getSelectedQuest().getRequirements().length)
-				text = parent.getSelectedQuest().getRequirements()[i-2];
+				text = "[Requirement " + (i-1) + "] " + parent.getSelectedQuest().getRequirements()[i-2];
 			break;
 		};
 		

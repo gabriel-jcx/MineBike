@@ -120,7 +120,7 @@ public class GuiChasingQuest extends GuiScreen {
 		this.buttonList.add(btn);
 	
 		CustomGuiButton cbtn = new CustomGuiButton(4, 0 , height - 40 , chasingquestlevelslotWidth , 40 , 
-				"", "/textures/GUI/startbutton.png");
+				"", "textures/GUI/startbutton.png");
 		this.buttonList.add(cbtn);
 		/**
 		 * END OF Difficulty Buttons
