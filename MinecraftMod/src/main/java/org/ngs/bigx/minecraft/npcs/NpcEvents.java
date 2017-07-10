@@ -64,6 +64,12 @@ public class NpcEvents {
 		if (!player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
 		
+		ItemStack p = new ItemStack(Items.potionitem);
+		p.setStackDisplayName("Teleportation Potion - Tutorial");
+		if (!player.inventory.hasItemStack(p)){
+			player.inventory.addItemStackToInventory(p);
+		}
+		
 //		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
 //			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 //		else{

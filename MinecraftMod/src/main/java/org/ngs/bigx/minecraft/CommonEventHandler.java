@@ -239,6 +239,11 @@ public class CommonEventHandler {
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 //		itemOnPlayersHand.getDisplayName().contains("Teleportation Potion")
 //		if(itemOnPlayersHand.getItem() == Items.paper)
+		if (itemOnPlayersHand == null && !p.inventory.hasItem(Items.paper)){
+			p.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+		}
+		
+		if (itemOnPlayersHand != null){
 		System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
 		
 		if(itemOnPlayersHand.getItem() == Items.paper)
@@ -276,6 +281,7 @@ public class CommonEventHandler {
 			ClientEventHandler.animTickFade = 0;
 			System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
 		}
+		}
 	}
 	
 	@SubscribeEvent
@@ -285,8 +291,10 @@ public class CommonEventHandler {
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
 		if (event.item.getDisplayName().contains("Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
+		if (event.item.getDisplayName().contains("Tutorial"))
+			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 65, 0);
 //		if (event.item.getDisplayName().contains("Sword"))
-//			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
+//			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 66, 0);
 	}
 	
 	@SubscribeEvent

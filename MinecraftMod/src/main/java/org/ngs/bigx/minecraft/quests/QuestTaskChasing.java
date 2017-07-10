@@ -968,9 +968,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					switch(this.questChaseType)
 					{
 					case REGULAR:
+						System.out.println("Spawning thief...");
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 						npc.ai.stopAndInteract = false;
 						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
+						if (npc.display.texture == "customnpcs:textures/entity/humanmale/GangsterSteve.png")
+							System.out.println("Thief has correct outfit");
 						break;
 					case FIRE:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
