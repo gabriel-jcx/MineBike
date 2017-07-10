@@ -107,11 +107,11 @@ public class ClientEventHandler {
 			
 		}
 		if (keyBindingToggleBikeToMining.isPressed()) {
-			pedalingModeState ++;
-			pedalingModeState %= 3;
-			animTickSwitch = 0;
-			animTickFade = 0;
-			System.out.println("pedalingModeState[" + pedalingModeState + "]");
+//			pedalingModeState ++;
+//			pedalingModeState %= 3;
+//			animTickSwitch = 0;
+//			animTickFade = 0;
+//			System.out.println("pedalingModeState[" + pedalingModeState + "]");
 		}
 		if (keyBindingToggleBike.isPressed()) {
 			enableBike = !enableBike;
@@ -142,27 +142,29 @@ public class ClientEventHandler {
 		}
 		if(keyBindingToggleQuestListGui.isPressed())
 		{
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
-			
-			guiQuestlistManager.resetQuestReferences();
-			
-			try {
-				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
-				
-				for(Quest quest : questlist)
-				{
-					guiQuestlistManager.addQuestReference(quest);
-				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (GuiQuestlistException e) {
-				e.printStackTrace();
-			}
-			
-			if(mc.currentScreen == null)
-				mc.displayGuiScreen(guiQuestlistManager);
-			System.out.println("Display Quest List");
+//			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
+//			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
+//			Minecraft mc = Minecraft.getMinecraft();
+//			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+//			
+//			guiQuestlistManager.resetQuestReferences();
+//			
+//			try {
+//				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
+//				
+//				for(Quest quest : questlist)
+//				{
+//					guiQuestlistManager.addQuestReference(quest);
+//				}
+//			} catch (NullPointerException e) {
+//				e.printStackTrace();
+//			} catch (GuiQuestlistException e) {
+//				e.printStackTrace();
+//			}
+//			
+//			if(mc.currentScreen == null)
+//				mc.displayGuiScreen(guiQuestlistManager);
+//			System.out.println("Display Quest List");
 		}
 		if(keyBindingToggleChasingQuestGui.isPressed())
 		{

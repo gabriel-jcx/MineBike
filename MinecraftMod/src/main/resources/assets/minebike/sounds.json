@@ -30,5 +30,13 @@
   "beep-go": {
     "category": "player",
     "sounds": ["beep-go"]
+  },
+  "powerup": {
+    "category": "player",
+    "sounds": ["powerup"]
+  },
+  "powerdown": {
+    "category": "player",
+    "sounds": ["powerdown"]
   }
 }

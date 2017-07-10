@@ -70,7 +70,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    public BigxServerContext serverContext; // BigxClientContext for client and BigxServerContext for server
 	    
 	    public static MouseHelper disableMouseHelper;
-	    
+
 	    public static Item MysteriousKey;
 	    
 	    /*
@@ -113,7 +113,7 @@ import net.minecraftforge.common.MinecraftForge;
 	    @EventHandler
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
-	    	
+
 	    	QuestEventHandler questEventHandler = new QuestEventHandler();
 			FMLCommonHandler.instance().bus().register(questEventHandler);
 	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
