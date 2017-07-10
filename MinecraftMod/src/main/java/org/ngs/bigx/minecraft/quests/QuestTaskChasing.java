@@ -911,7 +911,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //				e.printStackTrace();
 //			}
 			
-			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 			if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 				thiefLevelUp();
 			
@@ -1341,7 +1341,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					// CHASE QUEST LOSE CONDITION
 					if (ws != null && player instanceof EntityPlayerMP) {
 						isActive = false;
-						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 						virtualCurrency = 0;
 						time = 0;
 						chasingQuestOnCountDown = false;
