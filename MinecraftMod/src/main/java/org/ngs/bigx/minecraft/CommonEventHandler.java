@@ -16,11 +16,16 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
@@ -46,7 +51,9 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import org.ngs.bigx.utility.NpcCommand;
 
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -223,6 +230,51 @@ public class CommonEventHandler {
 		if (!w.isRemote) {
 			if (w.getBlock(e.x, e.y, e.z) == Blocks.chest)
 				BiGXEventTriggers.chestInteract(e, w, levelSys);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerUse(PlayerInteractEvent event){
+		EntityPlayer p = event.entityPlayer;
+		ItemStack itemOnPlayersHand= p.getHeldItem();
+//		itemOnPlayersHand.getDisplayName().contains("Teleportation Potion")
+//		if(itemOnPlayersHand.getItem() == Items.paper)
+		System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
+		
+		if(itemOnPlayersHand.getItem() == Items.paper)
+		{
+			if(!p.worldObj.isRemote)
+				return;
+			
+			Minecraft mc = Minecraft.getMinecraft();
+			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+			
+			guiQuestlistManager.resetQuestReferences();
+			
+			try {
+				Collection<Quest> questlist = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().values();
+				
+				for(Quest quest : questlist)
+				{
+					guiQuestlistManager.addQuestReference(quest);
+				}
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (GuiQuestlistException e) {
+				e.printStackTrace();
+			}
+			
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(guiQuestlistManager);
+			System.out.println("Display Quest List");
+		}
+		else if(itemOnPlayersHand.getDisplayName().contains("Phone"))
+		{
+			ClientEventHandler.pedalingModeState ++;
+			ClientEventHandler.pedalingModeState %= 3;
+			ClientEventHandler.animTickSwitch = 0;
+			ClientEventHandler.animTickFade = 0;
+			System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
 		}
 	}
 	
