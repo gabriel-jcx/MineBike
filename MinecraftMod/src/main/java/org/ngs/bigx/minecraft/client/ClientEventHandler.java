@@ -142,6 +142,8 @@ public class ClientEventHandler {
 		}
 		if(keyBindingToggleQuestListGui.isPressed())
 		{
+//			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
+//			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
 //			Minecraft mc = Minecraft.getMinecraft();
 //			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
 //			

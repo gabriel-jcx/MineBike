@@ -211,6 +211,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
+		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+		
 //		System.out.println("goBackToTheOriginalWorld");
 //		deactivateTask();
 		
@@ -1043,6 +1045,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		// Calulate Tick Numbers
 		if(countdown == 11)
 		{
+			Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 			pausedTime = 0;
 			questTimeStamp = timeNow;
 			countdown = 10;

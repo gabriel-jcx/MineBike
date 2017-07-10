@@ -129,6 +129,9 @@ public class GuiChasingQuest extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
+		if(this.guiChasingQuestLevelSlot == null)
+			this.guiChasingQuestLevelSlot = new GuiChasingQuestLevelSlot(this);
+		
 		guiChasingQuestLevelSlot.drawScreen(mx, my, partialTicks);
 
 		int chasingquestlevelslotWidth = guiChasingQuestLevelSlot.getWidth();
