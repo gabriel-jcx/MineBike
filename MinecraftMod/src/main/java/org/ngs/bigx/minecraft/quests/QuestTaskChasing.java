@@ -132,6 +132,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int thiefLevel = 1;
 	protected int thiefMaxLevel = 1;
 	protected boolean thiefLevelUpFlag = false;
+	protected boolean thiefLevelSet = false;
 	
 	private WorldServer ws;
 	private int questDestinationDimensionId = -1;
@@ -223,6 +224,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		countdown = 11;
 		lastCountdownTickTimestamp = 0;
 		pausedTime = 0;
+		thiefLevelSet = false;
 		
 		if(world.isRemote)
 			((BigxClientContext)context).setSpeed(0);
@@ -384,11 +386,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		pausedTime = 0;
 		completed = false;
 		
-		if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-			setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-		else
-			setThiefLevel(levelSys.getPlayerLevel());
-		System.out.println("Thief's level is: " + getThiefLevel());
+//		if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+//			setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
+//		else
+//			setThiefLevel(levelSys.getPlayerLevel());
+//		System.out.println("Thief's level is: " + getThiefLevel());
 		
 		// INIT questSettings ArrayList if there is any
 		if(context.isSuggestedGamePropertiesReady())
@@ -1016,7 +1018,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				}
 			}
 		} else {
-			initThiefStat();
+//			initThiefStat();
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
 			command.enableMoving(true);
@@ -1025,6 +1027,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
 			ClientEventHandler.animTickChasingFade = 0;
+			System.out.println("Thief Level on GO" + thiefLevel);
 //			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0;
 		}
 	}
@@ -1204,6 +1207,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			{	
 				if(chasingQuestOnGoing)
 				{
+					if (guiChasingQuest != null && !thiefLevelSet){
+						if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+							setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
+						else
+							setThiefLevel(levelSys.getPlayerLevel());
+						System.out.println("Thief's level is: " + getThiefLevel());
+						thiefLevelSet = true;
+					}
 					if(chasingQuestOnCountDown)
 					{
 						handleCountdown();
