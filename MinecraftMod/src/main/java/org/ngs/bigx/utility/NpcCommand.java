@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -47,6 +48,22 @@ public class NpcCommand {
 	public void setNPC(EntityCustomNpc npc) {
 		this.npc = npc;
 		this.role = 0;
+	}
+	
+	public static void putItemsInNpcInventory(EntityCustomNpc npc, ItemStack... items) {
+		if (items == null)
+			return;
+		
+		// Check DataInventory.setInventorySlotContents() for index information
+		int itemIterator = 0;
+		for (int i = npc.inventory.getSizeInventory()-1; i >= 4; --i) {
+			if (npc.inventory.getStackInSlot(i) != null) {
+				npc.inventory.setInventorySlotContents(i, items[itemIterator]);
+				if (++itemIterator == items.length) {
+					return;
+				}
+			}
+		}
 	}
 	
 	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name) {

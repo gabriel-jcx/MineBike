@@ -50,12 +50,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -130,6 +134,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
+	private boolean rewardDropped = false;
+	
 	private boolean menuOpen = false;
 	private GuiChasingQuest guiChasingQuest;
 	
@@ -200,6 +206,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		timeFallBehind = 0;
 		time = 0;
 		initThiefStat();
+		rewardDropped = false;
 		countdown = 11;
 		lastCountdownTickTimestamp = 0;
 		pausedTime = 0;
@@ -541,7 +548,77 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	{
 		this.command = npcCommand;
 	}
-
+	
+	private void WaitForRewardPickupAndReturn() {
+		
+		// Don't continue if there's an item on the ground nearby
+		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc, AxisAlignedBB.getBoundingBox(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
+			if (e instanceof EntityItem) {
+				System.out.println(((EntityItem)e).getEntityItem());
+				return;
+			}
+		}
+		
+		if (levelSys.getPlayerLevel() == 2){//thiefLevel == 2){
+			ItemStack key = new ItemStack(Item.getItemById(4424));
+//			key.setStackDisplayName("Burnt Key"); 
+//			player.inventory.addItemStackToInventory(key);
+			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element
+			//TODO: add Next Quest (normal -> fire -> air -> earth -> water)
+			//TODO: fix descriptions for this quest
+//			try {
+//				QuestChaseTypeEnum newQuestType;
+//				String newQuestID;
+//				switch(this.questChaseType)
+//				{
+//				case REGULAR:
+//					newQuestType = QuestChaseTypeEnum.FIRE;
+//					newQuestID = Quest.QUEST_ID_STRING_CHASE_FIRE;
+//					break;
+//				default:
+//					 newQuestType = QuestChaseTypeEnum.REGULAR;
+//					 newQuestID = Quest.QUEST_ID_STRING_CHASE_REG;
+//					break;
+//				};
+//				
+//				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+//				Quest quest;
+//				
+//				if(player.worldObj.isRemote)
+//				{
+//					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: CLIENT");
+//					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+//					quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
+//					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
+//						BiGX.instance().clientContext.getQuestManager().setActiveQuest(newQuestID);
+//				}
+//				else
+//				{
+//					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: SERVER");
+//					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+//					quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
+//					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
+//						BiGX.instance().serverContext.getQuestManager().setActiveQuest(newQuestID);
+//				}
+//			} catch (QuestException e) {
+//				e.printStackTrace();
+//			}
+		}
+		
+		System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
+//		if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
+//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
+//			levelSys.giveLevelUpRewards(player);
+//		}
+		
+		isActive = false;
+		completed = true;
+		goBackToTheOriginalWorld(ws, player);
+		
+		return;
+	}
+	
 	@Override
 	public void CheckComplete() {
 		// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
@@ -571,69 +648,36 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			
-			if (levelSys.getPlayerLevel() == 2){//thiefLevel == 2){
-				ItemStack key = new ItemStack(Item.getItemById(4424));
-//				key.setStackDisplayName("Burnt Key"); 
-//				player.inventory.addItemStackToInventory(key);
-				BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
-				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element
-				//TODO: add Next Quest (normal -> fire -> air -> earth -> water)
-				//TODO: fix descriptions for this quest
-//				try {
-//					QuestChaseTypeEnum newQuestType;
-//					String newQuestID;
-//					switch(this.questChaseType)
-//					{
-//					case REGULAR:
-//						newQuestType = QuestChaseTypeEnum.FIRE;
-//						newQuestID = Quest.QUEST_ID_STRING_CHASE_FIRE;
-//						break;
-//					default:
-//						 newQuestType = QuestChaseTypeEnum.REGULAR;
-//						 newQuestID = Quest.QUEST_ID_STRING_CHASE_REG;
-//						break;
-//					};
-//					
-//					WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-//					Quest quest;
-//					
-//					if(player.worldObj.isRemote)
-//					{
-//						System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: CLIENT");
-//						quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
-//						quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
-//						if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
-//							BiGX.instance().clientContext.getQuestManager().setActiveQuest(newQuestID);
-//					}
-//					else
-//					{
-//						System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: SERVER");
-//						quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
-//						quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
-//						if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
-//							BiGX.instance().serverContext.getQuestManager().setActiveQuest(newQuestID);
-//					}
-//				} catch (QuestException e) {
-//					e.printStackTrace();
-//				}
+			command.setSpeed(0);
+//			npc.setHealth(0f);
+			npc.setDead();
+			
+			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
+			if (!rewardDropped) {
+				rewardDropped = true;
+				Random random = new Random();
+				
+				int totalXP = 15;
+				int xpGiven; // ignore pls
+				
+				while (totalXP > 0) {
+			         xpGiven = random.nextBoolean() || totalXP == 1 ? 1 : 2;
+			         totalXP -= xpGiven;
+			         npc.worldObj.spawnEntityInWorld(new EntityXPOrb(npc.worldObj, npc.posX, npc.posY, npc.posZ, xpGiven));
+			    }
+				
+				npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+				npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+				for (int i = 0; i < virtualCurrency; ++i) {
+					npc.entityDropItem(new ItemStack(Items.gold_ingot), random.nextInt(16)/8F);
+				}
+				
+				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
+				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			}
 			
-			System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
-//			if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
-//				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
-//				levelSys.giveLevelUpRewards(player);
-//			}
-			
-			isActive = false;
-			completed = true;
-			goBackToTheOriginalWorld(ws, player);
-			
-			return;
+			WaitForRewardPickupAndReturn();
 		}
 		
 		// CHASE QUEST LOSE CONDITION
@@ -671,7 +715,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if (Minecraft.getMinecraft().currentScreen != guiChasingQuest) {
 			countdown --;
 		}
-			
 		
 		// PLAY SOUND
 		if (countdown == 2 || countdown == 1) {
@@ -688,9 +731,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					if (((Entity)o) instanceof EntityCustomNpc) {
 						((EntityCustomNpc)o).delete();
 					}
-				}
-				for (Object o : NpcCommand.getCustomNpcsInDimension(this.questDestinationDimensionId)) {
-//					System.out.println(((EntityCustomNpc)o).display.name);
 				}
 			}
 			if (countdown == 0) {
@@ -919,7 +959,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void run()
 	{
 		System.out.println("[BiGX] Quest Chasing Task Started");
-		synchronized (questManager) {
+ 		synchronized (questManager) {
 			init();
 			
 			while(isActive)
