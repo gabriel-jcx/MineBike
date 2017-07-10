@@ -292,7 +292,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if (thiefLevel > thiefMaxLevel)
 			thiefMaxLevel = thiefLevel;
 		
-		thiefHealthMax = 15 + (int) Math.pow(9, thiefLevel);
+		thiefHealthMax = 45 + (int) Math.pow(9, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 		System.out.println("Thief's level has been set!");
 	}
