@@ -149,8 +149,8 @@ public class ChestSystem {
 			if (!found) {
 				p.setStackDisplayName(displayName);
 				c.setInventorySlotContents(slot, p);
-				return;
 			}
+			return;
 		}
 		
 		// Search the adjacent chest (it exists as a separate TileEntityChest and has its own inventory)

@@ -1,29 +1,25 @@
 package org.ngs.bigx.minecraft.client;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,42 +33,54 @@ public class GuiLeaderBoard extends GuiScreen {
 	
 	private BigxClientContext context;
 	
+	private GuiTextField textField;
+	
 	private static ArrayList<LeaderboardRow> leaderboardRows = new ArrayList<LeaderboardRow>();
 	
 	private static boolean isShown = false;
 	
 	public GuiLeaderBoard(Minecraft mc) {
 		super();
-		//refreshLeaderBoard();
 		this.mc = mc;
+		fontRendererObj = mc.fontRenderer;
 	}
 	
 	public GuiLeaderBoard(BigxClientContext c, Minecraft mc) {
 		this(mc);
 		context = c;
+		fontRendererObj = mc.fontRenderer;
 	}
 	
 	public static ArrayList<LeaderboardRow> getLeaderboardRows() {
 		return leaderboardRows;
 	}
-
-	public static boolean writeToLeaderboard(LeaderboardRow row) throws IOException
-	{
+	
+	private static File getLeaderboardFile() {
 		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
 		if (!leaderboardFile.exists()) {
 			try {
 				leaderboardFile.createNewFile();
 			} catch (IOException e) {
 				System.out.println(new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json"));
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+		return leaderboardFile;
+	}
+	
+	private static Leaderboard readLeaderboard() throws IOException {
+		File leaderboardFile = getLeaderboardFile();
 		Gson gson = new Gson();
 		JsonReader reader = new JsonReader(new FileReader(leaderboardFile));
 		Leaderboard leaderboard = gson.fromJson(reader, Leaderboard.class);
-		
+		reader.close();
+		return leaderboard;
+	}
+	
+	public static boolean writeToLeaderboard(LeaderboardRow row) throws IOException
+	{
+		File leaderboardFile = getLeaderboardFile();
+		Leaderboard leaderboard = readLeaderboard();
 		ArrayList<LeaderboardRow> leaderboardRowToBeRemoved = new ArrayList<LeaderboardRow>();
 		
 		if(leaderboard == null)
@@ -84,13 +92,13 @@ public class GuiLeaderBoard extends GuiScreen {
 		
 		Collections.sort(leaderboard.leaderboardRows);
 		
-		for(int i=0; i< leaderboard.leaderboardRows.size(); i++)
+		for(int i = 0; i < leaderboard.leaderboardRows.size(); i++)
 		{
 			LeaderboardRow leaderboardRow = leaderboard.leaderboardRows.get(i);
 			
-			leaderboardRow.rank = "" + (i+1);
+			leaderboardRow.rank = "" + (i + 1);
 			
-			if(i>=10)
+			if(i >= 10)
 			{
 				leaderboardRowToBeRemoved.add(leaderboardRow);
 			}
@@ -101,13 +109,10 @@ public class GuiLeaderBoard extends GuiScreen {
 			leaderboard.leaderboardRows.remove(leaderboardRow);
 		}
 		
-		reader.close();
-		
-		/***
-		 * Write it back
-		 */
+		// Write it back
 		FileOutputStream fOut = new FileOutputStream(leaderboardFile);
-        OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+        OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+        Gson gson = new Gson();
         myOutWriter.append(gson.toJson(leaderboard));
         myOutWriter.close();
         fOut.close();
@@ -117,20 +122,7 @@ public class GuiLeaderBoard extends GuiScreen {
 	
 	public static void refreshLeaderBoard() throws IOException
 	{
-		File leaderboardFile = new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json");
-		if (!leaderboardFile.exists()) {
-			try {
-				leaderboardFile.createNewFile();
-			} catch (IOException e) {
-				System.out.println(new File(new File(Minecraft.getMinecraft().mcDataDir, "saves"), "Leaderboard.json"));
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		Gson gson = new Gson();
-		JsonReader reader = new JsonReader(new FileReader(leaderboardFile));
-		Leaderboard leaderboard = gson.fromJson(reader, Leaderboard.class);
+		Leaderboard leaderboard = readLeaderboard();
 		
 		if(leaderboard == null)
 		{
@@ -139,21 +131,17 @@ public class GuiLeaderBoard extends GuiScreen {
 		
 		Collections.sort(leaderboard.leaderboardRows);
 		
-		for(int i=0; i< leaderboard.leaderboardRows.size(); i++)
+		for(int i = 0; i < leaderboard.leaderboardRows.size(); i++)
 		{
 			LeaderboardRow leaderboardRow = leaderboard.leaderboardRows.get(i);
-			
-			leaderboardRow.rank = "" + (i+1);
+			leaderboardRow.rank = "" + (i + 1);
 		}
-		
-		reader.close();
 		
 		leaderboardRows = new ArrayList<LeaderboardRow>();
 		LeaderboardRow row = new LeaderboardRow();
 		row.rank = "Rank";
 		row.name = "Name";
 		row.level = "Level";
-//		row.stat_1 = "Blocks";
 		row.time_elapsed = "Time";
 		leaderboardRows.add(row);
 		
@@ -204,12 +192,12 @@ public class GuiLeaderBoard extends GuiScreen {
 			e.printStackTrace();
 		}
 		
-		if(rows == null)
+		if (rows == null)
 		{
 			return;
 		}
 		
-		for(LeaderboardRow row:rows)
+		for (LeaderboardRow row : rows)
 		{
 			addLeaderBoardRow(row);
 		}
@@ -263,13 +251,16 @@ public class GuiLeaderBoard extends GuiScreen {
 	      return;
 	    }
 	    
-    	FontRenderer fontRendererObj;
-    	
     	if( !GuiLeaderBoard.isShown )
     	{
     		return;
     	}
-
+    	
+    	if (textField == null)
+    	{
+    		textField = new GuiTextField(mc.fontRenderer, 0, 0, 0, 0);
+    	}
+    	
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
@@ -292,7 +283,6 @@ public class GuiLeaderBoard extends GuiScreen {
 //	        		String stat_1 = leaderboardRows.get(i).stat_1;
 	        		String time_elapsed = leaderboardRows.get(i).time_elapsed;
 	
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(rank, -120, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(name, -90, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(level, 5, 32 + i*14, 0xFFFFFF);
