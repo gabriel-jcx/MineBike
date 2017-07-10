@@ -1478,18 +1478,19 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void onCheckCompleteEvent() {
 		CheckComplete();
 	}
-
 	
 	@Override
 	public void onItemPickUp(EntityItemPickupEvent event) {
 		if(event.item.getEntityItem().getItem() == Items.feather)
 		{
+			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
 		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
 		{
+			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");
 			// Power Up Effect On
 			damageUpEffectTickCount = damageUpEffectTickCountMax;
