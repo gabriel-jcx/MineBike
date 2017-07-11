@@ -15,6 +15,7 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	GuiChasingQuest parent;
 	private int slotHeight;
 	private int slotWidth;
+	public static int numberOfQuestLevels = 10;
 	
 	public GuiChasingQuestLevelSlot(int width, int height, int top, int left, int entryHeight) {
 		super(Minecraft.getMinecraft(), width, height, top, top + height, left, entryHeight);
@@ -31,7 +32,7 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	}
 
 	public GuiChasingQuestLevelSlot(GuiChasingQuest parent) {
-		this(150, ((parent.height - parent.getTopMargin())>=90)?90:(parent.height - parent.getTopMargin()), parent.getTopMargin(), 0, 17);
+		this(150, ((parent.height - parent.getTopMargin())>=171)?171:(parent.height - parent.getTopMargin()), parent.getTopMargin(), 0, 17);
 		this.parent = parent;
 	}
 
@@ -73,7 +74,19 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 			name = "Thief King";
 			break;
 		case 5:
-			name = "Thief God";
+			name = "Creeper";
+			break;
+		case 6:
+			name = "Spider";
+			break;
+		case 7:
+			name = "Zombie";
+			break;
+		case 8:
+			name = "Zombie Pigman";
+			break;
+		case 9:
+			name = "Ender Man";
 			break;
 		default:
 			name = "Random Thief";

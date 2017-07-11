@@ -25,6 +25,7 @@ import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest.ChasingQuestDifficultyEnum;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -101,7 +102,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	protected long comboTime = 0;
 	protected int comboCount = 0;
-	protected final int comboTimeLimit = 300;
+	protected final int comboTimeLimit = 400;
 	
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
@@ -374,7 +375,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		guiChasingQuest.resetChasingQuestLevels();
 		
 		try {
-			for(int i=0; i<5; i++)
+			for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
 			{
 				boolean islocked = false;
 				if (i > levelSys.getPlayerLevel()-1)
@@ -557,7 +558,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					switch(this.questChaseType)
 					{
 					case REGULAR:
-						areas.add(terrainBiome.getRandomCityBiome());
+						if(levelSys.getPlayerLevel() < 6)
+							areas.add(terrainBiome.getRandomCityBiome());
+						else
+							areas.add(terrainBiomeFire.getRandomFieldBiome());
 						break;
 					case FIRE:
 						areas.add(terrainBiomeFire.getRandomFieldBiome());
@@ -575,7 +579,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					switch(this.questChaseType)
 					{
 					case REGULAR:
-						areas.add(terrainBiome.getRandomGrassBiome());
+						if(levelSys.getPlayerLevel() < 6)
+							areas.add(terrainBiome.getRandomGrassBiome());
+						else
+							areas.add(terrainBiomeFire.getRandomGateBiome());
 						break;
 					case FIRE:
 						areas.add(terrainBiomeFire.getRandomGateBiome());
@@ -593,7 +600,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					switch(this.questChaseType)
 					{
 					case REGULAR:
-						areas.add(terrainBiome.getRandomDesertBiome());
+						if(levelSys.getPlayerLevel() < 6)
+							areas.add(terrainBiome.getRandomDesertBiome());
+						else
+							areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
 						break;
 					case FIRE:
 						areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
@@ -693,8 +703,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				obstacleBiomeLevel = 4;
 			else if(levelSys.getPlayerLevel() == 3)
 				obstacleBiomeLevel = 5;
-			else
+			else if(levelSys.getPlayerLevel() == 4)
 				obstacleBiomeLevel = 6;
+			else if(levelSys.getPlayerLevel() == 5)
+				obstacleBiomeLevel = 6;
+			else if(levelSys.getPlayerLevel() == 6)
+				obstacleBiomeLevel = 7;
+			else if(levelSys.getPlayerLevel() == 7)
+				obstacleBiomeLevel = 8;
+			else if(levelSys.getPlayerLevel() == 8)
+				obstacleBiomeLevel = 8;
+			else if(levelSys.getPlayerLevel() == 9)
+				obstacleBiomeLevel = 9;
 
 			this.obstacleId = rand.nextInt(obstacleBiomeLevel);
 		}
@@ -1239,6 +1259,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			while(isActive)
 			{	
+				checkComboCount();
+				
 				if(chasingQuestOnGoing)
 				{
 					if (guiChasingQuest != null && !thiefLevelSet){
@@ -1490,7 +1512,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		guiChasingQuest.resetChasingQuestLevels();
 		
 		try {
-			for(int i=0; i<5; i++)
+			for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
 			{
 				boolean islocked = false;
 				if (i > levelSys.getPlayerLevel()-1)

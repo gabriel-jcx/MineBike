@@ -89,36 +89,36 @@ public class GuiChasingQuest extends GuiScreen {
 		 */
 		GuiButton btn;
 		
-		btn = new GuiButton(1, 0 , getTopMargin() + chasingquestlevelslotHeight + 22 , chasingquestlevelslotWidth , 20 , 
-				I18n.format("gui.chasingquest.easy", new Object[0]));
-		
-		if(this.chasingQuestDifficulty == ChasingQuestDifficultyEnum.EASY)
-			btn.enabled = false;
-		else
-			btn.enabled = true;
-		
-		this.buttonList.add(btn);
-	
-		btn = new GuiButton(2, 0 , getTopMargin() + chasingquestlevelslotHeight + 42 , chasingquestlevelslotWidth , 20 , 
-				I18n.format("gui.chasingquest.medium", new Object[0]));
-		
-		if(this.chasingQuestDifficulty == ChasingQuestDifficultyEnum.MEDIUM)
-			btn.enabled = false;
-		else
-			btn.enabled = true;
-		
-		this.buttonList.add(btn);
-	
-		btn = new GuiButton(3, 0 , getTopMargin() + chasingquestlevelslotHeight + 62 , chasingquestlevelslotWidth , 20 , 
-				I18n.format("gui.chasingquest.hard", new Object[0]));
-		
-		if(this.chasingQuestDifficulty == ChasingQuestDifficultyEnum.HARD)
-			btn.enabled = false;
-		else
-			btn.enabled = true;
-		
-		this.buttonList.add(btn);
-	
+//		btn = new GuiButton(1, 0 , getTopMargin() + chasingquestlevelslotHeight + 22 , chasingquestlevelslotWidth , 20 , 
+//				I18n.format("gui.chasingquest.easy", new Object[0]));
+//		
+//		if(this.chasingQuestDifficulty == ChasingQuestDifficultyEnum.EASY)
+//			btn.enabled = false;
+//		else
+//			btn.enabled = true;
+//		
+//		this.buttonList.add(btn);
+//	
+//		btn = new GuiButton(2, 0 , getTopMargin() + chasingquestlevelslotHeight + 42 , chasingquestlevelslotWidth , 20 , 
+//				I18n.format("gui.chasingquest.medium", new Object[0]));
+//		
+//		if(this.chasingQuestDifficulty == ChasingQuestDifficultyEnum.MEDIUM)
+//			btn.enabled = false;
+//		else
+//			btn.enabled = true;
+//		
+//		this.buttonList.add(btn);
+//	
+//		btn = new GuiButton(3, 0 , getTopMargin() + chasingquestlevelslotHeight + 62 , chasingquestlevelslotWidth , 20 , 
+//				I18n.format("gui.chasingquest.hard", new Object[0]));
+//		
+//		if(this.chasingQuestDifficulty == ChasingQuestDifficultyEnum.HARD)
+//			btn.enabled = false;
+//		else
+//			btn.enabled = true;
+//		
+//		this.buttonList.add(btn);
+//	
 		CustomGuiButton cbtn = new CustomGuiButton(4, 0 , height - 40 , chasingquestlevelslotWidth , 40 , 
 				"", "textures/GUI/startbutton.png");
 		this.buttonList.add(cbtn);
@@ -138,9 +138,10 @@ public class GuiChasingQuest extends GuiScreen {
 		int chasingquestlevelslotHeight = guiChasingQuestLevelSlot.getHeight();
 		
 		drawRect(0, 0, width, getTopMargin(), 0xCC0072BB); // The Box on top
-		drawRect(0, getTopMargin() + chasingquestlevelslotHeight, chasingquestlevelslotWidth, getTopMargin() + chasingquestlevelslotHeight + 22, 0xFF000000); // The Seperator (level and difficulty) Background
-		drawRect(1, getTopMargin() + chasingquestlevelslotHeight + 1, chasingquestlevelslotWidth - 1, getTopMargin() + chasingquestlevelslotHeight + 21, 0xCC0072BB); // The Seperator (level and difficulty)
-		drawRect(0, getTopMargin() + chasingquestlevelslotHeight + 82, chasingquestlevelslotWidth, height, 0xFF000000); // The START!
+//		drawRect(0, getTopMargin() + chasingquestlevelslotHeight, chasingquestlevelslotWidth, getTopMargin() + chasingquestlevelslotHeight + 22, 0xFF000000); // The Seperator (level and difficulty) Background
+//		drawRect(1, getTopMargin() + chasingquestlevelslotHeight + 1, chasingquestlevelslotWidth - 1, getTopMargin() + chasingquestlevelslotHeight + 21, 0xCC0072BB); // The Seperator (level and difficulty)
+//		drawRect(0, getTopMargin() + chasingquestlevelslotHeight + 82, chasingquestlevelslotWidth, height, 0xFF000000); // The START!
+		drawRect(0, getTopMargin() + chasingquestlevelslotHeight + 1, chasingquestlevelslotWidth, height, 0xFF000000); // The START!
 		drawRect(chasingquestlevelslotWidth+3, getTopMargin()+3, width, getTopMargin() + 25, 0xCC0072BB); // Leader Board Title Bar
 		drawRect(chasingquestlevelslotWidth+3, getTopMargin()+25, width, height, 0x88000000); // Leader Board Background
 		
@@ -162,11 +163,11 @@ public class GuiChasingQuest extends GuiScreen {
 			font.drawStringWithShadow(text, x, y, 0xFFFFFF);
     	GL11.glPopMatrix();
 		
-		text = "Difficulty";
-		x = 10;
-		y = getTopMargin() + chasingquestlevelslotHeight + 6;
-
-		font.drawStringWithShadow(text, x, y, 0xFFFFFF);
+//		text = "Difficulty";
+//		x = 10;
+//		y = getTopMargin() + chasingquestlevelslotHeight + 6;
+//
+//		font.drawStringWithShadow(text, x, y, 0xFFFFFF);
 		
 		/**
 		 * Draw Leader Board
@@ -176,7 +177,7 @@ public class GuiChasingQuest extends GuiScreen {
 		if(this.getSelectedQuestlevel() != null)
 			level = this.getSelectedQuestlevel().level;
 		
-		text = "Level " + level + "  Leaderboard";
+		text = "Leaderboard";
 		x = chasingquestlevelslotWidth + 13;
 		y = getTopMargin() + 9;
 

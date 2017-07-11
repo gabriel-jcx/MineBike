@@ -37,6 +37,7 @@ import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
@@ -174,7 +175,7 @@ public class ClientEventHandler {
 			guiChasingQuest.resetChasingQuestLevels();
 			
 			try {
-				for(int i=0; i<5; i++)
+				for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
 				{
 					boolean islocked = false;
 					if(i>2)
