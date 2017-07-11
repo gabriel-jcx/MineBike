@@ -76,7 +76,9 @@ public class GuiDamage extends GuiScreen {
 			damageTextItem.dx += -20;
 		}
 		
-		damageTextList.add(damageTextItem);
+		synchronized (damageTextList) {
+			damageTextList.add(damageTextItem);
+		}
 	}
 	
 	/**
@@ -141,44 +143,46 @@ public class GuiDamage extends GuiScreen {
 	    	xPos = mcWidth - WIDTH + 2;
 	    	double percentBig = context.timeSpent;
 	    	double percentSmall = context.timeSpentSmall;
-	    	
-	    	for(DamageTextItem damageTextItem : this.damageTextList)
-	    	{
-	    		int color = 0xFFFFFF;
-	    		float scalefactor = (damageTextItem.damage * 0.15f) + 4f;
-	    		
-	    		long currenttime = System.currentTimeMillis();
-	    		
-	    		if( (System.currentTimeMillis() - damageTextItem.timestamp) > GuiDamage.duration )
-	    		{
-	    			removeList.add(damageTextItem);
-	    			continue;
-	    		}
-	    		
-	    		float relativeTimeContant = (float)(currenttime - damageTextItem.timestamp) / (duration);
-	    		
-	    		if(((currenttime - damageTextItem.timestamp)%durationHalf) >= durationQuarter)
-	    		{
-	    			color = ((damageTextItem.colorR & 0xFF) << 16) | ((damageTextItem.colorG & 0xFF) << 8) | (damageTextItem.colorB & 0xFF);
-	    		}
-	    		
-		    	GL11.glPushMatrix();
-				    GL11.glTranslatef(damageTextItem.posX, damageTextItem.posY, 0);
-				    
-				    // Bouncing Animation
-				    int currentYPosition = (int)((relativeTimeContant*relativeTimeContant - relativeTimeContant)*(damageTextItem.damage*3 + 50));
 
-				    text = "" + damageTextItem.damage;
-
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-
-		    		GL11.glScalef(scalefactor, scalefactor, scalefactor);
-		    		fontRendererObj.drawString(text, (int)(damageTextItem.dx*relativeTimeContant)-fontRendererObj.getStringWidth(text)/2, currentYPosition + (int)(damageTextItem.dy*relativeTimeContant), 0);
-		    		fontRendererObj.drawString(text, (int)(damageTextItem.dx*relativeTimeContant)-fontRendererObj.getStringWidth(text)/2 - 1, currentYPosition + (int)(damageTextItem.dy*relativeTimeContant) - 1, color);
-
+			synchronized (damageTextList) {
+		    	for(DamageTextItem damageTextItem : this.damageTextList)
+		    	{
+		    		int color = 0xFFFFFF;
+		    		float scalefactor = (damageTextItem.damage * 0.15f) + 4f;
+		    		
+		    		long currenttime = System.currentTimeMillis();
+		    		
+		    		if( (System.currentTimeMillis() - damageTextItem.timestamp) > GuiDamage.duration )
+		    		{
+		    			removeList.add(damageTextItem);
+		    			continue;
+		    		}
+		    		
+		    		float relativeTimeContant = (float)(currenttime - damageTextItem.timestamp) / (duration);
+		    		
+		    		if(((currenttime - damageTextItem.timestamp)%durationHalf) >= durationQuarter)
+		    		{
+		    			color = ((damageTextItem.colorR & 0xFF) << 16) | ((damageTextItem.colorG & 0xFF) << 8) | (damageTextItem.colorB & 0xFF);
+		    		}
+		    		
+			    	GL11.glPushMatrix();
+					    GL11.glTranslatef(damageTextItem.posX, damageTextItem.posY, 0);
+					    
+					    // Bouncing Animation
+					    int currentYPosition = (int)((relativeTimeContant*relativeTimeContant - relativeTimeContant)*(damageTextItem.damage*3 + 50));
+	
+					    text = "" + damageTextItem.damage;
+	
+			        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	
+			    		GL11.glScalef(scalefactor, scalefactor, scalefactor);
+			    		fontRendererObj.drawString(text, (int)(damageTextItem.dx*relativeTimeContant)-fontRendererObj.getStringWidth(text)/2, currentYPosition + (int)(damageTextItem.dy*relativeTimeContant), 0);
+			    		fontRendererObj.drawString(text, (int)(damageTextItem.dx*relativeTimeContant)-fontRendererObj.getStringWidth(text)/2 - 1, currentYPosition + (int)(damageTextItem.dy*relativeTimeContant) - 1, color);
+	
+			        	GL11.glPopMatrix();
 		        	GL11.glPopMatrix();
-	        	GL11.glPopMatrix();
-	    	}
+		    	}
+			}
     	}
     }
 }
