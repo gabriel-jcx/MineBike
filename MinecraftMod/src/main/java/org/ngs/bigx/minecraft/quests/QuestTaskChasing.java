@@ -775,10 +775,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 		}
 		
-		if (levelSys.getPlayerLevel() == 2){
-//			ItemStack key = new ItemStack(Item.getItemById(4424));
-//			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element
+		if (thiefLevel == 2){//levelSys.getPlayerLevel() == 2){
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(46115)));//4420))); //water element
+		}
+		if (thiefLevel == 3){//levelSys.getPlayerLevel() == 3){
+			ItemStack key = new ItemStack(Item.getItemById(4424));
+			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
 			//TODO: add Next Quest (normal -> fire -> air -> earth -> water)
 			//TODO: fix descriptions for this quest
 //			try {
