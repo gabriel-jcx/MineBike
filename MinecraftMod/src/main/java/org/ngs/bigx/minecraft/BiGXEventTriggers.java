@@ -137,8 +137,8 @@ public class BiGXEventTriggers {
 		return false;
 	}
 	
-	private static int convertCoinsToGold(int numCoins){
-		return Math.floorDiv(numCoins, 5);
+	public static int convertCoinsToGold(int numCoins){
+		return Math.floorDiv(numCoins, 10);
 	}
 	
 }
