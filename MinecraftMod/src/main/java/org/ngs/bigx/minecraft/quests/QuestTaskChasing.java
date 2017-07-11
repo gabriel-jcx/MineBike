@@ -286,7 +286,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		thiefLevel ++;
 		thiefMaxLevel ++;
 		
-		thiefHealthMax = 15 + (int) Math.pow(3, thiefLevel);
+		thiefHealthMax = 45 + (int) Math.pow(5, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
@@ -296,7 +296,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if (thiefLevel > thiefMaxLevel)
 			thiefMaxLevel = thiefLevel;
 		
-		thiefHealthMax = 45 + (int) Math.pow(9, thiefLevel);
+		thiefHealthMax = 45 + (int) Math.pow(5, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 		System.out.println("Thief's level has been set!");
 	}
@@ -849,7 +849,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //			}
 		}
 		
-		System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
+		//System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
+		levelSys.levelUp();
 //		if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
 //			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
 //			levelSys.giveLevelUpRewards(player);
@@ -1136,7 +1137,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				 * END OF Terrain Cleaning
 				 */
 			}
-			else if(lastTickStage == 1)
+			else if(lastTickStage == 1)// && !npc.isDead)
 			{
 				if(thiefHealthCurrent > (thiefHealthMax*.8f))
 					obstacleRefreshed = 4;
