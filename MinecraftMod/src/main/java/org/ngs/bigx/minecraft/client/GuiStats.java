@@ -21,6 +21,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.ResourceLocation;
@@ -212,6 +213,28 @@ public class GuiStats extends GuiScreen {
 	    	 * END OF Pedaling Mode Indicator Drawinge
 	    	 */
 	    	
+	    	/**
+	    	 * Pedaling Mode Related Drawing
+	    	 */
+	    	if(mc.thePlayer.getHeldItem() != null)
+	    	{
+	    		if(mc.thePlayer.getHeldItem().getItem() == Items.paper)
+				{
+	    			text = "Press LT to open Quest List Menu";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
+				}
+	    		else if(mc.thePlayer.getHeldItem().getDisplayName().contains("Phone"))
+	    		{
+	    			text = "Press LT to Change Bike Mode (Move/Mining/Building)";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
+				}
+	    	}
+	    	
+	    	
 	    	if(ClientEventHandler.pedalingModeState == 2)
 	    	{
 	    		text = "  ";
@@ -242,6 +265,9 @@ public class GuiStats extends GuiScreen {
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
 	    	}
+	    	/**
+	    	 * END OF Pedaling Mode Related Drawing
+	    	 */
 
 	    	/**
 	    	 * Quest Progress Indicator Drawing
