@@ -66,6 +66,23 @@ public class NpcCommand {
 		}
 	}
 	
+	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name, String texture) {
+		EntityCustomNpc npc = new EntityCustomNpc(w);
+		npc.display.name = name;
+		npc.setPosition(x, y, z);
+		npc.display.texture = texture;
+		
+		npc.ai.startPos = new int[]{
+	    		MathHelper.floor_double(x),
+	    		MathHelper.floor_double(y),
+	    		MathHelper.floor_double(z)};
+		
+		w.spawnEntityInWorld(npc);
+	    npc.setHealth(999999999f);
+	    
+	    return npc;
+	}
+	
 	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
 		npc.display.name = name;

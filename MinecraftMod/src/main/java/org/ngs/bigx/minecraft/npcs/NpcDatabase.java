@@ -54,13 +54,15 @@ public class NpcDatabase {
 	public static void spawn(WorldServer world, String name, int dimID) {
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
-			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(0), name);
+			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, 
+					MinecraftServer.getServer().worldServerForDimension(0), name, getTexture(name));
 		}
 		else if (dimID == 102){
-			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, (int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name);
+			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, 
+					(int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name, getTexture(name));
 		}
 		if (npc != null){
-			npc.display.texture = getTexture(name);
+//			npc.display.texture = getTexture(name);
 			npc.setRoleDataWatcher(getRole(name));	
 			if (name.contains("Training Bot")){
 				System.out.println("Altering Training Bot");

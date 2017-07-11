@@ -76,6 +76,9 @@ import noppes.npcs.entity.EntityNpcCrystal;
 
 public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
+	
+	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
+			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
 	
@@ -1044,7 +1047,35 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					{
 					case REGULAR:
 						System.out.println("Spawning thief...");
-						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+						switch(thiefLevel)
+						{
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/GangsterSteve.png");
+							break;
+						case 6:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
+							break;
+						case 7:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/SandMonster.png");
+							break;
+						case 8:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/StoneGolem.png");
+							break;
+						case 9:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/EnderMage.png");
+							break;
+						case 10:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Undead King.png");
+							break;
+						default:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief", "customnpcs:textures/entity/humanmale/GangsterSteve.png");
+							break;
+						}
+						
 						npc.ai.stopAndInteract = false;
 						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 						if (npc.display.texture == "customnpcs:textures/entity/humanmale/GangsterSteve.png")

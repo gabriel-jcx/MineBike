@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -56,43 +57,10 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	{
 		String name = "";
 		
-		switch(i)
-		{
-		case 0:
-			name = "Gold Thief";
-			break;
-		case 1:
-			name = "Element Thief";
-			break;
-		case 2:
-			name = "Key Thief";
-			break;
-		case 3:
-			name = "Thief Master";
-			break;
-		case 4:
-			name = "Thief King";
-			break;
-		case 5:
-			name = "Creeper";
-			break;
-		case 6:
-			name = "Spider";
-			break;
-		case 7:
-			name = "Zombie";
-			break;
-		case 8:
-			name = "Zombie Pigman";
-			break;
-		case 9:
-			name = "Ender Man";
-			break;
-		default:
+		if(i < QuestTaskChasing.villainNames.length)
+			name = QuestTaskChasing.villainNames[i];
+		else
 			name = "Random Thief";
-			break;
-		}
-		
 		
 		int fontColor = 0xFFFFFF;
 		

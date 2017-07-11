@@ -101,14 +101,28 @@ public class ObstacleBiome {
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,2,3,2), Blocks.water);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
-		//6 - Fire
+		//6 - Sudden Walls
+		biomeArea = new TerrainBiomeArea();
+
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.cobblestone);
+		this.obstacleBiomeDef.areas.add(biomeArea);
+		
+		//7 - Fire
 		biomeArea = new TerrainBiomeArea();
 		
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,2,2), Blocks.fire);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.fire);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
-		//7 - Sudden Water Basin
+		//8 - Sudden Water Basin
 		biomeArea = new TerrainBiomeArea();
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,6,2), Blocks.water);
@@ -132,20 +146,6 @@ public class ObstacleBiome {
 		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,5,2), Blocks.water);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,5,2), Blocks.water);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,5,2), Blocks.water);
-		this.obstacleBiomeDef.areas.add(biomeArea);
-		
-		//8 - Sudden Walls
-		biomeArea = new TerrainBiomeArea();
-
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.cobblestone);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//9 - Sudden Walls 2

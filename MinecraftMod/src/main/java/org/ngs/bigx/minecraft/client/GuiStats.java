@@ -399,7 +399,7 @@ public class GuiStats extends GuiScreen {
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
 		        	
-		    		text = "Lv: " + quest.getThiefLevel();
+		    		text = "HP";
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
@@ -460,7 +460,7 @@ public class GuiStats extends GuiScreen {
 			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 90, 22, 0);
 			        }
 		        	
-		    		text = "HP: " + quest.getThiefHealthCurrent();
+		    		text = "" + quest.getThiefHealthCurrent();
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
