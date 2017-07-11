@@ -95,7 +95,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int timeFallBehind = 0;
 	protected NpcCommand activecommand;
 
-	protected int obstacleRefreshed = 7;
+	protected int obstacleRefreshed = 4;
 	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
 	protected int obstacleId = -1;
 	
@@ -668,8 +668,19 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		{
 			// Select Obstacle
 			Random rand = new Random();
+			
+			int obstacleBiomeLevel = this.obstacleBiome.obstacleBiomeDef.areas.size();
+			
+			if(levelSys.getPlayerLevel() == 1)
+				obstacleBiomeLevel = 2;
+			else if(levelSys.getPlayerLevel() == 2)
+				obstacleBiomeLevel = 4;
+			else if(levelSys.getPlayerLevel() == 3)
+				obstacleBiomeLevel = 5;
+			else
+				obstacleBiomeLevel = 6;
 
-			this.obstacleId = rand.nextInt(this.obstacleBiome.obstacleBiomeDef.areas.size());
+			this.obstacleId = rand.nextInt(obstacleBiomeLevel);
 		}
 		else if(obstacleTime > -3)
 			return;
@@ -684,9 +695,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIndex(this.obstacleId);
 			
 			// Spawn Obstacle
-			int x=0;
+			int x = (int)npc.posX;
 			int y = chasingQuestInitialPosY;
-			int z = (int)npc.posZ-7;
+			int z = (int)npc.posZ-4;
 			
 			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 			{
@@ -1112,15 +1123,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			else if(lastTickStage == 1)
 			{
 				if(thiefHealthCurrent > (thiefHealthMax*.8f))
-					obstacleRefreshed = 7;
-				else if(thiefHealthCurrent > (thiefHealthMax*.6f))
-					obstacleRefreshed = 6;
-				else if(thiefHealthCurrent > (thiefHealthMax*.4f))
-					obstacleRefreshed = 5;
-				else if(thiefHealthCurrent > (thiefHealthMax*.2f))
 					obstacleRefreshed = 4;
-				else
+				else if(thiefHealthCurrent > (thiefHealthMax*.6f))
 					obstacleRefreshed = 3;
+				else if(thiefHealthCurrent > (thiefHealthMax*.4f))
+					obstacleRefreshed = 3;
+				else if(thiefHealthCurrent > (thiefHealthMax*.2f))
+					obstacleRefreshed = 2;
+				else
+					obstacleRefreshed = 2;
 					
 				System.out.println("GENERATING");
 				
