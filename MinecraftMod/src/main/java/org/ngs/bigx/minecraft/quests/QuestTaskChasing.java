@@ -786,12 +786,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 		}
 		
-		if (levelSys.getPlayerLevel() == 2){//thiefLevel == 2){
+		if (thiefLevel == 2){//levelSys.getPlayerLevel() == 2){
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(46115)));//4420))); //water element
+		}
+		if (thiefLevel == 3){//levelSys.getPlayerLevel() == 3){
 			ItemStack key = new ItemStack(Item.getItemById(4424));
-//			key.setStackDisplayName("Burnt Key"); 
-//			player.inventory.addItemStackToInventory(key);
 			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4420))); //water element
 			//TODO: add Next Quest (normal -> fire -> air -> earth -> water)
 			//TODO: fix descriptions for this quest
 //			try {
@@ -896,8 +896,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				
 				npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
 				npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
-				for (int i = 0; i < virtualCurrency; ++i) {
-					npc.entityDropItem(new ItemStack(Items.gold_ingot), random.nextInt(16)/8F);
+				for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
+					npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
 				}
 				
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);

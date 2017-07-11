@@ -78,8 +78,10 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
@@ -234,16 +236,29 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
+	public void onItemToss(ItemTossEvent event) {
+	    Item droppedItem = event.entityItem.getEntityItem().getItem();
+	    if (droppedItem == Items.paper) {
+	        event.setCanceled(true);
+	        event.player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+	    }
+	    if (droppedItem == Item.getItemById(4801)) {
+	        event.setCanceled(true);
+	        event.player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));
+	    }
+	}
+	
+	@SubscribeEvent
 	public void onPlayerUse(PlayerInteractEvent event){
 		EntityPlayer p = event.entityPlayer;
 //		itemOnPlayersHand.getDisplayName().contains("Teleportation Potion")
 //		if(itemOnPlayersHand.getItem() == Items.paper)
-		if (!p.inventory.hasItem(Items.paper)){
-			p.inventory.addItemStackToInventory(new ItemStack(Items.paper));
-		}
-		if (!p.inventory.hasItem(Item.getItemById(4801))){
-			p.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
-		}
+//		if (!p.inventory.hasItem(Items.paper)){
+//			p.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+//		}
+//		if (!p.inventory.hasItem(Item.getItemById(4801))){
+//			p.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+//		}
 		
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
