@@ -292,7 +292,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		if (thiefLevel > thiefMaxLevel)
 			thiefMaxLevel = thiefLevel;
 		
-		thiefHealthMax = 15 + (int) Math.pow(9, thiefLevel);
+		thiefHealthMax = 45 + (int) Math.pow(9, thiefLevel);
 		thiefHealthCurrent = thiefHealthMax;
 		System.out.println("Thief's level has been set!");
 	}
@@ -911,7 +911,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //				e.printStackTrace();
 //			}
 			
-			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 			if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
 				thiefLevelUp();
 			
@@ -1341,7 +1341,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					// CHASE QUEST LOSE CONDITION
 					if (ws != null && player instanceof EntityPlayerMP) {
 						isActive = false;
-						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
+//						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 						virtualCurrency = 0;
 						time = 0;
 						chasingQuestOnCountDown = false;

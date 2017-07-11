@@ -236,12 +236,16 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onPlayerUse(PlayerInteractEvent event){
 		EntityPlayer p = event.entityPlayer;
-		ItemStack itemOnPlayersHand= p.getHeldItem();
 //		itemOnPlayersHand.getDisplayName().contains("Teleportation Potion")
 //		if(itemOnPlayersHand.getItem() == Items.paper)
-		if (itemOnPlayersHand == null && !p.inventory.hasItem(Items.paper)){
+		if (!p.inventory.hasItem(Items.paper)){
 			p.inventory.addItemStackToInventory(new ItemStack(Items.paper));
 		}
+		if (!p.inventory.hasItem(Item.getItemById(4801))){
+			p.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+		}
+		
+		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
 		if (itemOnPlayersHand != null){
 		System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
