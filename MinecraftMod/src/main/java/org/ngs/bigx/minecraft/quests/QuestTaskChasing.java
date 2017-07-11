@@ -99,6 +99,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
 	protected int obstacleId = -1;
 	
+	protected long comboTime = 0;
+	protected int comboCount = 0;
+	protected final int comboTimeLimit = 300;
+	
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
 	private boolean doMakeBlocks;
@@ -299,6 +303,13 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void deductThiefHealth(Item itemOnHands)
 	{
+		long currentTime = System.currentTimeMillis();
+		
+		if( (currentTime - comboTime) < comboTimeLimit )
+			comboCount ++;
+		else
+			comboCount = 0;
+		
 		int deduction = 1;
 		if (itemOnHands != null) {
 			if(itemOnHands.getUnlocalizedName().equals("item.swordWood"))
@@ -330,6 +341,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 		}
 		
+		// Combo Calculation
+		deduction = (int) (deduction + comboCount*(deduction*.5));
+		
 		if(damageUpEffectTickCount > 0)
 		{
 			System.out.println("DAMAGE BOOST");
@@ -347,6 +361,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 		
 		GuiDamage.addDamageText(deduction, 255, 10, 10);
+		
+		comboTime = currentTime;
 	}
 
 	public void handleQuestStart(){
@@ -1417,6 +1433,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		return QuestTaskChasing.class.toString();
 	}
 
+	public int getComboCount()
+	{
+		return comboCount;
+	}
+	
+	public void checkComboCount()
+	{
+		long currentTime = System.currentTimeMillis();
+		
+		if( (currentTime - comboTime) >= comboTimeLimit )
+			comboCount = 0;
+	}
 	
 	public int getTime()
 	{

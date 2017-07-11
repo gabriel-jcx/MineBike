@@ -365,6 +365,10 @@ public class GuiStats extends GuiScreen {
 							time = quest.getTime();
 						}
 		        	}
+		        	else
+		        	{
+		        		return;
+		        	}
 		        	
 		        	int minuteLeft = time/60;
 					int secondLeft = time%60;
@@ -389,7 +393,7 @@ public class GuiStats extends GuiScreen {
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
-		        	
+		    		
 		    		text = "" + new DecimalFormat("###.#").format(quest.getDist());
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
@@ -480,6 +484,27 @@ public class GuiStats extends GuiScreen {
 					    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
 				    		GL11.glPopMatrix();
 		    			}
+		    		}
+		    		
+		    		if(quest.getComboCount() != 0)
+		    		{
+		    			int combotextColor = 0xFFFFFF;
+		    			combotextColor -= ((4 * quest.getComboCount()) << 8);
+		    			combotextColor -= (4 * quest.getComboCount());
+		    			combotextColor |= 0xFF0000;
+		    			
+	    				GL11.glPushMatrix();
+					    GL11.glTranslatef(0, 0, 0);
+				    	GL11.glScalef(3F, 3F, 3F);
+				    		text = quest.getComboCount() + " COMBO";
+			
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, mcWidth/6-fontRendererObj.getStringWidth(text)/6 + 20, mcHeight/6 - 20, combotextColor);
+			    		GL11.glPopMatrix();
+		    		}
+		    		else
+		    		{
+		    			quest.checkComboCount();
 		    		}
 		    	}
 	    	}
