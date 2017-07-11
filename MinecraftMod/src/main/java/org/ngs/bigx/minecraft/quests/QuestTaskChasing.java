@@ -33,6 +33,7 @@ import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
@@ -46,7 +47,6 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
-import org.ngs.bigx.utility.NpcCommand;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -1077,9 +1077,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						}
 						
 						npc.ai.stopAndInteract = false;
-						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
-						if (npc.display.texture == "customnpcs:textures/entity/humanmale/GangsterSteve.png")
-							System.out.println("Thief has correct outfit");
 						break;
 					case FIRE:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
