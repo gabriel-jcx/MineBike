@@ -282,22 +282,49 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		thiefLevel = 1;
 	}
 	
-	public void thiefLevelUp()
-	{
-		thiefLevel ++;
-		thiefMaxLevel ++;
-		
-		thiefHealthMax = 45 + (int) Math.pow(5, thiefLevel);
-		thiefHealthCurrent = thiefHealthMax;
-	}
-	
 	public void setThiefLevel(int level)
 	{
 		thiefLevel = level;
 		if (thiefLevel > thiefMaxLevel)
 			thiefMaxLevel = thiefLevel;
 		
-		thiefHealthMax = 45 + (int) Math.pow(5, thiefLevel);
+//		thiefHealthMax = 41 + (int) Math.pow(9, thiefLevel);
+		switch(thiefLevel)
+		{
+		case 1:
+			thiefHealthMax = 50;
+			break;
+		case 2:
+			thiefHealthMax = 300;
+			break;
+		case 3:
+			thiefHealthMax = 600;
+			break;
+		case 4:
+			thiefHealthMax = 2000;
+			break;
+		case 5:
+			thiefHealthMax = 4000;
+			break;
+		case 6:
+			thiefHealthMax = 4000;
+			break;
+		case 7:
+			thiefHealthMax = 5000;
+			break;
+		case 8:
+			thiefHealthMax = 6000;
+			break;
+		case 9:
+			thiefHealthMax = 6000;
+			break;
+		case 10:
+			thiefHealthMax = 9999;
+			break;
+		default:
+			thiefHealthMax = 9999;
+			break;
+		}
 		thiefHealthCurrent = thiefHealthMax;
 		System.out.println("Thief's level has been set!");
 	}
@@ -823,7 +850,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 		
 		if (thiefLevel == 2){//levelSys.getPlayerLevel() == 2){
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(46115)));//4420))); //water element
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4615)));//4420))); //water element
 		}
 		if (thiefLevel == 3){//levelSys.getPlayerLevel() == 3){
 			ItemStack key = new ItemStack(Item.getItemById(4424));
@@ -960,8 +987,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //			}
 			
 //			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-			if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
-				thiefLevelUp();
+//			if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
+//				thiefLevelUp();
 			
 			isActive = false;
 			completed = false;
@@ -1066,6 +1093,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			}
 			if(countdown == 8)
 			{
+				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
+				if (guiChasingQuest != null && !thiefLevelSet){
+					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
+					else
+						setThiefLevel(levelSys.getPlayerLevel());
+					System.out.println("Thief's level is: " + getThiefLevel());
+					thiefLevelSet = true;
+				}
 				if(player.worldObj.isRemote) {
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
 				}
@@ -1099,7 +1135,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		// Calulate Tick Numbers
 		if(countdown == 11)
 		{
-			Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 			pausedTime = 0;
 			questTimeStamp = timeNow;
 			countdown = 10;
@@ -1263,14 +1298,17 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				
 				if(chasingQuestOnGoing)
 				{
-					if (guiChasingQuest != null && !thiefLevelSet){
-						if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-							setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-						else
-							setThiefLevel(levelSys.getPlayerLevel());
-						System.out.println("Thief's level is: " + getThiefLevel());
-						thiefLevelSet = true;
-					}
+//					if (guiChasingQuest != null)
+//						System.out.println("Selected Quest Level:" + (guiChasingQuest.getSelectedQuestLevelIndex()+1));
+//					System.out.println("Thief Level is Set: " + thiefLevelSet);
+//					if (guiChasingQuest != null && !thiefLevelSet){
+//						if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
+//							setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
+//						else
+//							setThiefLevel(levelSys.getPlayerLevel());
+//						System.out.println("Thief's level is: " + getThiefLevel());
+//						thiefLevelSet = true;
+//					}
 					if(chasingQuestOnCountDown)
 					{
 						handleCountdown();

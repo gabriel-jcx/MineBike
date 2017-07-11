@@ -312,6 +312,7 @@ public class GuiChasingQuest extends GuiScreen {
 	public void selectQuestlevel(int i)
 	{
 		selectedQuestLevelIndex = i;
+		System.out.println("Selected Level: " + (i+1));
 //		this.guiQuestlistDescriptionSlot.resetScroll();
 	}
 	
