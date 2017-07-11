@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,6 +16,7 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	GuiChasingQuest parent;
 	private int slotHeight;
 	private int slotWidth;
+	public static int numberOfQuestLevels = 10;
 	
 	public GuiChasingQuestLevelSlot(int width, int height, int top, int left, int entryHeight) {
 		super(Minecraft.getMinecraft(), width, height, top, top + height, left, entryHeight);
@@ -31,7 +33,7 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	}
 
 	public GuiChasingQuestLevelSlot(GuiChasingQuest parent) {
-		this(150, ((parent.height - parent.getTopMargin())>=90)?90:(parent.height - parent.getTopMargin()), parent.getTopMargin(), 0, 17);
+		this(150, ((parent.height - parent.getTopMargin())>=171)?171:(parent.height - parent.getTopMargin()), parent.getTopMargin(), 0, 17);
 		this.parent = parent;
 	}
 
@@ -55,31 +57,10 @@ public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	{
 		String name = "";
 		
-		switch(i)
-		{
-		case 0:
-			name = "Gold Thief";
-			break;
-		case 1:
-			name = "Element Thief";
-			break;
-		case 2:
-			name = "Key Thief";
-			break;
-		case 3:
-			name = "Thief Master";
-			break;
-		case 4:
-			name = "Thief King";
-			break;
-		case 5:
-			name = "Thief God";
-			break;
-		default:
+		if(i < QuestTaskChasing.villainNames.length)
+			name = QuestTaskChasing.villainNames[i];
+		else
 			name = "Random Thief";
-			break;
-		}
-		
 		
 		int fontColor = 0xFFFFFF;
 		

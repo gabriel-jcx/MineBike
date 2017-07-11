@@ -4,7 +4,7 @@ package org.ngs.bigx.minecraft;
 public class BiGXTextBoxDialogue {
 	//Event Dialogues
 	public static final String directionMsg = "I heard there's\na cave northward...";
-	public static final String policeDirection = "The Police Station is up ahead.\nI should go help them.";
+	public static final String policeDirection = "The Police Station is up\nahead. I should go help\nthem.";
 	public static final String wakeUpMsg = "Dad is calling me.\nLet’s go talk to him";
 	public static final String fatherMsg = "Dad: There's a lot of\ntheives lately. The Police\nOfficer needs help.";
 	public static final String fatherMsgMap = "Dad: Don't forget\nto use your map!";

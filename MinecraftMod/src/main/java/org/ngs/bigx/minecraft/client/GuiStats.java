@@ -21,6 +21,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.ResourceLocation;
@@ -212,6 +213,28 @@ public class GuiStats extends GuiScreen {
 	    	 * END OF Pedaling Mode Indicator Drawinge
 	    	 */
 	    	
+	    	/**
+	    	 * Pedaling Mode Related Drawing
+	    	 */
+	    	if(mc.thePlayer.getHeldItem() != null)
+	    	{
+	    		if(mc.thePlayer.getHeldItem().getItem() == Items.paper)
+				{
+	    			text = "Press LT to open Quest List Menu";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
+				}
+	    		else if(mc.thePlayer.getHeldItem().getDisplayName().contains("Phone"))
+	    		{
+	    			text = "Press LT to Change Bike Mode (Move/Mining/Building)";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
+				}
+	    	}
+	    	
+	    	
 	    	if(ClientEventHandler.pedalingModeState == 2)
 	    	{
 	    		text = "  ";
@@ -242,6 +265,9 @@ public class GuiStats extends GuiScreen {
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 52, 0xFFFFFF);
 	    	}
+	    	/**
+	    	 * END OF Pedaling Mode Related Drawing
+	    	 */
 
 	    	/**
 	    	 * Quest Progress Indicator Drawing
@@ -339,6 +365,10 @@ public class GuiStats extends GuiScreen {
 							time = quest.getTime();
 						}
 		        	}
+		        	else
+		        	{
+		        		return;
+		        	}
 		        	
 		        	int minuteLeft = time/60;
 					int secondLeft = time%60;
@@ -363,13 +393,13 @@ public class GuiStats extends GuiScreen {
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
-		        	
+		    		
 		    		text = "" + new DecimalFormat("###.#").format(quest.getDist());
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
 		        	
-		    		text = "Lv: " + quest.getThiefLevel();
+		    		text = "HP";
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
@@ -430,7 +460,7 @@ public class GuiStats extends GuiScreen {
 			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 90, 22, 0);
 			        }
 		        	
-		    		text = "HP: " + quest.getThiefHealthCurrent();
+		    		text = "" + quest.getThiefHealthCurrent();
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
@@ -454,6 +484,27 @@ public class GuiStats extends GuiScreen {
 					    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
 				    		GL11.glPopMatrix();
 		    			}
+		    		}
+		    		
+		    		if(quest.getComboCount() != 0)
+		    		{
+		    			int combotextColor = 0xFFFFFF;
+		    			combotextColor -= ((4 * quest.getComboCount()) << 8);
+		    			combotextColor -= (4 * quest.getComboCount());
+		    			combotextColor |= 0xFF0000;
+		    			
+	    				GL11.glPushMatrix();
+					    GL11.glTranslatef(0, 0, 0);
+				    	GL11.glScalef(3F, 3F, 3F);
+				    		text = quest.getComboCount() + " COMBO";
+			
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, mcWidth/6-fontRendererObj.getStringWidth(text)/6 + 20, mcHeight/6 - 20, combotextColor);
+			    		GL11.glPopMatrix();
+		    		}
+		    		else
+		    		{
+		    			quest.checkComboCount();
 		    		}
 		    	}
 	    	}

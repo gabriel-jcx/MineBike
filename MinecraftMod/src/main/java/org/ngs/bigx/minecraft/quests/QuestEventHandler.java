@@ -234,8 +234,18 @@ public class QuestEventHandler {
 		if(event.target.getClass().getName().equals("noppes.npcs.entity.EntityCustomNpc"))
 		{
 			target = (EntityCustomNpc)event.target;
+			boolean isVillain = false;
 			
-			if(target.display.name.equals("Thief"))
+			for(String villanName : QuestTaskChasing.villainNames)
+			{
+				if(villanName.equals(target.display.name))
+				{
+					isVillain = true;
+					break;
+				}
+			}
+			
+			if(isVillain)
 			{
 				if( (System.currentTimeMillis() - duplicateAttackEventPreventorTimeStamp) < 100 )
 					return;

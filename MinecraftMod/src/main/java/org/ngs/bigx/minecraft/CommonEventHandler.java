@@ -16,17 +16,23 @@ import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.npcs.NpcLocations;
@@ -44,9 +50,10 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
-import org.ngs.bigx.utility.NpcCommand;
 
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -71,8 +78,10 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
@@ -227,14 +236,84 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
+	public void onItemToss(ItemTossEvent event) {
+	    Item droppedItem = event.entityItem.getEntityItem().getItem();
+	    if (droppedItem == Items.paper) {
+	        event.setCanceled(true);
+	        event.player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+	    }
+	    if (droppedItem == Item.getItemById(4801)) {
+	        event.setCanceled(true);
+	        event.player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));
+	    }
+	}
+	
+	@SubscribeEvent
+	public void onPlayerUse(PlayerInteractEvent event){
+		EntityPlayer p = event.entityPlayer;
+//		itemOnPlayersHand.getDisplayName().contains("Teleportation Potion")
+//		if(itemOnPlayersHand.getItem() == Items.paper)
+//		if (!p.inventory.hasItem(Items.paper)){
+//			p.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+//		}
+//		if (!p.inventory.hasItem(Item.getItemById(4801))){
+//			p.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+//		}
+		
+		ItemStack itemOnPlayersHand= p.getHeldItem();
+		
+		if (itemOnPlayersHand != null){
+		System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
+		
+		if(itemOnPlayersHand.getItem() == Items.paper)
+		{
+			if(!p.worldObj.isRemote)
+				return;
+			
+			Minecraft mc = Minecraft.getMinecraft();
+			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+			
+			guiQuestlistManager.resetQuestReferences();
+			
+			try {
+				Collection<Quest> questlist = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().values();
+				
+				for(Quest quest : questlist)
+				{
+					guiQuestlistManager.addQuestReference(quest);
+				}
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (GuiQuestlistException e) {
+				e.printStackTrace();
+			}
+			
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(guiQuestlistManager);
+			System.out.println("Display Quest List");
+		}
+		else if(itemOnPlayersHand.getDisplayName().contains("Phone"))
+		{
+			ClientEventHandler.pedalingModeState ++;
+			ClientEventHandler.pedalingModeState %= 3;
+			ClientEventHandler.animTickSwitch = 0;
+			ClientEventHandler.animTickFade = 0;
+			System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
+		}
+		}
+	}
+	
+	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
 		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
 		if (event.item.getDisplayName().contains("Village"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
 		if (event.item.getDisplayName().contains("Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
+		if (event.item.getDisplayName().contains("Tutorial"))
+			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 65, 0);
 //		if (event.item.getDisplayName().contains("Sword"))
-//			QuestTeleporter.teleport(event.entityPlayer, 102, 1, 64, 1);
+//			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 66, 0);
 	}
 	
 	@SubscribeEvent

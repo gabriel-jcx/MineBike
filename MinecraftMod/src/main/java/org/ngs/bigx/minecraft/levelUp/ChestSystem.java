@@ -82,7 +82,8 @@ public class ChestSystem {
 		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
 		
 		if (keyName == "Shiny Key"){
-			putPotionInChest(c, "Teleportation Potion - Past", 0);	
+			putPotionInChest(c, "Teleportation Potion - Past", 0);
+			c.setInventorySlotContents(1, new ItemStack(Items.paper));
 		}
 		
 		if (keyName == "Burnt Key"){

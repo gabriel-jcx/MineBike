@@ -64,6 +64,25 @@ public class NpcEvents {
 		if (!player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
 		
+		ItemStack p = new ItemStack(Items.potionitem);
+		p.setStackDisplayName("Teleportation Potion - Tutorial");
+		if (!player.inventory.hasItemStack(p)){
+			player.inventory.addItemStackToInventory(p);
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Just in case you need it,\ntake this potion.");
+		}
+		
+		if (!player.inventory.hasItem(Items.paper)){
+			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
+		}
+		if (!player.inventory.hasItem(Item.getItemById(4801))){
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
+		}
+		
 //		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
 //			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
 //		else{
