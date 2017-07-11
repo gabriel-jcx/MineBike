@@ -765,8 +765,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		// Don't continue if there's an item on the ground nearby
 		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc, AxisAlignedBB.getBoundingBox(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
-			if (e instanceof EntityItem) {
-				System.out.println(((EntityItem)e).getEntityItem());
+			if (e instanceof EntityItem || e instanceof EntityXPOrb) {
 				return;
 			}
 		}
