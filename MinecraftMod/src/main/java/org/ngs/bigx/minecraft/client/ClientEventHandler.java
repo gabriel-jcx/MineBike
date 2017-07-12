@@ -2,31 +2,9 @@ package org.ngs.bigx.minecraft.client;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MouseHelper;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-
+import org.lwjgl.opengl.GL11;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.PedalingToBuild;
@@ -35,7 +13,6 @@ import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
@@ -50,6 +27,27 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import javafx.scene.shape.DrawMode;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MouseHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class ClientEventHandler {
 	private BigxClientContext context;
@@ -167,8 +165,7 @@ public class ClientEventHandler {
 //				mc.displayGuiScreen(guiQuestlistManager);
 //			System.out.println("Display Quest List");
 		}
-		if(keyBindingToggleChasingQuestGui.isPressed())
-		{
+		if (keyBindingToggleChasingQuestGui.isPressed()) {
 			Minecraft mc = Minecraft.getMinecraft();
 			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 			
@@ -230,6 +227,72 @@ public class ClientEventHandler {
 				}
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	public void onBlockDrawHighlight(DrawBlockHighlightEvent event) {
+		// What a helpful event for this effect
+		
+		// BIKE MODE - highlighting the block the player is looking at with a transparent white overlay
+		
+//		event.context.drawOutlinedBoundingBox(p_147590_0_, p_147590_1_);(AxisAlignedBB, int);
+		
+//		int minX = event.target.blockX;
+//		int maxX = event.target.blockX + 1;
+//		int minY = event.target.blockY;
+//		int maxY = event.target.blockY + 1;
+//		int minZ = event.target.blockZ;
+//		int maxZ = event.target.blockZ + 1;
+		
+		GL11.glPushMatrix();
+		
+		GL11.glTranslatef(event.target.blockX, event.target.blockY, event.target.blockZ);
+		
+	    Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+
+        tessellator.setColorRGBA(0, 0, 0, 128);
+        
+        // -Z
+        tessellator.setNormal(0, 0, -1);
+        tessellator.addVertex(1.0, 0.0, 0.0);
+        tessellator.addVertex(0.0, 0.0, 0.0);
+        tessellator.addVertex(0.0, 0.5, 0.0);
+        tessellator.addVertex(1.0, 0.5, 0.0);
+        // +Z
+        tessellator.setNormal(0, 0, 1);
+        tessellator.addVertex(0.0, 0.0, 1.0);
+        tessellator.addVertex(1.0, 0.0, 1.0);
+        tessellator.addVertex(1.0, 0.5, 1.0);
+        tessellator.addVertex(0.0, 0.5, 1.0);
+        // -X
+        tessellator.setNormal(-1, 0, 0);
+        tessellator.addVertex(0.0, 0.0, 0.0);
+        tessellator.addVertex(0.0, 0.0, 1.0);
+        tessellator.addVertex(0.0, 0.5, 1.0);
+        tessellator.addVertex(0.0, 0.5, 0.0);
+        // +X
+        tessellator.setNormal(1, 0, 0);
+        tessellator.addVertex(1.0, 0.0, 1.0);
+        tessellator.addVertex(1.0, 0.0, 0.0);
+        tessellator.addVertex(1.0, 0.5, 0.0);
+        tessellator.addVertex(1.0, 0.5, 1.0);
+        // -Y
+        tessellator.setNormal(0, -1, 0);
+        tessellator.addVertex(0.0, 0.0, 1.0);
+        tessellator.addVertex(0.0, 0.0, 0.0);
+        tessellator.addVertex(1.0, 0.0, 0.0);
+        tessellator.addVertex(1.0, 0.0, 1.0);
+        // +Y
+        tessellator.setNormal(0, 1, 0);
+        tessellator.addVertex(1.0, 0.5, 1.0);
+        tessellator.addVertex(1.0, 0.5, 0.0);
+        tessellator.addVertex(0.0, 0.5, 0.0);
+        tessellator.addVertex(0.0, 0.5, 1.0);
+        
+        tessellator.draw();
+		
+        GL11.glPopMatrix();
 	}
 	
 	//Called whenever the client ticks

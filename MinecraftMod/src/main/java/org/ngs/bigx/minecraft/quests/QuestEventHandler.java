@@ -4,35 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import noppes.npcs.entity.EntityCustomNpc;
-
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.client.ClientEventHandler;
-import org.ngs.bigx.minecraft.context.BigxServerContext;
-import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
-import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestEventHandler {
 	private int tickCount = 0;
@@ -305,6 +296,21 @@ public class QuestEventHandler {
 					questEventNpcInteractionList.remove(questEventNpcInteraction);
 			}
 			questEventNpcInteractionListDel.clear();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		// PLAY MUSIC FOR CHASING QUEST HERE
+		
+		if (BiGX.instance().clientContext.getQuestManager() == null)
+			return;
+		
+		if (event.entity instanceof EntityPlayer && event.entity.dimension == WorldProviderFlats.dimID) {
+			if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
+				event.entity.worldObj.playSoundAtEntity(event.entity, "minebike:chasemusic", 1.0f, 1.0f);
+			}
+			
 		}
 	}
 	
