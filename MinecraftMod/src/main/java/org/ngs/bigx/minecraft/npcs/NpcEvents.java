@@ -64,13 +64,8 @@ public class NpcEvents {
 		if (!player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
 		
-		ItemStack p = new ItemStack(Items.potionitem);
-		p.setStackDisplayName("Teleportation Potion - Tutorial");
-		if (!player.inventory.hasItemStack(p)){
-			player.inventory.addItemStackToInventory(p);
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Just in case you need it,\ntake this potion.");
-		}
+		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
+				"Dad: Just in case you need\nit, take this potion");
 		
 		if (!player.inventory.hasItem(Items.paper)){
 			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
@@ -143,14 +138,9 @@ public class NpcEvents {
 		}
 		
 		//Giving player teleportation potion
-		ItemStack p = new ItemStack(Items.potionitem);
-		p.setStackDisplayName("Teleportation Potion");
-		if (!player.inventory.hasItemStack(p)){
-			player.inventory.addItemStackToInventory(p);
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerRequestHelp);
-		}
-		else if (!player.worldObj.isRemote)
+		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
+				BiGXTextBoxDialogue.officerRequestHelp);
+		if (!player.worldObj.isRemote && gavePotion)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
 	

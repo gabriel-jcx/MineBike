@@ -128,6 +128,32 @@ public class BiGXEventTriggers {
 		return checkEntityInArea(entity, xyz1.xCoord, xyz1.yCoord, xyz1.zCoord, xyz2.xCoord, xyz2.yCoord, xyz2.zCoord);
 	}
 	
+	public static int convertCoinsToGold(int numCoins){
+		return Math.floorDiv(numCoins, 10);
+	}
+
+	public static boolean givePlayerPotion(EntityPlayer player, String potionName, String message){
+		boolean hasPotion = false;
+		for (ItemStack items : player.inventory.mainInventory){
+			if (items != null){
+				System.out.println(items.getDisplayName());
+				if (items.getDisplayName().contains(potionName)){
+					hasPotion = true;
+					break;
+				}
+			}
+		}
+		
+		if (!hasPotion){
+			ItemStack p = new ItemStack(Items.potionitem);
+			p.setStackDisplayName(potionName);
+			player.inventory.addItemStackToInventory(p);
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage(message);
+		}
+		return hasPotion;
+	}
+	
 	//Private helper methods
 	private static boolean checkClickedInArea(PlayerInteractEvent event, int x1, int y1, int z1, int x2, int y2, int z2){
 		if (event.x >= x1 && event.x <= x2)
@@ -135,10 +161,6 @@ public class BiGXEventTriggers {
 				if (event.z >= z1 && event.z <= z2)
 					return true;
 		return false;
-	}
-	
-	public static int convertCoinsToGold(int numCoins){
-		return Math.floorDiv(numCoins, 10);
 	}
 	
 }
