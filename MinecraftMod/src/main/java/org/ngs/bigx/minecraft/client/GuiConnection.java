@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
-import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;

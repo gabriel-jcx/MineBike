@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft;
 	
+import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
 import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;

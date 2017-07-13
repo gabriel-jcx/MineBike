@@ -1,10 +1,12 @@
-package org.ngs.bigx.minecraft;
+package org.ngs.bigx.minecraft.bike;
 
 import java.io.DataInputStream;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
+import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
 import org.ngs.bigx.minecraft.context.BigxClientContext;

@@ -7,8 +7,8 @@ import java.net.UnknownHostException;
 
 import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.CommonProxy;
+import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.renderer.TileEntityQuestChestRenderer;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
