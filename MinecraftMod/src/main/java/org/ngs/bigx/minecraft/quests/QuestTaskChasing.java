@@ -105,6 +105,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	protected long comboTime = 0;
 	protected int comboCount = 0;
+	protected int bestCombo = 0;
 	protected final int comboTimeLimit = 400;
 	
 	protected float initialDist, dist = 0;
@@ -338,8 +339,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		if( (currentTime - comboTime) < comboTimeLimit )
 			comboCount ++;
-		else
+		else{
+			if (comboCount > bestCombo)
+				bestCombo = comboCount;
 			comboCount = 0;
+			System.out.println("Best Combo: " + bestCombo);
+		}
 		
 		int deduction = 1;
 		if (itemOnHands != null) {
@@ -414,6 +419,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				
 				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
 			}
+			guiChasingQuest.selectQuestlevel(levelSys.getPlayerLevel()-1);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} catch (GuiQuestlistException e) {
@@ -1094,7 +1100,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					command = new NpcCommand(context, npc);
 					command.setSpeed(10);
 					command.enableMoving(false);
-					command.runInDirection(ForgeDirection.SOUTH);
+//					command.runInDirection(ForgeDirection.SOUTH);
 					
 					setNpcCommand(command);
 				}
