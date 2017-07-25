@@ -5,10 +5,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
-import org.ngs.bigx.minecraft.PedalingToBuild;
-import org.ngs.bigx.minecraft.PedalingToBuildEventHandler;
+import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.bike.PedalingToBuild;
+import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;

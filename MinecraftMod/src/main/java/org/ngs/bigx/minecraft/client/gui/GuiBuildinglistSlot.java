@@ -1,7 +1,7 @@
 package org.ngs.bigx.minecraft.client.gui;
 
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.PedalingToBuildEventHandler;
+import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

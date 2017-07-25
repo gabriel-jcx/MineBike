@@ -1,4 +1,4 @@
-package org.ngs.bigx.minecraft;
+package org.ngs.bigx.minecraft.bike;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 
+import org.ngs.bigx.minecraft.BlockPositionMapping;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 

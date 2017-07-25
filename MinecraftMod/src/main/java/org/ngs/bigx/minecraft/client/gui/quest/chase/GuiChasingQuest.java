@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
-import org.ngs.bigx.minecraft.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.Leaderboard;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
