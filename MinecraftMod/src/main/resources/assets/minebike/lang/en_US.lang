@@ -12,6 +12,10 @@ gui.chasingquest.medium=Medium
 gui.chasingquest.hard=Hard
 gui.chasingquest.start=start
 
+gui.finishchasingquest.continue=Continue
+gui.finishchasingquest.retry=Retry
+gui.finishchasingquest.exit=Exit
+
 gui.stats.heartrate=Heartrate
 gui.stats.bpm=BPM
 gui.stats.speed=Speed

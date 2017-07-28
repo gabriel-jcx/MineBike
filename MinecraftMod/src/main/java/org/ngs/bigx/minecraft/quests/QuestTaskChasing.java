@@ -27,6 +27,7 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiFinishChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest.ChasingQuestDifficultyEnum;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
@@ -842,7 +843,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		this.command = npcCommand;
 	}
 	
-	private void WaitForRewardPickupAndReturn() {
+	private void waitForRewardPickupAndContinue() {
 		
 		// Don't continue if there's an item on the ground nearby
 		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc, AxisAlignedBB.getBoundingBox(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
@@ -908,8 +909,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		isActive = false;
 		completed = true;
 		goBackToTheOriginalWorld(ws, player);
-		
-		return;
 	}
 	
 	@Override
@@ -970,7 +969,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			}
 			
-			WaitForRewardPickupAndReturn();
+			if (thiefHealthCurrent <= 0 && rewardDropped) {
+				Minecraft mc = Minecraft.getMinecraft();
+				System.out.println(context instanceof BigxServerContext);
+				GuiFinishChasingQuest gui = new GuiFinishChasingQuest(this); 
+				if(mc.currentScreen == null) {
+					mc.displayGuiScreen(gui);
+				}
+			}
+//			waitForRewardPickupAndContinue();
 		}
 		
 		// CHASE QUEST LOSE CONDITION
@@ -1561,6 +1568,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		return thiefLevel;
 	}
 
+	public boolean getRewardDropped() {
+		return rewardDropped;
+	}
+	
 	public static int getSpeedBoostTickCountLeft(){
 		return speedUpEffectTickCount;
 	}
