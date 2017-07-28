@@ -67,6 +67,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -222,7 +223,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-		
 //		System.out.println("goBackToTheOriginalWorld");
 //		deactivateTask();
 		
@@ -432,6 +432,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		////End Displaying Level Selection GUI
 		
 		boolean isReboot = !isActive;
+//		player.setGameType(GameType.CREATIVE);
 		
 		time = 0;
 		initThiefStat();
@@ -913,6 +914,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		isActive = false;
 		completed = true;
+//		player.setGameType(GameType.SURVIVAL);
 		goBackToTheOriginalWorld(ws, player);
 		
 		return;
@@ -971,6 +973,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
 					npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
 				}
+				//Combo Bonus
+				for (int i = 0; i < (bestCombo/2); ++i){
+					npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);
+				}
 				
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
@@ -1000,6 +1006,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			isActive = false;
 			completed = false;
+//			player.setGameType(GameType.SURVIVAL);
 			goBackToTheOriginalWorld(ws, player);
 		}
 	}
@@ -1100,7 +1107,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					command = new NpcCommand(context, npc);
 					command.setSpeed(10);
 					command.enableMoving(false);
-//					command.runInDirection(ForgeDirection.SOUTH);
+					command.runInDirection(ForgeDirection.SOUTH);
 					
 					setNpcCommand(command);
 				}
@@ -1423,7 +1430,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			context = BiGX.instance().serverContext;
 		}
 	}
-
+	
+//	@Override
+//	public void livingDeath(LivingDeathEvent event){
+//		
+//	}
 	
 	@Override
 	public void onItemUse(Start event) {
@@ -1462,7 +1473,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					// CHASE QUEST LOSE CONDITION
 					if (ws != null && player instanceof EntityPlayerMP) {
 						isActive = false;
-//						BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
 						virtualCurrency = 0;
 						time = 0;
 						chasingQuestOnCountDown = false;
@@ -1472,6 +1482,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						initThiefStat();
 						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 						completed = false;
+//						player.setGameType(GameType.SURVIVAL);
 						goBackToTheOriginalWorld(ws, player);
 					}
 
