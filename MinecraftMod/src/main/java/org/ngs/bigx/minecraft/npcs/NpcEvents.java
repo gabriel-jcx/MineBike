@@ -260,11 +260,13 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(3),32)); //Dirt block
 		inventoryCurrency.setInventorySlotContents(4, new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
 		inventoryCurrency.setInventorySlotContents(5, new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
-		inventoryCurrency.setInventorySlotContents(6, new ItemStack(Item.getItemById(268))); //Wood Sword
-		inventoryCurrency.setInventorySlotContents(7, new ItemStack(Item.getItemById(267))); //Iron Sword
+		inventoryCurrency.setInventorySlotContents(6, new ItemStack(Items.wooden_sword)); //Wood Sword
+		inventoryCurrency.setInventorySlotContents(7, new ItemStack(Items.iron_sword)); //Iron Sword
 		inventoryCurrency.setInventorySlotContents(8, new ItemStack(CustomItems.swordBronze)); //Bronze Sword
 		inventoryCurrency.setInventorySlotContents(9, new ItemStack(CustomItems.swordMithril)); //Mithril Sword
 		inventoryCurrency.setInventorySlotContents(10, new ItemStack(CustomItems.swordEmerald)); //Emerald Sword
+		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Items.feather)); //Feather
+		inventoryCurrency.setInventorySlotContents(12, new ItemStack(Items.blaze_powder)); //Burn Element thing
 	}
 	
 	private static void createTraderSold(NpcMiscInventory inventorySold){
@@ -279,6 +281,8 @@ public class NpcEvents {
 		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),9));
 		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),27));
 		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266), 81));
+		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),1));
 	}
 
 }
