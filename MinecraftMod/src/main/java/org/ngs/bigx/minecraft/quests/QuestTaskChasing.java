@@ -34,6 +34,8 @@ import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
+import org.ngs.bigx.minecraft.npcs.NpcEvents;
+import org.ngs.bigx.minecraft.npcs.NpcLocations;
 import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
@@ -42,12 +44,14 @@ import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -70,12 +74,13 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp {
+public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
@@ -432,7 +437,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		////End Displaying Level Selection GUI
 		
 		boolean isReboot = !isActive;
-//		player.setGameType(GameType.CREATIVE);
+		player.setGameType(GameType.CREATIVE);
 		
 		time = 0;
 		initThiefStat();
@@ -914,7 +919,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		isActive = false;
 		completed = true;
-//		player.setGameType(GameType.SURVIVAL);
+		player.setGameType(GameType.SURVIVAL);
 		goBackToTheOriginalWorld(ws, player);
 		
 		return;
@@ -1006,7 +1011,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			isActive = false;
 			completed = false;
-//			player.setGameType(GameType.SURVIVAL);
+			player.setGameType(GameType.SURVIVAL);
 			goBackToTheOriginalWorld(ws, player);
 		}
 	}
@@ -1062,11 +1067,19 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						switch(thiefLevel)
 						{
 						case 1:
-						case 2:
-						case 3:
-						case 4:
-						case 5:
 							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/GangsterSteve.png");
+							break;
+						case 2:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/FireSteve.png");
+							break;
+						case 3:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/RaggedyBardSteve.png");
+							break;
+						case 4:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve.png");
+							break;
+						case 5:
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve 2.png");
 							break;
 						case 6:
 							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
@@ -1431,10 +1444,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 	}
 	
-//	@Override
-//	public void livingDeath(LivingDeathEvent event){
-//		
-//	}
+	@Override
+	public void onNpcInteraction(EntityInteractEvent event) {
+		System.out.println("Interacting with NPC During Quest");
+//		EntityPlayer player = event.entityPlayer;
+//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
+//			handleQuestStart();
+//		}
+	}
 	
 	@Override
 	public void onItemUse(Start event) {
@@ -1482,7 +1499,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						initThiefStat();
 						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 						completed = false;
-//						player.setGameType(GameType.SURVIVAL);
+						player.setGameType(GameType.SURVIVAL);
 						goBackToTheOriginalWorld(ws, player);
 					}
 
@@ -1514,6 +1531,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			QuestEventHandler.unregisterQuestEventItemUse(this);
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 			QuestEventHandler.unregisterQuestEventItemPickUp(this);
+			QuestEventHandler.unregisterQuestEventNpcInteraction(this);
 		}
 	}
 	
@@ -1525,6 +1543,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			QuestEventHandler.registerQuestEventItemUse(this);
 			QuestEventHandler.registerQuestEventCheckComplete(this);
 			QuestEventHandler.registerQuestEventItemPickUp(this);
+			QuestEventHandler.registerQuestEventNpcInteraction(this);
 		}
 	}
 
