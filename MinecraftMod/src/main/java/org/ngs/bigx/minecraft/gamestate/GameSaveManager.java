@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 
+import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 
 import com.google.gson.Gson;
@@ -92,7 +93,7 @@ public class GameSaveManager {
 	    
 		try{
 		      JSch jsch=new JSch();
-		      Session session=jsch.getSession(serveraccount, host, 2221);
+		      Session session=jsch.getSession(serveraccount, host, BiGXConstants.SERVERSSHPORTNUM);
 		      session.setUserInfo(new UserInfo() {
 			
 					@Override

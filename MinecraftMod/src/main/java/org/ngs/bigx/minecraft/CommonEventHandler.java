@@ -263,43 +263,46 @@ public class CommonEventHandler {
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
 		if (itemOnPlayersHand != null){
-		System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
-		
-		if(itemOnPlayersHand.getItem() == Items.paper)
-		{
-			if(!p.worldObj.isRemote)
-				return;
+			System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
 			
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
-			
-			guiQuestlistManager.resetQuestReferences();
-			
-			try {
-				Collection<Quest> questlist = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().values();
+			if(itemOnPlayersHand.getItem() == Items.paper)
+			{
+				if(!p.worldObj.isRemote)
+					return;
 				
-				for(Quest quest : questlist)
-				{
-					guiQuestlistManager.addQuestReference(quest);
+				Minecraft mc = Minecraft.getMinecraft();
+				GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+				
+				guiQuestlistManager.resetQuestReferences();
+				
+				try {
+					Collection<Quest> questlist = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().values();
+					
+					for(Quest quest : questlist)
+					{
+						guiQuestlistManager.addQuestReference(quest);
+					}
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (GuiQuestlistException e) {
+					e.printStackTrace();
 				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (GuiQuestlistException e) {
-				e.printStackTrace();
+				
+				if(mc.currentScreen == null)
+					mc.displayGuiScreen(guiQuestlistManager);
+				System.out.println("Display Quest List");
 			}
-			
-			if(mc.currentScreen == null)
-				mc.displayGuiScreen(guiQuestlistManager);
-			System.out.println("Display Quest List");
-		}
-		else if(itemOnPlayersHand.getDisplayName().contains("Phone"))
-		{
-			ClientEventHandler.pedalingModeState ++;
-			ClientEventHandler.pedalingModeState %= 3;
-			ClientEventHandler.animTickSwitch = 0;
-			ClientEventHandler.animTickFade = 0;
-			System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
-		}
+			else if(itemOnPlayersHand.getDisplayName().contains("Phone"))
+			{
+				ClientEventHandler.pedalingModeState ++;
+				ClientEventHandler.pedalingModeState %= 3;
+				ClientEventHandler.animTickSwitch = 0;
+				ClientEventHandler.animTickFade = 0;
+				
+				ClientEventHandler.pedalingCombo.init();
+				
+				System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
+			}
 		}
 	}
 	

@@ -7,6 +7,8 @@ import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.bike.IPedalingComboEvent;
+import org.ngs.bigx.minecraft.bike.PedalingCombo;
 import org.ngs.bigx.minecraft.bike.PedalingToBuild;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
@@ -49,8 +51,13 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-public class ClientEventHandler {
+public class ClientEventHandler implements IPedalingComboEvent {
 	private BigxClientContext context;
+
+	public static boolean levelUpSoundPlayFlag = false;
+	public static boolean levelDownSoundPlayFlag = false;
+	public static boolean gaugeUpSoundPlayFlag = false;
+	
 	public static KeyBinding keyBindingTogglePedalingMode;
 	public static KeyBinding keyBindingMoveForward;
 	public static KeyBinding keyBindingMoveBackward;
@@ -85,6 +92,7 @@ public class ClientEventHandler {
 	
 	boolean enableLock = false, enableBike = true;
 	public static int pedalingModeState = 0; // 0: moving, 1:mining, 2:building
+	public static PedalingCombo pedalingCombo = new PedalingCombo();
 	
 	private boolean showLeaderboard;
 	private int leaderboardSeconds;
@@ -384,6 +392,31 @@ public class ClientEventHandler {
 					p.setVelocity(xt, p.motionY, zt);
 			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 			
+			/***
+			 * PEDALING MODE: LEVEL/GAUGE EVENTS
+			 */
+			if(levelUpSoundPlayFlag)
+			{
+				levelUpSoundPlayFlag = false;
+				p.worldObj.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
+			}
+
+			if(levelDownSoundPlayFlag)
+			{
+				levelDownSoundPlayFlag = false;
+				p.worldObj.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
+			}
+
+			if(gaugeUpSoundPlayFlag)
+			{
+				gaugeUpSoundPlayFlag = false;
+				p.worldObj.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
+			}
+			
+			pedalingCombo.decraseGauge();
+			/**
+			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
+			 */
 			
 			// Detect if there is area changes where the player is in
 			ClientAreaEvent.detectAreaChange(p);
@@ -521,5 +554,18 @@ public class ClientEventHandler {
 			
 			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(event.x, event.y+1, event.z, 9, PedalingToBuildEventHandler.buildingId);
 		}
+	}
+
+	@Override
+	public void onLevelChange(int oldLevel, int newLevel) {
+		if(newLevel > oldLevel)
+			levelUpSoundPlayFlag = true;
+		else
+			levelDownSoundPlayFlag = true;
+	}
+
+	@Override
+	public void onOneGaugeFilled() {
+		gaugeUpSoundPlayFlag = true;
 	}
 }

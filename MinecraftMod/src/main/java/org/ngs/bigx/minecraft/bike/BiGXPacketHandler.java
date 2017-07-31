@@ -101,6 +101,14 @@ public class BiGXPacketHandler {
 								PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
 							break;
 						};
+						
+						// Increase Fuel for Combo
+						{
+							int fuel = change;
+							if(fuel < 0)
+								fuel *= -1;
+							ClientEventHandler.pedalingCombo.increaseGauge(fuel);
+						}
 					}
 				}
 			break;

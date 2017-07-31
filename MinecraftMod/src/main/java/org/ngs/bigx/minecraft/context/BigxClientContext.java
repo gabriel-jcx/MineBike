@@ -114,7 +114,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	 */
 	public BiGXConnectionStateManagerClass connectionStateManager;
 //	public static String ipAddress = "128.195.55.237";
-	public static String ipAddress = "128.195.55.199";
+	public static String ipAddress = "128.200.115.181";
 //	public static String ipAddress = "192.168.0.53";
 //	public static String ipAddress = "localhost";
 	public static int port = 1331;
@@ -370,7 +370,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 							}
 							else {
 								// TODO: Need to disable this hardcore portion
-								ipAddress = "128.195.55.199";
+								ipAddress = "128.200.115.181";
+//								ipAddress = "128.195.55.199";
 //								ipAddress = "192.168.0.53";
 								isMiddlwareIPAvailable = true;
 							}

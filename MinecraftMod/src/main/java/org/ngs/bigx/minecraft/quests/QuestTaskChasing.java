@@ -257,7 +257,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
+		System.out.println("[BiGX] Cleaning Done.");
 		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+		System.out.println("[BiGX] Teleport Called");
 	}
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
