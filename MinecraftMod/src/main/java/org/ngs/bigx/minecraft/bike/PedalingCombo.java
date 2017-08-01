@@ -10,7 +10,9 @@ public class PedalingCombo {
 	private int gaugeFilledOnCurrentLevel = 0;			// Every Eight Seconds gauge can fill up
 
 	private static final int gaugeUpperLimit = 640;		// Every Eight Seconds
-	private static final int gaugeFilledUpperLimit = 3;  // Every Three gauges level up (3 gauges for Level 1)
+	private static final int gaugeFilledUpperLimit = 3; // Every Three gauges level up (3 gauges for Level 1)
+	private static final int gaugeLevelUpperLimit = 3;  // Max Level
+	private static final int gaugeMaxLimit = gaugeUpperLimit*gaugeFilledUpperLimit*gaugeLevelUpperLimit;  // Max Level
 	private static final int gaugeDegradationRate = 1;	// Each Tick
 	
 	private List<IPedalingComboEvent> pedalingComboEvents = new ArrayList<IPedalingComboEvent>();
@@ -63,6 +65,11 @@ public class PedalingCombo {
 	
 	private void calculateGaugeMechanicChange()
 	{
+		if(this.gauge <= 0)
+			this.gauge = 0;
+		else if(this.gauge >= gaugeMaxLimit)
+			this.gauge = gaugeMaxLimit;
+		
 		this.gaugeFilled = this.gauge / this.gaugeUpperLimit;
 		this.level = this.gaugeFilled / gaugeFilledUpperLimit;		// 3 levels: 3 gauges * 3 Levles = 9 gauges Max
 		this.gaugeFilledOnCurrentLevel = this.gaugeFilled % gaugeFilledUpperLimit;
@@ -74,7 +81,7 @@ public class PedalingCombo {
 		int oldGaugeFilled = this.gaugeFilled;
 		
 		// TODO: NEED TO UNCOMMENT THIS
-//		this.gauge += (fuel<<1);
+		this.gauge += (fuel<<1);
 		this.calculateGaugeMechanicChange();
 		
 		if(oldLevel != this.level)

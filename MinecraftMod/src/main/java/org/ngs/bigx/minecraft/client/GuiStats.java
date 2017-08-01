@@ -47,6 +47,7 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation TRAFFIC_GREEN = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-green.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalingmode-reverse.png");
+	private ResourceLocation PEDALINGGAUGE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalinggaugebar.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	
@@ -234,6 +235,52 @@ public class GuiStats extends GuiScreen {
 				}
 	    	}
 	    	
+	    	/**
+	    	 *  Peadling Gauge Drawing
+	    	 */
+	    	int pdealgauge = ClientEventHandler.pedalingCombo.getGauge();
+	    	int pedalgaugelevel = ClientEventHandler.pedalingCombo.getLevel();
+	    	
+	    	int pedalgaugedxscreen = 1;
+	    	float pdealgaugedxlevel = 72f;
+	    	
+	    	switch(pedalgaugelevel)
+	    	{
+	    	case 0:
+	    		pedalgaugedxscreen = 1;
+	    		pdealgaugedxlevel = 72f;
+    			break;
+	    	case 1:
+	    		pedalgaugedxscreen = 73;
+	    		pdealgaugedxlevel = 48f;
+	    		break;
+	    	case 2:
+	    		pedalgaugedxscreen = 121;
+	    		pdealgaugedxlevel = 24f;
+	    		break;
+    		default:
+	    		pedalgaugedxscreen = 1;
+	    		pdealgaugedxlevel = 72f;
+    			break;
+	    	};
+//System.out.println("pdealgauge["+pdealgauge+"]");
+    		pedalgaugedxscreen += (int) (((double)(pdealgauge-(1920*pedalgaugelevel))) * pdealgaugedxlevel / 1920f);
+//    		System.out.println("pedalgaugedxscreen["+pedalgaugedxscreen+"]");
+//    		System.out.println("pedalgaugelevel["+pedalgaugelevel+"]");
+	    	
+	    	GL11.glPushMatrix();
+	    	
+		    	GL11.glTranslatef(mcWidth/2 - 73, mcHeight/2 + 50, 0);
+			    GL11.glEnable(GL11.GL_BLEND);
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, .5F);
+			    mc.renderEngine.bindTexture(PEDALINGGAUGE_TEXTURE);
+
+		    	drawTexturedModalRect(0, 0, 0, 0, 146, 19);
+		    	
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, .8F);
+		    	drawTexturedModalRect(0, 0, 0, 24, pedalgaugedxscreen, 19);
+				
+	    	GL11.glPopMatrix();
 	    	
 	    	if(ClientEventHandler.pedalingModeState == 2)
 	    	{
