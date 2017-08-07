@@ -315,14 +315,13 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			{
 				context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
 			}
-			
-//			// TESTING
-//			if(ClientEventHandler.pedalingCombo.getGauge() < 1000)
+
+//			// Natural decrease of the pedaling gauge
+//			if(ClientEventHandler.pedalingCombo.getGauge() < 10000)
 //			{
 //				ClientEventHandler.pedalingCombo.increaseGauge(10);
-////				System.out.println("Gauge["+ClientEventHandler.pedalingCombo.getGauge()+"]");
 //			}
-			ClientEventHandler.pedalingCombo.decraseGauge();
+//			ClientEventHandler.pedalingCombo.decraseGauge();
 			
 			QuestManager playerQuestManager = context.getQuestManager();
 			

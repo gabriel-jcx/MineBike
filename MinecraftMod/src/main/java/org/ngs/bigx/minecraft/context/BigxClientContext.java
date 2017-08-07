@@ -26,6 +26,7 @@ import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.bike.PedalingComboSoundEffect;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
@@ -71,6 +72,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 
 	private static GameSaveList gameSaveList = null;
 	private static GameSave currentGameState = null;
+	
+	private PedalingComboSoundEffect pedalingComboSoundEffect;
 	
 	public float getRotationX() {
 		return rotationX;
@@ -130,16 +133,29 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		
 		ClientAreaEvent.initArea();
 				
+//		resistances.put(Blocks.air, Resistance.NONE);
+//		resistances.put(Blocks.brick_block, Resistance.LOW);
+//		resistances.put(Blocks.stone, Resistance.MLOW);
+//		resistances.put(Blocks.cobblestone, Resistance.MLOW);
+//		resistances.put(Blocks.grass, Resistance.MID);
+//		resistances.put(Blocks.dirt, Resistance.MID);
+//		resistances.put(Blocks.gravel, Resistance.MHIGH);
+//		resistances.put(Blocks.water, Resistance.HIGH);
+//		resistances.put(Blocks.obsidian, Resistance.HIGH);
+//		resistances.put(Blocks.sand, Resistance.HIGH);
+		
 		resistances.put(Blocks.air, Resistance.NONE);
-		resistances.put(Blocks.brick_block, Resistance.LOW);
-		resistances.put(Blocks.stone, Resistance.MLOW);
-		resistances.put(Blocks.cobblestone, Resistance.MLOW);
-		resistances.put(Blocks.grass, Resistance.MID);
-		resistances.put(Blocks.dirt, Resistance.MID);
-		resistances.put(Blocks.gravel, Resistance.MHIGH);
-		resistances.put(Blocks.water, Resistance.HIGH);
-		resistances.put(Blocks.obsidian, Resistance.HIGH);
-		resistances.put(Blocks.sand, Resistance.HIGH);
+		resistances.put(Blocks.brick_block, Resistance.NONE);
+		resistances.put(Blocks.stone, Resistance.NONE);
+		resistances.put(Blocks.cobblestone, Resistance.NONE);
+		resistances.put(Blocks.grass, Resistance.LOW);
+		resistances.put(Blocks.dirt, Resistance.LOW);
+		resistances.put(Blocks.gravel, Resistance.LOW);
+		resistances.put(Blocks.water, Resistance.MLOW);
+		resistances.put(Blocks.obsidian, Resistance.MLOW);
+		resistances.put(Blocks.sand, Resistance.MID);
+		
+		this.pedalingComboSoundEffect = new PedalingComboSoundEffect();
 		
 		try {
 			this.eTracker = new eyeTracker();
