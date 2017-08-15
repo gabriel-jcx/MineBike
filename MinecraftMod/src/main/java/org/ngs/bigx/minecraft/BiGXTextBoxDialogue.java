@@ -67,18 +67,18 @@ public class BiGXTextBoxDialogue {
 	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
 	
 	//Instructions
-	public static final String instructionsInteractNPC = "Press X or LEFT TRIGGER to\ninteract with characters.";
-	public static final String instructionsAttackNPC = "Press Y or RIGHT TRIGGER\nto hit the bot.";
+	public static final String instructionsInteractNPC = "Press X to interact\nwith characters.";
+	public static final String instructionsAttackNPC = "Press Y to hit the bot.";
 	public static final String instructionsPedalForward = "Pedal forward to\nmove forward!";
 	public static final String instructionsPedalBackward = "Pedal backward to\nmove back!";
 	public static final String instructionsJump = "Press A to jump!";
 	public static final String instructionsDashJump = "Pedal and press A to\nDash jump!";
-	public static final String instructionsMine = "Press Y or RIGHT TRIGGER\nto mine blocks!\nMine a path to proceed!";
-	public static final String instructionsBuild = "Press X or LEFT TRIGGER\nto place blocks!\nMake steps to proceed!";
-	public static final String instructionsDrinkPotion = "Open chest with the key and\npress X or LEFT TRIGGER\nto drink the potion!";
+	public static final String instructionsMine = "Press Y and hold to mine!\nMine a path to proceed!";
+	public static final String instructionsBuild = "Press X to place blocks!\nMake steps to proceed!";
+	public static final String instructionsDrinkPotion = "Open chest with the key and\npress X to drink the potion!";
 	
 	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
-	public static final String instructionsChestOpen = "Press LEFT TRIGGER to\nopen the chest.";
+	public static final String instructionsChestOpen = "Press X to\nopen the chest.";
 	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	public static final String instructionsChangeMode = "Press DPAD LEFT to\nswitch pedalling modes.";

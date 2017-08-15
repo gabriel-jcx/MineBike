@@ -71,7 +71,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.WorldSettings.GameType;
+//import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
@@ -439,7 +439,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		////End Displaying Level Selection GUI
 		
 		boolean isReboot = !isActive;
-		player.setGameType(GameType.CREATIVE);
+//		player.setGameType(GameType.CREATIVE);
 		
 		time = 0;
 		initThiefStat();
@@ -921,7 +921,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		isActive = false;
 		completed = true;
-		player.setGameType(GameType.SURVIVAL);
+//		player.setGameType(GameType.SURVIVAL);
 		goBackToTheOriginalWorld(ws, player);
 		
 		return;
@@ -950,6 +950,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			row.name = player.getDisplayName();
 			row.level = Integer.toString(thiefLevel);
 			row.time_elapsed = "" + time;
+			row.combo = "" + bestCombo;
 			
 			try {
 				GuiLeaderBoard.writeToLeaderboard(row);
@@ -1013,7 +1014,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			isActive = false;
 			completed = false;
-			player.setGameType(GameType.SURVIVAL);
+//			player.setGameType(GameType.SURVIVAL);
 			goBackToTheOriginalWorld(ws, player);
 		}
 	}
@@ -1372,6 +1373,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					{
 						// BUILD CENTER
 						// BUILD SIDE
+						player.setHealth(player.getMaxHealth());
 						if(!player.worldObj.isRemote)
 							handlePlayTimeOnServer();
 						else
@@ -1449,10 +1451,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	@Override
 	public void onNpcInteraction(EntityInteractEvent event) {
 		System.out.println("Interacting with NPC During Quest");
-//		EntityPlayer player = event.entityPlayer;
-//		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
-//			handleQuestStart();
-//		}
+		EntityPlayer player = event.entityPlayer;
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
+			handleQuestStart();
+		}
 	}
 	
 	@Override
@@ -1480,13 +1482,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					break;
 				};
 				
-				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") //&& checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
-						&& player.dimension != this.questDestinationDimensionId
-						&& player.dimension == this.questSourceDimensionId)
-				{
-					handleQuestStart();
-				}
-				else if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
+//				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") //&& checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
+//						&& player.dimension != this.questDestinationDimensionId
+//						&& player.dimension == this.questSourceDimensionId)
+//				{
+//					handleQuestStart();
+//				}
+//				else 
+				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == this.questDestinationDimensionId)
 				{
 					// CHASE QUEST LOSE CONDITION
@@ -1501,7 +1504,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						initThiefStat();
 						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 						completed = false;
-						player.setGameType(GameType.SURVIVAL);
+//						player.setGameType(GameType.SURVIVAL);
 						goBackToTheOriginalWorld(ws, player);
 					}
 

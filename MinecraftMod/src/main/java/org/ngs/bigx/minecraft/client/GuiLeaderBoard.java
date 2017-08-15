@@ -143,6 +143,7 @@ public class GuiLeaderBoard extends GuiScreen {
 		row.name = "Name";
 		row.level = "Level";
 		row.time_elapsed = "Time";
+		row.combo = "Best Combo";
 		leaderboardRows.add(row);
 		
 		for(LeaderboardRow leaderboardRow : leaderboard.leaderboardRows)
@@ -281,12 +282,14 @@ public class GuiLeaderBoard extends GuiScreen {
 	        		String name = leaderboardRows.get(i).name;
 	        		String level = leaderboardRows.get(i).level;
 //	        		String stat_1 = leaderboardRows.get(i).stat_1;
+	        		String bestcombo = leaderboardRows.get(i).combo;
 	        		String time_elapsed = leaderboardRows.get(i).time_elapsed;
 	
 		    		fontRendererObj.drawString(rank, -120, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(name, -90, 32 + i*14, 0xFFFFFF);
 		    		fontRendererObj.drawString(level, 5, 32 + i*14, 0xFFFFFF);
 //		    		fontRendererObj.drawString(stat_1, 40, 32 + i*14, 0xFFFFFF);
+		    		fontRendererObj.drawString(bestcombo, 30, 32 + i*42, 0xFFFFFF);
 		    		fontRendererObj.drawString(time_elapsed, 75, 32 + i*14, 0xFFFFFF);
 	        	}
         	

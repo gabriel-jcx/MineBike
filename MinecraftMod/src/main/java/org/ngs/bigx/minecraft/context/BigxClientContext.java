@@ -26,7 +26,7 @@ import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.bike.PedalingComboSoundEffect;
+//import org.ngs.bigx.minecraft.bike.PedalingComboSoundEffect;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
@@ -73,7 +73,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	private static GameSaveList gameSaveList = null;
 	private static GameSave currentGameState = null;
 	
-	private PedalingComboSoundEffect pedalingComboSoundEffect;
+//	private PedalingComboSoundEffect pedalingComboSoundEffect;
 	
 	public float getRotationX() {
 		return rotationX;
@@ -155,7 +155,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		resistances.put(Blocks.obsidian, Resistance.MLOW);
 		resistances.put(Blocks.sand, Resistance.MID);
 		
-		this.pedalingComboSoundEffect = new PedalingComboSoundEffect();
+//		this.pedalingComboSoundEffect = new PedalingComboSoundEffect();
 		
 		try {
 			this.eTracker = new eyeTracker();

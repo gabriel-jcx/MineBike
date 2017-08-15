@@ -59,26 +59,8 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
-		///Give player the mysterious key
 		if (!player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
-		
-		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
-				"Dad: Just in case you need\nit, take this potion");
-		
-		if (!player.inventory.hasItem(Items.paper)){
-			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
-		}
-		if (!player.inventory.hasItem(Item.getItemById(4801))){
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
-		}
-	}
-	
-	private static void InteractWithOfficer(EntityPlayer player, EntityInteractEvent event){
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
@@ -103,11 +85,29 @@ public class NpcEvents {
 			e.printStackTrace();
 		}
 		
+		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
+				"Dad: Just in case you need\nit, take this potion");
+		
+		if (!player.inventory.hasItem(Items.paper)){
+			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
+		}
+		if (!player.inventory.hasItem(Item.getItemById(4801))){
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
+		}
+	}
+	
+	private static void InteractWithOfficer(EntityPlayer player, EntityInteractEvent event){
+		System.out.println("Interacting with Officer...");
+		GuiMessageWindow.showMessage("We're kind of busy here.\nCome back later.");
 		//Giving player teleportation potion
-		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
-				BiGXTextBoxDialogue.officerRequestHelp);
-		if (!player.worldObj.isRemote && gavePotion)
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
+//		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
+//				BiGXTextBoxDialogue.officerRequestHelp);
+//		if (!player.worldObj.isRemote && gavePotion)
+//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){

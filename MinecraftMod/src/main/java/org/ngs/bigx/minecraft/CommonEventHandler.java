@@ -62,6 +62,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -74,11 +75,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
@@ -221,7 +225,33 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void entityInteractEvent(EntityInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
+		System.out.println("Interacting with NPC...");
 		NpcEvents.InteractWithNPC(player, e);
+	}
+	
+	@SubscribeEvent
+	public void entityAttacked(LivingAttackEvent event)
+	{
+//		System.out.println("Attack the player!");
+		EntityLivingBase attackedEnt = event.entityLiving;
+		DamageSource attackSource = event.source;
+		if(attackedEnt instanceof EntityPlayer)
+		{
+			if(attackSource == DamageSource.fall)
+			{
+				System.out.println("NO FALL!!!");
+				event.setCanceled(true);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingFallEvent(LivingFallEvent event) {
+//		System.out.println("Falling...");
+		if (event.entityLiving != null && event.entityLiving instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entityLiving;
+			player.fallDistance = 0.1F;
+		}
 	}
 
 	@SubscribeEvent

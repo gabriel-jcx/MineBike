@@ -5,6 +5,7 @@ public class LeaderboardRow implements Comparable {
 	public String name;
 	public String level;
 	public String time_elapsed;
+	public String combo;
 	
 	public int compareTo(Object o)
 	{
