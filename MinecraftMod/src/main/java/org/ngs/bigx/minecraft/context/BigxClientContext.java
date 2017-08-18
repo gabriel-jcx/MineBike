@@ -420,6 +420,10 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		0, bigxclientTimerTimeout);
 	}
 	
+	public static GameSave getCurrentGameState() {
+		return currentGameState;
+	}
+
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}

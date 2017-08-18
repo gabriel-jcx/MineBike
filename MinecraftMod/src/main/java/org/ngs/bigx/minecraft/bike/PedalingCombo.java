@@ -107,7 +107,39 @@ public class PedalingCombo {
 		}
 	}
 	
-	public void decraseGauge()
+	public boolean hasEnoughGauge(int value)
+	{
+		if(this.gauge >= value)
+			return true;
+		
+		return false;
+	}
+	
+	public boolean decreaseGauge(int value)
+	{
+		if(!this.hasEnoughGauge(value))
+			return false;
+		
+		int oldLevel = this.level;
+		int oldGaugeFilled = this.gaugeFilled;
+
+		this.gauge -= value;
+		this.calculateGaugeMechanicChange();
+		
+		if(oldLevel != this.level)
+		{
+			synchronized (pedalingComboEvents) {
+				for(IPedalingComboEvent pedalingComboEvent : this.pedalingComboEvents)
+				{
+					pedalingComboEvent.onLevelChange(oldLevel, this.level);
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	public void decreaseGauge()
 	{
 		int oldLevel = this.level;
 		int oldGaugeFilled = this.gaugeFilled;

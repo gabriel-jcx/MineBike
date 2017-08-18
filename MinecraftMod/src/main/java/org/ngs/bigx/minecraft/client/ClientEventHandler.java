@@ -18,6 +18,7 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.client.skills.SkillManager;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
@@ -62,8 +63,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static KeyBinding keyBindingMoveForward;
 	public static KeyBinding keyBindingMoveBackward;
 	public static KeyBinding keyBindingToggleMouse;
-	public static KeyBinding keyBindingToggleQuestListGui;
-	public static KeyBinding keyBindingToggleChasingQuestGui;
+	public static KeyBinding keyBindingSwitchSkills;
+	public static KeyBinding keyBindingUseSkills;
+//	public static KeyBinding keyBindingToggleQuestListGui;
+//	public static KeyBinding keyBindingToggleChasingQuestGui;
 	public static KeyBinding keyBindingToggleBuildingGui;
 	public static KeyBinding keyBindingToggleBike;
 	public static KeyBinding keyBindingToggleBikeToMining;
@@ -147,21 +150,61 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				mc.displayGuiScreen(guiBuildinglistManager);
 			System.out.println("Display Building Id List");
 		}
-		if(keyBindingToggleQuestListGui.isPressed())
+		if(keyBindingSwitchSkills.isPressed()) // "K"
 		{
-//			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
-//			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
+			// SWITCH SKILLs
+			System.out.println("keyBindingSwitchSkills pressed");
+			
+			context.getCurrentGameState().getSkillManager().switchSkill();
+		}
+		if(keyBindingUseSkills.isPressed()) // "J"
+		{
+			// SWITCH SKILLs
+			System.out.println("keyBindingUseSkills pressed");
+			
+			context.getCurrentGameState().getSkillManager().useCurrentlySelectedSkill();
+		}
+//		if(keyBindingToggleQuestListGui.isPressed())
+//		{
+////			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
+////			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
+////			Minecraft mc = Minecraft.getMinecraft();
+////			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+////			
+////			guiQuestlistManager.resetQuestReferences();
+////			
+////			try {
+////				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
+////				
+////				for(Quest quest : questlist)
+////				{
+////					guiQuestlistManager.addQuestReference(quest);
+////				}
+////			} catch (NullPointerException e) {
+////				e.printStackTrace();
+////			} catch (GuiQuestlistException e) {
+////				e.printStackTrace();
+////			}
+////			
+////			if(mc.currentScreen == null)
+////				mc.displayGuiScreen(guiQuestlistManager);
+////			System.out.println("Display Quest List");
+//		}
+//		if (keyBindingToggleChasingQuestGui.isPressed()) {
 //			Minecraft mc = Minecraft.getMinecraft();
-//			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+//			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 //			
-//			guiQuestlistManager.resetQuestReferences();
+//			guiChasingQuest.resetChasingQuestLevels();
 //			
 //			try {
-//				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
-//				
-//				for(Quest quest : questlist)
+//				for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
 //				{
-//					guiQuestlistManager.addQuestReference(quest);
+//					boolean islocked = false;
+//					if(i>2)
+//						islocked = true;
+//					GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+//					
+//					guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
 //				}
 //			} catch (NullPointerException e) {
 //				e.printStackTrace();
@@ -170,35 +213,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //			}
 //			
 //			if(mc.currentScreen == null)
-//				mc.displayGuiScreen(guiQuestlistManager);
-//			System.out.println("Display Quest List");
-		}
-		if (keyBindingToggleChasingQuestGui.isPressed()) {
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-			
-			guiChasingQuest.resetChasingQuestLevels();
-			
-			try {
-				for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
-				{
-					boolean islocked = false;
-					if(i>2)
-						islocked = true;
-					GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-					
-					guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (GuiQuestlistException e) {
-				e.printStackTrace();
-			}
-			
-			if(mc.currentScreen == null)
-				mc.displayGuiScreen(guiChasingQuest);
-			System.out.println("Display Chasing Quest Gui");
-		}
+//				mc.displayGuiScreen(guiChasingQuest);
+//			System.out.println("Display Chasing Quest Gui");
+//		}
 	}
 	
 	@SubscribeEvent
@@ -420,7 +437,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				p.worldObj.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
 			}
 			
-			pedalingCombo.decraseGauge();
+			pedalingCombo.decreaseGauge();
 			/**
 			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
 			 */

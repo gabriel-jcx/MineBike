@@ -10,7 +10,9 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonProxy;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+import org.ngs.bigx.minecraft.client.gui.GuiStatsSkill;
 import org.ngs.bigx.minecraft.client.renderer.TileEntityQuestChestRenderer;
+import org.ngs.bigx.minecraft.client.skills.SkillEventHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
@@ -36,6 +38,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 	ClientEventHandler clientEvents;
+	SkillEventHandler skillEventHandler;
 	
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
@@ -43,7 +46,11 @@ public class ClientProxy extends CommonProxy {
 		clientEvents = new ClientEventHandler(context);
 		FMLCommonHandler.instance().bus().register(clientEvents);
     	MinecraftForge.EVENT_BUS.register(clientEvents);
+    	skillEventHandler = new SkillEventHandler(context);
+		FMLCommonHandler.instance().bus().register(skillEventHandler);
+    	MinecraftForge.EVENT_BUS.register(skillEventHandler);
     	MinecraftForge.EVENT_BUS.register(new GuiStats(context,Minecraft.getMinecraft()));
+    	MinecraftForge.EVENT_BUS.register(new GuiStatsSkill(context,Minecraft.getMinecraft()));
     	MinecraftForge.EVENT_BUS.register(new GuiDamage(context,Minecraft.getMinecraft()));
     	MinecraftForge.EVENT_BUS.register(new GuiLeaderBoard(context,Minecraft.getMinecraft()));
     	MinecraftForge.EVENT_BUS.register(new GuiMessageWindow(context,Minecraft.getMinecraft()));
@@ -55,15 +62,16 @@ public class ClientProxy extends CommonProxy {
 		}
 
     	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("org.ngs.bigx.keyBindingToggleMouse.desc", Keyboard.KEY_P, "ChaseQuestLock");
-    	ClientEventHandler.keyBindingToggleQuestListGui = new KeyBinding("org.ngs.bigx.keyBindingToggleQuestListGui.desc", Keyboard.KEY_K, "QuestListGui");
+    	ClientEventHandler.keyBindingUseSkills = new KeyBinding("org.ngs.bigx.keyBindingUseSkills.desc", Keyboard.KEY_J, "UseSkills");
+    	ClientEventHandler.keyBindingSwitchSkills = new KeyBinding("org.ngs.bigx.keyBindingSwitchSkills.desc", Keyboard.KEY_K, "SwitchSkills");
     	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("org.ngs.bigx.keyBindingToggleBuildingGui.desc", Keyboard.KEY_N, "BuildingGui");
-    	ClientEventHandler.keyBindingToggleChasingQuestGui = new KeyBinding("org.ngs.bigx.keyBindingToggleChasingQuestGui.desc", Keyboard.KEY_J, "ChasingQuestGui");
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("", Keyboard.KEY_MINUS, "ToggleBike");
     	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("org.ngs.bigx.keyBindingToggleBikeToMining.desc", Keyboard.KEY_M, "ToggleBikeMining");
+    	
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBuildingGui);
-    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleQuestListGui);
-    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleChasingQuestGui);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingUseSkills);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchSkills);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBikeToMining);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
