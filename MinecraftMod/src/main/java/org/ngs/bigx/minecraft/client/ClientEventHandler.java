@@ -157,14 +157,14 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		if(keyBindingSwitchSkills.isPressed()) // "K"
 		{
 			// SWITCH SKILLs
-			System.out.println("keyBindingSwitchSkills pressed");
+//			System.out.println("keyBindingSwitchSkills pressed");
 			
 			context.getCurrentGameState().getSkillManager().switchSkill();
 		}
 		if(keyBindingUseSkills.isPressed()) // "J"
 		{
 			// SWITCH SKILLs
-			System.out.println("keyBindingUseSkills pressed");
+//			System.out.println("keyBindingUseSkills pressed");
 			
 			context.getCurrentGameState().getSkillManager().useCurrentlySelectedSkill();
 		}
@@ -237,11 +237,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void entityAttacked(LivingHurtEvent event)
 	{
-//		System.out.println("event.ammount["+event.ammount+"]");
-//		System.out.println("health["+event.entityLiving.getHealth()+"]");
-//		System.out.println("damageType["+(event.source.getSourceOfDamage() instanceof EntityPlayer)+"]");
-//		if(event.source.getSourceOfDamage())
-		
 		if(event.source.getSourceOfDamage() instanceof EntityPlayer)
 		{
 			if(context.getCurrentGameState().getSkillManager().getSkills().get(1).getSkillState() == enumSkillState.EFFECTIVE)

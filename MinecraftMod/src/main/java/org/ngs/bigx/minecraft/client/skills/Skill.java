@@ -1,5 +1,8 @@
 package org.ngs.bigx.minecraft.client.skills;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
 
 public abstract class Skill {
@@ -25,18 +28,27 @@ public abstract class Skill {
 	protected long coolTimeTimestamp = 0;
 	protected int coolTimeMax = 10000;	// unit is the milisecond
 	protected int coolTimeCurrent = 0;	// Same unit
+
+	protected String soundEffectName = "minebike:powerup";
 	
-	public Skill(PedalingCombo pedalingCombo, int effectiveTimeMax, int coolTimeMax, int requiredMana)
+	public Skill(PedalingCombo pedalingCombo, int effectiveTimeMax, int coolTimeMax, int requiredMana, String soundEffectName)
 	{
 		this.pedalingCombo = pedalingCombo;
 		this.effectiveTimeMax = effectiveTimeMax;
 		this.coolTimeMax = coolTimeMax;
 		this.requiredMana = requiredMana;
+		this.soundEffectName = soundEffectName;
 	}
 	
 	public boolean hasEnoughMana()
 	{	
 		return this.pedalingCombo.hasEnoughGauge(requiredMana);
+	}
+	
+	public void playSkillOnSoundEffect()
+	{
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		player.playSound(soundEffectName, 1.0f, 1.0f);
 	}
 	
 	public boolean use()
@@ -46,6 +58,8 @@ public abstract class Skill {
 		
 		if(!switchState(enumSkillState.EFFECTIVE))
 			return false;
+		
+		this.playSkillOnSoundEffect();
 		
 		this.effectiveTimeTimestamp = System.currentTimeMillis();
 		this.effectiveTimeCurrent = this.effectiveTimeMax;

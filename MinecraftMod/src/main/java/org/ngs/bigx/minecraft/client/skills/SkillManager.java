@@ -3,6 +3,9 @@ package org.ngs.bigx.minecraft.client.skills;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
 
 public class SkillManager {
