@@ -18,6 +18,9 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
+import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
+import org.ngs.bigx.minecraft.client.skills.SkillBoostMining;
 import org.ngs.bigx.minecraft.client.skills.SkillManager;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
@@ -39,6 +42,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -233,6 +237,20 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void entityAttacked(LivingHurtEvent event)
 	{
+//		System.out.println("event.ammount["+event.ammount+"]");
+//		System.out.println("health["+event.entityLiving.getHealth()+"]");
+//		System.out.println("damageType["+(event.source.getSourceOfDamage() instanceof EntityPlayer)+"]");
+//		if(event.source.getSourceOfDamage())
+		
+		if(event.source.getSourceOfDamage() instanceof EntityPlayer)
+		{
+			if(context.getCurrentGameState().getSkillManager().getSkills().get(1).getSkillState() == enumSkillState.EFFECTIVE)
+			{
+				event.ammount += SkillBoostDamage.boostRate;
+//				System.out.println("Damage Boost["+event.ammount+"]");
+			}
+		}
+		
 		if(event.entityLiving.getClass().getName().equals(EntityLiving.class.getName()))
 		{
 			EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
@@ -333,11 +351,14 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
 			}
 
-//			// Natural decrease of the pedaling gauge
-//			if(ClientEventHandler.pedalingCombo.getGauge() < 10000)
-//			{
-//				ClientEventHandler.pedalingCombo.increaseGauge(10);
-//			}
+			/**
+			 * TODO: Need to remove this testing code from the release version
+			 */
+			// Natural decrease of the pedaling gauge
+			if(ClientEventHandler.pedalingCombo.getGauge() < 10000)
+			{
+				ClientEventHandler.pedalingCombo.increaseGauge(10);
+			}
 //			ClientEventHandler.pedalingCombo.decraseGauge();
 			
 			QuestManager playerQuestManager = context.getQuestManager();
@@ -557,6 +578,12 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
+		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
+		{
+			event.newSpeed = (float) (event.originalSpeed + SkillBoostMining.boostRate);
+//			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
+		}
+		
 		if(pedalingModeState == 1)
 		{
 			float damage = (((float)this.context.rpm) / 10F) - 3F;

@@ -44,7 +44,7 @@ public abstract class Skill {
 		if(!this.hasEnoughMana())
 			return false;
 		
-		if(!switchState(this.skillState))
+		if(!switchState(enumSkillState.EFFECTIVE))
 			return false;
 		
 		this.effectiveTimeTimestamp = System.currentTimeMillis();
@@ -103,6 +103,7 @@ public abstract class Skill {
 		if(this.effectiveTimeCurrent < 0)
 		{
 			this.switchState(enumSkillState.COOLTIME);
+			this.coolTimeTimestamp = System.currentTimeMillis();
 			this.coolTimeCurrent = this.coolTimeMax;
 			this.effectiveTimeCurrent = 0;
 		}

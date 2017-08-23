@@ -1,10 +1,14 @@
 package org.ngs.bigx.minecraft.client.gui;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import org.ngs.bigx.minecraft.client.skills.Skill;
+import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
@@ -28,6 +32,8 @@ public class GuiStatsSkill extends GuiScreen {
 	
 	private Minecraft mc;
 	private BigxClientContext context;
+	
+	private ResourceLocation SKILLS_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/skills.png");
 
 	public GuiStatsSkill(Minecraft mc) {
 		super();
@@ -102,7 +108,98 @@ public class GuiStatsSkill extends GuiScreen {
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();
 	    	
+	    	GL11.glPushMatrix();
 	    	
+			    GL11.glTranslatef(mcWidth - 30, mcHeight/2 - 40, 0); 
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			    GL11.glEnable(GL11.GL_BLEND);
+			    
+			    /**
+			     * Selected Skill Highlight
+			     */
+			    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+		        drawTexturedModalRect(-2, -2 + 30 * context.getCurrentGameState().getSkillManager().getSelectedSkillIndex() 
+		        		, 100, 0, 24 , 24);
+			    
+			    /**
+			     * Skills Background
+			     */
+			    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+		        drawTexturedModalRect(0, 0, 0, 0, 20 , 20);
+		        
+			    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+		        drawTexturedModalRect(0, 30, 20, 0, 20 , 20);
+		        
+			    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+		        drawTexturedModalRect(0, 60, 40, 0, 20 , 20);
+
+		        /**
+		         * Skills Status
+		         */
+		        ArrayList<Skill> skillArray = (ArrayList<Skill>) context.getCurrentGameState().getSkillManager().getSkills();
+		        Skill aSkill = skillArray.get(0);
+		        switch(aSkill.getSkillState())
+		        {
+		        case LOCKED:
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 0, 80, 0, 20 , 20);
+			        break;
+		        case EFFECTIVE:
+		        	int effectivetimeLeft = (int) ((double)aSkill.getEffectiveTimeCurrent() * 20.0 / (double)aSkill.getEffectiveTimeMax());
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 0, 60, 0, 20 , 20-effectivetimeLeft);
+		        	break;
+		        case COOLTIME:
+		        	int cooltimeLeft = (int) ((double)aSkill.getCoolTimeCurrent() * 20.0 / (double)aSkill.getCoolTimeMax());
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 0, 60, 0, 20 , cooltimeLeft);
+		        	break;
+		        default:
+		        	break;
+		        }
+		        
+		        aSkill = skillArray.get(1);
+		        switch(aSkill.getSkillState())
+		        {
+		        case LOCKED:
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 30, 80, 0, 20 , 20);
+			        break;
+		        case EFFECTIVE:
+		        	int effectivetimeLeft = (int) ((double)aSkill.getEffectiveTimeCurrent() * 20.0 / (double)aSkill.getEffectiveTimeMax());
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 30, 60, 0, 20 , 20-effectivetimeLeft);
+		        	break;
+		        case COOLTIME:
+		        	int cooltimeLeft = (int) ((double)aSkill.getCoolTimeCurrent() * 20.0 / (double)aSkill.getCoolTimeMax());
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 30, 60, 0, 20 , cooltimeLeft);
+		        	break;
+		        default:
+		        	break;
+		        }
+		        
+		        aSkill = skillArray.get(2);
+		        switch(aSkill.getSkillState())
+		        {
+		        case LOCKED:
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 60, 80, 0, 20 , 20);
+			        break;
+		        case EFFECTIVE:
+		        	int effectivetimeLeft = (int) ((double)aSkill.getEffectiveTimeCurrent() * 20.0 / (double)aSkill.getEffectiveTimeMax());
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 60, 60, 0, 20 , 20-effectivetimeLeft);
+		        	break;
+		        case COOLTIME:
+		        	int cooltimeLeft = (int) ((double)aSkill.getCoolTimeCurrent() * 20.0 / (double)aSkill.getCoolTimeMax());
+				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+			        drawTexturedModalRect(0, 60, 60, 0, 20 , cooltimeLeft);
+		        	break;
+		        default:
+		        	break;
+		        }
+	    	GL11.glPopMatrix();
     	}
     }
 }

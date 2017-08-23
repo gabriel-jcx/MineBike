@@ -28,8 +28,11 @@ public class SkillEventHandler {
 		if ((Minecraft.getMinecraft().thePlayer!=null) && (event.phase==TickEvent.Phase.END)) {
 			tickCount++;
 			
-			if(tickCount < 15)
+			if(tickCount < 5)
+			{
+//				System.out.println("tick["+tickCount+"]");
 				return;
+			}
 			
 			tickCount = 0;
 			
@@ -37,7 +40,7 @@ public class SkillEventHandler {
 			BigxClientContext.getCurrentGameState().getSkillManager().updateSkillTime();
 		}
 		else {
-			tickCount = 0;
+//			tickCount = 0;
 		}
 	}
 }

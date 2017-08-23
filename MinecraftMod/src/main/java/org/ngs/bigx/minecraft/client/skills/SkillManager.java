@@ -29,6 +29,14 @@ public class SkillManager {
 		this.skills.add(new SkillBoostSpeed(pedalingCombo));
 		this.skills.add(new SkillBoostDamage(pedalingCombo));
 		this.skills.add(new SkillBoostMining(pedalingCombo));
+		
+		/**
+		 * TODO: Need to remove this tesing purpose code at the release
+		 */
+		for(Skill skill : this.skills)
+		{
+			skill.unlockSkillState();
+		}
 	}
 	
 	public void switchSkill()
@@ -79,5 +87,13 @@ public class SkillManager {
 		{
 			skill.updateTime();
 		}
+	}
+
+	public int getSelectedSkillIndex() {
+		return selectedSkillIndex;
+	}
+
+	public List<Skill> getSkills() {
+		return skills;
 	}
 }

@@ -293,7 +293,7 @@ public class CommonEventHandler {
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
 		if (itemOnPlayersHand != null){
-			System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
+//			System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
 			
 			if(itemOnPlayersHand.getItem() == Items.paper)
 			{
