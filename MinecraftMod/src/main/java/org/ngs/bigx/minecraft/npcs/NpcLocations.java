@@ -7,7 +7,7 @@ public class NpcLocations {
 	//Merchants and Sellers
 	public static Vec3 weaponsMerchant = Vec3.createVectorHelper(113, 71, 209);
 	public static Vec3 blacksmith = Vec3.createVectorHelper(105, 71, 209);
-	public static Vec3 potionSeller = Vec3.createVectorHelper(105, 71, 204);
+	public static Vec3 skillSeller = Vec3.createVectorHelper(105, 71, 204);
 	public static Vec3 trader = Vec3.createVectorHelper(113, 71, 204);
 	
 	//Quest-giving NPCs

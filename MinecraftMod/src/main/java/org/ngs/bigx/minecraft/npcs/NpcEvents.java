@@ -33,7 +33,8 @@ import noppes.npcs.roles.RoleTrader;
 
 
 public class NpcEvents {
-	
+
+	public static final String[] skillNames = {"Skill - Boost Damage","Skill - Boost Mining", "Skill - Boost Speed"};
 	public static int botHealth = 10;
 	
 	public NpcEvents() {
@@ -48,8 +49,8 @@ public class NpcEvents {
 			InteractWithWeaponsMerchant(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
 			InteractWithBlacksmith(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.potionSeller, NpcLocations.potionSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
-			InteractWithPotionSeller(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.skillSeller, NpcLocations.skillSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
+			InteractWithSkillSeller(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
@@ -138,16 +139,16 @@ public class NpcEvents {
 			createBlacksmithSold(traderInterface.inventorySold);
 	}
 	
-	private static void InteractWithPotionSeller(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithSkillSeller(EntityPlayer player, EntityInteractEvent event){
 		System.out.println("Interacting with Potion Seller NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.target;
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
 		if (traderInterface.inventoryCurrency.items.isEmpty())
-			createPotionCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
+			createSkillCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
 		if (traderInterface.inventorySold.items.isEmpty())
-			createPotionSold(traderInterface.inventorySold);
+			createSkillSold(traderInterface.inventorySold);
 	}
 	
 	private static void InteractWithTrader(EntityPlayer player, EntityInteractEvent event){
@@ -203,18 +204,21 @@ public class NpcEvents {
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
 	}
 	
-	//////////Potion Seller Market
-	private static void createPotionCurrency(NpcMiscInventory inventoryCurrency, Item currency){
-		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency,10));
-//		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,10));
-//		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,10));
-//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,10));
+	//////////Skill Seller Market
+	private static void createSkillCurrency(NpcMiscInventory inventoryCurrency, Item currency){
+		int i = 0;
+		for (String name : skillNames){
+			inventoryCurrency.setInventorySlotContents(i++, new ItemStack(currency,1));
+		}
 	}
 	
-	private static void createPotionSold(NpcMiscInventory inventorySold){
-		ItemStack p = new ItemStack(Items.potionitem);
-		p.setStackDisplayName("Teleportation Potion - Village");
-		inventorySold.setInventorySlotContents(0, p);
+	private static void createSkillSold(NpcMiscInventory inventorySold){
+		int i = 0;
+		for (String name : skillNames){
+			ItemStack p = new ItemStack(Items.book);
+			p.setStackDisplayName(name);
+			inventorySold.setInventorySlotContents(i++, p);
+		}
 	}
 	
 	
