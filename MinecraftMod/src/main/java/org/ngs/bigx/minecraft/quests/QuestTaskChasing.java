@@ -28,6 +28,8 @@ import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest.ChasingQuestDifficultyEnum;
+import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
+import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
@@ -382,6 +384,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						deduction = 8;
 					//TODO: Change ^
 			}
+		}
+		
+		if(((BigxClientContext)BigxClientContext.getInstance()).getCurrentGameState().getSkillManager().getSkills().get(1).getSkillState() == enumSkillState.EFFECTIVE)
+		{
+			deduction += SkillBoostDamage.boostRate;
 		}
 		
 		// Combo Calculation

@@ -33,13 +33,13 @@ public class SkillManager {
 		this.skills.add(new SkillBoostDamage(pedalingCombo));
 		this.skills.add(new SkillBoostMining(pedalingCombo));
 		
-		/**
-		 * TODO: Need to remove this tesing purpose code at the release
-		 */
-		for(Skill skill : this.skills)
-		{
-			skill.unlockSkillState();
-		}
+//		/**
+//		 * TODO: Need to remove this tesing purpose code at the release
+//		 */
+//		for(Skill skill : this.skills)
+//		{
+//			skill.unlockSkillState();
+//		}
 	}
 	
 	public void switchSkill()
