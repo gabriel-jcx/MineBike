@@ -174,6 +174,7 @@ public class GuiStatsSkill extends GuiScreen {
 					    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
 				        drawTexturedModalRect(0, 30, 60, 0, 20 , 20);
 		        	}
+		        	break;
 		        case LOCKED:
 				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
 			        drawTexturedModalRect(0, 30, 80, 0, 20 , 20);
@@ -201,6 +202,7 @@ public class GuiStatsSkill extends GuiScreen {
 					    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
 				        drawTexturedModalRect(0, 60, 60, 0, 20 , 20);
 		        	}
+		        	break;
 		        case LOCKED:
 				    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
 			        drawTexturedModalRect(0, 60, 80, 0, 20 , 20);
