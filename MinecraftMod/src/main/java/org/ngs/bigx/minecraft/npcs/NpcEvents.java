@@ -208,7 +208,7 @@ public class NpcEvents {
 	private static void createSkillCurrency(NpcMiscInventory inventoryCurrency, Item currency){
 		int i = 0;
 		for (String name : skillNames){
-			inventoryCurrency.setInventorySlotContents(i++, new ItemStack(currency,1));
+			inventoryCurrency.setInventorySlotContents(i++, new ItemStack(currency,15));
 		}
 	}
 	
