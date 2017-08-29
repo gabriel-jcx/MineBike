@@ -34,7 +34,7 @@ import noppes.npcs.roles.RoleTrader;
 
 public class NpcEvents {
 
-	public static final String[] skillNames = {"Skill - Boost Damage","Skill - Boost Mining", "Skill - Boost Speed"};
+	public static final String[] skillNames = { "Skill - Boost Speed","Skill - Boost Damage","Skill - Boost Mining"};
 	public static int botHealth = 10;
 	
 	public NpcEvents() {
@@ -215,7 +215,7 @@ public class NpcEvents {
 	private static void createSkillSold(NpcMiscInventory inventorySold){
 		int i = 0;
 		for (String name : skillNames){
-			ItemStack p = new ItemStack(Items.book);
+			ItemStack p = new ItemStack(Items.enchanted_book);
 			p.setStackDisplayName(name);
 			inventorySold.setInventorySlotContents(i++, p);
 		}

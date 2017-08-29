@@ -295,7 +295,7 @@ public class CommonEventHandler {
 		
 		if (itemOnPlayersHand != null){
 //			System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
-			if (itemOnPlayersHand.getItem() == Items.book){
+			if (itemOnPlayersHand.getItem() == Items.enchanted_book){
 				if (itemOnPlayersHand.getDisplayName().contains("Skill")){
 					System.out.println("Adding Skill!");	
 					BigxClientContext context = BiGX.instance().clientContext;
