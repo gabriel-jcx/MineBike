@@ -215,7 +215,7 @@ public class NpcEvents {
 	private static void createSkillSold(NpcMiscInventory inventorySold){
 		int i = 0;
 		for (String name : skillNames){
-			ItemStack p = new ItemStack(Items.book);
+			ItemStack p = new ItemStack(Items.enchanted_book);
 			p.setStackDisplayName(name);
 			inventorySold.setInventorySlotContents(i++, p);
 		}
