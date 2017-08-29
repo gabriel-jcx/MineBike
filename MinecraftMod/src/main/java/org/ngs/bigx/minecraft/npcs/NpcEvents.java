@@ -34,7 +34,7 @@ import noppes.npcs.roles.RoleTrader;
 
 public class NpcEvents {
 
-	public static final String[] skillNames = {"Skill - Boost Damage","Skill - Boost Mining", "Skill - Boost Speed"};
+	public static final String[] skillNames = { "Skill - Boost Speed","Skill - Boost Damage","Skill - Boost Mining"};
 	public static int botHealth = 10;
 	
 	public NpcEvents() {
