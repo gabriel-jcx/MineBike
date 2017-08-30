@@ -122,7 +122,7 @@ public class GuiStats extends GuiScreen {
     	int xPos = 2;
     	int yPos = 2;
     	FontRenderer fontRendererObj;
-    	String text;
+    	String text = "";
 
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
@@ -136,14 +136,17 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 
-	    	/**
-	    	 * Pedaling Mode Indicator Drawing
-	    	 */
     		float scaleX = 0.25f;
     		float scaleY = 0.25f*1.5f;
     		int rectX = 256;
 	    	int rectY = (int)(256/3f);
-	    	
+	    	float targetAlpha = 0.0f;
+
+	    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+
+	    	/**
+	    	 * Pedaling Mode Indicator Drawing
+	    	 */
 	    	//                         bike (blue),mine (red),build (green)
 	    	int[] colors = new int[] { 0xFF00A0FF, 0xFFFF2000, 0xFF00FF00 };
 	    	int chosenColor = colors[ClientEventHandler.pedalingModeState > 2 ? 2 : ClientEventHandler.pedalingModeState];
@@ -158,7 +161,6 @@ public class GuiStats extends GuiScreen {
 		    // TOP PORTION (unselected items, meant to fade out)
 	    	GL11.glPushMatrix();
 	    		
-		    	float targetAlpha = 0.0f;
 			    if (ClientEventHandler.animTickFade < (ClientEventHandler.animTickFadeLength + ClientEventHandler.animTickFadeTime))
 			    	if (ClientEventHandler.animTickFade >= ClientEventHandler.animTickFadeLength)
 			    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickFade - ClientEventHandler.animTickFadeLength) / ClientEventHandler.animTickFadeTime);
