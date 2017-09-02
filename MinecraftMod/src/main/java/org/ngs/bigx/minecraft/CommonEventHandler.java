@@ -202,7 +202,7 @@ public class CommonEventHandler {
 	public void onWorldLoad(WorldEvent.Load event) {
 		System.out.println("[BiGX] onWorldLoad(WorldEvent.Load event)");
 		
-		event.world.provider.setWorldTime(0);
+//		event.world.provider.setWorldTime(0);
 		event.world.provider.resetRainAndThunder();
 		
 		if(event.world.isRemote)
@@ -419,9 +419,11 @@ public class CommonEventHandler {
 				server_tick = 0;
 				
 				//Making sure it remains daytime all the time
-				World current_world = MinecraftServer.getServer().getEntityWorld();
+//				World current_world = MinecraftServer.getServer().getEntityWorld();
 
-				current_world.setWorldTime(8000);
+				if(Minecraft.getMinecraft().thePlayer != null)
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamerule doDaylightCycle false");
+//				current_world.setWorldTime(8000);
 			}
 			
 			if( (server_tick%60) == 0 )

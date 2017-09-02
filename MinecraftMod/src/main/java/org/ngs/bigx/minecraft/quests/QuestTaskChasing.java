@@ -264,7 +264,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //		};
 
 		initThiefStat();
-		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 128, (int)entity.posZ);
+		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 100, (int)entity.posZ + 16);
 		System.out.println("[BiGX] Cleaning Done.");
 		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 		System.out.println("[BiGX] Teleport Called");
@@ -272,19 +272,19 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
 	{
-		for(int dz=initZ; dz<endZ+64; dz++)
+		for(int dz=initZ; dz<endZ+16; dz++)
 		{
 			for(int dx=chasingQuestInitialPosX-32; dx<chasingQuestInitialPosX+32; dx++)
 			{
-				world.setBlock(dx, initY-1, dz, Blocks.grass);
+				cleanBlock(world, dx, initY-1, dz, Blocks.grass);
 				for(int dy= initY; dy<initY+16; dy++)
 				{
 					if(!(world.getBlock(dx, dy, dz) == Blocks.air))
-						world.setBlock(dx, dy, dz, Blocks.air);
+						setBlock(world, dx, dy, dz, Blocks.air);
 				}
 			}
-			world.setBlock(chasingQuestInitialPosX-16, initY, dz, Blocks.air);
-			world.setBlock(chasingQuestInitialPosX+16, initY, dz, Blocks.air);
+			cleanBlock(world, chasingQuestInitialPosX-16, initY, dz, Blocks.air);
+			cleanBlock(world, chasingQuestInitialPosX+16, initY, dz, Blocks.air);
 		}
 	}
 	
@@ -492,20 +492,20 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		blocks = new ArrayList<Vec3>();
 		
 		for (int z = -16; z < (int)player.posZ+64; ++z) {
-			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
 		for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-			ws.setBlock(x, chasingQuestInitialPosY, -16, Blocks.fence);
+			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
 		}
 		
 		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
 		}
 		
@@ -523,34 +523,34 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				for (int y = origY; y < origY + 5; ++y) {
 					for (int z = origZ; z < origZ + 11; ++z) {
 						if (z == origZ || z == origZ + 10)
-							w.setBlock(x, y, z, Blocks.log);
+							setBlock(w, x, y, z, Blocks.log);
 						else
-							w.setBlock(x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.planks);
 						blocks.add(Vec3.createVectorHelper(x, y, z));
 					}
 				}
-				w.setBlock(x, origY+1, origZ+5, Blocks.glass);
-				w.setBlock(x, origY+2, origZ+5, Blocks.glass);
+				setBlock(w, x, origY+1, origZ+5, Blocks.glass);
+				setBlock(w, x, origY+2, origZ+5, Blocks.glass);
 			} else {
 				for (int y = origY; y < origY + 7; ++y) {
 					for (int z = origZ; z < origZ + 11; ++z) {
 						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
-							w.setBlock(x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.planks);
 							blocks.add(Vec3.createVectorHelper(x, y, z));
 						}
 						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							w.setBlock(x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.planks);
 							blocks.add(Vec3.createVectorHelper(x, y, z));
 						}
 						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							w.setBlock(x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.planks);
 							blocks.add(Vec3.createVectorHelper(x, y, z));
 						}
 					}
 				}
 				if (x == origX + 2 || x == origX + 4) {
-					w.setBlock(x, origY+1, origZ, Blocks.glass);
-					w.setBlock(x, origY+2, origZ, Blocks.glass);
+					setBlock(w, x, origY+1, origZ, Blocks.glass);
+					setBlock(w, x, origY+2, origZ, Blocks.glass);
 				}
 			}
 		}
@@ -562,9 +562,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		 * Generates structures on sides (fence and Fake house on sides)
 		 */
 		for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
-			ws.setBlock(chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-			ws.setBlock(chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
 			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
 		
@@ -672,7 +672,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 				for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-					ws.setBlock(x, chasingQuestInitialPosY-1, z, blockByDifficulty);
+					setBlock(ws, x, chasingQuestInitialPosY-1, z, blockByDifficulty);
 					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
 				}
 			}
@@ -705,9 +705,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 					{
 						if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
-							ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+							setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
 						else
-							ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+							setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
 					}
 				}
 			}
@@ -722,15 +722,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			if (ratio > 0.4) {
 				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 					for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-						ws.setBlock(x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+						setBlock(ws, x, chasingQuestInitialPosY-1, z, Blocks.gravel);
 						blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-						ws.setBlock(x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+						setBlock(ws, x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
 					}
 				}
 			}
 		}
 	}
-	
+
 	private void generateObstacles()
 	{
 		// Check if the game is running
@@ -789,9 +789,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 			{
 				if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
-					ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+					setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
 				else
-					ws.setBlock(terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+					setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
 			}
 		}
 	}
@@ -1234,28 +1234,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				damageUpEffectTickCount--;
 			
 			long timeNow = System.currentTimeMillis();
-			if( (timeNow - lastTickTime - pausedTime) < 500 )
+			if( (timeNow - lastTickTime - pausedTime) < 250 )
 			{
 			}
-			else if(lastTickStage == 0)
-			{
-				System.out.println("CLEANING");
-				
-				lastTickStage++;
-
-				this.pausedTime = 0;
-				this.lastTickTime = System.currentTimeMillis();
-				
-				// CLEAN the terrain behind
-				/**
-				 * Terrain Cleaning
-				 */
-				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-112);
-				/**
-				 * END OF Terrain Cleaning
-				 */
-			}
-			else if(lastTickStage == 1)// && !npc.isDead)
+			else if((lastTickStage == 0) || (lastTickStage == 1))// && !npc.isDead)
 			{
 				if(thiefHealthCurrent > (thiefHealthMax*.8f))
 					obstacleRefreshed = 4;
@@ -1270,7 +1252,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					
 				System.out.println("GENERATING");
 				
-				lastTickStage = 0;
+				lastTickStage ++;
 				
 				// Make Obstacles and structures on the side
 				this.generateStructuresOnSides();
@@ -1291,6 +1273,42 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				
 				this.time++;
 				this.obstacleTime--;
+			}
+			else if(lastTickStage == 2)
+			{
+				System.out.println("CLEANING 1");
+				
+				lastTickStage++;
+
+				this.pausedTime = 0;
+				this.lastTickTime = System.currentTimeMillis();
+				
+				// CLEAN the terrain behind
+				/**
+				 * Terrain Cleaning
+				 */
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-56);
+				/**
+				 * END OF Terrain Cleaning
+				 */
+			}
+			else if(lastTickStage == 3)
+			{
+				System.out.println("CLEANING 2");
+				
+				lastTickStage = 0;
+
+				this.pausedTime = 0;
+				this.lastTickTime = System.currentTimeMillis();
+				
+				// CLEAN the terrain behind
+				/**
+				 * Terrain Cleaning
+				 */
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-56, (int)player.posZ-112);
+				/**
+				 * END OF Terrain Cleaning
+				 */
 			}
 		}
 	}
@@ -1347,6 +1365,20 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //		player.swingItem();
 	}
 
+	private static void setBlock(World world, int x, int y, int z, Block block)
+	{
+		world.setBlock(x, y, z, block);
+	}
+	
+	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
+	{
+		world.setBlock(x, y, z, block, direction, 3);
+	}
+	
+	private static void cleanBlock(World world, int x, int y, int z, Block block)
+	{
+		world.setBlock(x, y, z, block);
+	}
 
 	@Override
 	public void run()
@@ -1509,7 +1541,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						countdown = 11;
 						pausedTime = 0;
 						initThiefStat();
-						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
+//						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
 						completed = false;
 //						player.setGameType(GameType.SURVIVAL);
 						goBackToTheOriginalWorld(ws, player);
