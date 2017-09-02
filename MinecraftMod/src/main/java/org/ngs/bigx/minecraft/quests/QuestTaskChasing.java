@@ -1237,7 +1237,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			if( (timeNow - lastTickTime - pausedTime) < 250 )
 			{
 			}
-			else if((lastTickStage == 0) || (lastTickStage == 1))// && !npc.isDead)
+			else if(lastTickStage == 0)
 			{
 				if(thiefHealthCurrent > (thiefHealthMax*.8f))
 					obstacleRefreshed = 4;
@@ -1273,6 +1273,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				
 				this.time++;
 				this.obstacleTime--;
+			}
+			else if(lastTickStage == 1)// && !npc.isDead)
+			{
+				lastTickStage ++;
 			}
 			else if(lastTickStage == 2)
 			{
