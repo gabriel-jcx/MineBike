@@ -359,8 +359,8 @@ public class CommonEventHandler {
 		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
 		if (event.item.getDisplayName().contains("Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
-//		if (event.item.getDisplayName().contains("Tutorial"))
-//			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 65, 0);
+		if (event.item.getDisplayName().contains("Tutorial"))
+			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 65, 0);
 	}
 	
 	@SubscribeEvent
