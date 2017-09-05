@@ -483,6 +483,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 
 		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
+		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
 
 		chasingQuestInitialPosX = 1;
