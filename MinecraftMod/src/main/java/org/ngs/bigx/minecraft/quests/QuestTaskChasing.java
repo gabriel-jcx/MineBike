@@ -419,7 +419,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //		showLevelSelectionGui();
 		////Displaying Level Selection GUI
 		Minecraft mc = Minecraft.getMinecraft();
-		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		if (guiChasingQuest == null)
+			guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 		
 		guiChasingQuest.resetChasingQuestLevels();
 		
