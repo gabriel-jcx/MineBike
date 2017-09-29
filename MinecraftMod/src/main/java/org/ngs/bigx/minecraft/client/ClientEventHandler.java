@@ -1,12 +1,14 @@
 package org.ngs.bigx.minecraft.client;
 
-import java.awt.Color;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.bike.IPedalingComboEvent;
+import org.ngs.bigx.minecraft.bike.PedalingCombo;
 import org.ngs.bigx.minecraft.bike.PedalingToBuild;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
@@ -16,12 +18,14 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiFinishChasingQuest;
+import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
+import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
+import org.ngs.bigx.minecraft.client.skills.SkillBoostMining;
+import org.ngs.bigx.minecraft.client.skills.SkillManager;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -29,23 +33,22 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import javafx.scene.shape.DrawMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -53,14 +56,21 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-public class ClientEventHandler {
+public class ClientEventHandler implements IPedalingComboEvent {
 	private BigxClientContext context;
+
+	public static boolean levelUpSoundPlayFlag = false;
+	public static boolean levelDownSoundPlayFlag = false;
+	public static boolean gaugeUpSoundPlayFlag = false;
+	
 	public static KeyBinding keyBindingTogglePedalingMode;
 	public static KeyBinding keyBindingMoveForward;
 	public static KeyBinding keyBindingMoveBackward;
 	public static KeyBinding keyBindingToggleMouse;
-	public static KeyBinding keyBindingToggleQuestListGui;
-	public static KeyBinding keyBindingToggleChasingQuestGui;
+	public static KeyBinding keyBindingSwitchSkills;
+	public static KeyBinding keyBindingUseSkills;
+//	public static KeyBinding keyBindingToggleQuestListGui;
+//	public static KeyBinding keyBindingToggleChasingQuestGui;
 	public static KeyBinding keyBindingToggleBuildingGui;
 	public static KeyBinding keyBindingToggleBike;
 	public static KeyBinding keyBindingToggleBikeToMining;
@@ -89,6 +99,7 @@ public class ClientEventHandler {
 	
 	boolean enableLock = false, enableBike = true;
 	public static int pedalingModeState = 0; // 0: moving, 1:mining, 2:building
+	public static PedalingCombo pedalingCombo = new PedalingCombo();
 	
 	private boolean showLeaderboard;
 	private int leaderboardSeconds;
@@ -143,21 +154,61 @@ public class ClientEventHandler {
 				mc.displayGuiScreen(guiBuildinglistManager);
 			System.out.println("Display Building Id List");
 		}
-		if(keyBindingToggleQuestListGui.isPressed())
+		if(keyBindingSwitchSkills.isPressed()) // "K"
 		{
-//			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
-//			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
+			// SWITCH SKILLs
+//			System.out.println("keyBindingSwitchSkills pressed");
+			
+			context.getCurrentGameState().getSkillManager().switchSkill();
+		}
+		if(keyBindingUseSkills.isPressed()) // "J"
+		{
+			// SWITCH SKILLs
+//			System.out.println("keyBindingUseSkills pressed");
+			
+			context.getCurrentGameState().getSkillManager().useCurrentlySelectedSkill();
+		}
+//		if(keyBindingToggleQuestListGui.isPressed())
+//		{
+////			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
+////			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
+////			Minecraft mc = Minecraft.getMinecraft();
+////			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+////			
+////			guiQuestlistManager.resetQuestReferences();
+////			
+////			try {
+////				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
+////				
+////				for(Quest quest : questlist)
+////				{
+////					guiQuestlistManager.addQuestReference(quest);
+////				}
+////			} catch (NullPointerException e) {
+////				e.printStackTrace();
+////			} catch (GuiQuestlistException e) {
+////				e.printStackTrace();
+////			}
+////			
+////			if(mc.currentScreen == null)
+////				mc.displayGuiScreen(guiQuestlistManager);
+////			System.out.println("Display Quest List");
+//		}
+//		if (keyBindingToggleChasingQuestGui.isPressed()) {
 //			Minecraft mc = Minecraft.getMinecraft();
-//			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+//			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 //			
-//			guiQuestlistManager.resetQuestReferences();
+//			guiChasingQuest.resetChasingQuestLevels();
 //			
 //			try {
-//				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
-//				
-//				for(Quest quest : questlist)
+//				for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
 //				{
-//					guiQuestlistManager.addQuestReference(quest);
+//					boolean islocked = false;
+//					if(i>2)
+//						islocked = true;
+//					GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
+//					
+//					guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
 //				}
 //			} catch (NullPointerException e) {
 //				e.printStackTrace();
@@ -166,35 +217,9 @@ public class ClientEventHandler {
 //			}
 //			
 //			if(mc.currentScreen == null)
-//				mc.displayGuiScreen(guiQuestlistManager);
-//			System.out.println("Display Quest List");
-		}
-		if (keyBindingToggleChasingQuestGui.isPressed()) {
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-			
-			guiChasingQuest.resetChasingQuestLevels();
-			
-			try {
-				for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
-				{
-					boolean islocked = false;
-					if(i>2)
-						islocked = true;
-					GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-					
-					guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (GuiQuestlistException e) {
-				e.printStackTrace();
-			}
-			
-			if(mc.currentScreen == null)
-				mc.displayGuiScreen(guiChasingQuest);
-			System.out.println("Display Chasing Quest Gui");
-		}
+//				mc.displayGuiScreen(guiChasingQuest);
+//			System.out.println("Display Chasing Quest Gui");
+//		}
 	}
 	
 	@SubscribeEvent
@@ -212,6 +237,15 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public void entityAttacked(LivingHurtEvent event)
 	{
+		if(event.source.getSourceOfDamage() instanceof EntityPlayer)
+		{
+			if(context.getCurrentGameState().getSkillManager().getSkills().get(1).getSkillState() == enumSkillState.EFFECTIVE)
+			{
+				event.ammount += SkillBoostDamage.boostRate;
+//				System.out.println("Damage Boost["+event.ammount+"]");
+			}
+		}
+		
 		if(event.entityLiving.getClass().getName().equals(EntityLiving.class.getName()))
 		{
 			EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
@@ -237,44 +271,66 @@ public class ClientEventHandler {
 	public void onBlockDrawHighlight(DrawBlockHighlightEvent event) {
 		// What a helpful event for this effect
 		
-		if (pedalingModeState == 1) {
-			// BIKE MODE - highlighting the block the player is looking at with a transparent yellow overlay
-			
-			// Amount to expand highlight around block (keep it tiny)
-			float f1 = 0.002F;
-			
-			// Color to draw overlay with (RGBA). Overlay drawing function will take care of converting to bitmask
-			Color c = new Color(255, 220, 32, (int)((Math.sin(Minecraft.getSystemTime()/300f)*64f) + 96));
-
-			GL11.glEnable(GL11.GL_BLEND);
-			// Values here taken from RenderGlobal, they seem to know what they're doing in there
-	        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-	        GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
-	        GL11.glLineWidth(2.0F);
-	        GL11.glDisable(GL11.GL_TEXTURE_2D);
-	        GL11.glDepthMask(false);
-	        
-	        Block block = event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ);
-	        EntityPlayer p = event.player;
-	        MovingObjectPosition t = event.target;
-	        
-	        if (block.getMaterial() != Material.air)
-	        {
-	        	// Get partial tick offset (pos updates 1/20th per second but GL operates at framerate)
-	            block.setBlockBoundsBasedOnState(p.worldObj, t.blockX, t.blockY, t.blockZ);
-	            double d0 = p.lastTickPosX + (p.posX - p.lastTickPosX) * (double)event.partialTicks;
-	            double d1 = p.lastTickPosY + (p.posY - p.lastTickPosY) * (double)event.partialTicks;
-	            double d2 = p.lastTickPosZ + (p.posZ - p.lastTickPosZ) * (double)event.partialTicks;
-	            
-	            // Draw overlay
-	            drawOverlay(block.getSelectedBoundingBoxFromPool(p.worldObj, t.blockX, t.blockY, t.blockZ).expand((double)f1, (double)f1, (double)f1).getOffsetBoundingBox(-d0, -d1, -d2), c);
-	        }
-
-	        GL11.glDepthMask(true);
-	        GL11.glEnable(GL11.GL_TEXTURE_2D);
-	        GL11.glDisable(GL11.GL_BLEND);
-		}
+		// BIKE MODE - highlighting the block the player is looking at with a transparent white overlay
 		
+//		event.context.drawOutlinedBoundingBox(p_147590_0_, p_147590_1_);(AxisAlignedBB, int);
+		
+//		int minX = event.target.blockX;
+//		int maxX = event.target.blockX + 1;
+//		int minY = event.target.blockY;
+//		int maxY = event.target.blockY + 1;
+//		int minZ = event.target.blockZ;
+//		int maxZ = event.target.blockZ + 1;
+		
+		GL11.glPushMatrix();
+		
+		GL11.glTranslatef(event.target.blockX, event.target.blockY, event.target.blockZ);
+		
+	    Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+
+        tessellator.setColorRGBA(0, 0, 0, 128);
+        
+        // -Z
+        tessellator.setNormal(0, 0, -1);
+        tessellator.addVertex(1.0, 0.0, 0.0);
+        tessellator.addVertex(0.0, 0.0, 0.0);
+        tessellator.addVertex(0.0, 0.5, 0.0);
+        tessellator.addVertex(1.0, 0.5, 0.0);
+        // +Z
+        tessellator.setNormal(0, 0, 1);
+        tessellator.addVertex(0.0, 0.0, 1.0);
+        tessellator.addVertex(1.0, 0.0, 1.0);
+        tessellator.addVertex(1.0, 0.5, 1.0);
+        tessellator.addVertex(0.0, 0.5, 1.0);
+        // -X
+        tessellator.setNormal(-1, 0, 0);
+        tessellator.addVertex(0.0, 0.0, 0.0);
+        tessellator.addVertex(0.0, 0.0, 1.0);
+        tessellator.addVertex(0.0, 0.5, 1.0);
+        tessellator.addVertex(0.0, 0.5, 0.0);
+        // +X
+        tessellator.setNormal(1, 0, 0);
+        tessellator.addVertex(1.0, 0.0, 1.0);
+        tessellator.addVertex(1.0, 0.0, 0.0);
+        tessellator.addVertex(1.0, 0.5, 0.0);
+        tessellator.addVertex(1.0, 0.5, 1.0);
+        // -Y
+        tessellator.setNormal(0, -1, 0);
+        tessellator.addVertex(0.0, 0.0, 1.0);
+        tessellator.addVertex(0.0, 0.0, 0.0);
+        tessellator.addVertex(1.0, 0.0, 0.0);
+        tessellator.addVertex(1.0, 0.0, 1.0);
+        // +Y
+        tessellator.setNormal(0, 1, 0);
+        tessellator.addVertex(1.0, 0.5, 1.0);
+        tessellator.addVertex(1.0, 0.5, 0.0);
+        tessellator.addVertex(0.0, 0.5, 0.0);
+        tessellator.addVertex(0.0, 0.5, 1.0);
+        
+        tessellator.draw();
+		
+        GL11.glPopMatrix();
 	}
 	
 	//Called whenever the client ticks
@@ -289,6 +345,16 @@ public class ClientEventHandler {
 			{
 				context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
 			}
+
+//			/**
+//			 * TODO: Need to remove this testing code from the release version
+//			 */
+//			// Natural decrease of the pedaling gauge
+//			if(ClientEventHandler.pedalingCombo.getGauge() < 10000)
+//			{
+//				ClientEventHandler.pedalingCombo.increaseGauge(10);
+//			}
+//			ClientEventHandler.pedalingCombo.decraseGauge();
 			
 			QuestManager playerQuestManager = context.getQuestManager();
 			
@@ -305,17 +371,6 @@ public class ClientEventHandler {
 				} catch (QuestException e) {
 					e.printStackTrace();
 				}
-			}
-			
-			if (playerQuestManager != null && playerQuestManager.getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
-//				QuestTaskChasing qt = (QuestTaskChasing)playerQuestManager.getActiveQuestTask();
-//				if (qt.getThiefHealthCurrent() <= 0 && qt.getRewardDropped()) {
-//					Minecraft mc = Minecraft.getMinecraft();
-//					GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
-//					if(mc.currentScreen == null) {
-//						mc.displayGuiScreen(gui);
-//					}
-//				}
 			}
 		
 			/**
@@ -377,6 +432,31 @@ public class ClientEventHandler {
 					p.setVelocity(xt, p.motionY, zt);
 			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
 			
+			/***
+			 * PEDALING MODE: LEVEL/GAUGE EVENTS
+			 */
+			if(levelUpSoundPlayFlag)
+			{
+				levelUpSoundPlayFlag = false;
+				p.worldObj.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
+			}
+
+			if(levelDownSoundPlayFlag)
+			{
+				levelDownSoundPlayFlag = false;
+				p.worldObj.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
+			}
+
+			if(gaugeUpSoundPlayFlag)
+			{
+				gaugeUpSoundPlayFlag = false;
+				p.worldObj.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
+			}
+			
+			pedalingCombo.decreaseGauge();
+			/**
+			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
+			 */
 			
 			// Detect if there is area changes where the player is in
 			ClientAreaEvent.detectAreaChange(p);
@@ -493,6 +573,12 @@ public class ClientEventHandler {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
+		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
+		{
+			event.newSpeed = (float) (event.originalSpeed + SkillBoostMining.boostRate);
+//			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
+		}
+		
 		if(pedalingModeState == 1)
 		{
 			float damage = (((float)this.context.rpm) / 10F) - 3F;
@@ -515,94 +601,17 @@ public class ClientEventHandler {
 			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(event.x, event.y+1, event.z, 9, PedalingToBuildEventHandler.buildingId);
 		}
 	}
-	
-	// Draws a solid color around a given bounding box in world space
-	private void drawOverlay(AxisAlignedBB aabb, Color color) {
-		
-		Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
 
-        if (color != null)
-        {
-            tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        }
-        
-        // -Z
-	    tessellator.setNormal(0, 0, -1);
-	    tessellator.addVertex(aabb.maxX, aabb.minY, aabb.minZ);
-	    tessellator.addVertex(aabb.minX, aabb.minY, aabb.minZ);
-	    tessellator.addVertex(aabb.minX, aabb.maxY, aabb.minZ);
-	    tessellator.addVertex(aabb.maxX, aabb.maxY, aabb.minZ);
-	    tessellator.draw();
-        tessellator.startDrawingQuads();
+	@Override
+	public void onLevelChange(int oldLevel, int newLevel) {
+		if(newLevel > oldLevel)
+			levelUpSoundPlayFlag = true;
+		else
+			levelDownSoundPlayFlag = true;
+	}
 
-        if (color != null)
-        {
-            tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        }
-        
-        // +Z
-        tessellator.setNormal(0, 0, 1);
-        tessellator.addVertex(aabb.minX, aabb.minY, aabb.maxZ);
-        tessellator.addVertex(aabb.maxX, aabb.minY, aabb.maxZ);
-        tessellator.addVertex(aabb.maxX, aabb.maxY, aabb.maxZ);
-        tessellator.addVertex(aabb.minX, aabb.maxY, aabb.maxZ);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-//
-        if (color != null)
-        {
-            tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        }
-        
-		// -X
-        tessellator.setNormal(-1, 0, 0);
-		tessellator.addVertex(aabb.minX, aabb.minY, aabb.minZ);
-		tessellator.addVertex(aabb.minX, aabb.minY, aabb.maxZ);
-		tessellator.addVertex(aabb.minX, aabb.maxY, aabb.maxZ);
-		tessellator.addVertex(aabb.minX, aabb.maxY, aabb.minZ);
-		tessellator.draw();
-        tessellator.startDrawingQuads();
-
-        if (color != null)
-        {
-            tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        }
-        
-        // +X
-        tessellator.setNormal(1, 0, 0);
-		tessellator.addVertex(aabb.maxX, aabb.maxY, aabb.minZ);
-		tessellator.addVertex(aabb.maxX, aabb.maxY, aabb.maxZ);
-		tessellator.addVertex(aabb.maxX, aabb.minY, aabb.maxZ);
-		tessellator.addVertex(aabb.maxX, aabb.minY, aabb.minZ);
-		tessellator.draw();
-        tessellator.startDrawingQuads();
-
-        if (color != null)
-        {
-            tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        }
-        
-        // -Y
-        tessellator.setNormal(0, -1, 0);
-        tessellator.addVertex(aabb.minX, aabb.minY, aabb.maxZ);
-        tessellator.addVertex(aabb.minX, aabb.minY, aabb.minZ);
-        tessellator.addVertex(aabb.maxX, aabb.minY, aabb.minZ);
-        tessellator.addVertex(aabb.maxX, aabb.minY, aabb.maxZ);
-        tessellator.draw();
-        tessellator.startDrawingQuads();
-
-        if (color != null)
-        {
-            tessellator.setColorRGBA(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        }
-        
-        // +Y
-        tessellator.setNormal(0, 1, 0);
-        tessellator.addVertex(aabb.maxX, aabb.maxY, aabb.maxZ);
-        tessellator.addVertex(aabb.maxX, aabb.maxY, aabb.minZ);
-        tessellator.addVertex(aabb.minX, aabb.maxY, aabb.minZ);
-        tessellator.addVertex(aabb.minX, aabb.maxY, aabb.maxZ);
-        tessellator.draw();
+	@Override
+	public void onOneGaugeFilled() {
+		gaugeUpSoundPlayFlag = true;
 	}
 }

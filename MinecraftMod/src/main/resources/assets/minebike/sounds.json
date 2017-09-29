@@ -38,5 +38,17 @@
   "powerdown": {
     "category": "player",
     "sounds": ["powerdown"]
+  },
+  "pedalinggaugeup": {
+    "category": "player",
+    "sounds": ["pedalinggaugeup"]
+  },
+  "pedalingleveldown": {
+    "category": "player",
+    "sounds": ["pedalingleveldown"]
+  },
+  "pedalinglevelup": {
+    "category": "player",
+    "sounds": ["pedalinglevelup"]
   }
 }

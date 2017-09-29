@@ -47,6 +47,7 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation TRAFFIC_GREEN = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/traffic-green.png");
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalingmode-reverse.png");
+	private ResourceLocation PEDALINGGAUGE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalinggaugebar.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	
@@ -121,7 +122,7 @@ public class GuiStats extends GuiScreen {
     	int xPos = 2;
     	int yPos = 2;
     	FontRenderer fontRendererObj;
-    	String text;
+    	String text = "";
 
     	if (mc.thePlayer != null) {
 	    	EntityPlayer p = mc.thePlayer;
@@ -135,14 +136,17 @@ public class GuiStats extends GuiScreen {
 	    	double percentSmall = context.timeSpentSmall;
 	    	int yy = yPos+HEART_SIZE+mc.fontRenderer.FONT_HEIGHT;
 
-	    	/**
-	    	 * Pedaling Mode Indicator Drawing
-	    	 */
     		float scaleX = 0.25f;
     		float scaleY = 0.25f*1.5f;
     		int rectX = 256;
 	    	int rectY = (int)(256/3f);
-	    	
+	    	float targetAlpha = 0.0f;
+
+	    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+
+	    	/**
+	    	 * Pedaling Mode Indicator Drawing
+	    	 */
 	    	//                         bike (blue),mine (red),build (green)
 	    	int[] colors = new int[] { 0xFF00A0FF, 0xFFFF2000, 0xFF00FF00 };
 	    	int chosenColor = colors[ClientEventHandler.pedalingModeState > 2 ? 2 : ClientEventHandler.pedalingModeState];
@@ -157,7 +161,6 @@ public class GuiStats extends GuiScreen {
 		    // TOP PORTION (unselected items, meant to fade out)
 	    	GL11.glPushMatrix();
 	    		
-		    	float targetAlpha = 0.0f;
 			    if (ClientEventHandler.animTickFade < (ClientEventHandler.animTickFadeLength + ClientEventHandler.animTickFadeTime))
 			    	if (ClientEventHandler.animTickFade >= ClientEventHandler.animTickFadeLength)
 			    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickFade - ClientEventHandler.animTickFadeLength) / ClientEventHandler.animTickFadeTime);
@@ -234,6 +237,52 @@ public class GuiStats extends GuiScreen {
 				}
 	    	}
 	    	
+	    	/**
+	    	 *  Peadling Gauge Drawing
+	    	 */
+	    	int pdealgauge = ClientEventHandler.pedalingCombo.getGauge();
+	    	int pedalgaugelevel = ClientEventHandler.pedalingCombo.getLevel();
+	    	
+	    	int pedalgaugedxscreen = 1;
+	    	float pdealgaugedxlevel = 72f;
+	    	
+	    	switch(pedalgaugelevel)
+	    	{
+	    	case 0:
+	    		pedalgaugedxscreen = 1;
+	    		pdealgaugedxlevel = 72f;
+    			break;
+	    	case 1:
+	    		pedalgaugedxscreen = 73;
+	    		pdealgaugedxlevel = 48f;
+	    		break;
+	    	case 2:
+	    		pedalgaugedxscreen = 121;
+	    		pdealgaugedxlevel = 24f;
+	    		break;
+    		default:
+	    		pedalgaugedxscreen = 1;
+	    		pdealgaugedxlevel = 72f;
+    			break;
+	    	};
+//System.out.println("pdealgauge["+pdealgauge+"]");
+    		pedalgaugedxscreen += (int) (((double)(pdealgauge-(1920*pedalgaugelevel))) * pdealgaugedxlevel / 1920f);
+//    		System.out.println("pedalgaugedxscreen["+pedalgaugedxscreen+"]");
+//    		System.out.println("pedalgaugelevel["+pedalgaugelevel+"]");
+	    	
+	    	GL11.glPushMatrix();
+	    	
+		    	GL11.glTranslatef(mcWidth/2 - 73, mcHeight/2 + 50, 0);
+			    GL11.glEnable(GL11.GL_BLEND);
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, .5F);
+			    mc.renderEngine.bindTexture(PEDALINGGAUGE_TEXTURE);
+
+		    	drawTexturedModalRect(0, 0, 0, 0, 146, 19);
+		    	
+			    GL11.glColor4f(1.0F, 1.0F, 1.0F, .8F);
+		    	drawTexturedModalRect(0, 0, 0, 24, pedalgaugedxscreen, 19);
+				
+	    	GL11.glPopMatrix();
 	    	
 	    	if(ClientEventHandler.pedalingModeState == 2)
 	    	{

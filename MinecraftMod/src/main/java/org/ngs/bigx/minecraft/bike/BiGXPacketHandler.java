@@ -9,6 +9,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
+import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
@@ -47,6 +48,7 @@ public class BiGXPacketHandler {
 					boolean chasingQuestOnCountDown = false;
 					float speedchange = 0f;
 					int speedBoostTickCountLeft = 0;
+					boolean isSpeedBoostSkillOn = (context.getCurrentGameState().getSkillManager().getSkills().get(0).getSkillState() == enumSkillState.EFFECTIVE);
 					
 					QuestManager questManager = context.getQuestManager(); 
 					
@@ -92,6 +94,14 @@ public class BiGXPacketHandler {
 						{
 						case 0:
 							context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+							
+							/**
+							 * Speed Boost By Pedaling Gauge
+							 */
+							if(isSpeedBoostSkillOn)
+							{
+								context.setSpeed(context.getSpeed() * 1.3f);
+							}
 							break;
 						case 2:
 							if(change < 0)
@@ -101,6 +111,14 @@ public class BiGXPacketHandler {
 								PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
 							break;
 						};
+						
+						// Increase Fuel for Combo
+						{
+							int fuel = change;
+							if(fuel < 0)
+								fuel *= -1;
+							ClientEventHandler.pedalingCombo.increaseGauge(fuel);
+						}
 					}
 				}
 			break;

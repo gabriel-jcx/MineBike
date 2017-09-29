@@ -2,6 +2,8 @@ package org.ngs.bigx.minecraft.gamestate;
 
 import java.util.ArrayList;
 
+import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import org.ngs.bigx.minecraft.client.skills.SkillManager;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 public class GameSave {
@@ -23,6 +25,9 @@ public class GameSave {
 	// UNLOCKED QUEST LIST
 	private ArrayList<String> accomplishedQuestId;
 	
+	// AVAILABLE SKILLS
+	private SkillManager skillManager;
+	
 	public GameSave()
 	{
 		this.levelSystem = new LevelSystem();
@@ -33,6 +38,15 @@ public class GameSave {
 		this.posY = 0;
 		this.posZ = 0;
 		this.accomplishedQuestId = new ArrayList<String>();
+		this.skillManager = new SkillManager(ClientEventHandler.pedalingCombo);
+	}
+
+	public SkillManager getSkillManager() {
+		return skillManager;
+	}
+
+	public void setSkillManager(SkillManager skillManager) {
+		this.skillManager = skillManager;
 	}
 
 	public long getTimestamp() {

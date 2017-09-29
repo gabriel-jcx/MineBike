@@ -33,7 +33,8 @@ import noppes.npcs.roles.RoleTrader;
 
 
 public class NpcEvents {
-	
+
+	public static final String[] skillNames = { "Skill - Boost Speed","Skill - Boost Damage","Skill - Boost Mining"};
 	public static int botHealth = 10;
 	
 	public NpcEvents() {
@@ -48,71 +49,19 @@ public class NpcEvents {
 			InteractWithWeaponsMerchant(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
 			InteractWithBlacksmith(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.potionSeller, NpcLocations.potionSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
-			InteractWithPotionSeller(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.skillSeller, NpcLocations.skillSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
+			InteractWithSkillSeller(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
 			InteractWithTrainingBot(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
 			InteractWithOfficer(player, event);
-			
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
-		///Give player the mysterious key
 		if (!player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
-		
-		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
-				"Dad: Just in case you need\nit, take this potion");
-		
-		if (!player.inventory.hasItem(Items.paper)){
-			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
-		}
-		if (!player.inventory.hasItem(Item.getItemById(4801))){
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
-		}
-		
-//		if (!BiGXEventTriggers.givePlayerKey(player, "Mysterious Key", BiGXTextBoxDialogue.fatherMsg) && !player.worldObj.isRemote)
-//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsgMap);
-//		else{
-//			if (!player.worldObj.isRemote){
-//				GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.questAdded, GuiMessageWindow.BOOK_TEXTURE);
-//				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questBookInstructions);	
-//			}
-//		}
-		
-//		try {
-//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-//			Quest quest;
-//			
-//			if(player.worldObj.isRemote)
-//			{
-//				System.out.println("InteractWithFather Quest Generation: CLIENT");
-//				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
-//				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
-//				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
-//					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
-//			}
-//			else
-//			{
-//				System.out.println("InteractWithFather Quest Generation: SERVER");
-//				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
-//				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
-//				if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
-//					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
-//			}
-//		} catch (QuestException e) {
-//			e.printStackTrace();
-//		}
-	}
-	
-	private static void InteractWithOfficer(EntityPlayer player, EntityInteractEvent event){
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
@@ -137,11 +86,29 @@ public class NpcEvents {
 			e.printStackTrace();
 		}
 		
+		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
+				"Dad: Just in case you need\nit, take this potion");
+		
+		if (!player.inventory.hasItem(Items.paper)){
+			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
+		}
+		if (!player.inventory.hasItem(Item.getItemById(4801))){
+			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+			if (!player.worldObj.isRemote)
+				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
+		}
+	}
+	
+	private static void InteractWithOfficer(EntityPlayer player, EntityInteractEvent event){
+		System.out.println("Interacting with Officer...");
+		GuiMessageWindow.showMessage("We're kind of busy here.\nCome back later.");
 		//Giving player teleportation potion
-		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
-				BiGXTextBoxDialogue.officerRequestHelp);
-		if (!player.worldObj.isRemote && gavePotion)
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
+//		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
+//				BiGXTextBoxDialogue.officerRequestHelp);
+//		if (!player.worldObj.isRemote && gavePotion)
+//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
 	
 	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
@@ -172,16 +139,16 @@ public class NpcEvents {
 			createBlacksmithSold(traderInterface.inventorySold);
 	}
 	
-	private static void InteractWithPotionSeller(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithSkillSeller(EntityPlayer player, EntityInteractEvent event){
 		System.out.println("Interacting with Potion Seller NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.target;
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
 		if (traderInterface.inventoryCurrency.items.isEmpty())
-			createPotionCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
+			createSkillCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
 		if (traderInterface.inventorySold.items.isEmpty())
-			createPotionSold(traderInterface.inventorySold);
+			createSkillSold(traderInterface.inventorySold);
 	}
 	
 	private static void InteractWithTrader(EntityPlayer player, EntityInteractEvent event){
@@ -237,18 +204,21 @@ public class NpcEvents {
 		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
 	}
 	
-	//////////Potion Seller Market
-	private static void createPotionCurrency(NpcMiscInventory inventoryCurrency, Item currency){
-		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency,10));
-//		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,10));
-//		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,10));
-//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,10));
+	//////////Skill Seller Market
+	private static void createSkillCurrency(NpcMiscInventory inventoryCurrency, Item currency){
+		int i = 0;
+		for (String name : skillNames){
+			inventoryCurrency.setInventorySlotContents(i++, new ItemStack(currency,15));
+		}
 	}
 	
-	private static void createPotionSold(NpcMiscInventory inventorySold){
-		ItemStack p = new ItemStack(Items.potionitem);
-		p.setStackDisplayName("Teleportation Potion - Village");
-		inventorySold.setInventorySlotContents(0, p);
+	private static void createSkillSold(NpcMiscInventory inventorySold){
+		int i = 0;
+		for (String name : skillNames){
+			ItemStack p = new ItemStack(Items.enchanted_book);
+			p.setStackDisplayName(name);
+			inventorySold.setInventorySlotContents(i++, p);
+		}
 	}
 	
 	

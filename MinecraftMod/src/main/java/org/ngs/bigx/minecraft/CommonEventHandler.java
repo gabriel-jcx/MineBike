@@ -26,6 +26,7 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
@@ -62,6 +63,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -74,11 +76,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
@@ -197,7 +202,7 @@ public class CommonEventHandler {
 	public void onWorldLoad(WorldEvent.Load event) {
 		System.out.println("[BiGX] onWorldLoad(WorldEvent.Load event)");
 		
-		event.world.provider.setWorldTime(0);
+//		event.world.provider.setWorldTime(0);
 		event.world.provider.resetRainAndThunder();
 		
 		if(event.world.isRemote)
@@ -221,7 +226,33 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void entityInteractEvent(EntityInteractEvent e) {
 		EntityPlayer player = e.entityPlayer;
+		System.out.println("Interacting with NPC...");
 		NpcEvents.InteractWithNPC(player, e);
+	}
+	
+	@SubscribeEvent
+	public void entityAttacked(LivingAttackEvent event)
+	{
+//		System.out.println("Attack the player!");
+		EntityLivingBase attackedEnt = event.entityLiving;
+		DamageSource attackSource = event.source;
+		if(attackedEnt instanceof EntityPlayer)
+		{
+			if(attackSource == DamageSource.fall)
+			{
+				System.out.println("NO FALL!!!");
+				event.setCanceled(true);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingFallEvent(LivingFallEvent event) {
+//		System.out.println("Falling...");
+		if (event.entityLiving != null && event.entityLiving instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entityLiving;
+			player.fallDistance = 0.1F;
+		}
 	}
 
 	@SubscribeEvent
@@ -263,57 +294,73 @@ public class CommonEventHandler {
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
 		if (itemOnPlayersHand != null){
-		System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
-		
-		if(itemOnPlayersHand.getItem() == Items.paper)
-		{
-			if(!p.worldObj.isRemote)
-				return;
-			
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
-			
-			guiQuestlistManager.resetQuestReferences();
-			
-			try {
-				Collection<Quest> questlist = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().values();
-				
-				for(Quest quest : questlist)
-				{
-					guiQuestlistManager.addQuestReference(quest);
+//			System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
+			if (itemOnPlayersHand.getItem() == Items.enchanted_book){
+				if (itemOnPlayersHand.getDisplayName().contains("Skill")){
+					System.out.println("Adding Skill!");	
+					BigxClientContext context = BiGX.instance().clientContext;
+					String unlockedSkillName = itemOnPlayersHand.getDisplayName().substring(7).replace(" ", "");
+					System.out.println(unlockedSkillName);
+					List<Skill> skills = BigxClientContext.getCurrentGameState().getSkillManager().getSkills();
+					for (Skill skill : skills){
+						if (skill.getClass().getName().contains(unlockedSkillName)){
+							skill.unlockSkillState();
+						}
+					}
+					p.inventory.consumeInventoryItem(itemOnPlayersHand.getItem());
+//					p.inventory.clearInventory(itemOnPlayersHand.getItem(), -1);
+					System.out.println("Skill Added!");
 				}
-			} catch (NullPointerException e) {
-				e.printStackTrace();
-			} catch (GuiQuestlistException e) {
-				e.printStackTrace();
 			}
-			
-			if(mc.currentScreen == null)
-				mc.displayGuiScreen(guiQuestlistManager);
-			System.out.println("Display Quest List");
-		}
-		else if(itemOnPlayersHand.getDisplayName().contains("Phone"))
-		{
-			ClientEventHandler.pedalingModeState ++;
-			ClientEventHandler.pedalingModeState %= 3;
-			ClientEventHandler.animTickSwitch = 0;
-			ClientEventHandler.animTickFade = 0;
-			System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
-		}
+			if(itemOnPlayersHand.getItem() == Items.paper)
+			{
+				if(!p.worldObj.isRemote)
+					return;
+				
+				Minecraft mc = Minecraft.getMinecraft();
+				GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+				
+				guiQuestlistManager.resetQuestReferences();
+				
+				try {
+					Collection<Quest> questlist = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().values();
+					
+					for(Quest quest : questlist)
+					{
+						guiQuestlistManager.addQuestReference(quest);
+					}
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (GuiQuestlistException e) {
+					e.printStackTrace();
+				}
+				
+				if(mc.currentScreen == null)
+					mc.displayGuiScreen(guiQuestlistManager);
+				System.out.println("Display Quest List");
+			}
+			else if(itemOnPlayersHand.getDisplayName().contains("Phone"))
+			{
+				ClientEventHandler.pedalingModeState ++;
+				ClientEventHandler.pedalingModeState %= 3;
+				ClientEventHandler.animTickSwitch = 0;
+				ClientEventHandler.animTickFade = 0;
+				
+				ClientEventHandler.pedalingCombo.init();
+				
+				System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
+			}
 		}
 	}
 	
 	@SubscribeEvent
 	public void onItemUse(final PlayerUseItemEvent.Start event) {
+		System.out.println("Item being used...");
 		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
-		if (event.item.getDisplayName().contains("Village"))
-			QuestTeleporter.teleport(event.entityPlayer, 0, 94, 71, 227);
 		if (event.item.getDisplayName().contains("Past"))
 			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
 		if (event.item.getDisplayName().contains("Tutorial"))
 			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 65, 0);
-//		if (event.item.getDisplayName().contains("Sword"))
-//			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 66, 0);
 	}
 	
 	@SubscribeEvent
@@ -372,9 +419,11 @@ public class CommonEventHandler {
 				server_tick = 0;
 				
 				//Making sure it remains daytime all the time
-				World current_world = MinecraftServer.getServer().getEntityWorld();
+//				World current_world = MinecraftServer.getServer().getEntityWorld();
 
-				current_world.setWorldTime(8000);
+				if(Minecraft.getMinecraft().thePlayer != null)
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamerule doDaylightCycle false");
+//				current_world.setWorldTime(8000);
 			}
 			
 			if( (server_tick%60) == 0 )
