@@ -419,7 +419,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 //		showLevelSelectionGui();
 		////Displaying Level Selection GUI
 		Minecraft mc = Minecraft.getMinecraft();
-		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		if (guiChasingQuest == null)
+			guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 		
 		guiChasingQuest.resetChasingQuestLevels();
 		
@@ -483,6 +484,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		}
 
 		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
+		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
 
 		chasingQuestInitialPosX = 1;
