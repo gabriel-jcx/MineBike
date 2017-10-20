@@ -61,12 +61,12 @@ public class ClientProxy extends CommonProxy {
 			e1.printStackTrace();
 		}
 
-    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("org.ngs.bigx.keyBindingToggleMouse.desc", Keyboard.KEY_P, "ChaseQuestLock");
-    	ClientEventHandler.keyBindingUseSkills = new KeyBinding("org.ngs.bigx.keyBindingUseSkills.desc", Keyboard.KEY_J, "UseSkills");
-    	ClientEventHandler.keyBindingSwitchSkills = new KeyBinding("org.ngs.bigx.keyBindingSwitchSkills.desc", Keyboard.KEY_K, "SwitchSkills");
-    	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("org.ngs.bigx.keyBindingToggleBuildingGui.desc", Keyboard.KEY_N, "BuildingGui");
-    	ClientEventHandler.keyBindingToggleBike = new KeyBinding("", Keyboard.KEY_MINUS, "ToggleBike");
-    	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("org.ngs.bigx.keyBindingToggleBikeToMining.desc", Keyboard.KEY_M, "ToggleBikeMining");
+    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("key.keyBindingToggleMouse.desc", Keyboard.KEY_P, "ChaseQuestLock");
+    	ClientEventHandler.keyBindingUseSkills = new KeyBinding("key.keyBindingUseSkills.desc", Keyboard.KEY_J, "UseSkills");
+    	ClientEventHandler.keyBindingSwitchSkills = new KeyBinding("key.keyBindingSwitchSkills.desc", Keyboard.KEY_K, "SwitchSkills");
+    	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("key.keyBindingToggleBuildingGui.desc", Keyboard.KEY_N, "BuildingGui");
+//    	ClientEventHandler.keyBindingToggleBike = new KeyBinding("key.ToggleBike.desc", Keyboard.KEY_MINUS, "ToggleBike");
+    	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("key.keyBindingToggleBikeToMining.desc", Keyboard.KEY_M, "ToggleBikeMining");
     	
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBuildingGui);
