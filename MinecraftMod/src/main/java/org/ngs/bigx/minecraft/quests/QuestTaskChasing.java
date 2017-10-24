@@ -106,8 +106,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	protected double lastTickTime = 0;
 	protected int lastTickStage = 0;
 	protected int timeFallBehind = 0;
+	public int endOfChaseItemCounter = 0;
 	protected NpcCommand activecommand;
 
+	public int endGuiChoice = 0;
 	protected int obstacleRefreshed = 4;
 	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
 	protected int obstacleId = -1;
@@ -160,8 +162,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
-	
-	private boolean rewardDropped = false;
 	
 	private boolean menuOpen = false;
 	private GuiChasingQuest guiChasingQuest;
@@ -239,7 +239,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		timeFallBehind = 0;
 		time = 0;
 		initThiefStat();
-		rewardDropped = false;
 		countdown = 11;
 		lastCountdownTickTimestamp = 0;
 		pausedTime = 0;
@@ -971,8 +970,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			npc.setDead();
 			
 			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
-			if (!rewardDropped) {
-				rewardDropped = true;
+			if (endOfChaseItemCounter == -1) {
+				endOfChaseItemCounter = 15;
+				
 				Random random = new Random();
 				
 				int totalXP = 15;
@@ -998,16 +998,45 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 			}
 			
-			if (thiefHealthCurrent <= 0 && rewardDropped) {
-				Minecraft mc = Minecraft.getMinecraft();
-				System.out.println(context instanceof BigxServerContext);
-				GuiFinishChasingQuest gui = new GuiFinishChasingQuest(this); 
+			if (endOfChaseItemCounter > 0) {
+				endOfChaseItemCounter -= 1;
+				List<EntityItem> nearbyItems = npc.worldObj.getEntitiesWithinAABB(EntityItem.class,
+						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
+				List<EntityXPOrb> nearbyOrbs = npc.worldObj.getEntitiesWithinAABB(EntityXPOrb.class,
+						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
+				
+				if (endOfChaseItemCounter == 0) {
+					
+				}
+				
+				if (nearbyItems.size() == 0 && nearbyOrbs.size() == 0) {
+					endOfChaseItemCounter = 0;
+				}
+			}
+			
+			Minecraft mc = Minecraft.getMinecraft();
+			System.out.println(context instanceof BigxServerContext);
+			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(this); 
+			
+			if (endOfChaseItemCounter == 0) {
+				endOfChaseItemCounter = -1;
 				if(mc.currentScreen == null) {
 					mc.displayGuiScreen(gui);
 				}
+			} else {
+				if(mc.currentScreen != null) {
+					if (endGuiChoice == 1) {
+						// Continue
+					} else if (endGuiChoice == 2) {
+						// Retry
+					} else {
+						// Exit / ?
+					}
+				}
 			}
-//			waitForRewardPickupAndContinue();
 		}
+		
+//		waitForRewardPickupAndContinue();
 		
 		// CHASE QUEST LOSE CONDITION
 		if(timeFallBehind >= 30)
@@ -1654,10 +1683,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		return thiefLevel;
 	}
 
-	public boolean getRewardDropped() {
-		return rewardDropped;
-	}
-	
 	public static int getSpeedBoostTickCountLeft(){
 		return speedUpEffectTickCount;
 	}
