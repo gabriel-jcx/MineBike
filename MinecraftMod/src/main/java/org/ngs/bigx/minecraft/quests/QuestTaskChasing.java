@@ -1006,7 +1006,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
 				
 				if (endOfChaseItemCounter == 0) {
-					
+					// TODO move items to player
 				}
 				
 				if (nearbyItems.size() == 0 && nearbyOrbs.size() == 0) {
@@ -1030,7 +1030,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					} else if (endGuiChoice == 2) {
 						// Retry
 					} else {
-						// Exit / ?
+						isActive = false;
+						completed = false;
+//						player.setGameType(GameType.SURVIVAL);
+						goBackToTheOriginalWorld(ws, player);
 					}
 				}
 			}
