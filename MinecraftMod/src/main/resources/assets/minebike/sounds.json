@@ -50,5 +50,41 @@
   "pedalinglevelup": {
     "category": "player",
     "sounds": ["pedalinglevelup"]
-  }
+  },
+  "mus_metal1": {
+    "category": "music",
+	"sounds": ["Nightmares"]
+  },
+  "mus_metal2": {
+    "category": "music",
+	"sounds": ["RacerX"]
+  },
+  "mus_metal3": {
+    "category": "music",
+	"sounds": ["Redemption"]
+  },
+  "mus_metal4": {
+    "category": "music",
+	"sounds": ["Trilogy"]
+  },
+  "mus_metal5": {
+    "category": "music",
+	"sounds": ["DragonForce"]
+  },
+  "mus_breaks1": {
+    "category": "music",
+	"sounds": ["Surfing"]
+  },
+  "mus_breaks2": {
+    "category": "music",
+	"sounds": ["Sneakman"]
+  },
+  "mus_breaks3": {
+    "category": "music",
+	"sounds": ["BlockRockin"]
+  },
+  "mus_breaks4": {
+    "category": "music",
+	"sounds": ["Nasty"]
+  },
 }

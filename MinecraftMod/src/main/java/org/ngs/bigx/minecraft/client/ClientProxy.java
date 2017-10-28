@@ -61,12 +61,12 @@ public class ClientProxy extends CommonProxy {
 			e1.printStackTrace();
 		}
 
-    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("key.keyBindingToggleMouse.desc", Keyboard.KEY_P, "ChaseQuestLock");
-    	ClientEventHandler.keyBindingUseSkills = new KeyBinding("key.keyBindingUseSkills.desc", Keyboard.KEY_J, "UseSkills");
-    	ClientEventHandler.keyBindingSwitchSkills = new KeyBinding("key.keyBindingSwitchSkills.desc", Keyboard.KEY_K, "SwitchSkills");
-    	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("key.keyBindingToggleBuildingGui.desc", Keyboard.KEY_N, "BuildingGui");
-//    	ClientEventHandler.keyBindingToggleBike = new KeyBinding("key.ToggleBike.desc", Keyboard.KEY_MINUS, "ToggleBike");
-    	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("key.keyBindingToggleBikeToMining.desc", Keyboard.KEY_M, "ToggleBikeMining");
+    	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("Chase Quest Lock", Keyboard.KEY_P, "Bike Mod");
+    	ClientEventHandler.keyBindingUseSkills = new KeyBinding("Use Skills", Keyboard.KEY_J, "Bike Mod");
+    	ClientEventHandler.keyBindingSwitchSkills = new KeyBinding("Switch Skills", Keyboard.KEY_K, "Bike Mod");
+    	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("Building GUI", Keyboard.KEY_N, "Bike Mod");
+    	ClientEventHandler.keyBindingToggleBike = new KeyBinding("Toggle Bike Input", Keyboard.KEY_MINUS, "Bike Mod");
+    	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("Toggle Bike Mining", Keyboard.KEY_M, "Bike Mod");
     	
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBuildingGui);

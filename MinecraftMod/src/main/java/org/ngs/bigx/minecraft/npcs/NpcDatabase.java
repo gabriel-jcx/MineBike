@@ -35,6 +35,7 @@ public class NpcDatabase {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
 //		map.put("Scientist", NpcLocations.scientists);
 		map.put("Training Bot", NpcLocations.trainingBot);
+		map.put("Telly Port", NpcLocations.tutorialExit);
 		return map;
 	}
 	
@@ -87,6 +88,8 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
 		if (name.contains("Thief"))
 			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
+		if (name.contains("Telly Port"))
+			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}

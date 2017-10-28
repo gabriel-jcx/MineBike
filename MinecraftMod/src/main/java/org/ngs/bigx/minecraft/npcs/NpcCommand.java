@@ -186,7 +186,7 @@ public class NpcCommand {
 						++found;
 	
 				if (found == 0) {
-					System.out.println("No " + name + "s found in this dimension...");
+					System.out.println("No '" + name + "' found in this dimension...");
 					NpcDatabase.spawn(worldServer, name, dimensionId);
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();

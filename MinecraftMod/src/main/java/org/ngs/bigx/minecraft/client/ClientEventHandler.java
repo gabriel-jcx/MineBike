@@ -282,6 +282,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //		int minZ = event.target.blockZ;
 //		int maxZ = event.target.blockZ + 1;
 		
+		// TODO re-enable and fix when we need to highlight blocks again!
+		/*
 		GL11.glPushMatrix();
 		
 		GL11.glTranslatef(event.target.blockX, event.target.blockY, event.target.blockZ);
@@ -331,6 +333,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
         tessellator.draw();
 		
         GL11.glPopMatrix();
+        */
 	}
 	
 	//Called whenever the client ticks

@@ -15,6 +15,7 @@ import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskTalk;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,6 +58,14 @@ public class NpcEvents {
 			InteractWithTrainingBot(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
 			InteractWithOfficer(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
+			InteractWithTeleportExit(player, event);
+	}
+	
+	private static void InteractWithTeleportExit(EntityPlayer player, EntityInteractEvent event) {
+		// TODO Add confirmation GUI? "Want to try the tutorial again?"
+		if (player.worldObj.isRemote)
+			QuestTeleporter.teleport(player, 0, 89, 78, 243);
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){

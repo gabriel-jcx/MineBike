@@ -38,8 +38,6 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(604, 66, -1).toString(), "Shiny Key"); //TODO: change coords
-		map.put(Vec3.createVectorHelper(604, 66, 0).toString(), "Shiny Key"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(20, 77, -76).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
 		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); //TODO: change coords
@@ -51,7 +49,9 @@ public class ChestSystem {
 		System.out.println("Interacting with Chest");
 		String chestCoords = Vec3.createVectorHelper(e.x, e.y, e.z).toString();
 		System.out.println(chestCoords);
-		if (e.action == Action.LEFT_CLICK_BLOCK)
+		
+		// If we need to know this chest location, then player can't break it!
+		if (e.action == Action.LEFT_CLICK_BLOCK && (normalChests.containsKey(chestCoords) || lockedChests.containsKey(chestCoords)))
 			e.setCanceled(true);
 		if (normalChests.containsKey(chestCoords))
 			interactWithNormalChest(e, normalChests.get(chestCoords));

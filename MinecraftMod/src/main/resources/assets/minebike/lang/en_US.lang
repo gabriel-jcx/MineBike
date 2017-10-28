@@ -33,9 +33,3 @@ quest.type.run.name=Run
 quest.type.run.description=Run a Distance
 
 tile.questChest.name=Quest Chest
-
-key.keyBindingToggleMouse.desc=ChaseQuestLock
-key.keyBindingUseSkills.desc=UseSkills
-key.keyBindingSwitchSkills.desc=SwitchSkills
-key.keyBindingToggleBuildingGui.desc=BuildingGui
-key.keyBindingToggleBikeToMining.desc=ToggleBikeMining
