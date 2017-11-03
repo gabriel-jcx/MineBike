@@ -12,6 +12,7 @@ import org.ngs.bigx.minecraft.bike.PedalingCombo;
 import org.ngs.bigx.minecraft.bike.PedalingToBuild;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
+import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
@@ -49,8 +50,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -500,7 +503,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 					else{
-						GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+						if (ClientAreaEvent.previousArea.type == AreaTypeEnum.EVENT)
+							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 				}
 				else

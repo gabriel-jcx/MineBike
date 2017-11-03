@@ -1,98 +1,51 @@
 package org.ngs.bigx.minecraft;
 
 import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.jws.Oneway;
-
-import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
-import org.ngs.bigx.dictionary.objects.game.properties.Stage;
-import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
-import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
-import org.ngs.bigx.minecraft.client.GuiDamage;
-import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.client.LeaderboardRow;
-import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.context.BigxContext;
-import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
-import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
-import org.ngs.bigx.minecraft.npcs.NpcLocations;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTask;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
-import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
-import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
-import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import noppes.npcs.CustomItems;
-import noppes.npcs.entity.EntityCustomNpc;
 
 
 public class CommonEventHandler {
@@ -429,6 +382,49 @@ public class CommonEventHandler {
 			if( (server_tick%60) == 0 )
 			{
 				NpcCommand.spawnNpcInDB();
+			}
+			
+			/**
+			 * Solution to doors being annoying -- auto-open in range.
+			 * NOTE: Only do this for Wooden Doors. Iron Doors should be
+			 * used for more important things... example: puzzle solving.
+			 */
+			if ((server_tick%10) == 0) {
+				int doorOpenDistance = 5;
+				int doorCheckRadius = 10;
+				
+				for (WorldServer ws : MinecraftServer.getServer().worldServers) {
+					for (EntityPlayer player : (List<EntityPlayer>) ws.playerEntities) {
+						
+						int pX = (int) player.posX;
+						int pY = (int) player.posY;
+						int pZ = (int) player.posZ;
+						
+						for (int xx = pX-doorCheckRadius; xx < pX+doorCheckRadius; ++xx) {
+							for (int zz = pZ-doorCheckRadius; zz < pZ+doorCheckRadius; ++zz) {
+								for (int yy = pY-doorCheckRadius; yy < pY+doorCheckRadius; ++yy) {
+									
+									if (ws.getBlock(xx, yy, zz) == Blocks.wooden_door) {
+										double blockDistance = Math.sqrt(Math.pow(Math.abs(xx-pX), 2) + Math.pow(Math.abs((yy-pY)), 2) + Math.pow(Math.abs(zz-pZ), 2));
+										// Open if close
+										int gottenMeta = Minecraft.getMinecraft().thePlayer.worldObj.getBlockMetadata(xx, yy, zz);
+										int meta = gottenMeta;
+										
+										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
+											meta += 4;
+											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
+											ws.playAuxSFX(1003, xx, yy, zz, 0);
+										} else if (blockDistance > doorOpenDistance && (gottenMeta >= 4 && gottenMeta < 8)){
+											meta -= 4;
+											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
+											ws.playAuxSFX(1003, xx, yy, zz, 0);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
