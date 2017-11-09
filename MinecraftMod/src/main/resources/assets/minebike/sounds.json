@@ -53,38 +53,47 @@
   },
   "mus_metal1": {
     "category": "music",
-	"sounds": ["Nightmares"]
+	"sounds": ["Nightmares"],
+	"stream": "true"
   },
   "mus_metal2": {
     "category": "music",
-	"sounds": ["RacerX"]
+	"sounds": ["RacerX"],
+	"stream": "true"
   },
   "mus_metal3": {
     "category": "music",
-	"sounds": ["Redemption"]
+	"sounds": ["Redemption"],
+	"stream": "true"
   },
   "mus_metal4": {
     "category": "music",
-	"sounds": ["Trilogy"]
+	"sounds": ["Trilogy"],
+	"stream": "true"
   },
   "mus_metal5": {
     "category": "music",
-	"sounds": ["DragonForce"]
+	"sounds": ["DragonForce"],
+	"stream": "true"
   },
   "mus_breaks1": {
     "category": "music",
-	"sounds": ["Surfing"]
+	"sounds": ["Surfing"],
+	"stream": "true"
   },
   "mus_breaks2": {
     "category": "music",
-	"sounds": ["Sneakman"]
+	"sounds": ["Sneakman"],
+	"stream": "true"
   },
   "mus_breaks3": {
     "category": "music",
-	"sounds": ["BlockRockin"]
+	"sounds": ["BlockRockin"],
+	"stream": "true"
   },
   "mus_breaks4": {
     "category": "music",
-	"sounds": ["Nasty"]
+	"sounds": ["Nasty"],
+	"stream": "true"
   }
 }
