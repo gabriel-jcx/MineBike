@@ -346,32 +346,32 @@ public class ClientEventHandler implements IPedalingComboEvent {
         */
 	}
 	
-	protected void sendLocationGameTag(LocationChangeTagEnum questActivityTagEnum)
-	{
-		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
-		try {
-			int questTypeEnum = ((0xff & questTypeId) << 4) | (0xf & questActivityTagEnum.getQuestActivityTagEnum());
-			BiGXGameTag biGXGameTag = new BiGXGameTag();
-			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_QUEST_BEGINNING | questTypeEnum));
-			
-			BigxClientContext.sendGameTag(biGXGameTag);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BiGXNetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BiGXInternalGamePluginExcpetion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	protected void sendLocationGameTag(LocationChangeTagEnum questActivityTagEnum)
+//	{
+//		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
+//		try {
+//			int questTypeEnum = ((0xff & questTypeId) << 4) | (0xf & questActivityTagEnum.getQuestActivityTagEnum());
+//			BiGXGameTag biGXGameTag = new BiGXGameTag();
+//			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_QUEST_BEGINNING | questTypeEnum));
+//			
+//			BigxClientContext.sendGameTag(biGXGameTag);
+//		} catch (NumberFormatException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (SocketException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (BiGXNetException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (BiGXInternalGamePluginExcpetion e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 	//Called whenever the client ticks
 	@SubscribeEvent
