@@ -14,6 +14,8 @@ public class SkillEventHandler {
 	private static SkillEventHandler handler;
 	private static int tickCount = 0;
 	
+	private int skillTypeId = 5;
+	
 	public SkillEventHandler(BigxClientContext context)
 	{
 		this.context = context;

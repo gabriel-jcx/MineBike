@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
 import org.ngs.bigx.dictionary.objects.game.GameServerList;
 import org.ngs.bigx.dictionary.objects.game.GameServerStatus;
@@ -302,6 +303,11 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		bigxclient.connect();
 	}
 	
+	public static void sendGameTag(BiGXGameTag biGXGameTag) throws NumberFormatException, SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
+	{
+		bigxclient.sendGameEvent(Integer.parseInt(biGXGameTag.getTagName()), System.currentTimeMillis());
+	}
+	
 	public boolean checkIPFile()
 	{
 		return (new File(gameServerListFileName)).exists();
@@ -385,7 +391,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 								isMiddlwareIPAvailable = true;
 							}
 							else {
-								// TODO: Need to disable this hardcore portion
+								// TODO: Need to disable this hard coded portion
+//								ipAddress = "128.195.54.79";
 								ipAddress = "128.200.115.181";
 //								ipAddress = "128.195.55.199";
 //								ipAddress = "192.168.0.53";

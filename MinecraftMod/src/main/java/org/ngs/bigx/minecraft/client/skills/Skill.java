@@ -1,9 +1,17 @@
 package org.ngs.bigx.minecraft.client.skills;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
+import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
+import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 public abstract class Skill {
 	public enum enumSkillState {
@@ -12,6 +20,8 @@ public abstract class Skill {
 		EFFECTIVE,
 		COOLTIME,
 	}
+	
+	protected int skillTypeId = 1;
 
 	protected enumSkillState skillState = enumSkillState.LOCKED;
 	
@@ -60,6 +70,31 @@ public abstract class Skill {
 			return false;
 		
 		this.playSkillOnSoundEffect();
+		
+		// SEND GAME TAG - Skill 0x(GAME TAG[0xF])(SKILL ID[0xF])(Gauge Percentage[0xFF])
+		try {
+			int gaugePercentage = (100 * this.pedalingCombo.getGauge()) / this.pedalingCombo.gaugeMaxLimit;
+			int skillTypeEnum = ((0xf & skillTypeId) << 8) | (0xff & gaugePercentage);
+			BiGXGameTag biGXGameTag = new BiGXGameTag();
+			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_SKILL_BEGINNING | skillTypeEnum));
+			
+			BigxClientContext.sendGameTag(biGXGameTag);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXNetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXInternalGamePluginExcpetion e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		this.effectiveTimeTimestamp = System.currentTimeMillis();
 		this.effectiveTimeCurrent = this.effectiveTimeMax;

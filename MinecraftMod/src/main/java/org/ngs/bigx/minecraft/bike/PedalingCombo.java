@@ -12,7 +12,7 @@ public class PedalingCombo {
 	private static final int gaugeUpperLimit = 640;		// Every Eight Seconds
 	private static final int gaugeFilledUpperLimit = 3; // Every Three gauges level up (3 gauges for Level 1)
 	private static final int gaugeLevelUpperLimit = 3;  // Max Level
-	private static final int gaugeMaxLimit = gaugeUpperLimit*gaugeFilledUpperLimit*gaugeLevelUpperLimit;  // Max Level
+	public static final int gaugeMaxLimit = gaugeUpperLimit*gaugeFilledUpperLimit*gaugeLevelUpperLimit;  // Max Level
 	private static final int gaugeDegradationRate = 1;	// Each Tick
 	
 	private List<IPedalingComboEvent> pedalingComboEvents = new ArrayList<IPedalingComboEvent>();

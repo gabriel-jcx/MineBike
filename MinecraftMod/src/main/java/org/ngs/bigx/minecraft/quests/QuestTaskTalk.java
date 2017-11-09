@@ -9,6 +9,8 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskTalk extends QuestTask {
 	private EntityCustomNpc npc;
 	
+	private int questTypeId = 3;
+	
 	public QuestTaskTalk(QuestManager questManager, EntityPlayer p, EntityCustomNpc n) {
 		this(questManager, p, n, false);
 	}

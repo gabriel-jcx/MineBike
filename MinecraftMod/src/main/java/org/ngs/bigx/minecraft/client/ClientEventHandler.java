@@ -1,9 +1,13 @@
 package org.ngs.bigx.minecraft.client;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
+import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
@@ -26,7 +30,10 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -336,6 +343,33 @@ public class ClientEventHandler implements IPedalingComboEvent {
         */
 	}
 	
+	protected void sendLocationGameTag(LocationChangeTagEnum questActivityTagEnum)
+	{
+		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
+		try {
+			int questTypeEnum = ((0xff & questTypeId) << 4) | (0xf & questActivityTagEnum.getQuestActivityTagEnum());
+			BiGXGameTag biGXGameTag = new BiGXGameTag();
+			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_QUEST_BEGINNING | questTypeEnum));
+			
+			BigxClientContext.sendGameTag(biGXGameTag);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXNetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXInternalGamePluginExcpetion e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	//Called whenever the client ticks
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -462,11 +496,13 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			 */
 			
 			// Detect if there is area changes where the player is in
-			ClientAreaEvent.detectAreaChange(p);
+			Area tempCurrentArea = ClientAreaEvent.detectAreaChange(p);
 			
 			if(ClientAreaEvent.isAreaChange())
 			{
 				ClientAreaEvent.unsetAreaChangeFlag();
+				
+				
 				
 				if(ClientAreaEvent.previousArea != null){
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){

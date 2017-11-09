@@ -9,6 +9,8 @@ public class QuestTaskGoto extends QuestTask {
 
 	public Vec3 edge1, edge2;
 	
+	private int questTypeId = 2;
+	
 	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3 e1, Vec3 e2, boolean required) {
 		super(questManager, true);
 		player = p;

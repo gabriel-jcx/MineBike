@@ -30,7 +30,7 @@ public class ClientAreaEvent {
 		areaChangedFlag = false;
 	}
 	
-	public static void detectAreaChange(EntityPlayer player)
+	public static Area detectAreaChange(EntityPlayer player)
 	{
 		if(previousArea == null)
 		{
@@ -51,6 +51,8 @@ public class ClientAreaEvent {
 			areaChangedFlag = true;
 			previousArea = currentArea;
 		}
+		
+		return currentArea;
 	}
 	
 	

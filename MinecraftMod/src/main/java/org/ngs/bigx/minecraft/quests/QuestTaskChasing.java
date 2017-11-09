@@ -11,8 +11,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
+import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
+import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
@@ -170,6 +172,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	public static final int damageUpEffectTickCountMax = 60;
 	private static int speedUpEffectTickCount = 0;
 	private static int damageUpEffectTickCount = 0;
+	
+	private int questTypeId = 1;
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
@@ -939,6 +943,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
 		System.out.println("Checking if Chasing Quest is Complete");
 		if (thiefHealthCurrent <= 0) {
+			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
 //			try {
 ////				context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 //			} catch (SocketException e) {
@@ -1044,6 +1049,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		// CHASE QUEST LOSE CONDITION
 		if(timeFallBehind >= 30)
 		{
+			this.sendQuestGameTag(QuestActivityTagEnum.FAILED);
 //			try {
 //				context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
 //			} catch (SocketException e) {

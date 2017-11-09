@@ -30,6 +30,8 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	private EntityCustomNpc npc;
 	private int botHealth;
 	
+	private int questTypeId = 4;
+	
 	public QuestTaskTutorial(QuestManager questManager, EntityPlayer p, EntityCustomNpc n) {
 		this(questManager, p, n, true);
 	}
