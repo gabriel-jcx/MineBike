@@ -1247,7 +1247,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 					break;
 				}
 				
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsound2p " + chosenSong + " loop");
 //				if (player.worldObj.isRemote)
 //					Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(chosenSong)));
 				

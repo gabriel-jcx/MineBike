@@ -52,39 +52,39 @@
     "sounds": ["pedalinglevelup"]
   },
   "mus_metal1": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"Nightmares","stream": true},"Nightmares"]
   },
   "mus_metal2": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"RacerX","stream": true},"RacerX"]
   },
   "mus_metal3": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"Redemption","stream": true},"Redemption"]
   },
   "mus_metal4": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"Trilogy","stream": true},"Trilogy"]
   },
   "mus_metal5": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"DragonForce","stream": true},"DragonForce"]
   },
   "mus_breaks1": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"Surfing","stream": true},"Surfing"]
   },
   "mus_breaks2": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"Sneakman","stream": true},"Sneakman"]
   },
   "mus_breaks3": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"BlockRockin","stream": true},"BlockRockin"]
   },
   "mus_breaks4": {
-    "category": "music",
+    "category": "player",
 	"sounds": [{"name":"Nasty","stream": true}]
   }
 }
