@@ -407,7 +407,7 @@ public class CommonEventHandler {
 									if (ws.getBlock(xx, yy, zz) == Blocks.wooden_door) {
 										double blockDistance = Math.sqrt(Math.pow(Math.abs(xx-pX), 2) + Math.pow(Math.abs((yy-pY)), 2) + Math.pow(Math.abs(zz-pZ), 2));
 										// Open if close
-										int gottenMeta = Minecraft.getMinecraft().thePlayer.worldObj.getBlockMetadata(xx, yy, zz);
+										int gottenMeta = ws.getBlockMetadata(xx, yy, zz);
 										int meta = gottenMeta;
 										
 										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
