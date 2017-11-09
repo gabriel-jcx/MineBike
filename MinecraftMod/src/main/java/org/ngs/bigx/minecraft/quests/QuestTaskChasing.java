@@ -61,6 +61,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -73,6 +74,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -175,6 +177,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	private int questTypeId = 1;
 	
+	public String chosenSong = "";
+	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
 		super(questManager, true);
 
@@ -234,7 +238,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
+		
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
+		
+		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
+		chosenSong = "";
+		
 //		System.out.println("goBackToTheOriginalWorld");
 //		deactivateTask();
 		
@@ -352,7 +361,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		
 		if( (currentTime - comboTime) < comboTimeLimit )
 			comboCount ++;
-		else{
+		else {
 			if (comboCount > bestCombo)
 				bestCombo = comboCount;
 			comboCount = 0;
@@ -1200,6 +1209,48 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			{
 				player.rotationPitch = 0f;
 				player.rotationYaw = 0f;
+				
+				/**
+				 * PLAYING MUSIC FOR CHASING QUEST
+				 */
+				
+				switch (thiefLevel) {
+				case 1:
+					chosenSong = "minebike:mus_metal1";
+					break;
+				case 2:
+					chosenSong = "minebike:mus_breaks1";
+					break;
+				case 3:
+					chosenSong = "minebike:mus_metal5";
+					break;
+				case 4:
+					chosenSong = "minebike:mus_metal3";
+					break;
+				case 5:
+					chosenSong = "minebike:mus_breaks2";
+					break;
+				case 6:
+					chosenSong = "minebike:mus_metal4";
+					break;
+				case 7:
+					chosenSong = "minebike:mus_breaks3";
+					break;
+				case 8:
+					chosenSong = "minebike:mus_metal2";
+					break;
+				case 9:
+					chosenSong = "minebike:mus_breaks4";
+					break;
+				default:
+					chosenSong = "minebike:mus_metal2";
+					break;
+				}
+				
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
+//				if (player.worldObj.isRemote)
+//					Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(chosenSong)));
+				
 			}
 			if(countdown == 8)
 			{
