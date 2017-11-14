@@ -9,20 +9,27 @@ public class Area
 		EVENT, ROOM, BUILDING, PLACE, WORLD, NOTASSIGNED
 	}
 	
-	public Area(Vec3 pointA, Vec3 pointB, String name, AreaTypeEnum type, int dimension)
+	public Area(Vec3 pointA, Vec3 pointB, String name, AreaTypeEnum type, int dimension, int id)
 	{
 		this.pointA = pointA;
 		this.pointB = pointB;
 		this.name = name;
 		this.type = type;
 		this.dimension = dimension;
+		this.id = id;
 	}
 	
+	private int id = 0;
 	public Vec3 pointA;
 	public Vec3 pointB;
 	public String name = "";
 	public AreaTypeEnum type = AreaTypeEnum.NOTASSIGNED;
 	public int dimension = 0;
+	
+	public int getId()
+	{
+		return this.id;
+	}
 	
 	@Override
 	public boolean equals(Object object)

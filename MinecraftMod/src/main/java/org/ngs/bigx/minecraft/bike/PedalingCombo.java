@@ -35,6 +35,10 @@ public class PedalingCombo {
 	public int getGauge() {
 		return gauge;
 	}
+	
+	public int getGaugePercentage() {
+		return gauge / gaugeMaxLimit;
+	}
 
 	public int getGaugeFilledOnCurrentLevel() {
 		return gaugeFilledOnCurrentLevel;

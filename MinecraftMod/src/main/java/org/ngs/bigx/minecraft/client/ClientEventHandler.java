@@ -93,6 +93,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static int animTickChasingFade;
 	public static final int animTickChasingFadeLength = 20;
 	
+	private static int gaugeTaggingTickCount = 0;
+	private static final int gaugeTaggingTickCountMax = 5*10*3; // Every Three Seconds
+	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
 	
@@ -493,7 +496,20 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				p.worldObj.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
 			}
 			
+			/**
+			 * Pedaling Combo
+			 */
 			pedalingCombo.decreaseGauge();
+			
+			gaugeTaggingTickCount++;
+			
+			if(gaugeTaggingTickCount == gaugeTaggingTickCountMax)
+			{
+				gaugeTaggingTickCount = 0;
+
+				sendGaugeGameTag(pedalingCombo.getGaugePercentage());
+			}
+			
 			/**
 			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
 			 */
@@ -504,8 +520,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			if(ClientAreaEvent.isAreaChange())
 			{
 				ClientAreaEvent.unsetAreaChangeFlag();
-				
-				
 				
 				if(ClientAreaEvent.previousArea != null){
 					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
@@ -542,6 +556,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						if (ClientAreaEvent.previousArea.type == AreaTypeEnum.EVENT)
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
+					
+					ClientAreaEvent.sendLocationGameTag(ClientAreaEvent.previousArea.getId());
 				}
 				else
 					GuiMessageWindow.showMessage("Out of Continent Pangea...");
@@ -597,6 +613,36 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
 				BiGXPacketHandler.sendPacket(context.bigxclient, packet);
 			}
+		}
+	}
+	
+	public static void sendGaugeGameTag(int gaugePercentage)
+	{
+		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
+		try {
+			gaugePercentage = gaugePercentage<0?0:gaugePercentage;
+			gaugePercentage = gaugePercentage>100?100:gaugePercentage;
+			
+			int locationTypeEnum = (0xfff & gaugePercentage);
+			BiGXGameTag biGXGameTag = new BiGXGameTag();
+			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_LOCATION_BEGINNING | locationTypeEnum));
+			
+			BigxClientContext.sendGameTag(biGXGameTag);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXNetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXInternalGamePluginExcpetion e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
