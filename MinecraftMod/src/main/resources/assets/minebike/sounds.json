@@ -51,37 +51,56 @@
     "category": "player",
     "sounds": ["pedalinglevelup"]
   },
+  "mus_metal": {
+	"category": "player",
+	"sounds": [
+	  {"name":"Nightmares","stream": true},
+	  {"name":"RacerX","stream": true},
+	  {"name":"Redemption","stream": true},
+	  {"name":"Trilogy","stream": true},
+	  {"name":"DragonForce","stream": true}
+	]
+  },
+  "mus_breaks": {
+	"category": "player",
+	"sounds": [
+	  {"name":"Surfing","stream": true},
+	  {"name":"Sneakman","stream": true},
+	  {"name":"BlockRockin","stream": true},
+	  {"name":"Nasty","stream": true}
+	]
+  },
   "mus_metal1": {
     "category": "player",
-	"sounds": [{"name":"Nightmares","stream": true},"Nightmares"]
+	"sounds": [{"name":"Nightmares","stream": true}]
   },
   "mus_metal2": {
     "category": "player",
-	"sounds": [{"name":"RacerX","stream": true},"RacerX"]
+	"sounds": [{"name":"RacerX","stream": true}]
   },
   "mus_metal3": {
     "category": "player",
-	"sounds": [{"name":"Redemption","stream": true},"Redemption"]
+	"sounds": [{"name":"Redemption","stream": true}]
   },
   "mus_metal4": {
     "category": "player",
-	"sounds": [{"name":"Trilogy","stream": true},"Trilogy"]
+	"sounds": [{"name":"Trilogy","stream": true}]
   },
   "mus_metal5": {
     "category": "player",
-	"sounds": [{"name":"DragonForce","stream": true},"DragonForce"]
+	"sounds": [{"name":"DragonForce","stream": true}]
   },
   "mus_breaks1": {
     "category": "player",
-	"sounds": [{"name":"Surfing","stream": true},"Surfing"]
+	"sounds": [{"name":"Surfing","stream": true}]
   },
   "mus_breaks2": {
     "category": "player",
-	"sounds": [{"name":"Sneakman","stream": true},"Sneakman"]
+	"sounds": [{"name":"Sneakman","stream": true}]
   },
   "mus_breaks3": {
     "category": "player",
-	"sounds": [{"name":"BlockRockin","stream": true},"BlockRockin"]
+	"sounds": [{"name":"BlockRockin","stream": true}]
   },
   "mus_breaks4": {
     "category": "player",

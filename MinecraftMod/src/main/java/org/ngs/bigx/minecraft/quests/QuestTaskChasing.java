@@ -177,6 +177,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 	
 	private int questTypeId = 1;
 	
+	private int initialHunger;
+	
 	public String chosenSong = "";
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
@@ -256,6 +258,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		lastCountdownTickTimestamp = 0;
 		pausedTime = 0;
 		thiefLevelSet = false;
+		
+		Minecraft.getMinecraft().thePlayer.getFoodStats().setFoodLevel(initialHunger);
 		
 		if(world.isRemote)
 			((BigxClientContext)context).setSpeed(0);
@@ -462,6 +466,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 		boolean isReboot = !isActive;
 //		player.setGameType(GameType.CREATIVE);
 		
+		initialHunger = mc.thePlayer.getFoodStats().getFoodLevel();
 		time = 0;
 		initThiefStat();
 		countdown = 11;
@@ -1214,42 +1219,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 				 * PLAYING MUSIC FOR CHASING QUEST
 				 */
 				
-				switch (thiefLevel) {
-				case 1:
-					chosenSong = "minebike:mus_metal1";
-					break;
-				case 2:
-					chosenSong = "minebike:mus_breaks1";
-					break;
-				case 3:
-					chosenSong = "minebike:mus_metal5";
-					break;
-				case 4:
-					chosenSong = "minebike:mus_metal3";
-					break;
-				case 5:
-					chosenSong = "minebike:mus_breaks2";
-					break;
-				case 6:
-					chosenSong = "minebike:mus_metal4";
-					break;
-				case 7:
-					chosenSong = "minebike:mus_breaks3";
-					break;
-				case 8:
-					chosenSong = "minebike:mus_metal2";
-					break;
-				case 9:
-					chosenSong = "minebike:mus_breaks4";
-					break;
-				default:
-					chosenSong = "minebike:mus_metal2";
-					break;
-				}
+				if (thiefLevel < 2 || thiefLevel > 3)
+					chosenSong = "minebike:mus_metal";
+				else
+					chosenSong = "minebike:mus_breaks";
 				
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsound2p " + chosenSong + " loop");
-//				if (player.worldObj.isRemote)
-//					Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147673_a(new ResourceLocation(chosenSong)));
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
 				
 			}
 			if(countdown == 8)
