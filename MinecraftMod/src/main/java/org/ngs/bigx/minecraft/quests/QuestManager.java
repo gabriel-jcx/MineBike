@@ -135,6 +135,9 @@ public class QuestManager {
 	
 	// WARNING: volatile - use this to read information, not set new information
 	public IQuestTask getActiveQuestTask() {
+		if(availableQuestList.get(activeQuestId) == null)
+			return null;
+		
 		return availableQuestList.get(activeQuestId).getCurrentQuestTask();
 	}
 	

@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
@@ -23,19 +24,26 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
+import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiFinishChasingQuest;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostMining;
 import org.ngs.bigx.minecraft.client.skills.SkillManager;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
+import com.sun.xml.internal.ws.api.policy.PolicyResolver.ServerContext;
+
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -123,10 +131,47 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			event.entity.motionY = 0;
 	}
 	
-	@SubscribeEvent
-	public void onKeyInput(KeyInputEvent event) {
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+	public void onEvent(KeyInputEvent event) 
+	{
 		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
 			Minecraft.getMinecraft().thePlayer.setSprinting(false);
+		}
+		if( (Keyboard.getEventKey() == 1) && (Keyboard.getEventCharacter() != '\u0000')) // ESC
+		{
+			if(Minecraft.getMinecraft() == null)
+				return;
+			
+			if( (Minecraft.getMinecraft().thePlayer != null) && (!Minecraft.getMinecraft().isGamePaused()) )
+			{
+				if(!Minecraft.getMinecraft().isGamePaused())
+				{
+//					System.out.println("ESC Pressed");
+					EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+					
+					if(player.dimension == WorldProviderFlats.dimID)
+					{
+						BigxServerContext context = BiGX.instance().serverContext;;
+						
+						if(context.getQuestManager() == null)
+						{
+//							System.out.println("ESC Pressed 1");
+							return;
+						}
+						
+						if(context.getQuestManager().getActiveQuestTask() == null)
+						{
+//							System.out.println("ESC Pressed 2");
+							return;
+						}
+						
+						GuiFinishChasingQuest gui = new GuiFinishChasingQuest((QuestTaskChasing) context.getQuestManager().getActiveQuestTask()); 
+
+						Minecraft.getMinecraft().displayGuiScreen(gui);
+					}
+				}
+			}
 		}
 		if (keyBindingToggleMouse.isPressed()) {
 			enableLock = !enableLock;
@@ -181,6 +226,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			context.getCurrentGameState().getSkillManager().useCurrentlySelectedSkill();
 		}
+		
 //		if(keyBindingToggleQuestListGui.isPressed())
 //		{
 ////			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");

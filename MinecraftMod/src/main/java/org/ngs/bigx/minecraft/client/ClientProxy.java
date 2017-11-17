@@ -32,8 +32,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -81,20 +86,5 @@ public class ClientProxy extends CommonProxy {
 	
 	public void postInit(FMLPostInitializationEvent e) {
 		super.postInit(e);
-//		try {
-//			BiGXPacketHandler.connect(BiGX.instance().context.bigxclient);
-//		} catch (SocketException e1) {
-//			e1.printStackTrace();
-//		} catch (UnknownHostException e1) {
-//			e1.printStackTrace();
-//		} catch (BiGXNetException e1) {
-//			e1.printStackTrace();
-//		} catch (BiGXInternalGamePluginExcpetion e1) {
-//			e1.printStackTrace();
-//		}
 	}
-	
-	
-	
-	
 }
