@@ -10,6 +10,8 @@ import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession.eQuestEventRewardSessionType;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -37,18 +39,21 @@ public class QuestEventHandler {
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionList = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteList = new ArrayList<IQuestEventCheckComplete>();
 	private static List<IQuestEventItemPickUp> questEventItemPickUpList = new ArrayList<IQuestEventItemPickUp>();
+	private static List<IQuestEventRewardSession> questEventRewardSessionList = new ArrayList<IQuestEventRewardSession>();
 	
 	private static List<IQuestEventAttack> questEventAttackListAdd = new ArrayList<IQuestEventAttack>();
 	private static List<IQuestEventItemUse> questEventItemUseListAdd = new ArrayList<IQuestEventItemUse>();
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionListAdd = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteListAdd = new ArrayList<IQuestEventCheckComplete>();
 	private static List<IQuestEventItemPickUp> questEventItemPickUpListAdd = new ArrayList<IQuestEventItemPickUp>();
+	private static List<IQuestEventRewardSession> questEventRewardSessionListAdd = new ArrayList<IQuestEventRewardSession>();
 	
 	private static List<IQuestEventAttack> questEventAttackListDel = new ArrayList<IQuestEventAttack>();
 	private static List<IQuestEventItemUse> questEventItemUseListDel = new ArrayList<IQuestEventItemUse>();
 	private static List<IQuestEventNpcInteraction> questEventNpcInteractionListDel = new ArrayList<IQuestEventNpcInteraction>();
 	private static List<IQuestEventCheckComplete> questEventCheckCompleteListDel = new ArrayList<IQuestEventCheckComplete>();
 	private static List<IQuestEventItemPickUp> questEventItemPickUpListDel = new ArrayList<IQuestEventItemPickUp>();
+	private static List<IQuestEventRewardSession> questEventRewardSessionListDel = new ArrayList<IQuestEventRewardSession>();
 	
 	public QuestEventHandler()
 	{
@@ -121,6 +126,28 @@ public class QuestEventHandler {
 	{
 		synchronized (questEventItemPickUpListDel) {
 			questEventItemPickUpListDel.remove(questEventItemPickUp);
+		}
+	}
+
+	public static void registerQuestEventRewardSession(IQuestEventRewardSession questEventRewardSession)
+	{
+		synchronized (questEventRewardSessionListAdd) {
+			questEventRewardSessionListAdd.add(questEventRewardSession);
+		}
+	}
+	
+	public static void unregisterQuestEventRewardSession(IQuestEventRewardSession questEventRewardSession)
+	{
+		synchronized (questEventRewardSessionListDel) {
+			questEventRewardSessionListDel.remove(questEventRewardSession);
+		}
+	}
+	
+	public static void unregisterAllQuestEventRewardSession()
+	{
+		synchronized (questEventRewardSessionList) {
+			for(int i=0; i<questEventRewardSessionList.size(); i++)
+				questEventRewardSessionList.remove(0);
 		}
 	}
 	
@@ -370,4 +397,52 @@ public class QuestEventHandler {
 			questEventItemPickUpListDel.clear();
 		}
     }
+	
+	public static void onQuestEventRewardSessionButtonClicked(eQuestEventRewardSessionType e)
+	{
+		switch(e)
+		{
+		case CONTINUE:
+			synchronized (questEventRewardSessionList) {
+				for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionList)
+				{
+					questEventRewardSession.onRewardSessionContinueClicked();
+				}
+			}
+			break;
+		case RETRY:
+			synchronized (questEventRewardSessionList) {
+				for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionList)
+				{
+					questEventRewardSession.onRewardSessionRetryClicked();
+				}
+			}
+			break;
+		case EXIT:
+			synchronized (questEventRewardSessionList) {
+				for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionList)
+				{
+					questEventRewardSession.onRewardSessionExitClicked();
+				}
+			}
+			break;
+		default:
+			break;
+		};
+		
+		synchronized (questEventRewardSessionListAdd) {
+			for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionListAdd)
+			{
+				questEventRewardSessionList.add(questEventRewardSession);
+			}
+			questEventRewardSessionListAdd.clear();
+		}
+		synchronized (questEventRewardSessionListDel) {
+			for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionListDel)
+			{
+				questEventRewardSessionList.remove(questEventRewardSession);
+			}
+			questEventRewardSessionListDel.clear();
+		}
+	}
 }

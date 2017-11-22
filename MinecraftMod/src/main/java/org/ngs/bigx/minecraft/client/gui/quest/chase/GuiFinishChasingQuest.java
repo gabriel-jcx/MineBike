@@ -1,6 +1,8 @@
 package org.ngs.bigx.minecraft.client.gui.quest.chase;
 
+import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession.eQuestEventRewardSessionType;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -8,16 +10,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class GuiFinishChasingQuest extends GuiScreen {
-	private QuestTaskChasing questTask;
-	
 	// Need context in order for the GUI to function properly - keep empty constructor protected
-	protected GuiFinishChasingQuest() {
+	public GuiFinishChasingQuest() {
 		super();
-	}
-	
-	public GuiFinishChasingQuest(QuestTaskChasing task) {
-		this();
-		questTask = task;
 	}
 	
 	@Override
@@ -58,19 +53,15 @@ public class GuiFinishChasingQuest extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		// TODO replace with enums?
 		switch(button.id) {
 		case 1:
-			questTask.endGuiChoice = 1;
-			// questTask.resumeTask();
+			QuestEventHandler.onQuestEventRewardSessionButtonClicked(eQuestEventRewardSessionType.CONTINUE);
 			break;
 		case 2:
-			questTask.endGuiChoice = 2;
-			// questTask.restartTask();
+			QuestEventHandler.onQuestEventRewardSessionButtonClicked(eQuestEventRewardSessionType.RETRY);
 			break;
 		case 3:
-			questTask.endGuiChoice = 3;
-//			 questTask.waitForRewardPickupAndContinue(); -- but public version for this GUI
+			QuestEventHandler.onQuestEventRewardSessionButtonClicked(eQuestEventRewardSessionType.EXIT);
 			break;
 		default:
 			System.out.println("Clicked Unimplemented Button");

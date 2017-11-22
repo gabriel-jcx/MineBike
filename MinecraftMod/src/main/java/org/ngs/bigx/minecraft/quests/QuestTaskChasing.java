@@ -50,6 +50,7 @@ import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
+import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
@@ -87,7 +88,7 @@ import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
+public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
@@ -1035,7 +1036,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			
 			Minecraft mc = Minecraft.getMinecraft();
 			System.out.println(context instanceof BigxServerContext);
-			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(this); 
+			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
 			
 			if (endOfChaseItemCounter == 0) {
 				endOfChaseItemCounter = -1;
@@ -1796,5 +1797,23 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventAttack, IQ
 			// Power Up Effect On
 			damageUpEffectTickCount = damageUpEffectTickCountMax;
 		}
+	}
+
+	@Override
+	public void onRewardSessionContinueClicked() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRewardSessionRetryClicked() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onRewardSessionExitClicked() {
+		// TODO Auto-generated method stub
+		
 	}
 }

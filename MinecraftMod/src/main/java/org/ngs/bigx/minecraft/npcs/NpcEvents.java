@@ -11,6 +11,7 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskTalk;
@@ -79,7 +80,10 @@ public class NpcEvents {
 			{
 				System.out.println("InteractWithOfficer Quest Generation: CLIENT");
 				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
-				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
+				QuestEventHandler.unregisterAllQuestEventRewardSession();
+				QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
+				QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
+				quest.addTasks(questTaskChasing);
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 			}
@@ -87,7 +91,10 @@ public class NpcEvents {
 			{
 				System.out.println("InteractWithOfficer Quest Generation: SERVER");
 				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
-				quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
+				QuestEventHandler.unregisterAllQuestEventRewardSession();
+				QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4);
+				QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
+				quest.addTasks(questTaskChasing);
 				if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 			}

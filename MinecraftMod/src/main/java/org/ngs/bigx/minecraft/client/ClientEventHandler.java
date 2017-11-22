@@ -166,7 +166,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 							return;
 						}
 						
-						GuiFinishChasingQuest gui = new GuiFinishChasingQuest((QuestTaskChasing) context.getQuestManager().getActiveQuestTask()); 
+						GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
 
 						Minecraft.getMinecraft().displayGuiScreen(gui);
 					}
@@ -176,7 +176,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		if (keyBindingToggleMouse.isPressed()) {
 			enableLock = !enableLock;
 			System.out.println("Movement/Look lock: " + enableLock);
-			
 		}
 		if (keyBindingToggleBikeToMining.isPressed()) {
 //			pedalingModeState ++;

@@ -81,8 +81,6 @@ public class CommonEventHandler {
 	private static int thiefMaxLevel = 1;
 	
 	public static LevelSystem levelSys = new LevelSystem();
-//	public static QuestTaskChasing chaseQuest = new QuestTaskChasing();
-//	public static QuestTaskChasingFire chaseQuestFire = new QuestTaskChasingFire();
 	boolean chaseQuestInProgress = false;
 	
 	private static int onPlayerTickEventCount = 0;
