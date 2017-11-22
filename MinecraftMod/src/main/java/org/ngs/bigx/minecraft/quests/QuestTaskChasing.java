@@ -181,8 +181,13 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	private int initialHunger;
 	
 	public String chosenSong = "";
+
+	public static boolean isContinueSelected = false;
+	public static boolean isRetrySelected = false;
+	public static boolean isExitSelected = false;
 	
-	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) {
+	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) 
+	{
 		super(questManager, true);
 
 		this.levelSys = levelSys;
@@ -241,13 +246,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
-		
+		System.out.println("well1");
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
-		
+
+		System.out.println("well2");
 		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
 		chosenSong = "";
 		
-//		System.out.println("goBackToTheOriginalWorld");
+		System.out.println("goBackToTheOriginalWorld");
 //		deactivateTask();
 		
 		chasingQuestOnGoing = false;
@@ -1058,6 +1064,108 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				}
 			}
 		}
+//		else
+		
+		if(isExitSelected)
+		{
+			System.out.println("isExitSelected");
+			
+			isContinueSelected = false;
+			isRetrySelected = false;
+			isExitSelected = false;
+			
+			isActive = false;
+			completed = false;
+			System.out.println("well");
+			goBackToTheOriginalWorld(ws, player);
+		}
+		
+		if(isRetrySelected)
+		{
+			System.out.println("isRetrySelected");
+			isContinueSelected = false;
+			isRetrySelected = false;
+			isExitSelected = false;
+			
+			init();
+			
+			QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+
+			chasingQuestInitialPosX = 1;
+			chasingQuestInitialPosY = 10;
+			chasingQuestInitialPosZ = 0;
+			
+			blocks = new ArrayList<Vec3>();
+			
+			for (int z = -16; z < (int)player.posZ+64; ++z) {
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+			}
+			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+			}
+			
+			for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+			}
+			
+			chasingQuestOnGoing = true;
+			chasingQuestOnCountDown = true; 
+			questTimeStamp = System.currentTimeMillis();
+
+			// Need to remove the previous thief
+			if(npc != null)
+				command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+						
+//			if(isContinueSelected)
+//			{
+//				isContinueSelected = false;
+//				isRetrySelected = false;
+//				isExitSelected = false;
+//				
+//				init();
+//				
+//				QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+//
+//				chasingQuestInitialPosX = 1;
+//				chasingQuestInitialPosY = 10;
+//				chasingQuestInitialPosZ = 0;
+//				
+//				blocks = new ArrayList<Vec3>();
+//				
+//				for (int z = -16; z < (int)player.posZ+64; ++z) {
+//					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+//					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+//				}
+//				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+//					setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+//				}
+//				
+//				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+//					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+//					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+//					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+//				}
+//				
+//				chasingQuestOnGoing = true;
+//				chasingQuestOnCountDown = true; 
+//				questTimeStamp = System.currentTimeMillis();
+//
+//				// Need to remove the previous thief
+//				if(npc != null)
+//					command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+//			}
+		}
 		
 //		waitForRewardPickupAndContinue();
 		
@@ -1469,6 +1577,13 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			{	
 				checkComboCount();
 				
+				if(isExitSelected)
+				{
+					isContinueSelected = false;
+					isRetrySelected = false;
+					isExitSelected = false;
+				}
+				
 				if(chasingQuestOnGoing)
 				{
 //					if (guiChasingQuest != null)
@@ -1531,6 +1646,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		completed = false;
 		countdown = 11;
 		pausedTime = 0;
+		comboCount = 0;
 		
 		questSettings = new ArrayList<Integer>();
 		StageSettings stagesettings;
@@ -1801,19 +1917,19 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 
 	@Override
 	public void onRewardSessionContinueClicked() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Continue Clicked");
+		isContinueSelected = true;
 	}
 
 	@Override
 	public void onRewardSessionRetryClicked() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Retry Clicked");
+		isRetrySelected = true;
 	}
 
 	@Override
 	public void onRewardSessionExitClicked() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Exit Clicked");
+		isExitSelected = true;
 	}
 }

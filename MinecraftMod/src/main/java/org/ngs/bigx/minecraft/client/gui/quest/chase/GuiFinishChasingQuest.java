@@ -67,6 +67,8 @@ public class GuiFinishChasingQuest extends GuiScreen {
 			System.out.println("Clicked Unimplemented Button");
 			break;
 		}
+
+		Minecraft.getMinecraft().thePlayer.closeScreen();
 	}
 
     @Override
