@@ -35,6 +35,7 @@ import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -613,7 +614,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						chosenSong = "minebike:bg_avalon loop";
 					}
 					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeContinentPangea) {
-						chosenSong = "minebike:bg_ladylake";
+						chosenSong = "minebike:bg_ladylake loop";
+					}
+					
+					if (p.dimension == WorldProviderEmpty.dimID) {
+						chosenSong = "minebike:bg_rama loop";
 					}
 					
 					if (chosenSong != "") {
@@ -621,6 +626,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong);
 					}
 						

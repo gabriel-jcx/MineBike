@@ -76,6 +76,10 @@
 	"category": "player",
 	"sounds": [{"name":"BG/MedievalFaire","stream": true}]
   },
+  "bg_rama": {
+	"category": "player",
+	"sounds": [{"name":"BG/Rama","stream": true}]
+  },
   "mus_metal": {
 	"category": "player",
 	"sounds": [
