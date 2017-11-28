@@ -51,6 +51,31 @@
     "category": "player",
     "sounds": ["pedalinglevelup"]
   },
+  "bg_random": {
+    "category": "player",
+	"sounds": [
+	  {"name":"BG/Avalon","stream": true},
+	  {"name":"BG/Camelot","stream": true},
+	  {"name":"BG/LadyOfTheLake","stream": true},
+	  {"name":"BG/MedievalFaire","stream": true}
+	]
+  },
+  "bg_avalon": {
+	"category": "player",
+	"sounds": [{"name":"BG/Avalon","stream": true}]
+  },
+  "bg_camelot": {
+	"category": "player",
+	"sounds": [{"name":"BG/Camelot","stream": true}]
+  },
+  "bg_ladylake": {
+	"category": "player",
+	"sounds": [{"name":"BG/LadyOfTheLake","stream": true}]
+  },
+  "bg_faire": {
+	"category": "player",
+	"sounds": [{"name":"BG/MedievalFaire","stream": true}]
+  },
   "mus_metal": {
 	"category": "player",
 	"sounds": [

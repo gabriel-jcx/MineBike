@@ -602,6 +602,29 @@ public class ClientEventHandler implements IPedalingComboEvent {
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 					
+					String chosenSong = "";
+					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeMarket) {
+						chosenSong = "minebike:bg_faire loop";
+					}
+					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeVillage) {
+						chosenSong = "minebike:bg_camelot loop";
+					}
+					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placePoliceDepartment) {
+						chosenSong = "minebike:bg_avalon loop";
+					}
+					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeContinentPangea) {
+						chosenSong = "minebike:bg_ladylake";
+					}
+					
+					if (chosenSong != "") {
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_faire stop");
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong);
+					}
+						
+					
 					ClientAreaEvent.sendLocationGameTag(ClientAreaEvent.previousArea.getId());
 				}
 				else
