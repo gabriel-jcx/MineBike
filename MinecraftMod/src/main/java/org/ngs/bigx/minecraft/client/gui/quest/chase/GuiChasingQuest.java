@@ -17,6 +17,7 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistDescriptionSlot;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistSlot;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -49,7 +50,6 @@ public class GuiChasingQuest extends GuiScreen {
 	private GuiChasingQuestLevelSlot guiChasingQuestLevelSlot;
 	
 	private Minecraft mc;
-	private BigxClientContext context;
 	
 	public GuiChasingQuest(Minecraft mc) {
 		super();
@@ -60,11 +60,6 @@ public class GuiChasingQuest extends GuiScreen {
 		
 		if(this.questLevelLock == null)
 			this.questLevelLock = new Object();
-	}
-	
-	public GuiChasingQuest(BigxClientContext c,Minecraft mc) {
-		this(mc);
-		context = c;
 	}
 	
 	@Override

@@ -10,8 +10,9 @@ public class BigxContext {
 	
 	public BiGXSuggestedGameProperties suggestedGameProperties = null;
 	public boolean suggestedGamePropertiesReady = false;
-	
-	public static BigxContext self = null;
+
+	public static BigxContext clientSelf = null;
+	public static BigxContext serverSelf = null;
 	
 	protected QuestManager questManager = null;
 	

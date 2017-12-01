@@ -167,7 +167,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 							return;
 						}
 						
-						GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
+						GuiFinishChasingQuest gui = new GuiFinishChasingQuest(false); 
 
 						Minecraft.getMinecraft().displayGuiScreen(gui);
 					}

@@ -10,9 +10,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class GuiFinishChasingQuest extends GuiScreen {
+	private boolean isContinueVisible = false; 
+	
 	// Need context in order for the GUI to function properly - keep empty constructor protected
-	public GuiFinishChasingQuest() {
+	public GuiFinishChasingQuest(boolean isContinueVisible) {
 		super();
+		this.isContinueVisible = isContinueVisible;
 	}
 	
 	@Override
@@ -26,6 +29,7 @@ public class GuiFinishChasingQuest extends GuiScreen {
 				(width-buttonWidth)/2, (height-buttonHeight)/2 - 40,
 				buttonWidth, buttonHeight,
 				I18n.format("gui.finishchasingquest.continue"));
+		continueButton.visible = isContinueVisible;
 		
 		retryButton = new GuiButton(2,
 				(width-buttonWidth)/2, (height-buttonHeight)/2,

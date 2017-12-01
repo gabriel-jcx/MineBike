@@ -172,13 +172,13 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	private int questDestinationDimensionId = -1;
 	private int questSourceDimensionId = -1;
 	
-	public LevelSystem levelSys;
+	private static LevelSystem levelSys;
 	
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
 	private boolean menuOpen = false;
-	private GuiChasingQuest guiChasingQuest;
+	private static GuiChasingQuest guiChasingQuest;
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
@@ -255,10 +255,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
-		System.out.println("well1");
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 
-		System.out.println("well2");
 		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
 		chosenSong = "";
 		
@@ -449,38 +447,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	}
 
 	public void handleQuestStart(){
-//		showLevelSelectionGui();
-		////Displaying Level Selection GUI
-		Minecraft mc = Minecraft.getMinecraft();
-		if (guiChasingQuest == null)
-			guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-		
-		guiChasingQuest.resetChasingQuestLevels();
-		
-		try {
-			for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
-			{
-				boolean islocked = false;
-				if (i > levelSys.getPlayerLevel()-1)
-					islocked = true;
-				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-				
-				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-			}
-			guiChasingQuest.selectQuestlevel(levelSys.getPlayerLevel()-1);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		} catch (GuiQuestlistException e) {
-			e.printStackTrace();
-		}
-		
-		if(mc.currentScreen == null)
-			mc.displayGuiScreen(guiChasingQuest);
-		System.out.println("Display Chasing Quest Gui");
-		////End Displaying Level Selection GUI
+		showLevelSelectionGui();
 		
 		boolean isReboot = !isActive;
 //		player.setGameType(GameType.CREATIVE);
+		Minecraft mc = Minecraft.getMinecraft();
 		
 		initialHunger = mc.thePlayer.getFoodStats().getFoodLevel();
 		time = 0;
@@ -997,6 +968,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			}
 		}
 		else if(isRewardState) {
+			npc.setDead();
+			
 			if (endOfChaseItemCounter > 0) {
 				List<EntityItem> nearbyItems = npc.worldObj.getEntitiesWithinAABB(EntityItem.class,
 						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
@@ -1019,6 +992,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			if(isExitSelected)
 			{
 				flagLeave = true;
+				chasingQuestOnGoing = false;
+			}
+			
+			if(isRetrySelected)
+			{
+				flagRetry = true;
+				chasingQuestOnGoing = false;
+			}
+			
+			if(isContinueSelected)
+			{
+				flagContinue = true;
 				chasingQuestOnGoing = false;
 			}
 		}
@@ -1474,6 +1459,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			flagAccomplished = false;
 			isRewardState = true;
 			returnValue = 2;		// ACCOMPLISHED
+
+			levelSys.levelUp();
 			
 			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
 			endingZ = (int)player.posZ;
@@ -1526,7 +1513,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			
 			Minecraft mc = Minecraft.getMinecraft();
 			System.out.println(context instanceof BigxServerContext);
-			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
+			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(true); 
 
 			if(mc.currentScreen == null) {
 				mc.displayGuiScreen(gui);
@@ -1656,6 +1643,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		pausedTime = 0;
 		comboCount = 0;
 		isRewardState = false;
+		thiefLevelSet = false;
 		
 		resetChasingQuestTaskActivityFlags();
 		
@@ -1858,10 +1846,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	{
 		return damageUpEffectTickCount;
 	}
-	public void showLevelSelectionGui(){
+
+	public void showLevelSelectionGui()
+	{
 		////Displaying Level Selection GUI
 		Minecraft mc = Minecraft.getMinecraft();
-		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		if (guiChasingQuest == null)
+		{
+			guiChasingQuest = new GuiChasingQuest(mc);
+		}
 		
 		guiChasingQuest.resetChasingQuestLevels();
 		
@@ -1870,11 +1863,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			{
 				boolean islocked = false;
 				if (i > levelSys.getPlayerLevel()-1)
+				{
 					islocked = true;
+				}
+				else
+				{
+					System.out.println("NOT LOCKED");
+				}
 				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
 				
 				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
 			}
+			guiChasingQuest.selectQuestlevel(levelSys.getPlayerLevel()-1);
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		} catch (GuiQuestlistException e) {
