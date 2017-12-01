@@ -305,6 +305,10 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	
 	public static void sendGameTag(BiGXGameTag biGXGameTag) throws NumberFormatException, SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion
 	{
+		if (bigxclient == null) {
+			System.out.println("ERROR: bigxclient is null! (Are you on the wrong network?)");
+			return;
+		}
 		bigxclient.sendGameEvent(Integer.parseInt(biGXGameTag.getTagName()), System.currentTimeMillis());
 	}
 	

@@ -965,6 +965,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		System.out.println("Checking if Chasing Quest is Complete");
 		if (thiefHealthCurrent <= 0) {
 			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
+			chasingQuestOnGoing = false;
 //			try {
 ////				context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
 //			} catch (SocketException e) {
@@ -996,7 +997,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			npc.setDead();
 			
 			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
-			if (endOfChaseItemCounter == -1) {
+			if (endOfChaseItemCounter == -1 && !npc.isDead) {
 				endOfChaseItemCounter = 15;
 				
 				Random random = new Random();
@@ -1050,18 +1051,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					mc.displayGuiScreen(gui);
 				}
 			} else {
-				if(mc.currentScreen != null) {
-					if (endGuiChoice == 1) {
-						// Continue
-					} else if (endGuiChoice == 2) {
-						// Retry
-					} else {
-						isActive = false;
-						completed = false;
-//						player.setGameType(GameType.SURVIVAL);
-						goBackToTheOriginalWorld(ws, player);
-					}
-				}
+//				if(mc.currentScreen != null) {
+//					if (endGuiChoice == 1) {
+//						// Continue
+//					} else if (endGuiChoice == 2) {
+//						// Retry
+//					} else {
+//						isActive = false;
+//						completed = false;
+////						player.setGameType(GameType.SURVIVAL);
+//						goBackToTheOriginalWorld(ws, player);
+//					}
+//				}
 			}
 		}
 //		else
