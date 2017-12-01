@@ -1617,6 +1617,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		{
 			System.out.println("[Bigx] This button is not implemented yet.");
 			
+			int tCurrentLevel = guiChasingQuest.getSelectedQuestLevelIndex();
+			
+			guiChasingQuest.selectQuestlevel(tCurrentLevel+1);
+			
+			flagRetry = true;
 			returnValue = 0;
 		}
 		else
@@ -1629,7 +1634,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		return returnValue;
 	}
 	
-
 	private void resetChasingQuestTaskActivityFlags() {
 		flagAccomplished = false;
 		flagContinue = false;
@@ -1640,7 +1644,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		flagLeave = false;
 	}
 	
-
 	@Override
 	public void init()
 	{
@@ -1693,8 +1696,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public void onNpcInteraction(EntityInteractEvent event) {
 		System.out.println("Interacting with NPC During Quest");
 		EntityPlayer player = event.entityPlayer;
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
-			handleQuestStart();
+		
+		if(!player.worldObj.isRemote)
+		{
+			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
+				handleQuestStart();
+			}
 		}
 	}
 	
