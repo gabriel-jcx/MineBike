@@ -20,7 +20,9 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
@@ -56,14 +58,18 @@ public class QuestManager {
 	private HashMap<String, Quest> availableQuestList;		// String is the ID of the quest
 	private String activeQuestId;
 	private EntityPlayer player;
-	private BigxContext context;
+	private BigxClientContext clientContext;
+	private BigxServerContext serverContext;
 	
-	public QuestManager(BigxContext context, EntityPlayer p) {
+	public QuestManager(BigxClientContext clientContext, BigxServerContext serverContext, EntityPlayer p) {
 		player = p;
 		this.availableQuestList = new HashMap<String, Quest>();
 		activeQuestId = Quest.QUEST_ID_STRING_NONE;
-		this.context = context;
-		this.context.setQuestManager(this);
+		this.clientContext = clientContext;
+		this.serverContext = serverContext;
+		
+		if(this.clientContext != null)
+			this.clientContext.setQuestManager(this);
 	}
 	
 	public void setActiveQuest(String questid) throws QuestException {
@@ -189,8 +195,12 @@ public class QuestManager {
 		}
 	}
 
-	public BigxContext getContext() {
-		return context;
+	public BigxClientContext getClientContext() {
+		return clientContext;
+	}
+
+	public BigxServerContext getServerContext() {
+		return serverContext;
 	}
 
 	public HashMap<String, Quest> getAvailableQuestList() {

@@ -8,6 +8,7 @@ import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -22,7 +23,8 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 	protected boolean isRequired;
 	protected QuestManager questManager;
 	protected boolean isActive = false;
-	protected BigxContext context;
+	protected BigxClientContext clientContext;
+	protected BigxServerContext serverContext;
 	
 	protected int questTypeId = 0;
 	
@@ -48,7 +50,8 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 	{
 		this.questManager = questManager;
 		this.isRequired = isMainTask;
-		this.context = questManager.getContext();
+		this.clientContext = questManager.getClientContext();
+		this.serverContext = questManager.getServerContext();
 	}
 	
 	public QuestManager getQuestManager() {

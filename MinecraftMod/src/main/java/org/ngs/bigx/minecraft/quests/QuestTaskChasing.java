@@ -276,7 +276,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		Minecraft.getMinecraft().thePlayer.getFoodStats().setFoodLevel(initialHunger);
 		
 		if(world.isRemote)
-			((BigxClientContext)context).setSpeed(0);
+			((BigxClientContext)clientContext).setSpeed(0);
 		
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
@@ -469,11 +469,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 //		System.out.println("Thief's level is: " + getThiefLevel());
 		
 		// INIT questSettings ArrayList if there is any
-		if(context.isSuggestedGamePropertiesReady())
+		if(serverContext.isSuggestedGamePropertiesReady())
 		{
 			time = 0; 
 			questSettings = new ArrayList<Integer>();
-			StageSettings stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+			StageSettings stagesettings = serverContext.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 			List<Stage> stageList = stagesettings.stages;
 			
 			for(int i=0; i<stageList.size();i++)
@@ -590,7 +590,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	private void generateTerrainByPatientProfile() {
 		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 		
-		if(context.isSuggestedGamePropertiesReady())
+		if(serverContext.isSuggestedGamePropertiesReady())
 		{
 			/**
 			 * Generates structures inside fence
@@ -1116,7 +1116,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					
 					setNpc(npc);
 					
-					command = new NpcCommand(context, npc);
+					command = new NpcCommand(serverContext, npc);
 					command.setSpeed(10);
 					command.enableMoving(false);
 					command.runInDirection(ForgeDirection.SOUTH);
@@ -1235,7 +1235,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				damageUpEffectTickCount--;
 			
 			long timeNow = System.currentTimeMillis();
-			if( (timeNow - lastTickTime - pausedTime) < 250 )
+			if( (timeNow - lastTickTime - pausedTime) < 125 )
 			{
 			}
 			else if(lastTickStage == 0)
@@ -1279,7 +1279,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			{
 				lastTickStage ++;
 			}
-			else if(lastTickStage == 2)
+			else if(lastTickStage == 2)// && !npc.isDead)
+			{
+				lastTickStage ++;
+			}
+			else if(lastTickStage == 3)
 			{
 				System.out.println("CLEANING 1");
 				
@@ -1292,14 +1296,50 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				/**
 				 * Terrain Cleaning
 				 */
-				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-56);
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-128, (int)player.posZ-92);
 				/**
 				 * END OF Terrain Cleaning
 				 */
 			}
-			else if(lastTickStage == 3)
+			else if(lastTickStage == 4)
 			{
 				System.out.println("CLEANING 2");
+
+				lastTickStage++;
+
+				this.pausedTime = 0;
+				this.lastTickTime = System.currentTimeMillis();
+				
+				// CLEAN the terrain behind
+				/**
+				 * Terrain Cleaning
+				 */
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-92, (int)player.posZ-56);
+				/**
+				 * END OF Terrain Cleaning
+				 */
+			}
+			else if(lastTickStage == 5)
+			{
+				System.out.println("CLEANING 3");
+				
+				lastTickStage++;
+
+				this.pausedTime = 0;
+				this.lastTickTime = System.currentTimeMillis();
+				
+				// CLEAN the terrain behind
+				/**
+				 * Terrain Cleaning
+				 */
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-56	, (int)player.posZ-24);
+				/**
+				 * END OF Terrain Cleaning
+				 */
+			}
+			else if(lastTickStage == 6)
+			{
+				System.out.println("CLEANING 4");
 				
 				lastTickStage = 0;
 
@@ -1310,7 +1350,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				/**
 				 * Terrain Cleaning
 				 */
-				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-56, (int)player.posZ-112);
+				cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ-24, (int)player.posZ-20);
 				/**
 				 * END OF Terrain Cleaning
 				 */
@@ -1321,7 +1361,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public void handlePlayTimeOnClient()
 	{
 		// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
-		BigxClientContext context = (BigxClientContext) this.context;
+		BigxClientContext context = (BigxClientContext) this.clientContext;
 		speedchange = 0f;
 		float speedchangerate = 0.025f;
 		
@@ -1433,7 +1473,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				
 				if(!player.worldObj.isRemote)
 				{
-					((BigxServerContext)context).updateQuestInformationToClient((BigxServerContext)context);
+					((BigxServerContext)serverContext).updateQuestInformationToClient((BigxServerContext)serverContext);
 				}
 				
 				try {
@@ -1447,7 +1487,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			initThiefStat();
 			countdown = 11;
 			pausedTime = 0;
-			((BigxServerContext)context).updateQuestInformationToClient(null);
+			((BigxServerContext)serverContext).updateQuestInformationToClient(null);
 		}
 	}
 	
@@ -1512,7 +1552,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			flagOpenQuestMenuGui = false;
 			
 			Minecraft mc = Minecraft.getMinecraft();
-			System.out.println(context instanceof BigxServerContext);
+			System.out.println(serverContext instanceof BigxServerContext);
 			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(true); 
 
 			if(mc.currentScreen == null) {
@@ -1653,11 +1693,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		stageList = new ArrayList<Stage>();
 		questSettings.add(0);
 		
-		if(context.suggestedGameProperties != null)
+		if(serverContext.suggestedGameProperties != null)
 		{
-			if(context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().size() != 0)
+			if(serverContext.suggestedGameProperties.getQuestProperties().getStageSettingsArray().size() != 0)
 			{
-				stagesettings = context.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
+				stagesettings = serverContext.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 				stageList = stagesettings.stages;
 				
 				for(int i=0; i<stageList.size();i++)
@@ -1672,11 +1712,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		
 		if(world.isRemote)
 		{
-			context = BiGX.instance().clientContext;
+			clientContext = BiGX.instance().clientContext;
 		}
 		else
 		{
-			context = BiGX.instance().serverContext;
+			serverContext = BiGX.instance().serverContext;
 		}
 	}
 	
