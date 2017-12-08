@@ -38,7 +38,9 @@ public class NpcCommand {
 	private static boolean theifOnFireChaseQuestSpawnFlag = false;
 
 	private static BigxContext bigxContext;
-
+	
+	private double runStartX, runStartZ;
+	
 	public NpcCommand(BigxContext bigxContext, EntityCustomNpc npc) {
 		this.npc = npc;
 		this.role = 0;
@@ -261,6 +263,10 @@ public class NpcCommand {
 	
 	public void runInDirection(final ForgeDirection direction) {
 		final Timer timer = new Timer();
+		
+		runStartX = npc.posX;
+		runStartZ = npc.posZ;
+		
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
@@ -273,20 +279,20 @@ public class NpcCommand {
 				npc.ai.setMovingPath(new ArrayList());
 				switch(direction) {
 				case NORTH:
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX, yy, (int)npc.posZ - 20});
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX, yy, (int)npc.posZ - 30});
+					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 20});
+					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 30});
 					break;
 				case SOUTH:
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX, yy, (int)npc.posZ + 20});
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX, yy, (int)npc.posZ + 30});
+					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 20});
+					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 30});
 					break;
 				case EAST:
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 20, yy, (int)npc.posZ});
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 30, yy, (int)npc.posZ});
+					npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 20, yy, (int)runStartZ});
+					npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 30, yy, (int)runStartZ});
 					break;
 				case WEST:
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)npc.posZ});
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)npc.posZ});
+					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)runStartZ});
+					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)runStartZ});
 					break;
 				default:
 					break;
