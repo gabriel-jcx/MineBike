@@ -28,6 +28,7 @@ public class NpcDatabase {
 		map.put("Trader", NpcLocations.trader);
 		map.put("Police Officer", NpcLocations.officer);
 //		map.put("Thief", NpcLocations.jailedthief1);
+		map.put("Tutorial Guy", NpcLocations.tutorialGuy);
 		return map;
 	}
 	
@@ -90,6 +91,8 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
 		if (name.contains("Telly Port"))
 			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
+		if (name.contains("Tutorial Guy"))
+			return "customnpcs:textures/entity/humanmale/CasualSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}

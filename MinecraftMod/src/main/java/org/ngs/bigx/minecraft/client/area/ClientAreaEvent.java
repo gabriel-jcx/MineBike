@@ -154,7 +154,7 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(585, 54, -4), Vec3.createVectorHelper(596, 100, 4), 
 				BiGXTextBoxDialogue.instructionsDashJump, AreaTypeEnum.ROOM, 102, 21), AreaTypeEnum.ROOM);
 		addArea(new Area(Vec3.createVectorHelper(596, 54, -4), Vec3.createVectorHelper(610, 100, 4), 
-				BiGXTextBoxDialogue.instructionsDrinkPotion, AreaTypeEnum.ROOM, 102, 22), AreaTypeEnum.ROOM);
+				BiGXTextBoxDialogue.instructionsExitTutorial, AreaTypeEnum.ROOM, 102, 22), AreaTypeEnum.ROOM);
 	}
 	
 	public static void addArea(Area areaToAdd, AreaTypeEnum areaType)

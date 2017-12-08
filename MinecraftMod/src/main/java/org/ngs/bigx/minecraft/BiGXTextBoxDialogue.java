@@ -75,7 +75,7 @@ public class BiGXTextBoxDialogue {
 	public static final String instructionsDashJump = "Pedal and press A to\nDash jump!";
 	public static final String instructionsMine = "Press Y and hold to mine!\nMine a path to proceed!";
 	public static final String instructionsBuild = "Press X to place blocks!\nMake steps to proceed!";
-	public static final String instructionsDrinkPotion = "Open chest with the key and\npress X to drink the potion!";
+	public static final String instructionsExitTutorial = "Talk to this NPC to exit\nthe tutorial! Good luck!";
 	
 	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
 	public static final String instructionsChestOpen = "Press X to\nopen the chest.";

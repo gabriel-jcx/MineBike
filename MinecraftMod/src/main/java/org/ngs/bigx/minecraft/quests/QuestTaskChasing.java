@@ -1267,9 +1267,11 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
+					command.setSpeed(7);
 				}
 				else{
 					timeFallBehind = 0;
+					command.setSpeed(10);
 				}
 				
 				this.time++;

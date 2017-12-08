@@ -61,12 +61,14 @@ public class NpcEvents {
 			InteractWithOfficer(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
 			InteractWithTeleportExit(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(0, -1, 0), NpcLocations.tutorialGuy.addVector(1, 0, 1)))
+			InteractWithTutorialGuy(player, event);
 	}
 	
 	private static void InteractWithTeleportExit(EntityPlayer player, EntityInteractEvent event) {
 		// TODO Add confirmation GUI? "Want to try the tutorial again?"
 		if (player.worldObj.isRemote)
-			QuestTeleporter.teleport(player, 0, 89, 78, 243);
+			QuestTeleporter.teleport(player, 0, 91, 78, 243);
 	}
 	
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
@@ -102,8 +104,8 @@ public class NpcEvents {
 			e.printStackTrace();
 		}
 		
-		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
-				"Dad: Just in case you need\nit, take this potion");
+//		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
+//				"Dad: Just in case you need\nit, take this potion");
 		
 		if (!player.inventory.hasItem(Items.paper)){
 			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
@@ -179,6 +181,15 @@ public class NpcEvents {
 			createTraderSold(traderInterface.inventorySold);
 	}
 	
+	private static void InteractWithTutorialGuy(EntityPlayer player, EntityInteractEvent event) {
+		System.out.println("Interact with Tutorial Guy");
+		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		
+		// TODO add confirmation prompt
+		if (player.worldObj.isRemote && player.inventory.getCurrentItem() == null) {
+			QuestTeleporter.teleport(player, 102, 512, 65, 0);
+		}
+	}
 	
 	//////Private Helper Methods: Traders
 	//////////WeaponsMerchant Market

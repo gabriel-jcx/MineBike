@@ -107,6 +107,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
 	
 	private static ClientEventHandler handler;
+	private String previousSong;
 	
 	public ClientEventHandler(BigxClientContext con) {
 		context = con;
@@ -591,8 +592,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
 							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDrinkPotion)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDrinkPotion, GuiMessageWindow.POTION_TEXTURE, false);
+						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsExitTutorial)
+							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.instructionsExitTutorial);
 						else
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
@@ -619,7 +620,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						chosenSong = "minebike:bg_rama loop";
 					}
 					
-					if (chosenSong != "") {
+					if (chosenSong != "" && chosenSong != previousSong) {
+						previousSong = chosenSong;
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_faire stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
