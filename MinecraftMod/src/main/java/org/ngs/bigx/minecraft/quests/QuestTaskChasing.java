@@ -95,6 +95,16 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
+
+	private static boolean flagAccomplished = false;
+	private static boolean flagFallBehind = false;
+	private static boolean flagRetry = false;
+	private static boolean flagGiveup = false;
+	private static boolean flagContinue = false;
+	private static boolean flagOpenQuestMenuGui = false;
+	private static boolean flagLeave = false;
+	
+	private static boolean isRewardState = false;
 	
 	private String id = "QUEST_TASK_CHASE";
 	
@@ -114,7 +124,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public int endOfChaseItemCounter = 0;
 	protected NpcCommand activecommand;
 
-	public int endGuiChoice = 0;
 	protected int obstacleRefreshed = 4;
 	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
 	protected int obstacleId = -1;
@@ -963,70 +972,32 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public void CheckComplete() {
 		// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
 		System.out.println("Checking if Chasing Quest is Complete");
-		if (thiefHealthCurrent <= 0) {
-			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
-			chasingQuestOnGoing = false;
-//			try {
-////				context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPSUCCESS, System.currentTimeMillis());
-//			} catch (SocketException e) {
-//				e.printStackTrace();
-//			} catch (UnknownHostException e) {
-//				e.printStackTrace();
-//			} catch (BiGXNetException e) {
-//				e.printStackTrace();
-//			} catch (BiGXInternalGamePluginExcpetion e) {
-//				e.printStackTrace();
-//			}
-			
-//			player.worldObj.playSoundAtEntity(player, "win", 1.0f, 1.0f);
-			endingZ = (int)player.posZ;
-			LeaderboardRow row = new LeaderboardRow();
-			row.name = player.getDisplayName();
-			row.level = Integer.toString(thiefLevel);
-			row.time_elapsed = "" + time;
-			row.combo = "" + bestCombo;
-			
-			try {
-				GuiLeaderBoard.writeToLeaderboard(row);
-			} catch (IOException e) {
-				e.printStackTrace();
+		
+		if(chasingQuestOnGoing)
+		{
+			if (thiefHealthCurrent <= 0) 
+			{
+				flagAccomplished = true;
+				chasingQuestOnGoing = false;
 			}
 			
-			command.setSpeed(0);
-//			npc.setHealth(0f);
-			npc.setDead();
-			
-			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
-			if (endOfChaseItemCounter == -1 && !npc.isDead) {
-				endOfChaseItemCounter = 15;
-				
-				Random random = new Random();
-				
-				int totalXP = 15;
-				int xpGiven; // ignore pls
-				
-				while (totalXP > 0) {
-			         xpGiven = random.nextBoolean() || totalXP == 1 ? 1 : 2;
-			         totalXP -= xpGiven;
-			         npc.worldObj.spawnEntityInWorld(new EntityXPOrb(npc.worldObj, npc.posX, npc.posY, npc.posZ, xpGiven));
-			    }
-				
-				npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
-				npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
-				for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
-					npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
-				}
-				//Combo Bonus
-				for (int i = 0; i < (bestCombo/2); ++i){
-					npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);
-				}
-				
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
-				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+			if(isExitSelected)
+			{
+				flagGiveup = true;
+				chasingQuestOnGoing = false;
 			}
 			
+	//		waitForRewardPickupAndContinue();
+			
+			// CHASE QUEST LOSE CONDITION
+			if(timeFallBehind >= 30)
+			{
+				flagFallBehind = true;
+				chasingQuestOnGoing = false;
+			}
+		}
+		else if(isRewardState) {
 			if (endOfChaseItemCounter > 0) {
-				endOfChaseItemCounter -= 1;
 				List<EntityItem> nearbyItems = npc.worldObj.getEntitiesWithinAABB(EntityItem.class,
 						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
 				List<EntityXPOrb> nearbyOrbs = npc.worldObj.getEntitiesWithinAABB(EntityXPOrb.class,
@@ -1040,160 +1011,22 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					endOfChaseItemCounter = 0;
 				}
 			}
-			
-			Minecraft mc = Minecraft.getMinecraft();
-			System.out.println(context instanceof BigxServerContext);
-			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
-			
-			if (endOfChaseItemCounter == 0) {
-				endOfChaseItemCounter = -1;
-				if(mc.currentScreen == null) {
-					mc.displayGuiScreen(gui);
-				}
-			} else {
-//				if(mc.currentScreen != null) {
-//					if (endGuiChoice == 1) {
-//						// Continue
-//					} else if (endGuiChoice == 2) {
-//						// Retry
-//					} else {
-//						isActive = false;
-//						completed = false;
-////						player.setGameType(GameType.SURVIVAL);
-//						goBackToTheOriginalWorld(ws, player);
-//					}
-//				}
+			else if(endOfChaseItemCounter == 0)
+			{
+				flagOpenQuestMenuGui = true;
 			}
-		}
-//		else
-		
-		if(isExitSelected)
-		{
-			System.out.println("isExitSelected");
 			
-			isContinueSelected = false;
-			isRetrySelected = false;
-			isExitSelected = false;
-			
-			isActive = false;
-			completed = false;
-			System.out.println("well");
-			goBackToTheOriginalWorld(ws, player);
+			if(isExitSelected)
+			{
+				flagLeave = true;
+				chasingQuestOnGoing = false;
+			}
 		}
 		
 		if(isRetrySelected)
 		{
-			System.out.println("isRetrySelected");
-			isContinueSelected = false;
-			isRetrySelected = false;
-			isExitSelected = false;
-			
-			init();
-			
-			QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
-
-			chasingQuestInitialPosX = 1;
-			chasingQuestInitialPosY = 10;
-			chasingQuestInitialPosZ = 0;
-			
-			blocks = new ArrayList<Vec3>();
-			
-			for (int z = -16; z < (int)player.posZ+64; ++z) {
-				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
-			}
-			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
-				blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
-			}
-			
-			for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
-			}
-			
-			chasingQuestOnGoing = true;
-			chasingQuestOnCountDown = true; 
-			questTimeStamp = System.currentTimeMillis();
-
-			// Need to remove the previous thief
-			if(npc != null)
-				command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-						
-//			if(isContinueSelected)
-//			{
-//				isContinueSelected = false;
-//				isRetrySelected = false;
-//				isExitSelected = false;
-//				
-//				init();
-//				
-//				QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
-//
-//				chasingQuestInitialPosX = 1;
-//				chasingQuestInitialPosY = 10;
-//				chasingQuestInitialPosZ = 0;
-//				
-//				blocks = new ArrayList<Vec3>();
-//				
-//				for (int z = -16; z < (int)player.posZ+64; ++z) {
-//					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-//					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
-//					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-//					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
-//				}
-//				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-//					setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
-//					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
-//				}
-//				
-//				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-//					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-//					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
-//					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-//					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
-//				}
-//				
-//				chasingQuestOnGoing = true;
-//				chasingQuestOnCountDown = true; 
-//				questTimeStamp = System.currentTimeMillis();
-//
-//				// Need to remove the previous thief
-//				if(npc != null)
-//					command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-//			}
-		}
-		
-//		waitForRewardPickupAndContinue();
-		
-		// CHASE QUEST LOSE CONDITION
-		if(timeFallBehind >= 30)
-		{
-			this.sendQuestGameTag(QuestActivityTagEnum.FAILED);
-//			try {
-//				context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTOPFAILURE, System.currentTimeMillis());
-//			} catch (SocketException e) {
-//				e.printStackTrace();
-//			} catch (UnknownHostException e) {
-//				e.printStackTrace();
-//			} catch (BiGXNetException e) {
-//				e.printStackTrace();
-//			} catch (BiGXInternalGamePluginExcpetion e) {
-//				e.printStackTrace();
-//			}
-			
-//			BiGXEventTriggers.GivePlayerGoldfromCoins(player, virtualCurrency); ///Give player reward
-//			if (thiefLevel == thiefMaxLevel && virtualCurrency > 50)
-//				thiefLevelUp();
-			
-			isActive = false;
-			completed = false;
-//			player.setGameType(GameType.SURVIVAL);
-			goBackToTheOriginalWorld(ws, player);
+			flagRetry = true;
+			chasingQuestOnGoing = false;
 		}
 	}
 	
@@ -1576,14 +1409,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			
 			while(isActive)
 			{	
-				checkComboCount();
+				if(checkChasingQuestTaskActivityFlags() == 2)
+					continue;
 				
-				if(isExitSelected)
-				{
-					isContinueSelected = false;
-					isRetrySelected = false;
-					isExitSelected = false;
-				}
+				checkComboCount();
 				
 				if(chasingQuestOnGoing)
 				{
@@ -1637,6 +1466,181 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		}
 	}
 	
+	private int checkChasingQuestTaskActivityFlags() {
+		int returnValue = 1;
+		
+		if(flagAccomplished)
+		{
+			flagAccomplished = false;
+			isRewardState = true;
+			returnValue = 2;		// ACCOMPLISHED
+			
+			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
+			endingZ = (int)player.posZ;
+			LeaderboardRow row = new LeaderboardRow();
+			row.name = player.getDisplayName();
+			row.level = Integer.toString(thiefLevel);
+			row.time_elapsed = "" + time;
+			row.combo = "" + bestCombo;
+			
+			try {
+				GuiLeaderBoard.writeToLeaderboard(row);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			command.setSpeed(0);
+//			npc.setHealth(0f);
+			npc.setDead();
+			
+			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
+			endOfChaseItemCounter = 15;
+			
+			Random random = new Random();
+			
+			int totalXP = 15;
+			int xpGiven; // ignore pls
+			
+			while (totalXP > 0) {
+		         xpGiven = random.nextBoolean() || totalXP == 1 ? 1 : 2;
+		         totalXP -= xpGiven;
+		         npc.worldObj.spawnEntityInWorld(new EntityXPOrb(npc.worldObj, npc.posX, npc.posY, npc.posZ, xpGiven));
+		    }
+			
+			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+			for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
+				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
+			}
+			//Combo Bonus
+			for (int i = 0; i < (bestCombo/2); ++i){
+				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);
+			}
+			
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+		}
+		else if(flagOpenQuestMenuGui)
+		{
+			flagOpenQuestMenuGui = false;
+			
+			Minecraft mc = Minecraft.getMinecraft();
+			System.out.println(context instanceof BigxServerContext);
+			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
+
+			if(mc.currentScreen == null) {
+				mc.displayGuiScreen(gui);
+			}
+			
+			// Set another 15 second timer to open gui
+			endOfChaseItemCounter = 15;
+		}
+		else if(flagGiveup)
+		{
+			flagGiveup = false;
+			
+			System.out.println("[BiGX] Player gives up the quest");
+			
+			this.sendQuestGameTag(QuestActivityTagEnum.FAILED);
+
+			flagLeave = true;
+		}
+		else if(flagFallBehind)
+		{
+			flagFallBehind = false;
+			
+			System.out.println("[BiGX] Player fall behind too far");
+			
+			this.sendQuestGameTag(QuestActivityTagEnum.FAILED);
+
+			flagLeave = true;
+		}
+		else if(flagRetry)
+		{
+			flagRetry = false;
+			
+			System.out.println("isRetrySelected");
+			isContinueSelected = false;
+			isRetrySelected = false;
+			isExitSelected = false;
+			
+			init();
+			
+			QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+
+			chasingQuestInitialPosX = 1;
+			chasingQuestInitialPosY = 10;
+			chasingQuestInitialPosZ = 0;
+			
+			blocks = new ArrayList<Vec3>();
+			
+			for (int z = -16; z < (int)player.posZ+64; ++z) {
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+			}
+			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+			}
+			
+			for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+			}
+			
+			chasingQuestOnGoing = true;
+			chasingQuestOnCountDown = true; 
+			questTimeStamp = System.currentTimeMillis();
+
+			// Need to remove the previous thief
+			if(npc != null)
+				command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+		}
+		else if(flagLeave)
+		{
+			System.out.println("[bigx] Leave the quest");
+			
+			isContinueSelected = false;
+			isRetrySelected = false;
+			isExitSelected = false;
+			
+			isActive = false;
+			completed = false;
+			
+			goBackToTheOriginalWorld(ws, player);
+		}
+		else if(flagContinue)
+		{
+			System.out.println("[Bigx] This button is not implemented yet.");
+			
+			returnValue = 0;
+		}
+		else
+		{
+			returnValue = 0;
+		}
+		
+//		resetChasingQuestTaskActivityFlags();
+		
+		return returnValue;
+	}
+	
+
+	private void resetChasingQuestTaskActivityFlags() {
+		flagAccomplished = false;
+		flagContinue = false;
+		flagFallBehind = false;
+		flagGiveup = false;
+		flagRetry = false;
+		flagOpenQuestMenuGui = false;
+		flagLeave = false;
+	}
+	
+
 	@Override
 	public void init()
 	{
@@ -1648,6 +1652,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		countdown = 11;
 		pausedTime = 0;
 		comboCount = 0;
+		isRewardState = false;
+		
+		resetChasingQuestTaskActivityFlags();
 		
 		questSettings = new ArrayList<Integer>();
 		StageSettings stagesettings;
@@ -1847,7 +1854,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public void showLevelSelectionGui(){
 		////Displaying Level Selection GUI
 		Minecraft mc = Minecraft.getMinecraft();
-		guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
+		if (guiChasingQuest == null)
+			guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
 		
 		guiChasingQuest.resetChasingQuestLevels();
 		
