@@ -53,7 +53,7 @@ public class LevelSystem {
 	}
 	
 	public void setPlayerLevel(int level){
-		playerLevel = 1;
+		playerLevel = level;
 		playerExp = 0;
 	}
 	

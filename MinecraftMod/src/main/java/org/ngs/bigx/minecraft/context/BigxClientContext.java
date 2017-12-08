@@ -129,7 +129,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	public BigxClientContext(BiGX main) {
 		super(main);
 		
-		self = this;
+		clientSelf = this;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		
 		ClientAreaEvent.initArea();
@@ -169,7 +169,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	
 	public static BigxContext getInstance()
 	{
-		return self;
+		return clientSelf;
 	}
 	
 	public void connectBiGX() throws SocketException, UnknownHostException, BiGXNetException, BiGXInternalGamePluginExcpetion

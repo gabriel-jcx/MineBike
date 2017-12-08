@@ -42,8 +42,6 @@ import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
-import com.sun.xml.internal.ws.api.policy.PolicyResolver.ServerContext;
-
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -167,7 +165,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 							return;
 						}
 						
-						GuiFinishChasingQuest gui = new GuiFinishChasingQuest(); 
+						GuiFinishChasingQuest gui = new GuiFinishChasingQuest(false); 
 
 						Minecraft.getMinecraft().displayGuiScreen(gui);
 					}
@@ -432,7 +430,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(context.getQuestManager() == null)
 			{
-				context.setQuestManager(new QuestManager(context, Minecraft.getMinecraft().thePlayer));
+				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().thePlayer));
 			}
 
 //			/**

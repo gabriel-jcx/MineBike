@@ -230,7 +230,7 @@ public class QuestEventHandler {
 				}
 				else
 				{
-					BiGX.instance().serverContext.setQuestManager(new QuestManager(BiGX.instance().serverContext, event.player));
+					BiGX.instance().serverContext.setQuestManager(new QuestManager(null, BiGX.instance().serverContext, event.player));
 				}
 			}
 			else
@@ -238,7 +238,7 @@ public class QuestEventHandler {
 				// CLIENT CODE
 				if(BiGX.instance().clientContext.getQuestManager() == null)
 				{
-					BiGX.instance().clientContext.setQuestManager(new QuestManager(BiGX.instance().clientContext, event.player));
+					BiGX.instance().clientContext.setQuestManager(new QuestManager(BiGX.instance().clientContext, null, event.player));
 				}
 			}
 		}

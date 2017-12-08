@@ -65,10 +65,16 @@ public class BigxServerContext extends BigxContext {
 	public BigxServerContext(BiGX main)
 	{
 		super(main);
+		serverSelf = this;
 	}
 	
 	public void updateQuestInformationToClient(BigxServerContext bigxContext)
 	{
 		GuiStats.setServerContext(bigxContext);
+	}
+	
+	public static BigxContext getInstance()
+	{
+		return serverSelf;
 	}
 }
