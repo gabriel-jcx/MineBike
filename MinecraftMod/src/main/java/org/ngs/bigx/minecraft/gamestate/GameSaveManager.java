@@ -1,15 +1,36 @@
 package org.ngs.bigx.minecraft.gamestate;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
+
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
+import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
+import org.ngs.bigx.minecraft.client.skills.Skill;
+import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.quests.Quest;
+import org.ngs.bigx.minecraft.quests.QuestEventHandler;
+import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 
 import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
@@ -26,6 +47,9 @@ public class GameSaveManager {
 	public static final String gameSaveConfigFolderName = gameSaveConfigRootFolderName + "\\gameconfig";
 	public static final String gameSaveConfigFileName = gameSaveConfigFolderName + "\\gamesave.conf";
 	
+	public static final String gameSaveRootFolderName = System.getProperty("user.home") + "\\ixercise";
+	public static final String gameSaveFolderName = gameSaveConfigRootFolderName + "\\gamesave";
+	
 	public static String serveraccount = "";
 	public static String serverpassword = "";
 	
@@ -34,12 +58,241 @@ public class GameSaveManager {
 	public static final String serverip = "128.195.54.50";
 //	public static final String serverip = "localhost";
 	public static final int serverportnumber = 2331;
+
+	public static boolean flagEnableChasingQuestClient = false;
+	public static boolean flagEnableChasingQuestServer = false;
+	public static boolean flagUpdatePlayerLevelClient = false;
+	public static boolean flagUpdatePlayerLevelServer = false;
+	public static boolean flagGameSaveContinue = false;
+	
+	public static int savedPlayerLevel = 1;
 	
 	public enum CUSTOMCOMMAND 
 	{
 		GETGAMESAVES,
 		SETGAMESAVES,
 	};
+	
+	public static boolean readGameSaveByUserCaseId(String caseid, EntityPlayer player) throws IOException
+	{
+		boolean returnValue = false;
+		
+		File folderCheck = new File(gameSaveRootFolderName);
+		
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+			return false;
+		}
+		
+		folderCheck = new File(gameSaveFolderName);
+		
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+			return false;
+		}
+		
+		String fileName = gameSaveFolderName + "\\gamesave_" + caseid + ".sav";
+		
+		File filedesc = new File(fileName);
+		
+		if(!filedesc.exists())
+		{
+			System.out.println("gameSave does not exist for the user[" + caseid + "]");
+
+			Gson gson = new Gson();
+			GameSaveJson save = new GameSaveJson();
+			
+			String parcedSaveObject = gson.toJson(save);
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+			writer.write(parcedSaveObject);
+			 
+			writer.close();
+			
+			returnValue = false;
+		}
+		else
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+
+			String saveString = br.readLine();
+			
+			GameSaveJson gameSaveJson = (new Gson()).fromJson(saveString, GameSaveJson.class);
+			
+			BigxClientContext context = (BigxClientContext)BigxClientContext.getInstance();
+			int i=0;
+			
+			// UNLOCK SKILLS
+			for(i=0; i<3; i++)
+			{
+				if((gameSaveJson.getSkills() & (0x1 << i)) != 0)
+				{
+					context.getCurrentGameState().getSkillManager().getSkills().get(i).unlockSkillState();
+				}
+			}
+			
+			// READ SAVED PLAYER LEVEL
+			if(gameSaveJson.isChasingQuestOn())
+			{
+				System.out.println("[BiGX] Chasing Quest is on from Save File");
+				setEnableChasingQuestFlag();
+				setUpdatePlayerLevel(gameSaveJson.getPlayerLevel());
+			}
+//			QuestTaskChasing.getLevelSystem().getPlayerLevel()
+//			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
+			
+			returnValue = true;
+		}
+		
+		return returnValue;
+	}
+	
+	public static void setEnableChasingQuestFlag()
+	{
+		GameSaveManager.flagEnableChasingQuestClient = true;
+		GameSaveManager.flagEnableChasingQuestServer = true;
+	}
+	
+	public static void setUpdatePlayerLevel(int savedPlayerLevel)
+	{
+		GameSaveManager.flagUpdatePlayerLevelClient = true;
+		GameSaveManager.flagUpdatePlayerLevelServer = true;
+		GameSaveManager.savedPlayerLevel = savedPlayerLevel;
+	}
+	
+	public static void updatePlayerLevel()
+	{
+		QuestTaskChasing.getLevelSystem().setPlayerLevel(GameSaveManager.savedPlayerLevel);
+	}
+	
+	public static void enableChasingQuest(EntityPlayer player) throws QuestException
+	{
+		if(Minecraft.getMinecraft().thePlayer == null)
+		{
+			System.out.println("[BiGX] The player is not loaded yet.");
+			return;
+		}
+		
+		Quest quest;
+		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+		
+		QuestManager questManager;
+		
+		if(player.worldObj.isRemote)
+		{
+			if(BiGX.instance().clientContext.getQuestManager() == null)
+			{
+				questManager = new QuestManager(
+						BiGX.instance().clientContext, 
+						BiGX.instance().serverContext, 
+						Minecraft.getMinecraft().thePlayer);
+				
+				BiGX.instance().clientContext.setQuestManager(questManager);
+			}
+			
+			quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+			QuestEventHandler.unregisterAllQuestEventRewardSession();
+			QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
+			QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
+			quest.addTasks(questTaskChasing);
+			if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
+				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+		}
+		else
+		{
+			if(BiGX.instance().serverContext.getQuestManager() == null)
+			{
+				questManager = new QuestManager(
+						BiGX.instance().clientContext, 
+						BiGX.instance().serverContext, 
+						Minecraft.getMinecraft().thePlayer);
+				
+				BiGX.instance().serverContext.setQuestManager(questManager);
+			}
+	
+			quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+			QuestEventHandler.unregisterAllQuestEventRewardSession();
+			QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4);
+			QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
+			quest.addTasks(questTaskChasing);
+			if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
+				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+		}
+	}
+	
+	public static void writeGameSaveByUserCaseId(String caseid) throws IOException
+	{
+		/*
+		 * private boolean isChasingQuestOn = false;
+		 * private int playerLevel = 1;
+		 * private int skills = 0x0;
+		 */
+		GameSaveJson save = new GameSaveJson();
+		
+		if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null)
+		{
+			save.setChasingQuestOn(true);
+		}
+		
+		if(QuestTaskChasing.getLevelSystem() != null)
+		{
+			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
+		}
+		
+		try
+		{
+			BigxClientContext context = (BigxClientContext)BigxClientContext.getInstance();
+			List<Skill> skills = context.getCurrentGameState().getSkillManager().getSkills();
+			int accumulatedSkillState = 0;
+			int i=0;
+			
+			for(i=0; i<skills.size(); i++)
+			{
+				Skill skill = skills.get(i);
+				
+				if(skill.getSkillState() != enumSkillState.LOCKED)
+				{
+					accumulatedSkillState = accumulatedSkillState | (0x1 << i);
+				}
+			}
+
+			save.setSkills(accumulatedSkillState);
+		}
+		catch(Exception ee)
+		{
+			ee.printStackTrace();
+		}
+		
+		Gson gson = new Gson();
+		String parcedSaveObject = gson.toJson(save);
+		
+		File folderCheck = new File(gameSaveRootFolderName);
+				
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+		}
+		
+		folderCheck = new File(gameSaveFolderName);
+		
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+		}
+		
+		String saveFileName = gameSaveFolderName + "\\gamesave_" + caseid + ".sav";
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileName));
+		writer.write(parcedSaveObject);
+		 
+		writer.close();
+	}
 	
 	public static GameSaveConfig readGameSaveServerConfigFile() throws IOException
 	{

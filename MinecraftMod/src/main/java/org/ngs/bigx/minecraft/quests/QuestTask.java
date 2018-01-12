@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
@@ -14,6 +15,7 @@ import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
@@ -50,8 +52,8 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 	{
 		this.questManager = questManager;
 		this.isRequired = isMainTask;
-		this.clientContext = questManager.getClientContext();
-		this.serverContext = questManager.getServerContext();
+		this.clientContext = this.questManager.getClientContext();
+		this.serverContext = this.questManager.getServerContext();
 	}
 	
 	public QuestManager getQuestManager() {
