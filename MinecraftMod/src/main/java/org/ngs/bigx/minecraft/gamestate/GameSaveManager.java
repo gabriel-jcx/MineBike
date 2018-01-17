@@ -194,7 +194,13 @@ public class GameSaveManager {
 				BiGX.instance().clientContext.setQuestManager(questManager);
 			}
 			
-			quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+			if(BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null) {
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+			}
+			else {
+				quest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+			}
+			
 			QuestEventHandler.unregisterAllQuestEventRewardSession();
 			QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
 			QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
@@ -213,8 +219,16 @@ public class GameSaveManager {
 				
 				BiGX.instance().serverContext.setQuestManager(questManager);
 			}
-	
-			quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+			
+			if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null)
+			{
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+			}
+			else
+			{
+				quest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+			}
+			
 			QuestEventHandler.unregisterAllQuestEventRewardSession();
 			QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4);
 			QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
