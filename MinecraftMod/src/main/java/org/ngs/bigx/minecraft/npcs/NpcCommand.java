@@ -10,6 +10,7 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 
@@ -34,6 +35,7 @@ public class NpcCommand {
 	private static boolean npcSpawnFlag = false;
 	private static ArrayList<Integer> npcSpawnDimensionId = new ArrayList<Integer>();
 
+	private static boolean theifOnFightAndChaseQuestSpawnFlag = false;
 	private static boolean theifOnRegularChaseQuestSpawnFlag = false;
 	private static boolean theifOnFireChaseQuestSpawnFlag = false;
 
@@ -123,6 +125,7 @@ public class NpcCommand {
 	
 			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 			npc.ai.stopAndInteract = false;
+			//npc.faction.isAggressiveToPlayer(true)
 	
 			questTaskChasing.setNpc(npc);
 	
@@ -135,29 +138,30 @@ public class NpcCommand {
 		}
 	}
 	
-	public static void spawnTheifOnFireChaseQuest(BigxContext context) {	
-		if(theifOnFireChaseQuestSpawnFlag) {
-	//			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-	//			QuestTaskChasingFire questTaskChasingFire = (QuestTaskChasingFire) context.getQuestManager().getActiveQuestTask();
-	//			EntityCustomNpc npc;
-	//			NpcCommand command;
-	//			
-	//			if(questTaskChasingFire == null)
-	//				return;
-	//			
-	//			theifOnFireChaseQuestSpawnFlag = false;
-	//			
-	//			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
-	//			npc.ai.stopAndInteract = false;
-	//			npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
-	//			questTaskChasingFire.setNpc(npc);
-	//			
-	//			command = new NpcCommand(context, npc);
-	//			command.setSpeed(10);
-	//			command.enableMoving(false);
-	//			command.runInDirection(ForgeDirection.SOUTH);
-	//			
-	//			questTaskChasingFire.setNpcCommand(command);
+	public static void spawnTheifOnFightAndChaseQuest(BigxContext context) {	
+		if(theifOnFightAndChaseQuestSpawnFlag) {
+			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
+			QuestTaskFightAndChasing questTaskFightAndChasing = (QuestTaskFightAndChasing)bigxContext.getQuestManager().getQuestTaskFightAndChasing();
+			EntityCustomNpc npc;
+			NpcCommand command;
+	
+			if(questTaskFightAndChasing == null)
+				return;
+	
+			theifOnFightAndChaseQuestSpawnFlag = false;
+	
+			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+//			npc.ai.stopAndInteract = false;
+			npc.faction.neutralPoints = 20000;
+	
+			questTaskFightAndChasing.setNpc(npc);
+	
+			command = new NpcCommand(context, npc);
+//			command.setSpeed(10);
+			command.enableMoving(true);
+//			command.runInDirection(ForgeDirection.SOUTH);
+	
+			questTaskFightAndChasing.setNpcCommand(command);
 		}
 	}
 	
@@ -273,7 +277,9 @@ public class NpcCommand {
 				if (npc.hasDied) {
 					timer.cancel();
 				}
-				//System.out.println("AI : " + npc.motionX + " " + npc.motionZ);
+				
+//				System.out.println("[BiGX] AI : " + npc.motionX + " " + npc.motionZ);
+				
 				int yy = (int)npc.posY;
 				npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
 				npc.ai.setMovingPath(new ArrayList());
@@ -295,11 +301,22 @@ public class NpcCommand {
 					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)runStartZ});
 					break;
 				default:
+					System.out.println("[BiGX] Direction to NO WHERE!");
 					break;
 				}
+				
 				npc.ai.getMovingPath().remove(0);
+				
+				if( (npc.motionZ == 0) && (!npc.isDead))
+				{
+					npc.reset();
+					setSpeed(10);
+					enableMoving(true);
+					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");
+					System.out.println("[BiGX] CQ Var: [" + npc.ai.movingType + "] [" + npc.ai.movingPause + "] [" + npc.getSpeed() + "]");
+				}
 			}
-		}, 0, 1000);
+		}, 0, 200);
 	}
 	
 	public void addPathPoint(int x, int y, int z) {
