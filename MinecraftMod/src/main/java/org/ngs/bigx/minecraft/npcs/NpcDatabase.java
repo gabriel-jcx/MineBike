@@ -5,19 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class NpcDatabase {
 	
 	private static Map<String, Vec3> npcs = populateMap();
 	private static Map<String, Vec3> npcsTutorial = populateMapTutorial();
+	private static Map<String, Vec3> npcsDungeon = populateDungeon();
 	
 	private static Map<String, Vec3> populateMap() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
@@ -40,6 +41,12 @@ public class NpcDatabase {
 		return map;
 	}
 	
+	private static Map<String, Vec3> populateDungeon() {
+		HashMap<String, Vec3> map = new HashMap<String, Vec3>();
+		map.put("Baddest Guy", NpcLocations.baddestGuy);
+		return map;
+	}
+	
 	public static List<String> NpcNames(int dimID) {
 		List<String> toReturn = new ArrayList<String>();
 		if (dimID == 0)
@@ -47,6 +54,9 @@ public class NpcDatabase {
 				toReturn.add(item.getKey());
 		else if (dimID == 102)
 			for (Map.Entry<String, Vec3> item : npcsTutorial.entrySet())
+				toReturn.add(item.getKey());
+		else if (dimID == WorldProviderDungeon.dimID)
+			for (Map.Entry<String, Vec3> item : npcsDungeon.entrySet())
 				toReturn.add(item.getKey());
 		return toReturn;
 	}
@@ -60,6 +70,9 @@ public class NpcDatabase {
 		else if (dimID == 102){
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, 
 					(int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name, getTexture(name));
+		} else if (dimID == WorldProviderDungeon.dimID) {
+			npc = NpcCommand.spawnNpc((int)npcsDungeon.get(name).xCoord, (int)npcsDungeon.get(name).yCoord,
+					(int)npcsDungeon.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), name, getTexture(name));
 		}
 		if (npc != null){
 //			npc.display.texture = getTexture(name);
@@ -93,6 +106,8 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
 		if (name.contains("Tutorial Guy"))
 			return "customnpcs:textures/entity/humanmale/CasualSteve.png";
+		if (name.contains("Baddest Guy"))
+			return "customnpcs:textures/entity/humanmale/RobesBlackSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}

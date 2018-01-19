@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGX;
@@ -20,24 +19,18 @@ import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiFinishChasingQuest;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostMining;
-import org.ngs.bigx.minecraft.client.skills.SkillManager;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
@@ -48,26 +41,21 @@ import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import javafx.scene.shape.DrawMode;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -317,6 +305,25 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.gold_ingot));
 //				}
 //			}
+		
+		if (event.world.isRemote && event.entity instanceof EntityClientPlayerMP) {
+			// TODO fill in JSON boundary int when it's implemented
+			int bounds = 0;
+			
+			EntityClientPlayerMP p = (EntityClientPlayerMP) event.entity;
+			
+			if (bounds == 0) {
+				p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+			} else if (bounds == 1) {
+				p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+			}
+		}
 	}
 	
 	@SubscribeEvent
@@ -643,7 +650,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						chosenSong = "minebike:bg_ladylake loop";
 					}
 					
-					if (p.dimension == WorldProviderEmpty.dimID) {
+					if (p.dimension == WorldProviderEmpty.dimID || p.dimension == WorldProviderDungeon.dimID) {
 						chosenSong = "minebike:bg_rama loop";
 					}
 					

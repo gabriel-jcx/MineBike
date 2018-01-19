@@ -7,6 +7,7 @@ public class GameSaveJson {
 	private boolean isChasingQuestOn = false;
 	private int playerLevel = 1;
 	private int skills = 0x0;
+	private int boundaryProgress;
 	
 	public boolean isChasingQuestOn() {
 		return isChasingQuestOn;
@@ -25,5 +26,11 @@ public class GameSaveJson {
 	}
 	public void setSkills(int skills) {
 		this.skills = skills;
+	}
+	public void setBoundaryProgress(int progress) {
+		boundaryProgress = progress;
+	}
+	public int getBoundaryProgress() {
+		return boundaryProgress;
 	}
 }

@@ -63,6 +63,8 @@ public class NpcEvents {
 			InteractWithTeleportExit(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(0, -1, 0), NpcLocations.tutorialGuy.addVector(1, 0, 1)))
 			InteractWithTutorialGuy(player, event);
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.baddestGuy.addVector(0, -1, 0), NpcLocations.tutorialGuy.addVector(1, 0, 1)))
+			InteractWithDungeonBoss(player, event);
 	}
 	
 	private static void InteractWithTeleportExit(EntityPlayer player, EntityInteractEvent event) {
@@ -88,6 +90,11 @@ public class NpcEvents {
 				quest.addTasks(questTaskChasing);
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+				// TODO add this zone update to GameSave boundary value
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
 			}
 			else
 			{
@@ -116,6 +123,14 @@ public class NpcEvents {
 			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
 			if (!player.worldObj.isRemote)
 				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
+		}
+	}
+	
+	private static void InteractWithDungeonBoss(EntityPlayer player, EntityInteractEvent event) {
+		System.out.println("Interacting with Baddest Guy...");
+		// TODO look at police officer interaction for proper chase setup
+		if (player.worldObj.isRemote) {
+			
 		}
 	}
 	
