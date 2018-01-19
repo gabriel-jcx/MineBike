@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventCheckComplete;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
@@ -334,8 +333,6 @@ public class QuestEventHandler {
 		if (BiGX.instance().clientContext.getQuestManager() == null)
 			return;
 		
-		GameSaveManager.flagGameSaveContinue = true;
-		
 		if (event.entity instanceof EntityPlayer && event.entity.dimension == WorldProviderFlats.dimID) {
 			if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
 				event.entity.worldObj.playSoundAtEntity(event.entity, "minebike:chasemusic", 1.0f, 1.0f);
@@ -346,9 +343,6 @@ public class QuestEventHandler {
 	
 	@SubscribeEvent
 	public void onQuit(ClientDisconnectionFromServerEvent event) {
-		
-		GameSaveManager.flagGameSaveContinue = false;
-		
 		System.out.println("onQuit(ClientDisconnectionFromServerEvent event)");
 		
 		if(BiGX.instance().serverContext == null)

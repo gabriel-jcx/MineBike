@@ -3,7 +3,6 @@ package org.ngs.bigx.minecraft.quests;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;
 
 import net.minecraft.entity.player.EntityPlayer;

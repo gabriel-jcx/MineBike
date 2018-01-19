@@ -72,14 +72,6 @@ public class QuestManager {
 			this.clientContext.setQuestManager(this);
 	}
 	
-	public void setClientContext(BigxClientContext clientContext) {
-		this.clientContext = clientContext;
-	}
-	
-	public void setServerContext(BigxServerContext serverContext) {
-		this.serverContext = serverContext;
-	}
-
 	public void setActiveQuest(String questid) throws QuestException {
 		if(!questid.equals(Quest.QUEST_ID_STRING_NONE))
 		{
@@ -96,10 +88,7 @@ public class QuestManager {
 		activeQuestId = questid;
 		
 		if(questid.equals(Quest.QUEST_ID_STRING_NONE))
-		{
-			System.out.println("[BiGX] QUEST_ID_STRING_NONE");
 			return;
-		}
 		
 		quest = this.availableQuestList.get(questid);
 		this.activateQuest(quest);

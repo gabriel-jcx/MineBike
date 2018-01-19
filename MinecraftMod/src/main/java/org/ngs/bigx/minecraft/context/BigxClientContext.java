@@ -33,7 +33,6 @@ import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -42,10 +41,10 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import com.google.gson.Gson;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 public class BigxClientContext extends BigxContext implements eyeTrackerListner {
 	// CLIENT
@@ -53,7 +52,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	private Timer bigxclientTimer;
 	private static int bigxclientConnectionTryCount = 0;
 	public static final int bigxclientConnectionTryMaxCount = 10;
-	private static final int bigxclientTimerTimeout = 5000;
+	private static final int bigxclientTimerTimeout = 2000;
 
 	public String BiGXUserName;
 	
@@ -69,10 +68,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	
 	private static boolean isMiddlwareIPFileAvailable = false;
 	private static boolean isMiddlwareIPAvailable = false;
-	private static boolean isGameSaveRead = false;
-	private static boolean isBiGXConnected = false;
-	private static boolean isPlayerLoadedInWorld = false;
-	
 	public static final String gameServerListFileName = System.getProperty("user.home") + "\\bigxGameServerList.dat";
 	private static Object MiddlewareIPReadMutex = new Object();
 	private static GameServerList gameServerList = null;
@@ -381,142 +376,60 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				@Override
 				public void run() 
 				{
-					readPlayerProfile();
-					
-					handleGameSaveState();
+					synchronized(MiddlewareIPReadMutex)
+					{
+						isMiddlwareIPFileAvailable = false;
+						isMiddlwareIPAvailable = false;
+						
+						// CHECK the IP Address FILE
+						isMiddlwareIPFileAvailable = checkIPFile();
+						
+						// Extract IP of Middleware
+						if(isMiddlwareIPFileAvailable) {
+							try {
+								ipAddress = extractMiddlewareIP();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							
+							if(!ipAddress.equals("")) {
+								isMiddlwareIPAvailable = true;
+							}
+							else {
+								// TODO: Need to disable this hard coded portion
+//								ipAddress = "128.195.54.79";
+								ipAddress = "128.200.115.181";
+//								ipAddress = "128.195.55.199";
+//								ipAddress = "192.168.0.53";
+								isMiddlwareIPAvailable = true;
+							}
+						}
+						else {
+							return;
+						}
+						
+						// SUCCESS THEN CONNECT
+						if(isMiddlwareIPAvailable) {
+							try {
+								connectBiGX();
+							} catch (SocketException e) {
+								e.printStackTrace();
+							} catch (UnknownHostException e) {
+								e.printStackTrace();
+							} catch (BiGXNetException e) {
+								e.printStackTrace();
+							} catch (BiGXInternalGamePluginExcpetion e) {
+								e.printStackTrace();
+							}
+							this.cancel();
+						}
+						else {
+							return;
+						}
+					}
 				}
 			},
 		0, bigxclientTimerTimeout);
-	}
-	
-	public void handleGameSaveState()
-	{
-		if(!isGameSaveRead)
-		{
-			if(suggestedGamePropertiesReady)
-			{
-				if(isPlayerLoadedInWorld)
-				{
-					// with case id read game save
-					if(readGameSave(suggestedGameProperties.getPatientCaseId(), Minecraft.getMinecraft().thePlayer))
-					{
-						// if gameSave Read
-						System.out.println("[BiGX] Game Save Read");
-						
-						isGameSaveRead = true;
-					}
-				}
-				else
-				{
-					System.out.println("[BiGX] Player is not loaded.");
-					
-					if(Minecraft.getMinecraft().thePlayer != null)
-					{
-						isPlayerLoadedInWorld = true;
-					}
-				}
-			}
-		}
-		else if(GameSaveManager.flagGameSaveContinue)
-		{
-			if(GameSaveManager.flagEnableChasingQuestClient | GameSaveManager.flagEnableChasingQuestServer)
-			{
-				System.out.println("[BiGX] Game Save is not loaded yet.");
-				return;
-			}
-			
-			if(Minecraft.getMinecraft().thePlayer != null)
-			{
-				BigxServerContext context = BiGX.instance().serverContext;
-				
-				if(context.suggestedGamePropertiesReady)
-				{
-					writeGameSave(context.suggestedGameProperties.getPatientCaseId());
-				}
-				
-				System.out.println("[BiGX] Game Saved.");
-			}
-		}
-		
-	}
-	
-	public boolean readGameSave(String caseid, EntityPlayer player)
-	{	
-		try {
-			return GameSaveManager.readGameSaveByUserCaseId(caseid, player);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-	
-	public void writeGameSave(String caseid)
-	{
-		try {
-			GameSaveManager.writeGameSaveByUserCaseId(caseid);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void readPlayerProfile()
-	{
-		if(isBiGXConnected)
-			return;
-		
-		synchronized(MiddlewareIPReadMutex)
-		{
-			isMiddlwareIPFileAvailable = false;
-			isMiddlwareIPAvailable = false;
-			
-			// CHECK the IP Address FILE
-			isMiddlwareIPFileAvailable = checkIPFile();
-			
-			// Extract IP of Middleware
-			if(isMiddlwareIPFileAvailable) {
-				try {
-					ipAddress = extractMiddlewareIP();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-				if(!ipAddress.equals("")) {
-					isMiddlwareIPAvailable = true;
-				}
-				else {
-					// TODO: Need to disable this hard coded portion
-//					ipAddress = "128.195.54.79";
-					ipAddress = "128.200.115.181";
-//					ipAddress = "128.195.55.199";
-//					ipAddress = "192.168.0.53";
-					isMiddlwareIPAvailable = true;
-				}
-			}
-			else {
-				return;
-			}
-			
-			// SUCCESS THEN CONNECT
-			if(isMiddlwareIPAvailable) {
-				try {
-					connectBiGX();
-					isBiGXConnected = true;
-				} catch (SocketException e) {
-					e.printStackTrace();
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				} catch (BiGXNetException e) {
-					e.printStackTrace();
-				} catch (BiGXInternalGamePluginExcpetion e) {
-					e.printStackTrace();
-				}
-//				this.cancel();
-			}
-			else {
-				return;
-			}
-		}
 	}
 	
 	public static GameSave getCurrentGameState() {

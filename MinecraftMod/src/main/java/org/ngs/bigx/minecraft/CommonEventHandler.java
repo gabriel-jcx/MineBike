@@ -10,14 +10,12 @@ import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
@@ -29,8 +27,6 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.NPCEntityHelper;
-import net.minecraft.entity.NpcMerchant;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -98,49 +94,6 @@ public class CommonEventHandler {
 		else if (inBounds(event.player, Vec3.createVectorHelper(3, 63, 10), Vec3.createVectorHelper(-3, 68, 20)) &&
 				event.player.dimension == WorldProviderDungeon.dimID) {
 			QuestTeleporter.teleport(event.player, 0, 121, 163, -145);
-		}
-		
-		if (event.player.worldObj.isRemote)
-		{
-			if(GameSaveManager.flagEnableChasingQuestClient)
-			{
-				try {
-					GameSaveManager.enableChasingQuest(event.player);
-				} catch (QuestException e) {
-					e.printStackTrace();
-				}
-				
-				GameSaveManager.flagEnableChasingQuestClient = false;
-				
-				System.out.println("[BiGX] Enabling Chasing Quest Initiated.");
-			}
-			else if(GameSaveManager.flagUpdatePlayerLevelClient)
-			{
-				GameSaveManager.flagUpdatePlayerLevelClient = false;
-				
-				GameSaveManager.updatePlayerLevel();
-			}
-		}
-		else
-		{
-			if(GameSaveManager.flagEnableChasingQuestServer)
-			{
-				try {
-					GameSaveManager.enableChasingQuest(event.player);
-				} catch (QuestException e) {
-					e.printStackTrace();
-				}
-				
-				GameSaveManager.flagEnableChasingQuestServer = false;
-				
-				System.out.println("[BiGX] Enabling Chasing Quest Initiated.");
-			}
-			else if(GameSaveManager.flagUpdatePlayerLevelServer)
-			{
-				GameSaveManager.flagUpdatePlayerLevelServer = false;
-				
-				GameSaveManager.updatePlayerLevel();
-			}
 		}
 		
 		if (!event.player.worldObj.isRemote)
@@ -212,7 +165,13 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
-		BigxClientContext context = BiGX.instance().clientContext;
+//		BigxContext context = BiGX.instance().context;
+		
+		//TODO: Implement proper cleanup when the game is exited
+		//The event which is called by the server shutting down needs to be located and used
+		//instead of this event which is called whenever the game is paused.
+		
+		//context.unloadWorld();
 	}
 	
 	@SubscribeEvent

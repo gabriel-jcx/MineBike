@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxContext;
-import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -19,7 +18,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import noppes.npcs.constants.EnumMovingType;

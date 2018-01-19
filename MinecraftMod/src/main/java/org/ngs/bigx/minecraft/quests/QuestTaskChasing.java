@@ -195,11 +195,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public static boolean isRetrySelected = false;
 	public static boolean isExitSelected = false;
 	
-	public static LevelSystem getLevelSystem()
-	{
-		return levelSys;
-	}
-	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) 
 	{
 		super(questManager, true);
@@ -1700,9 +1695,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		stageList = new ArrayList<Stage>();
 		questSettings.add(0);
 		
-		clientContext = BiGX.instance().clientContext;
-		serverContext = BiGX.instance().serverContext;
-		
 		if(serverContext.suggestedGameProperties != null)
 		{
 			if(serverContext.suggestedGameProperties.getQuestProperties().getStageSettingsArray().size() != 0)
@@ -1718,6 +1710,15 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					}
 				}
 			}
+		}
+		
+		if(world.isRemote)
+		{
+			clientContext = BiGX.instance().clientContext;
+		}
+		else
+		{
+			serverContext = BiGX.instance().serverContext;
 		}
 	}
 	
