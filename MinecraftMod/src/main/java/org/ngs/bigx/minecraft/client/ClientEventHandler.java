@@ -119,33 +119,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			event.entity.motionY = 0;
 	}
 	
-	public static void sendResistanceGameTag(int resistanceLevel)
-	{
-		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
-		try {
-			int resistanceTypeEnum = (0xfff & resistanceLevel);
-			BiGXGameTag biGXGameTag = new BiGXGameTag();
-			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_RESISTANCE_BEGINNING | resistanceTypeEnum));
-			
-			BigxClientContext.sendGameTag(biGXGameTag);
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BiGXNetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BiGXInternalGamePluginExcpetion e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onEvent(KeyInputEvent event) 
@@ -308,7 +281,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		
 		if (event.world.isRemote && event.entity instanceof EntityClientPlayerMP) {
 			// TODO fill in JSON boundary int when it's implemented
-			int bounds = 0;
+			int bounds = 1;
 			
 			EntityClientPlayerMP p = (EntityClientPlayerMP) event.entity;
 			
@@ -720,8 +693,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
 						org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
 				BiGXPacketHandler.sendPacket(context.bigxclient, packet);
-
-				sendResistanceGameTag((int)new_resistance);
 			}
 		}
 	}
