@@ -147,6 +147,16 @@ public class QuestManager {
 		return availableQuestList.get(activeQuestId).getCurrentQuestTask();
 	}
 	
+	public IQuestTask getQuestTaskFightAndChasing() {
+		if(availableQuestList.get(Quest.QUEST_ID_STRING_FIGHT_CHASE) == null)
+		{
+			System.out.println("[BiGX] Fight and chase is not enabled yet.");
+			return null;
+		}
+		
+		return availableQuestList.get(Quest.QUEST_ID_STRING_FIGHT_CHASE).getCurrentQuestTask();
+	}
+	
 	public EntityPlayer getPlayer() {
 		return player;
 	}

@@ -42,7 +42,6 @@ import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.npcs.NpcLocations;
 import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
-import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing.QuestChaseTypeEnum;
 import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
@@ -90,7 +89,7 @@ import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
+public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
@@ -197,7 +196,12 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public static boolean isRetrySelected = false;
 	public static boolean isExitSelected = false;
 	
-	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) 
+	public static LevelSystem getLevelSystem()
+	{
+		return levelSys;
+	}
+	
+	public QuestTaskFightAndChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) 
 	{
 		super(questManager, true);
 
@@ -225,7 +229,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		this.questChaseType = questChaseType;
 	}
 	
-	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
+	public QuestTaskFightAndChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
 		this(levelSys, questManager, p, worldServer, level, maxLevel, QuestChaseTypeEnum.REGULAR);
 	}
 	public boolean checkPlayerInArea(EntityPlayer player, int x1, int y1, int z1, int x2, int y2, int z2) {
@@ -1119,15 +1123,37 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					setNpc(npc);
 					
 					command = new NpcCommand(serverContext, npc);
-					command.setSpeed(10);
+//					command.setSpeed(10);
+//					command.enableMoving(false);
+//					command.runInDirection(ForgeDirection.SOUTH);
+					
+
+					npc.faction.neutralPoints = 2000;
+					npc.faction.friendlyPoints = 3000;
+					npc.faction.defaultPoints = 2500;
+					npc.faction.attackFactions.add(player);
+					npc.ai.canLeap = true;
+					npc.attackEntityAsMob(player);
+					
+//					command.setSpeed(10);
 					command.enableMoving(false);
-					command.runInDirection(ForgeDirection.SOUTH);
+//					command.runInDirection(ForgeDirection.SOUTH);
 					
 					setNpcCommand(command);
 				}
 			}
 			else if (countdown == 1)
-			{
+			{	
+				npc.ai.canLeap = false;
+			    npc.setHealth(999999999f);
+			    npc.faction.attackFactions.remove(player);
+			    npc.ai.avoidsWater = true;
+			    npc.ai.onAttack = 3;
+			    npc.setResponse();
+
+				command.setSpeed(10);
+//				command.enableMoving(true);
+				command.runInDirection(ForgeDirection.SOUTH);
 //				try {
 //					context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
 //				} catch (SocketException e) {
@@ -1155,7 +1181,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					chosenSong = "minebike:mus_breaks";
 				
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
-				
 			}
 			if(countdown == 8)
 			{
@@ -1176,13 +1201,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //			initThiefStat();
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
+//			System.out.println("[BiGX] npc motion: [" + npc.motionX + "][" + npc.motionZ + "]");
 			command.enableMoving(true);
+			System.out.println("Thief Level on GO" + thiefLevel);
 			countdown = 11;
 			lastCountdownTickTimestamp = 0;
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
 			ClientEventHandler.animTickChasingFade = 0;
-			System.out.println("Thief Level on GO" + thiefLevel);
 //			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0;
 		}
 	}
@@ -1500,6 +1526,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		
 		if(flagAccomplished)
 		{
+			System.out.println("flagAccomplished");
+			
 			flagAccomplished = false;
 			isRewardState = true;
 			returnValue = 2;		// ACCOMPLISHED
@@ -1697,6 +1725,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		stageList = new ArrayList<Stage>();
 		questSettings.add(0);
 		
+		clientContext = BiGX.instance().clientContext;
+		serverContext = BiGX.instance().serverContext;
+		
 		if(serverContext.suggestedGameProperties != null)
 		{
 			if(serverContext.suggestedGameProperties.getQuestProperties().getStageSettingsArray().size() != 0)
@@ -1712,15 +1743,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					}
 				}
 			}
-		}
-		
-		if(world.isRemote)
-		{
-			clientContext = BiGX.instance().clientContext;
-		}
-		else
-		{
-			serverContext = BiGX.instance().serverContext;
 		}
 	}
 	

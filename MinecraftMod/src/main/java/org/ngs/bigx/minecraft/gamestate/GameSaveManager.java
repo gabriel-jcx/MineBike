@@ -41,6 +41,241 @@ public class GameSaveManager {
 		SETGAMESAVES,
 	};
 	
+	public static boolean readGameSaveByUserCaseId(String caseid, EntityPlayer player) throws IOException
+	{
+		boolean returnValue = false;
+		
+		File folderCheck = new File(gameSaveRootFolderName);
+		
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+			return false;
+		}
+		
+		folderCheck = new File(gameSaveFolderName);
+		
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+			return false;
+		}
+		
+		String fileName = gameSaveFolderName + "\\gamesave_" + caseid + ".sav";
+		
+		File filedesc = new File(fileName);
+		
+		if(!filedesc.exists())
+		{
+			System.out.println("gameSave does not exist for the user[" + caseid + "]");
+
+			Gson gson = new Gson();
+			GameSaveJson save = new GameSaveJson();
+			
+			String parcedSaveObject = gson.toJson(save);
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+			writer.write(parcedSaveObject);
+			 
+			writer.close();
+			
+			returnValue = false;
+		}
+		else
+		{
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+
+			String saveString = br.readLine();
+			
+			GameSaveJson gameSaveJson = (new Gson()).fromJson(saveString, GameSaveJson.class);
+			
+			BigxClientContext context = (BigxClientContext)BigxClientContext.getInstance();
+			int i=0;
+			
+			// UNLOCK SKILLS
+			for(i=0; i<3; i++)
+			{
+				if((gameSaveJson.getSkills() & (0x1 << i)) != 0)
+				{
+					context.getCurrentGameState().getSkillManager().getSkills().get(i).unlockSkillState();
+				}
+			}
+			
+			// READ SAVED PLAYER LEVEL
+			if(gameSaveJson.isChasingQuestOn())
+			{
+				System.out.println("[BiGX] Chasing Quest is on from Save File");
+				setEnableChasingQuestFlag();
+				setUpdatePlayerLevel(gameSaveJson.getPlayerLevel());
+			}
+//			QuestTaskChasing.getLevelSystem().getPlayerLevel()
+//			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
+			
+			returnValue = true;
+		}
+		
+		return returnValue;
+	}
+	
+	public static void setEnableChasingQuestFlag()
+	{
+		GameSaveManager.flagEnableChasingQuestClient = true;
+		GameSaveManager.flagEnableChasingQuestServer = true;
+	}
+	
+	public static void setUpdatePlayerLevel(int savedPlayerLevel)
+	{
+		GameSaveManager.flagUpdatePlayerLevelClient = true;
+		GameSaveManager.flagUpdatePlayerLevelServer = true;
+		GameSaveManager.savedPlayerLevel = savedPlayerLevel;
+	}
+	
+	public static void updatePlayerLevel()
+	{
+		QuestTaskChasing.getLevelSystem().setPlayerLevel(GameSaveManager.savedPlayerLevel);
+	}
+	
+	public static void enableChasingQuest(EntityPlayer player) throws QuestException
+	{
+		if(Minecraft.getMinecraft().thePlayer == null)
+		{
+			System.out.println("[BiGX] The player is not loaded yet.");
+			return;
+		}
+		
+		Quest quest;
+		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+		
+		QuestManager questManager;
+		
+		if(player.worldObj.isRemote)
+		{
+			if(BiGX.instance().clientContext.getQuestManager() == null)
+			{
+				questManager = new QuestManager(
+						BiGX.instance().clientContext, 
+						BiGX.instance().serverContext, 
+						Minecraft.getMinecraft().thePlayer);
+				
+				BiGX.instance().clientContext.setQuestManager(questManager);
+			}
+			
+			if(BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null) {
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+			}
+			else {
+				quest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+			}
+			
+			QuestEventHandler.unregisterAllQuestEventRewardSession();
+			QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
+			QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
+			quest.addTasks(questTaskChasing);
+			if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
+				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+		}
+		else
+		{
+			if(BiGX.instance().serverContext.getQuestManager() == null)
+			{
+				questManager = new QuestManager(
+						BiGX.instance().clientContext, 
+						BiGX.instance().serverContext, 
+						Minecraft.getMinecraft().thePlayer);
+				
+				BiGX.instance().serverContext.setQuestManager(questManager);
+			}
+			
+			if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null)
+			{
+				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+			}
+			else
+			{
+				quest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+			}
+			
+			QuestEventHandler.unregisterAllQuestEventRewardSession();
+			QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4);
+			QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
+			quest.addTasks(questTaskChasing);
+			if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
+				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+		}
+	}
+	
+	public static void writeGameSaveByUserCaseId(String caseid) throws IOException
+	{
+		/*
+		 * private boolean isChasingQuestOn = false;
+		 * private int playerLevel = 1;
+		 * private int skills = 0x0;
+		 */
+		GameSaveJson save = new GameSaveJson();
+		
+		if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null)
+		{
+			save.setChasingQuestOn(true);
+		}
+		
+		if(QuestTaskChasing.getLevelSystem() != null)
+		{
+			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
+		}
+		
+		try
+		{
+			BigxClientContext context = (BigxClientContext)BigxClientContext.getInstance();
+			List<Skill> skills = context.getCurrentGameState().getSkillManager().getSkills();
+			int accumulatedSkillState = 0;
+			int i=0;
+			
+			for(i=0; i<skills.size(); i++)
+			{
+				Skill skill = skills.get(i);
+				
+				if(skill.getSkillState() != enumSkillState.LOCKED)
+				{
+					accumulatedSkillState = accumulatedSkillState | (0x1 << i);
+				}
+			}
+
+			save.setSkills(accumulatedSkillState);
+		}
+		catch(Exception ee)
+		{
+			ee.printStackTrace();
+		}
+		
+		Gson gson = new Gson();
+		String parcedSaveObject = gson.toJson(save);
+		
+		File folderCheck = new File(gameSaveRootFolderName);
+				
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+		}
+		
+		folderCheck = new File(gameSaveFolderName);
+		
+		if(!folderCheck.exists())
+		{
+			// make the folder
+			folderCheck.mkdir();
+		}
+		
+		String saveFileName = gameSaveFolderName + "\\gamesave_" + caseid + ".sav";
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileName));
+		writer.write(parcedSaveObject);
+		 
+		writer.close();
+	}
+	
 	public static GameSaveConfig readGameSaveServerConfigFile() throws IOException
 	{
 		GameSaveConfig returnValue = null;

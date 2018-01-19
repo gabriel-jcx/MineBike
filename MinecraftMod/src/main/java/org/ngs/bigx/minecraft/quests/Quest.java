@@ -12,7 +12,7 @@ public class Quest implements Runnable {
 	public static final String QUEST_ID_STRING_NONE = "ID_QUEST_NONE";
 	public static final String QUEST_ID_STRING_TUTORIAL = "ID_QUEST_TUTORIAL";
 	public static final String QUEST_ID_STRING_CHASE_REG = "ID_QUEST_CHASE_REG";
-	public static final String QUEST_ID_STRING_CHASE_FIRE = "ID_QUEST_CHASE_FIRE";
+	public static final String QUEST_ID_STRING_FIGHT_CHASE = "ID_QUEST_FIGHT_CHASE";
 	
 	protected String id; 		// Quest ID by type
 	
