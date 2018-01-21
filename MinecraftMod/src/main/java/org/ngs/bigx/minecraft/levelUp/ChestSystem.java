@@ -38,7 +38,7 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(20, 77, -76).toString(), "Burnt Key");
+		map.put(Vec3.createVectorHelper(20, 77, -88).toString(), "Burnt Key");
 		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
 		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); //TODO: change coords
 		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); //TODO: change coords
