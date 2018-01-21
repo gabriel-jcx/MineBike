@@ -11,6 +11,7 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
@@ -335,8 +336,21 @@ public class GuiStats extends GuiScreen {
 	    	}
 	    	
 	    	synchronized (bigxServerContext.getQuestManager()) {
+	    		boolean isQuestTaskChasing = false;
+	    		boolean isQuestTaskFightAndChasing = false;
+	    		
 		    	if(bigxServerContext.getQuestManager() != null && bigxServerContext.getQuestManager().getActiveQuest() != null && 
 		    			bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask() instanceof QuestTaskChasing )
+		    	{
+		    		isQuestTaskChasing = true;
+		    	}
+		    	else if(bigxServerContext.getQuestManager() != null && bigxServerContext.getQuestManager().getActiveQuest() != null && 
+		    			bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask() instanceof QuestTaskFightAndChasing )
+		    	{
+		    		isQuestTaskFightAndChasing = true;
+		    	}
+		    	
+		    	if(isQuestTaskChasing)
 		    	{
 		    		QuestTaskChasing questTaskChasing = (QuestTaskChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();
 		    		
@@ -484,6 +498,226 @@ public class GuiStats extends GuiScreen {
 			        if(QuestTaskChasing.getDamageBoostTickCountLeft() > 0)
 			        {
 			        	time = QuestTaskChasing.getDamageBoostTickCountLeft() * 50;
+			        	minuteLeft = time/1000;
+						secondLeft = (time%1000)/10;
+						
+						chainsgQuestTimeLeft = "";
+						
+						if(minuteLeft<10)
+						{
+							chainsgQuestTimeLeft = "0";
+						}
+						
+						chainsgQuestTimeLeft += minuteLeft + ":";
+						
+						if(secondLeft<10)
+						{
+							chainsgQuestTimeLeft += "0";
+						}
+						
+						chainsgQuestTimeLeft += secondLeft;
+			        	
+			        	text = chainsgQuestTimeLeft;
+		
+			        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 90, 22, 0);
+			        }
+		        	
+		    		text = "" + quest.getThiefHealthCurrent();
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
+		    		
+		    		if(quest.getTimeFallBehind() > 0)
+		    		{
+		    			if( (System.currentTimeMillis() - quest.getWarningMsgBlinkingTime()) < 700)
+		    			{
+		    				GL11.glPushMatrix();
+							    GL11.glTranslatef(mcWidth/2, 0, 0);
+						    	GL11.glScalef(2F, 2F, 2F);
+						    	
+					    		text = "WARNING";
+			
+					        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+					    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF0000);
+						    	
+					    		text = "THIEF IS GETTING AWAY";
+			
+					        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+					    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 40, 0xFF0000);
+				    		GL11.glPopMatrix();
+		    			}
+		    		}
+		    		
+		    		if(quest.getComboCount() != 0)
+		    		{
+		    			int combotextColor = 0xFFFFFF;
+		    			combotextColor -= ((4 * quest.getComboCount()) << 8);
+		    			combotextColor -= (4 * quest.getComboCount());
+		    			combotextColor |= 0xFF0000;
+		    			
+	    				GL11.glPushMatrix();
+					    GL11.glTranslatef(0, 0, 0);
+				    	GL11.glScalef(3F, 3F, 3F);
+				    		text = quest.getComboCount() + " COMBO";
+			
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, mcWidth/6-fontRendererObj.getStringWidth(text)/6 + 20, mcHeight/6 - 20, combotextColor);
+			    		GL11.glPopMatrix();
+		    		}
+		    		else
+		    		{
+		    			quest.checkComboCount();
+		    		}
+		    	}
+		    	else if(isQuestTaskFightAndChasing)
+		    	{
+		    		QuestTaskFightAndChasing questTaskFightAndChasing = (QuestTaskFightAndChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();
+		    		
+		    		if(!questTaskFightAndChasing.isChasingQuestOnGoing())
+		    			return;
+		    		
+			    	GL11.glPushMatrix();
+			    	
+					    GL11.glTranslatef(mcWidth/2, 12f, 0); 
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    mc.renderEngine.bindTexture(QUEST_TIMER_TEXTURE);
+				        drawTexturedModalRect(-10, -10, 0, 0, 20 , 20);
+				        
+					    mc.renderEngine.bindTexture(OBJECTIVE_TEXTURE);
+				        drawTexturedModalRect(-40, -10, 0, 0, 20 , 20);
+				        
+					    mc.renderEngine.bindTexture(THIEF_TEXTURE);
+				        drawTexturedModalRect(20, -10, 0, 0, 20 , 20);
+				        
+				        if(QuestTaskFightAndChasing.getSpeedBoostTickCountLeft() > 0)
+				        {
+						    mc.renderEngine.bindTexture(SPEEDUP_TEXTURE);
+					        drawTexturedModalRect(50, -10, 0, 0, 20 , 20);
+				        }
+				        
+				        if(QuestTaskFightAndChasing.getDamageBoostTickCountLeft() > 0)
+				        {
+						    mc.renderEngine.bindTexture(DAMAGEUP_TEXTURE);
+					        drawTexturedModalRect(80, -10, 0, 0, 20 , 20);
+				        }
+		        	
+		        	GL11.glPopMatrix();
+		        	
+		        	GL11.glPushMatrix();
+		        		
+		        		if (questTaskFightAndChasing.isChasingQuestOnCountDown() && questTaskFightAndChasing.getCountdown() < 6) {
+		        			targetAlpha = 1.0f;
+		        		} else {
+		        			targetAlpha = 0.0f;
+						    if (ClientEventHandler.animTickChasingFade < (ClientEventHandler.animTickChasingFadeLength + ClientEventHandler.animTickFadeTime))
+						    	if (ClientEventHandler.animTickChasingFade >= ClientEventHandler.animTickChasingFadeLength)
+						    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickChasingFade - ClientEventHandler.animTickChasingFadeLength) / ClientEventHandler.animTickFadeTime);
+						    	else
+						    		targetAlpha = 1.0f;
+		        		}
+			        	
+				        scaleX = 0.3f;
+			    		scaleY = 0.3f;
+			    		rectX = 256;
+				    	rectY = 256;
+				        GL11.glTranslatef(mcWidth/2 - (int)(rectX*scaleX/2f), 32, 0); 
+					    GL11.glScalef(scaleX, scaleY, 1.0f);
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    ResourceLocation chosenImage = questTaskFightAndChasing.getCountdown() > 2 && questTaskFightAndChasing.getCountdown() < 6  ? TRAFFIC_NONE :
+					    	questTaskFightAndChasing.getCountdown() == 2 ? TRAFFIC_RED :
+					    		questTaskFightAndChasing.getCountdown() == 1 ? TRAFFIC_YELLOW : 
+					    			TRAFFIC_GREEN;
+				        mc.renderEngine.bindTexture(chosenImage);
+				        drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+			        
+			        GL11.glPopMatrix();
+		        
+		        	int time = 0;
+		        	
+		        	QuestTaskFightAndChasing quest = (QuestTaskFightAndChasing) bigxServerContext.getQuestManager().getActiveQuest().getCurrentQuestTask();
+		        	if(quest != null){
+		        		if(quest.isChasingQuestOnCountDown())
+						{
+							time = quest.getCountdown();
+						}
+						else
+						{
+							time = quest.getTime();
+						}
+		        	}
+		        	else
+		        	{
+		        		return;
+		        	}
+		        	
+		        	int minuteLeft = time/60;
+					int secondLeft = time%60;
+					
+					String chainsgQuestTimeLeft = "";
+					
+					if(minuteLeft<10)
+					{
+						chainsgQuestTimeLeft = "0";
+					}
+					
+					chainsgQuestTimeLeft += minuteLeft + ":";
+					
+					if(secondLeft<10)
+					{
+						chainsgQuestTimeLeft += "0";
+					}
+					
+					chainsgQuestTimeLeft += secondLeft;
+		        	
+		        	text = chainsgQuestTimeLeft;
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 22, 0);
+		    		
+		    		text = "" + new DecimalFormat("###.#").format(quest.getDist());
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 - 30, 22, 0);
+		        	
+		    		text = "HP";
+	
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 22, 0);
+			        
+			        if(QuestTaskFightAndChasing.getSpeedBoostTickCountLeft() > 0)
+			        {
+			        	time = QuestTaskFightAndChasing.getSpeedBoostTickCountLeft() * 50;
+			        	minuteLeft = time/1000;
+						secondLeft = (time%1000)/10;
+						
+						chainsgQuestTimeLeft = "";
+						
+						if(minuteLeft<10)
+						{
+							chainsgQuestTimeLeft = "0";
+						}
+						
+						chainsgQuestTimeLeft += minuteLeft + ":";
+						
+						if(secondLeft<10)
+						{
+							chainsgQuestTimeLeft += "0";
+						}
+						
+						chainsgQuestTimeLeft += secondLeft;
+			        	
+			        	text = chainsgQuestTimeLeft;
+		
+			        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 60, 22, 0);
+			        }
+			        
+			        if(QuestTaskFightAndChasing.getDamageBoostTickCountLeft() > 0)
+			        {
+			        	time = QuestTaskFightAndChasing.getDamageBoostTickCountLeft() * 50;
 			        	minuteLeft = time/1000;
 						secondLeft = (time%1000)/10;
 						

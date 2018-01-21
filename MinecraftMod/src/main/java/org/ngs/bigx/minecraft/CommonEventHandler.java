@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
 import org.ngs.bigx.minecraft.client.skills.Skill;
@@ -18,6 +19,7 @@ import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
+import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
@@ -41,6 +43,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -57,6 +60,8 @@ public class CommonEventHandler {
 	private static boolean EVENT_PLAYERSTATE_RESET = false;
 	private static boolean EVENT_PLAYERSTATE_LOAD = false;
 	private static boolean EVENT_PLAYERSTATE_SAVE = false;
+	
+	public static boolean flagOpenMonsterEncounter = false;
 	
 	public static void setEVENT_PLAYERSTATE_FLAG() {
 		EVENT_PLAYERSTATE_FLAG = true;
@@ -82,6 +87,9 @@ public class CommonEventHandler {
 	int server_tick = 0;
 	int serverQuestTestTickCount = 10;
 	
+	int fightAndChaseQuestTick = 0;
+	int fightAndChaseQuestTickCount = 500;
+	
 	private static int thiefMaxLevel = 1;
 	
 	public static LevelSystem levelSys = new LevelSystem();
@@ -100,8 +108,48 @@ public class CommonEventHandler {
 			QuestTeleporter.teleport(event.player, 0, 121, 163, -145);
 		}
 		
+		if(event.player != null)
+		{	
+			if(!event.player.worldObj.isRemote)
+			{
+				if(event.player.worldObj.provider.dimensionId == 0)
+				{
+					fightAndChaseQuestTick ++;
+					
+					if(fightAndChaseQuestTick >= fightAndChaseQuestTickCount)
+					{
+						fightAndChaseQuestTick = 0;
+						
+						if(BiGX.instance().serverContext.getQuestManager() != null)
+						{	
+							if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null) 
+							{
+								if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE) != null)
+								{
+//									System.out.println("[BiGX] Start Fight And Chase Quest");									
+//									Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+//									
+//									try {
+//										BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+//										BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+//										((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
+//									} catch (QuestException e) {
+//										// TODO Auto-generated catch block
+//										e.printStackTrace();
+//									}
+									
+									// OPEN Monster Appears Gui
+									flagOpenMonsterEncounter = true;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		if (event.player.worldObj.isRemote)
-		{
+		{	
 			if(GameSaveManager.flagEnableChasingQuestClient)
 			{
 				try {
@@ -119,6 +167,17 @@ public class CommonEventHandler {
 				GameSaveManager.flagUpdatePlayerLevelClient = false;
 				
 				GameSaveManager.updatePlayerLevel();
+			}
+			
+			if(GameSaveManager.flagEnableFightAndChasingQuestClient)
+			{
+				try {
+					GameSaveManager.enableFightAndChasingQuest(event.player);
+				} catch (QuestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				GameSaveManager.flagEnableFightAndChasingQuestClient = false;
 			}
 		}
 		else
@@ -141,10 +200,38 @@ public class CommonEventHandler {
 				
 				GameSaveManager.updatePlayerLevel();
 			}
+			
+			if(GameSaveManager.flagEnableFightAndChasingQuestServer)
+			{
+				try {
+					GameSaveManager.enableFightAndChasingQuest(event.player);
+					GameSaveManager.flagEnableFightAndChasingQuestServer = false;
+				} catch (QuestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		if (!event.player.worldObj.isRemote)
 		{
+			if(GuiMonsterAppears.isGuiMonsterAppearsClosed)
+			{
+				GuiMonsterAppears.isGuiMonsterAppearsClosed = false;
+				
+				// This gets triggered when the screen closes
+				System.out.println("[BiGX] Start Fight And Chase Quest");									
+				Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+				
+				try {
+					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
+				} catch (QuestException e) {
+					e.printStackTrace();
+				}
+			}
+			
 			try {
 				onPlayerTickEventCount++;
 				

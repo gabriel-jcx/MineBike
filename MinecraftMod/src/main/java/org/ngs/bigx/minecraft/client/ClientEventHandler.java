@@ -11,6 +11,7 @@ import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
+import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.bike.IPedalingComboEvent;
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
@@ -20,6 +21,7 @@ import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
+import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
@@ -460,6 +462,30 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			{
 				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().thePlayer));
 			}
+			
+			if(GuiMonsterAppears.isGuiMonsterAppearsOpened)
+			{
+				GuiMonsterAppears.isGuiMonsterAppearsOpened = false;
+				GuiMonsterAppears.isGuiMonsterAppearsClosed = true;
+			}
+			
+			if(CommonEventHandler.flagOpenMonsterEncounter)
+			{
+				System.out.println("[BigX] GuiMonsterAppears open triggered");
+
+				// Monster Encounter Sound Play
+				String chosenSong = "minebike:monsterencounter";
+
+				Minecraft.getMinecraft().thePlayer.playSound(chosenSong, 1.5f, 1.0f);
+//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
+				
+				CommonEventHandler.flagOpenMonsterEncounter = false;
+				
+				Minecraft mc = Minecraft.getMinecraft();
+				
+				if(mc.currentScreen == null)
+					mc.displayGuiScreen(new GuiMonsterAppears(BiGX.instance().clientContext, mc));
+			}
 
 //			/**
 //			 * TODO: Need to remove this testing code from the release version
@@ -755,6 +781,13 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			GuiMenu gui = new GuiMenu();
 			gui.setContext(context);
 			event.gui = gui;
+		}
+		
+		if(Minecraft.getMinecraft().currentScreen instanceof GuiMonsterAppears)
+		{
+			System.out.println("[BiGX] onGuiOpen(GuiOpenEvent event)");
+			
+			GuiMonsterAppears.isGuiMonsterAppearsOpened = true;
 		}
 	}
 	

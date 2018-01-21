@@ -51,6 +51,10 @@
     "category": "player",
     "sounds": ["pedalinglevelup"]
   },
+  "monsterencounter": {
+    "category": "player",
+    "sounds": [{"name":"monsterencounter","stream": true}]
+  },
   "bg_random": {
     "category": "player",
 	"sounds": [

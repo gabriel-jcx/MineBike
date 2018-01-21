@@ -81,7 +81,17 @@ public class NpcEvents {
 			if(player.worldObj.isRemote)
 			{
 				System.out.println("InteractWithOfficer Quest Generation: CLIENT");
-				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+				
+				if(BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null) {
+					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+				}
+				else {
+					if(BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_CHASE_REG) != null)
+						quest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+					else
+						quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+				}
+				
 				QuestEventHandler.unregisterAllQuestEventRewardSession();
 				QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
 				QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
@@ -92,7 +102,19 @@ public class NpcEvents {
 			else
 			{
 				System.out.println("InteractWithOfficer Quest Generation: SERVER");
-				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+				
+				if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null)
+				{
+					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+				}
+				else
+				{
+					if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_CHASE_REG) != null)
+						quest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+					else
+						quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+				}
+
 				QuestEventHandler.unregisterAllQuestEventRewardSession();
 				QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4);
 				QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
