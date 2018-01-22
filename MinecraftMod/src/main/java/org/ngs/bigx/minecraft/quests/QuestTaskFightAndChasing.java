@@ -166,7 +166,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	protected int chasingQuestInitialPosY = 0;
 	protected int chasingQuestInitialPosZ = 0;
 
-	protected int thiefHealthMax = 15;
+	protected int thiefHealthMaxDefault = 50;
+	protected int thiefHealthMax = thiefHealthMaxDefault;
 	protected int thiefHealthCurrent = thiefHealthMax;
 	protected int thiefLevel = 1;
 	protected int thiefMaxLevel = 1;
@@ -332,7 +333,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void initThiefStat()
 	{
-		thiefHealthMax = 15;
+		thiefHealthMax = thiefHealthMaxDefault;
 		thiefHealthCurrent = thiefHealthMax;
 		thiefLevel = 1;
 	}
