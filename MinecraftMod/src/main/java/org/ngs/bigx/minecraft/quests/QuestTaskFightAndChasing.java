@@ -25,6 +25,9 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
+import org.ngs.bigx.minecraft.client.gui.GuiMonsterReadyFight;
+import org.ngs.bigx.minecraft.client.gui.GuiMonsterStunned;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
@@ -65,6 +68,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
@@ -114,7 +118,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	protected long questTimeStamp = 0;
 	 
 	protected long lastCountdownTickTimestamp = 0;
-	protected int countdown = 11;
+	protected int countdown = 5;
 	
 	protected int time = 0;
 	protected double elapsedTime = 0;
@@ -179,7 +183,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
 	private boolean menuOpen = false;
-	private static GuiChasingQuest guiChasingQuest;
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
@@ -195,6 +198,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public static boolean isContinueSelected = false;
 	public static boolean isRetrySelected = false;
 	public static boolean isExitSelected = false;
+	
+	public boolean isStunnedGuiHappend = false;
 	
 	public static LevelSystem getLevelSystem()
 	{
@@ -453,16 +458,13 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	}
 
 	public void handleQuestStart(){
-		showLevelSelectionGui();
-		
 		boolean isReboot = !isActive;
-//		player.setGameType(GameType.CREATIVE);
 		Minecraft mc = Minecraft.getMinecraft();
 		
 		initialHunger = mc.thePlayer.getFoodStats().getFoodLevel();
 		time = 0;
 		initThiefStat();
-		countdown = 11;
+		countdown = 5;
 		lastCountdownTickTimestamp = 0;
 		dist = 0;
 		pausedTime = 0;
@@ -891,57 +893,13 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		if (thiefLevel == 3){//levelSys.getPlayerLevel() == 3){
 			ItemStack key = new ItemStack(Item.getItemById(4424));
 			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
-			//TODO: add Next Quest (normal -> fire -> air -> earth -> water)
-			//TODO: fix descriptions for this quest
-//			try {
-//				QuestChaseTypeEnum newQuestType;
-//				String newQuestID;
-//				switch(this.questChaseType)
-//				{
-//				case REGULAR:
-//					newQuestType = QuestChaseTypeEnum.FIRE;
-//					newQuestID = Quest.QUEST_ID_STRING_CHASE_FIRE;
-//					break;
-//				default:
-//					 newQuestType = QuestChaseTypeEnum.REGULAR;
-//					 newQuestID = Quest.QUEST_ID_STRING_CHASE_REG;
-//					break;
-//				};
-//				
-//				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-//				Quest quest;
-//				
-//				if(player.worldObj.isRemote)
-//				{
-//					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: CLIENT");
-//					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
-//					quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
-//					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
-//						BiGX.instance().clientContext.getQuestManager().setActiveQuest(newQuestID);
-//				}
-//				else
-//				{
-//					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: SERVER");
-//					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
-//					quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
-//					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
-//						BiGX.instance().serverContext.getQuestManager().setActiveQuest(newQuestID);
-//				}
-//			} catch (QuestException e) {
-//				e.printStackTrace();
-//			}
 		}
 		
 		//System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
 		levelSys.levelUp();
-//		if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
-//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
-//			levelSys.giveLevelUpRewards(player);
-//		}
 		
 		isActive = false;
 		completed = true;
-//		player.setGameType(GameType.SURVIVAL);
 		goBackToTheOriginalWorld(ws, player);
 	}
 	
@@ -963,8 +921,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				flagGiveup = true;
 				chasingQuestOnGoing = false;
 			}
-			
-	//		waitForRewardPickupAndContinue();
 			
 			// CHASE QUEST LOSE CONDITION
 			if(timeFallBehind >= 30)
@@ -1027,147 +983,15 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		
 		long timeNow = System.currentTimeMillis();
 		
-		// COUNT DOWN TIME
-		if (Minecraft.getMinecraft().currentScreen != guiChasingQuest) {
-			countdown --;
-		}
-		
-		// PLAY SOUND
-		if (countdown == 2 || countdown == 1) {
-			player.worldObj.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
-//			player.playSound("minebike:beep-ready", 1.0f, 1.0f);
-		} else if (countdown == 0) {
-			player.worldObj.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
-//			player.playSound("minebike:beep-go", 1.0f, 1.0f);
-		}
-		
 		if(countdown > 0){	
-			if (countdown == 7) {
+			// REMOVE existing NPC
+			if (countdown == 4) {
 				for (Object o : player.worldObj.loadedEntityList) {
 					if (((Entity)o) instanceof EntityCustomNpc) {
 						((EntityCustomNpc)o).delete();
 					}
 				}
-			}
-			if (countdown == 0) {
-				elapsedTime = timeNow;
-				dist = 0;
-				startingZ = (int)player.posZ;
-				endingZ = (int)player.posZ;
-			}
-			if (countdown == 5) {
-				if(player.worldObj.isRemote) {
-				}
-				else
-				{
-					System.out.println("if (countdown == 5)");
-					
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
-					
-					switch(this.questChaseType)
-					{
-					case REGULAR:
-						System.out.println("Spawning thief...");
-						switch(thiefLevel)
-						{
-						case 1:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/GangsterSteve.png");
-							break;
-						case 2:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/FireSteve.png");
-							break;
-						case 3:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/RaggedyBardSteve.png");
-							break;
-						case 4:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve.png");
-							break;
-						case 5:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve 2.png");
-							break;
-						case 6:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
-							break;
-						case 7:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/SandMonster.png");
-							break;
-						case 8:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/StoneGolem.png");
-							break;
-						case 9:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/EnderMage.png");
-							break;
-						case 10:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Undead King.png");
-							break;
-						default:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief", "customnpcs:textures/entity/humanmale/GangsterSteve.png");
-							break;
-						}
-						
-						npc.ai.stopAndInteract = false;
-						break;
-					case FIRE:
-						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
-						npc.ai.stopAndInteract = false;
-						npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
-						break;
-					default:
-						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-						npc.ai.stopAndInteract = false;
-						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
-						break;
-					};
-					
-					setNpc(npc);
-					
-					command = new NpcCommand(serverContext, npc);
-//					command.setSpeed(10);
-//					command.enableMoving(false);
-//					command.runInDirection(ForgeDirection.SOUTH);
-					
-
-					npc.faction.neutralPoints = 2000;
-					npc.faction.friendlyPoints = 3000;
-					npc.faction.defaultPoints = 2500;
-					npc.faction.attackFactions.add(player);
-					npc.ai.canLeap = true;
-					npc.attackEntityAsMob(player);
-					
-//					command.setSpeed(10);
-					command.enableMoving(false);
-//					command.runInDirection(ForgeDirection.SOUTH);
-					
-					setNpcCommand(command);
-				}
-			}
-			else if (countdown == 1)
-			{	
-				npc.ai.canLeap = false;
-			    npc.setHealth(999999999f);
-			    npc.faction.attackFactions.remove(player);
-			    npc.ai.avoidsWater = true;
-			    npc.ai.onAttack = 3;
-			    npc.setResponse();
-
-				command.setSpeed(10);
-//				command.enableMoving(true);
-				command.runInDirection(ForgeDirection.SOUTH);
-//				try {
-//					context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
-//				} catch (SocketException e) {
-//					e.printStackTrace();
-//				} catch (UnknownHostException e) {
-//					e.printStackTrace();
-//				} catch (BiGXNetException e) {
-//					e.printStackTrace();
-//				} catch (BiGXInternalGamePluginExcpetion e) {
-//					e.printStackTrace();
-//				}
-			}
-			if(countdown == 9)
-			{
+				
 				player.rotationPitch = 0f;
 				player.rotationYaw = 0f;
 				
@@ -1179,37 +1003,208 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					chosenSong = "minebike:mus_metal";
 				else
 					chosenSong = "minebike:mus_breaks";
+
+//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop");
 				
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
-			}
-			if(countdown == 8)
-			{
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
-				if (guiChasingQuest != null && !thiefLevelSet){
-					if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-						setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-					else
-						setThiefLevel(levelSys.getPlayerLevel());
-					System.out.println("Thief's level is: " + getThiefLevel());
-					thiefLevelSet = true;
-				}
-				if(player.worldObj.isRemote) {
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
+				setThiefLevel(levelSys.getPlayerLevel());
+				System.out.println("Thief's level is: " + getThiefLevel());
+				thiefLevelSet = true;
+			}
+			// SPAWN surrounding
+			else if(countdown == 3)
+			{
+				ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
+				areas.add(terrainBiome.getRandomGrassBiome());
+				areas.add(terrainBiome.getRandomGrassBiome());
+				areas.add(terrainBiome.getRandomGrassBiome());
+				areas.add(terrainBiome.getRandomGrassBiome());
+				
+				for(int row=0; row<2; row++)
+				{
+					for(int idx=0; idx<areas.size(); idx++)
+					{
+						int x=0;
+						switch(idx)
+						{
+						case 0:
+							x = chasingQuestInitialPosX-14;
+							break;
+						case 1:
+							x = chasingQuestInitialPosX-8;
+							break;
+						case 2:
+							x = chasingQuestInitialPosX+2;
+							break;
+						case 3:
+							x = chasingQuestInitialPosX+9;
+							break;
+						}
+						int y = chasingQuestInitialPosY;
+						int z = (int)player.posZ+5 + row*9;
+						
+						TerrainBiomeArea terrainBiomeArea = areas.get(idx);
+						
+						for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
+						{
+							if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+								setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
+							else
+								setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
+						}
+					}
 				}
 			}
+			// SPAWN a monster
+			else if (countdown == 1) 
+			{
+				if(player.worldObj.isRemote) {
+				}
+				else
+				{
+					System.out.println("if (countdown == 1)");
+					
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
+					
+//					switch(this.questChaseType)
+//					{
+//					case REGULAR:
+//						System.out.println("Spawning thief...");
+//						switch(thiefLevel)
+//						{
+//						case 1:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/GangsterSteve.png");
+//							break;
+//						case 2:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/FireSteve.png");
+//							break;
+//						case 3:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/RaggedyBardSteve.png");
+//							break;
+//						case 4:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve.png");
+//							break;
+//						case 5:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve 2.png");
+//							break;
+//						case 6:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
+//							break;
+//						case 7:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/SandMonster.png");
+//							break;
+//						case 8:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/StoneGolem.png");
+//							break;
+//						case 9:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/EnderMage.png");
+//							break;
+//						case 10:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Undead King.png");
+//							break;
+//						default:
+//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief", "customnpcs:textures/entity/humanmale/GangsterSteve.png");
+//							break;
+//						}
+//						
+//						npc.ai.stopAndInteract = false;
+//						break;
+//					case FIRE:
+//						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
+//						npc.ai.stopAndInteract = false;
+//						npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
+//						break;
+//					default:
+//						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
+//						npc.ai.stopAndInteract = false;
+//						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
+//						break;
+//					};
+					
+					npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
+					npc.ai.stopAndInteract = false;
+					setNpc(npc);
+					
+					npc.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1);
+					
+					command = new NpcCommand(serverContext, npc);
+					
+					npc.faction.neutralPoints = 2000;
+					npc.faction.friendlyPoints = 3000;
+					npc.faction.defaultPoints = 2500;
+					npc.faction.attackFactions.add(player);
+					npc.ai.canLeap = true;
+					npc.attackEntityAsMob(player);
+					
+					command.enableMoving(false);
+					
+					setNpcCommand(command);
+				}
+			}
+			
+			if (countdown == 1)
+			{	
+//				npc.ai.canLeap = false;
+//			    npc.setHealth(999999999f);
+//			    npc.faction.attackFactions.remove(player);
+//			    npc.ai.avoidsWater = true;
+//			    npc.ai.onAttack = 3;
+//			    npc.setResponse();
+
+			    // TODO: START RUNNING FOR QUEST FIGHT AND CHASE QUEST
+//				command.setSpeed(10);
+//				command.runInDirection(ForgeDirection.SOUTH);
+			}
+//			if(countdown == 9)
+//			{
+//				player.rotationPitch = 0f;
+//				player.rotationYaw = 0f;
+//				
+//				/**
+//				 * PLAYING MUSIC FOR CHASING QUEST
+//				 */
+//				
+//				if (thiefLevel < 2 || thiefLevel > 3)
+//					chosenSong = "minebike:mus_metal";
+//				else
+//					chosenSong = "minebike:mus_breaks";
+//				
+//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
+//			}
+//			if(countdown == 8)
+//			{
+//				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
+//				setThiefLevel(levelSys.getPlayerLevel());
+//				System.out.println("Thief's level is: " + getThiefLevel());
+//				thiefLevelSet = true;
+//				
+//				if(player.worldObj.isRemote) {
+//					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
+//				}
+//			}
 		} else {
-//			initThiefStat();
 			chasingQuestOnCountDown = false;
-			System.out.println("GO!");
-//			System.out.println("[BiGX] npc motion: [" + npc.motionX + "][" + npc.motionZ + "]");
+//			System.out.println("GO!");
 			command.enableMoving(true);
+
 			System.out.println("Thief Level on GO" + thiefLevel);
-			countdown = 11;
+			countdown = 5;
 			lastCountdownTickTimestamp = 0;
 			initialDist = 20; // HARD CODED
 			pausedTime = 0;
 			ClientEventHandler.animTickChasingFade = 0;
-//			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0;
+
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(new GuiMonsterReadyFight(BiGX.instance().clientContext, mc));
+		}
+		
+		// COUNT DOWN TIME
+		{
+			System.out.println("[BiGX] Count down from fq by one");
+			countdown --;
 		}
 	}
 	
@@ -1225,11 +1220,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		long timeNow = System.currentTimeMillis();
 		
 		// Calulate Tick Numbers
-		if(countdown == 11)
+		if(countdown == 5)
 		{
 			pausedTime = 0;
 			questTimeStamp = timeNow;
-			countdown = 10;
+			countdown = 4;
 			tickCount ++;
 		}
 		else
@@ -1461,35 +1456,48 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		System.out.println("[BiGX] Quest Chasing Task Started");
  		synchronized (questManager) {
 			init();
-			
+
 			while(isActive)
 			{	
+//				System.out.println("[BiGX] FQ AF[" + isActive + "]");
+				
 				if(checkChasingQuestTaskActivityFlags() == 2)
 					continue;
+
+//				System.out.println("[BiGX] FQ AF[checkChasingQuestTaskActivityFlags]");
 				
 				checkComboCount();
 				
 				if(chasingQuestOnGoing)
 				{
-//					if (guiChasingQuest != null)
-//						System.out.println("Selected Quest Level:" + (guiChasingQuest.getSelectedQuestLevelIndex()+1));
-//					System.out.println("Thief Level is Set: " + thiefLevelSet);
-//					if (guiChasingQuest != null && !thiefLevelSet){
-//						if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-//							setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-//						else
-//							setThiefLevel(levelSys.getPlayerLevel());
-//						System.out.println("Thief's level is: " + getThiefLevel());
-//						thiefLevelSet = true;
-//					}
 					if(chasingQuestOnCountDown)
 					{
 						handleCountdown();
 					}
-					else
+					else if(getThiefHealthCurrent() < (getThiefHealthMax() * 0.15))
 					{
-						// BUILD CENTER
-						// BUILD SIDE
+						if(!isStunnedGuiHappend)
+						{
+							isStunnedGuiHappend = true;
+
+							npc.ai.canLeap = false;
+						    npc.setHealth(999999999f);
+						    npc.faction.attackFactions.remove(player);
+						    npc.ai.avoidsWater = true;
+						    npc.ai.onAttack = 3;
+						    npc.setResponse();
+							
+							command.setSpeed(10);
+							command.runInDirection(ForgeDirection.SOUTH);
+
+							// OPEN Monster Stunned GUI
+							Minecraft mc = Minecraft.getMinecraft();
+							if(mc.currentScreen == null)
+								mc.displayGuiScreen(new GuiMonsterStunned(BiGX.instance().clientContext, mc));
+						}
+						
+						System.out.println("[BiGX] FQ AF[!chasingQuestOnCountDown]");
+
 						player.setHealth(player.getMaxHealth());
 						if(!player.worldObj.isRemote)
 							handlePlayTimeOnServer();
@@ -1507,15 +1515,18 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				}
 				
 				try {
+//					System.out.println("[BiGX] questManager wait");
 					questManager.wait();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
+			
+			System.out.println("[BiGX] Logic out");
 
 			time = 0;
 			initThiefStat();
-			countdown = 11;
+			countdown = 5;
 			pausedTime = 0;
 			((BigxServerContext)serverContext).updateQuestInformationToClient(null);
 		}
@@ -1676,9 +1687,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		{
 			System.out.println("[Bigx] This button is not implemented yet.");
 			
-			int tCurrentLevel = guiChasingQuest.getSelectedQuestLevelIndex();
-			
-			guiChasingQuest.selectQuestlevel(tCurrentLevel+1);
+			int tCurrentLevel = levelSys.getPlayerLevel();
 			
 			flagRetry = true;
 			returnValue = 0;
@@ -1711,7 +1720,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		virtualCurrency = 0;
 		initThiefStat();
 		completed = false;
-		countdown = 11;
+		countdown = 5;
 		pausedTime = 0;
 		comboCount = 0;
 		isRewardState = false;
@@ -1748,15 +1757,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	@Override
 	public void onNpcInteraction(EntityInteractEvent event) {
-		System.out.println("Interacting with NPC During Quest");
-		EntityPlayer player = event.entityPlayer;
-		
-		if(!player.worldObj.isRemote)
-		{
-			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
-				handleQuestStart();
-			}
-		}
+		System.out.println("Interacting with NPC During Quest FQ");
 	}
 	
 	@Override
@@ -1784,13 +1785,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					break;
 				};
 				
-//				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion") //&& checkPlayerInArea(player, x1, y1, z1, x2, y2, z2)
-//						&& player.dimension != this.questDestinationDimensionId
-//						&& player.dimension == this.questSourceDimensionId)
-//				{
-//					handleQuestStart();
-//				}
-//				else 
 				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == this.questDestinationDimensionId)
 				{
@@ -1801,7 +1795,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						time = 0;
 						chasingQuestOnCountDown = false;
 						chasingQuestOnGoing = false;
-						countdown = 11;
+						countdown = 5;
 						pausedTime = 0;
 						initThiefStat();
 //						cleanArea(ws, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)player.posZ - 128, (int)player.posZ);
@@ -1820,6 +1814,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void onAttackEntityEvent(AttackEntityEvent event) {
 		synchronized (questManager) {
+			if(questManager.getActiveQuestId() != Quest.QUEST_ID_STRING_FIGHT_CHASE)
+				return;
+			
 			if( (chasingQuestOnGoing) && (!chasingQuestOnCountDown) )
 			{
 				if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
@@ -1911,46 +1908,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public static int getDamageBoostTickCountLeft() // Each ticks are 50 ms
 	{
 		return damageUpEffectTickCount;
-	}
-
-	public void showLevelSelectionGui()
-	{
-		////Displaying Level Selection GUI
-		Minecraft mc = Minecraft.getMinecraft();
-		if (guiChasingQuest == null)
-		{
-			guiChasingQuest = new GuiChasingQuest(mc);
-		}
-		
-		guiChasingQuest.resetChasingQuestLevels();
-		
-		try {
-			for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
-			{
-				boolean islocked = false;
-				if (i > levelSys.getPlayerLevel()-1)
-				{
-					islocked = true;
-				}
-				else
-				{
-					System.out.println("NOT LOCKED");
-				}
-				GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-				
-				guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-			}
-			guiChasingQuest.selectQuestlevel(levelSys.getPlayerLevel()-1);
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		} catch (GuiQuestlistException e) {
-			e.printStackTrace();
-		}
-		
-		if(mc.currentScreen == null)
-			mc.displayGuiScreen(guiChasingQuest);
-		System.out.println("Display Chasing Quest Gui");
-		////End Displaying Level Selection GUI
 	}
 
 	public boolean isChasingQuestOnGoing() {

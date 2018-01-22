@@ -1460,7 +1460,7 @@ public class BackupOfQuestTaskChasing extends QuestTask implements IQuestEventRe
 		System.out.println("[BiGX] Quest Chasing Task Started");
  		synchronized (questManager) {
 			init();
-			
+
 			while(isActive)
 			{	
 				if(checkChasingQuestTaskActivityFlags() == 2)

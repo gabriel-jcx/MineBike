@@ -31,6 +31,7 @@ import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 
 import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
@@ -63,6 +64,10 @@ public class GameSaveManager {
 	public static boolean flagEnableChasingQuestServer = false;
 	public static boolean flagUpdatePlayerLevelClient = false;
 	public static boolean flagUpdatePlayerLevelServer = false;
+
+	public static boolean flagEnableFightAndChasingQuestClient = false;
+	public static boolean flagEnableFightAndChasingQuestServer = false;
+	
 	public static boolean flagGameSaveContinue = false;
 	
 	public static int savedPlayerLevel = 1;
@@ -142,6 +147,8 @@ public class GameSaveManager {
 				setEnableChasingQuestFlag();
 				setUpdatePlayerLevel(gameSaveJson.getPlayerLevel());
 			}
+			
+			setEnableFightAndChasingQuestFlag();
 //			QuestTaskChasing.getLevelSystem().getPlayerLevel()
 //			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
 			
@@ -157,6 +164,12 @@ public class GameSaveManager {
 		GameSaveManager.flagEnableChasingQuestServer = true;
 	}
 	
+	public static void setEnableFightAndChasingQuestFlag()
+	{
+		GameSaveManager.flagEnableFightAndChasingQuestClient = true;
+		GameSaveManager.flagEnableFightAndChasingQuestServer = true;
+	}
+	
 	public static void setUpdatePlayerLevel(int savedPlayerLevel)
 	{
 		GameSaveManager.flagUpdatePlayerLevelClient = true;
@@ -167,6 +180,81 @@ public class GameSaveManager {
 	public static void updatePlayerLevel()
 	{
 		QuestTaskChasing.getLevelSystem().setPlayerLevel(GameSaveManager.savedPlayerLevel);
+	}
+	
+	public static void enableFightAndChasingQuest(EntityPlayer player) throws QuestException
+	{
+		if(Minecraft.getMinecraft().thePlayer == null)
+		{
+			System.out.println("[BiGX] The player is not loaded yet.");
+			return;
+		}
+		
+		Quest quest;
+		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+		
+		QuestManager questManager;
+		
+		if(player.worldObj.isRemote)
+		{
+			if(BiGX.instance().clientContext.getQuestManager() == null)
+			{
+				questManager = new QuestManager(
+						BiGX.instance().clientContext, 
+						BiGX.instance().serverContext, 
+						Minecraft.getMinecraft().thePlayer);
+				
+				BiGX.instance().clientContext.setQuestManager(questManager);
+			}
+			
+			if(BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null) {
+				quest = new Quest(Quest.QUEST_ID_STRING_FIGHT_CHASE, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+			}
+			else {
+				if(BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE) != null)
+					quest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+				else
+					quest = new Quest(Quest.QUEST_ID_STRING_FIGHT_CHASE, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
+			}
+			
+			QuestEventHandler.unregisterAllQuestEventRewardSession();
+			QuestTaskFightAndChasing questTaskFightAndChasing = new QuestTaskFightAndChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
+			QuestEventHandler.registerQuestEventRewardSession(questTaskFightAndChasing);
+			quest.addTasks(questTaskFightAndChasing);
+			if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
+				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+		}
+		else
+		{
+			if(BiGX.instance().serverContext.getQuestManager() == null)
+			{
+				questManager = new QuestManager(
+						BiGX.instance().clientContext, 
+						BiGX.instance().serverContext, 
+						Minecraft.getMinecraft().thePlayer);
+				
+				BiGX.instance().serverContext.setQuestManager(questManager);
+			}
+			
+			if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null)
+			{
+				quest = new Quest(Quest.QUEST_ID_STRING_FIGHT_CHASE, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+			}
+			else
+			{
+				if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE) != null)
+					quest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+				else
+					quest = new Quest(Quest.QUEST_ID_STRING_FIGHT_CHASE, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
+			}
+			
+			QuestEventHandler.unregisterAllQuestEventRewardSession();
+			QuestTaskFightAndChasing questTaskFightAndChasing = new QuestTaskFightAndChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4);
+			QuestEventHandler.registerQuestEventRewardSession(questTaskFightAndChasing);
+			quest.addTasks(questTaskFightAndChasing);
+			if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
+				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+		}
 	}
 	
 	public static void enableChasingQuest(EntityPlayer player) throws QuestException
@@ -198,7 +286,10 @@ public class GameSaveManager {
 				quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
 			}
 			else {
-				quest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+				if(BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_CHASE_REG) != null)
+					quest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
+				else
+					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
 			}
 			
 			QuestEventHandler.unregisterAllQuestEventRewardSession();
@@ -226,7 +317,10 @@ public class GameSaveManager {
 			}
 			else
 			{
-				quest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+				if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_CHASE_REG) != null)
+					quest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
+				else
+					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
 			}
 			
 			QuestEventHandler.unregisterAllQuestEventRewardSession();

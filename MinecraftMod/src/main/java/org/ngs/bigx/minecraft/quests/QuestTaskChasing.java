@@ -1030,6 +1030,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		
 		// COUNT DOWN TIME
 		if (Minecraft.getMinecraft().currentScreen != guiChasingQuest) {
+			System.out.println("[BiGX] Count Down by One");
 			countdown --;
 		}
 		
@@ -1726,11 +1727,22 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void onNpcInteraction(EntityInteractEvent event) {
 		System.out.println("Interacting with NPC During Quest");
-		EntityPlayer player = event.entityPlayer;
 		
 		if(!player.worldObj.isRemote)
 		{
 			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
+				if(player.worldObj.provider.dimensionId != 0)
+					return;
+					
+				try {
+					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+				} catch (QuestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				EntityPlayer player = event.entityPlayer;
+				
 				handleQuestStart();
 			}
 		}
@@ -1797,6 +1809,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void onAttackEntityEvent(AttackEntityEvent event) {
 		synchronized (questManager) {
+			if(questManager.getActiveQuestId() != Quest.QUEST_ID_STRING_CHASE_REG)
+				return;
+			
 			if( (chasingQuestOnGoing) && (!chasingQuestOnCountDown) )
 			{
 				if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
