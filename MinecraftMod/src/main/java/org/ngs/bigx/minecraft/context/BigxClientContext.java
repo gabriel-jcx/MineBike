@@ -389,6 +389,11 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		0, bigxclientTimerTimeout);
 	}
 	
+	public static boolean getIsGameSaveRead()
+	{
+		return isGameSaveRead;
+	}
+	
 	public void handleGameSaveState()
 	{
 		if(!isGameSaveRead)

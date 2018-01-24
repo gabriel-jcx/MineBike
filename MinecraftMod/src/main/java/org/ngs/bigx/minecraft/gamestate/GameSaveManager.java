@@ -22,6 +22,7 @@ import net.minecraft.world.WorldServer;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -149,6 +150,10 @@ public class GameSaveManager {
 			}
 			
 			setEnableFightAndChasingQuestFlag();
+			
+			// SET CHAPTER
+			GuiChapter.setChapter(gameSaveJson.getBoundaryProgress());
+			
 //			QuestTaskChasing.getLevelSystem().getPlayerLevel()
 //			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
 			

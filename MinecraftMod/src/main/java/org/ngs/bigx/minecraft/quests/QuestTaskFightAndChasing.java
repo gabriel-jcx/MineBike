@@ -1123,7 +1123,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 //						break;
 //					};
-					
+
+//					npc.attackEntityAsMob(player);
 					npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
 					npc.ai.stopAndInteract = false;
 					setNpc(npc);
