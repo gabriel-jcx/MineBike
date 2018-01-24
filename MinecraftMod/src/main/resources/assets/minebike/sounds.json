@@ -55,6 +55,10 @@
     "category": "player",
     "sounds": [{"name":"monsterencounter","stream": true}]
   },
+  "victory": {
+    "category": "player",
+    "sounds": [{"name":"victory","stream": true}]
+  },
   "bg_random": {
     "category": "player",
 	"sounds": [
