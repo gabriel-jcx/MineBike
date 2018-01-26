@@ -1,21 +1,13 @@
 package org.ngs.bigx.minecraft.quests;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
-import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
-import org.ngs.bigx.dictionary.protocol.Specification;
-import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
@@ -23,30 +15,18 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
-import org.ngs.bigx.minecraft.client.gui.GuiChapter;
-import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterReadyFight;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterStunned;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiVictory;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiFinishChasingQuest;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest.ChasingQuestDifficultyEnum;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
-import org.ngs.bigx.minecraft.npcs.NpcEvents;
-import org.ngs.bigx.minecraft.npcs.NpcLocations;
-import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
 import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
@@ -58,17 +38,10 @@ import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemUse;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventNpcInteraction;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
-import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.item.EntityItem;
@@ -81,8 +54,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -93,7 +64,6 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
-import noppes.npcs.entity.EntityNpcCrystal;
 
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
@@ -101,6 +71,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
 			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
 
+	public static ArrayList<ArrayList<String>> monsterTypes = GetMonsterTypes();
+	
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
 
 	private static boolean flagAccomplished = false;
@@ -224,6 +196,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		this.questSourceDimensionId = 0;
 		
 		this.questChaseType = questChaseType;
+		
+		monsterTypes = new ArrayList<ArrayList<String>>();
 	}
 	
 	public QuestTaskFightAndChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
@@ -324,9 +298,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void initThiefStat()
 	{
-		thiefHealthMax = thiefHealthMaxDefault;
-		thiefHealthCurrent = thiefHealthMax;
 		thiefLevel = 1;
+		thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
+		thiefHealthCurrent = thiefHealthMax;
 	}
 	
 	public void setThiefLevel(int level)
@@ -336,43 +310,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			thiefMaxLevel = thiefLevel;
 		
 //		thiefHealthMax = 41 + (int) Math.pow(9, thiefLevel);
-		switch(thiefLevel)
-		{
-		case 1:
-			thiefHealthMax = 50;
-			break;
-		case 2:
-			thiefHealthMax = 300;
-			break;
-		case 3:
-			thiefHealthMax = 600;
-			break;
-		case 4:
-			thiefHealthMax = 2000;
-			break;
-		case 5:
-			thiefHealthMax = 4000;
-			break;
-		case 6:
-			thiefHealthMax = 4000;
-			break;
-		case 7:
-			thiefHealthMax = 5000;
-			break;
-		case 8:
-			thiefHealthMax = 6000;
-			break;
-		case 9:
-			thiefHealthMax = 6000;
-			break;
-		case 10:
-			thiefHealthMax = 9999;
-			break;
-		default:
-			thiefHealthMax = 9999;
-			break;
-		}
+		thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
 		thiefHealthCurrent = thiefHealthMax;
+		
 		System.out.println("Thief's level has been set!");
 	}
 	
@@ -1116,7 +1056,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //					};
 
 //					npc.attackEntityAsMob(player);
-					npc = NpcCommand.spawnNpc(0, 11, 5, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
+					ArrayList<String> monsterType = monsterTypes.get(thiefLevel-1);
+					npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));
+					
 					npc.ai.stopAndInteract = false;
 					setNpc(npc);
 					
@@ -1877,6 +1819,33 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			comboCount = 0;
 	}
 	
+	private static ArrayList<ArrayList<String>> GetMonsterTypes() {
+		ArrayList<ArrayList<String>> types = new ArrayList<ArrayList<String>>();
+		
+		ArrayList<String> type1 = new ArrayList<String>();
+		type1.add("Normal Monster");
+		type1.add("50");
+		type1.add("customnpcs:textures/entity/monstermale/ZombieSteve.png");
+		ArrayList<String> type2 = new ArrayList<String>();
+		type2.add("Angry Monster");
+		type2.add("80");
+		type2.add("customnpcs:textures/entity/monstermale/ZombieSteve.png");
+		ArrayList<String> type3 = new ArrayList<String>();
+		type3.add("Brutish Monster");
+		type3.add("115");
+		type3.add("customnpcs:textures/entity/orcmale/GenericOrc1.png");
+		ArrayList<String> type4 = new ArrayList<String>();
+		type4.add("Maniac Monster");
+		type4.add("150");
+		type4.add("customnpcs:textures/entity/orcmale/MercenaryOrc1.png");
+		
+		types.add(type1);
+		types.add(type2);
+		types.add(type3);
+		types.add(type4);
+		
+		return types;
+	}
 	public int getTime()
 	{
 		return time;

@@ -64,7 +64,7 @@ public class GuiMonsterReadyFight extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				text = "GO And FIGHT!";
+				text = "GO and FIGHT!";
 			}
 		}, 1*1000);
 	}

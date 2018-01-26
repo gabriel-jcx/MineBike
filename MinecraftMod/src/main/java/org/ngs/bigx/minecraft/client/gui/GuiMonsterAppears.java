@@ -82,7 +82,7 @@ public class GuiMonsterAppears extends GuiScreen {
 	    	GL11.glTranslatef(mcWidth/2, 0, 0);
 	    	GL11.glScalef(2F, 2F, 2F);
 
-			String text  = "MONSTER APPEARS!";
+			String text  = "A MONSTER APPEARED!";
 
         	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
     		fontRendererObj.drawStringWithShadow(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);

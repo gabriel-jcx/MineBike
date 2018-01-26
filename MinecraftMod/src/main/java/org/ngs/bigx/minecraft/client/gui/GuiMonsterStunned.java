@@ -34,7 +34,7 @@ public class GuiMonsterStunned extends GuiScreen {
 	public GuiMonsterStunned(Minecraft mc) {
 		super();
 		this.mc = mc;
-		text = "The monster stunned!";
+		text = "The monster is hurt!";
 		text2 = "Chase the monster and defeat him!";
 	}
 	
