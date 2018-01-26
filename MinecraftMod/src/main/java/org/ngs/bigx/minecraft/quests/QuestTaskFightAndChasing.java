@@ -25,10 +25,12 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterReadyFight;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterStunned;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.GuiVictory;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
@@ -175,8 +177,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	protected boolean thiefLevelSet = false;
 	
 	private WorldServer ws;
-	private int questDestinationDimensionId = -1;
-	private int questSourceDimensionId = -1;
+	private int questDestinationDimensionId = WorldProviderFlats.dimID;
+	private int questSourceDimensionId = 0;
 	
 	private static LevelSystem levelSys;
 	
@@ -218,19 +220,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		thiefMaxLevel = maxLevel;
 		this.id = this.id + "_" + questChaseType;
 		
-		switch(questChaseType)
-		{
-		case REGULAR:
-			this.questDestinationDimensionId = WorldProviderFlats.dimID;
-			this.questSourceDimensionId = 0;
-			break;
-		case FIRE:
-			this.questDestinationDimensionId = WorldProviderDark.dimID;
-			this.questSourceDimensionId = 105;
-			break;
-		default:
-			break;
-		}
+		this.questDestinationDimensionId = WorldProviderFlats.dimID;
+		this.questSourceDimensionId = 0;
 		
 		this.questChaseType = questChaseType;
 	}
@@ -499,7 +490,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
 		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
-		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+		QuestTeleporter.teleport(player, 100, 1, 11, 0);
 
 		chasingQuestInitialPosX = 1;
 		chasingQuestInitialPosY = 10;
@@ -1015,15 +1006,15 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 			// SPAWN surrounding
 			else if(countdown == 3)
-			{
-				ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
-				areas.add(terrainBiome.getRandomGrassBiome());
-				areas.add(terrainBiome.getRandomGrassBiome());
-				areas.add(terrainBiome.getRandomGrassBiome());
-				areas.add(terrainBiome.getRandomGrassBiome());
-				
-				for(int row=0; row<2; row++)
+			{	
+				for(int row=0; row<3; row++)
 				{
+					ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
+					areas.add(terrainBiome.getRandomGrassBiome());
+					areas.add(terrainBiome.getRandomGrassBiome());
+					areas.add(terrainBiome.getRandomGrassBiome());
+					areas.add(terrainBiome.getRandomGrassBiome());
+					
 					for(int idx=0; idx<areas.size(); idx++)
 					{
 						int x=0;
@@ -1125,7 +1116,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //					};
 
 //					npc.attackEntityAsMob(player);
-					npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
+					npc = NpcCommand.spawnNpc(0, 11, 5, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
 					npc.ai.stopAndInteract = false;
 					setNpc(npc);
 					
@@ -1139,6 +1130,12 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					npc.faction.attackFactions.add(player);
 					npc.ai.canLeap = true;
 					npc.attackEntityAsMob(player);
+					
+					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
+					
+					npc.setFaction(2);
+					
+					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
 					
 					command.enableMoving(false);
 					
@@ -1591,6 +1588,10 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(new GuiVictory(mc));
 		}
 		else if(flagOpenQuestMenuGui)
 		{
@@ -1638,7 +1639,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			
 			init();
 			
-			QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
+			QuestTeleporter.teleport(player, 100, 1, 11, 0);
 
 			chasingQuestInitialPosX = 1;
 			chasingQuestInitialPosY = 10;

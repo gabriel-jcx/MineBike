@@ -37,6 +37,10 @@ public class GuiChapter extends GuiScreen {
 	private static String subtitleLine1 = "";
 	private static String subtitleLine2 = "";
 	private static String subtitleLineShort = "";
+	private static String strUnlocked = "UNLOCKED NEW CHAPTER";
+
+	private boolean flagUnlocked = false;
+	private static boolean flagProceedToNextChapter = false;
 	
 	public static final String STR_CHAPTER_1_TITLE = "WAKE UP!";
 	public static final String STR_CHAPTER_1_SUBTITLE_LINE_1 = "Go talk to father";
@@ -48,10 +52,15 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_2 = "";
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_SHORT = "Go talk to a trainer";
 	
-	public static final String STR_CHAPTER_3_TITLE = "JOB EARNED - POLICE OFFICER";
+	public static final String STR_CHAPTER_3_TITLE = "CATCH DIAMOND THIEF";
 	public static final String STR_CHAPTER_3_SUBTITLE_LINE_1 = "Go talk to a police officer";
 	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "at police station";
-	public static final String STR_CHAPTER_3_SUBTITLE_LINE_SHORT = "Go talk to a police officer";
+	public static final String STR_CHAPTER_3_SUBTITLE_LINE_SHORT = "Go talk to a police officer and defeat \"Diamond Thief\"";
+	
+	public static final String STR_CHAPTER_4_TITLE = "THE JOURNEY STARTS";
+	public static final String STR_CHAPTER_4_SUBTITLE_LINE_1 = "Defeat the Thief Boss from the cave";
+	public static final String STR_CHAPTER_4_SUBTITLE_LINE_2 = "located on top of the mountain!";
+	public static final String STR_CHAPTER_4_SUBTITLE_LINE_SHORT = "Defeat the Thief Boss";
 	
 	public static boolean didOneSecondPassed = false;
 
@@ -59,21 +68,44 @@ public class GuiChapter extends GuiScreen {
 	{
 		chapterNumber ++;
 		GuiChapter.setChapter(chapterNumber);
+		flagProceedToNextChapter = true;
 	}
 	
-	public GuiChapter(Minecraft mc, int chapterNumber) {
+	public static boolean isFlagProceedToNextChapter() {
+		return flagProceedToNextChapter;
+	}
+
+	public static void unsetFlagProceedToNextChapter()
+	{
+		flagProceedToNextChapter = false;
+	}
+	
+	public GuiChapter(Minecraft mc, int chapterNumber, boolean flagUnlocked) {
 		super();
 		didOneSecondPassed = false;
 		this.mc = mc;
 		this.chapterNumber = chapterNumber;
 		setTitleAndSubTitles(chapterNumber);
+		this.flagUnlocked = flagUnlocked;
+
+		if(GuiChapter.isFlagProceedToNextChapter())
+		{
+			GuiChapter.unsetFlagProceedToNextChapter();
+			
+			// Play Sound
+			Minecraft.getMinecraft().thePlayer.playSound("victory", 1.5f, 1.0f);
+		}
 	}
 	
-	public GuiChapter(BigxClientContext c,Minecraft mc, int chapterNumber) {
-		this(mc, chapterNumber);
+	public GuiChapter(BigxClientContext c,Minecraft mc, int chapterNumber, boolean flagUnlocked) {
+		this(mc, chapterNumber, flagUnlocked);
 		context = c;
 	}
 	
+	public static int getChapterNumber() {
+		return chapterNumber;
+	}
+
 	public static String getCurrentChapterSubtitleShort()
 	{
 		if(!BigxClientContext.getIsGameSaveRead())
@@ -118,6 +150,12 @@ public class GuiChapter extends GuiScreen {
 			subtitleLine1 = STR_CHAPTER_3_SUBTITLE_LINE_1;
 			subtitleLine2 = STR_CHAPTER_3_SUBTITLE_LINE_2;
 			subtitleLineShort = STR_CHAPTER_3_SUBTITLE_LINE_SHORT;
+			break;
+		case 4:
+			title = STR_CHAPTER_4_TITLE;
+			subtitleLine1 = STR_CHAPTER_4_SUBTITLE_LINE_1;
+			subtitleLine2 = STR_CHAPTER_4_SUBTITLE_LINE_2;
+			subtitleLineShort = STR_CHAPTER_4_SUBTITLE_LINE_SHORT;
 			break;
 		default:
 			break;
@@ -172,20 +210,27 @@ public class GuiChapter extends GuiScreen {
 		
 		GL11.glPushMatrix();
 		    GL11.glTranslatef(mcWidth/2, 0, 0);
+	    	GL11.glScalef(2F, 2F, 2F);
+		    
+		    if(flagUnlocked)
+		    {
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(strUnlocked, -1 * fontRendererObj.getStringWidth(strUnlocked)/2, mcHeight/4 - 35, 0xFF5555);
+		    }
 	
         	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(chapterText, -1 * fontRendererObj.getStringWidth(chapterText)/2, mcHeight/4 - 20, 0xFFFFFF);
+    		fontRendererObj.drawString(chapterText, -1 * fontRendererObj.getStringWidth(chapterText)/2, mcHeight/4 - 30, 0xFFFFFF);
 
         	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 10, 0xFFFFFF);
+    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 25, 0xFFFFFF);
     		
     		if(didOneSecondPassed)
     		{
     			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4 + 5, 0xEEEEEE);
+        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4 - 15, 0xEEEEEE);
 
             	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4 + 14, 0xEEEEEE);
+        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4 - 10, 0xEEEEEE);
     		}
 		GL11.glPopMatrix();
 		

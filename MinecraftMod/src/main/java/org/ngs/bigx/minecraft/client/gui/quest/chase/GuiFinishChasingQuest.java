@@ -1,5 +1,8 @@
 package org.ngs.bigx.minecraft.client.gui.quest.chase;
 
+import java.util.Random;
+
+import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession.eQuestEventRewardSessionType;
@@ -7,6 +10,7 @@ import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession.eQuestE
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 
 public class GuiFinishChasingQuest extends GuiScreen {
@@ -48,8 +52,11 @@ public class GuiFinishChasingQuest extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
-		
-//		drawRect(0, 0, width, 30, 0xCC0072BB); // The Box on top
+	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+		int mcWidth = sr.getScaledWidth();
+    	int mcHeight = sr.getScaledHeight();
+
+		drawRect(0, 0, mcWidth, mcHeight, 0xCC000000); // Background
 		
 		super.drawScreen(mx, my, partialTicks);
 		

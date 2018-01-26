@@ -20,6 +20,7 @@ import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
@@ -44,6 +45,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -99,6 +101,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
+	
+	private static boolean flagOpenChapterGui = false;
 	
 	private static ClientEventHandler handler;
 	private String previousSong;
@@ -219,72 +223,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			context.getCurrentGameState().getSkillManager().useCurrentlySelectedSkill();
 		}
-		
-//		if(keyBindingToggleQuestListGui.isPressed())
-//		{
-////			System.out.println("view[" + Minecraft.getMinecraft().gameSettings.thirdPersonView + "]");
-////			Minecraft.getMinecraft().gameSettings.thirdPersonView ++;
-////			Minecraft mc = Minecraft.getMinecraft();
-////			GuiQuestlistManager guiQuestlistManager = new GuiQuestlistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
-////			
-////			guiQuestlistManager.resetQuestReferences();
-////			
-////			try {
-////				Collection<Quest> questlist = context.getQuestManager().getAvailableQuestList().values();
-////				
-////				for(Quest quest : questlist)
-////				{
-////					guiQuestlistManager.addQuestReference(quest);
-////				}
-////			} catch (NullPointerException e) {
-////				e.printStackTrace();
-////			} catch (GuiQuestlistException e) {
-////				e.printStackTrace();
-////			}
-////			
-////			if(mc.currentScreen == null)
-////				mc.displayGuiScreen(guiQuestlistManager);
-////			System.out.println("Display Quest List");
-//		}
-//		if (keyBindingToggleChasingQuestGui.isPressed()) {
-//			Minecraft mc = Minecraft.getMinecraft();
-//			GuiChasingQuest guiChasingQuest = new GuiChasingQuest((BigxClientContext)BigxClientContext.getInstance(), mc);
-//			
-//			guiChasingQuest.resetChasingQuestLevels();
-//			
-//			try {
-//				for(int i=0; i<GuiChasingQuestLevelSlot.numberOfQuestLevels; i++)
-//				{
-//					boolean islocked = false;
-//					if(i>2)
-//						islocked = true;
-//					GuiChasingQuestLevelSlotItem guiChasingQuestLevelSlotItem = new GuiChasingQuestLevelSlotItem(i+1, islocked);
-//					
-//					guiChasingQuest.addChasingQuestLevel(guiChasingQuestLevelSlotItem);
-//				}
-//			} catch (NullPointerException e) {
-//				e.printStackTrace();
-//			} catch (GuiQuestlistException e) {
-//				e.printStackTrace();
-//			}
-//			
-//			if(mc.currentScreen == null)
-//				mc.displayGuiScreen(guiChasingQuest);
-//			System.out.println("Display Chasing Quest Gui");
-//		}
 	}
 	
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-//			if (!event.world.isRemote && event.entity instanceof EntityPlayerMP) {
-//				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.wooden_sword))) {
-//					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.wooden_sword));
-//				}
-//				if (!((EntityPlayerMP)event.entity).inventory.hasItemStack(new ItemStack(Items.gold_ingot))) {
-//					((EntityPlayerMP)event.entity).inventory.addItemStackToInventory(new ItemStack(Items.gold_ingot));
-//				}
-//			}
-		
 		if (event.world.isRemote && event.entity instanceof EntityClientPlayerMP) {
 			// TODO fill in JSON boundary int when it's implemented
 			int bounds = 1;
@@ -301,6 +243,21 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+			}
+		}
+		
+		if(event.entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.entity;
+			Minecraft mc = Minecraft.getMinecraft();
+			
+			if(player.worldObj.provider.dimensionId == 0)
+			{
+				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
+				
+				if(BigxClientContext.getIsGameSaveRead())
+				{
+					flagOpenChapterGui = true;
+				}
 			}
 		}
 	}
@@ -445,6 +402,23 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			if(context.getQuestManager() == null)
 			{
 				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().thePlayer));
+			}
+			
+			if(flagOpenChapterGui && (Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0))
+			{	
+				Minecraft mc = Minecraft.getMinecraft();
+				
+				if(mc.currentScreen == null)
+				{
+					System.out.println("[BiGX] GuiChapter opens [" + GuiChapter.getChapterNumber() + "]");
+					
+					if(GuiChapter.isFlagProceedToNextChapter())
+						mc.displayGuiScreen(new GuiChapter(mc, GuiChapter.getChapterNumber(),true));
+					else
+						mc.displayGuiScreen(new GuiChapter(mc, GuiChapter.getChapterNumber(),false));
+					
+					flagOpenChapterGui = false;
+				}
 			}
 			
 			if(GuiMonsterAppears.isGuiMonsterAppearsOpened)

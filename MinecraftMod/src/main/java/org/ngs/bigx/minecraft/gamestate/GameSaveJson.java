@@ -8,7 +8,14 @@ public class GameSaveJson {
 	private int playerLevel = 1;
 	private int skills = 0x0;
 	private int boundaryProgress;
+	private int chapter = 1;
 	
+	public int getChapter() {
+		return chapter;
+	}
+	public void setChapter(int chapter) {
+		this.chapter = chapter;
+	}
 	public boolean isChasingQuestOn() {
 		return isChasingQuestOn;
 	}

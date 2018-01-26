@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.area.Area;
+import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
@@ -88,6 +90,7 @@ public class CommonEventHandler {
 	int serverQuestTestTickCount = 10;
 	
 	int fightAndChaseQuestTick = 0;
+//	int fightAndChaseQuestTickCount = 90*20;
 	int fightAndChaseQuestTickCount = 500;
 	
 	private static int thiefMaxLevel = 1;
@@ -114,7 +117,12 @@ public class CommonEventHandler {
 			{
 				if(event.player.worldObj.provider.dimensionId == 0)
 				{
-					fightAndChaseQuestTick ++;
+					if(!( (event.player.posX >= 78) && (event.player.posX <=119) &&
+						(event.player.posY >= 45) && (event.player.posY <= 100) &&
+						(event.player.posZ >= 142) && (event.player.posZ <=250)))
+					{
+						fightAndChaseQuestTick ++;
+					}
 					
 					if(fightAndChaseQuestTick >= fightAndChaseQuestTickCount)
 					{
@@ -125,21 +133,14 @@ public class CommonEventHandler {
 							if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null) 
 							{
 								if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE) != null)
-								{
-//									System.out.println("[BiGX] Start Fight And Chase Quest");									
-//									Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
-//									
-//									try {
-//										BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
-//										BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
-//										((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
-//									} catch (QuestException e) {
-//										// TODO Auto-generated catch block
-//										e.printStackTrace();
-//									}
-									
-									// OPEN Monster Appears Gui
-									flagOpenMonsterEncounter = true;
+								{	
+									if(!( (event.player.posX >= 78) && (event.player.posX <=119) &&
+										(event.player.posY >= 45) && (event.player.posY <= 100) &&
+										(event.player.posZ >= 142) && (event.player.posZ <=250)))
+									{
+										// OPEN Monster Appears Gui
+										flagOpenMonsterEncounter = true;
+									}
 								}
 							}
 						}
