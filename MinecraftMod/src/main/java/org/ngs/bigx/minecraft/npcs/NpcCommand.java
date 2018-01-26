@@ -312,6 +312,7 @@ public class NpcCommand {
 				if( (npc.motionZ == 0) && (!npc.isDead))
 				{
 					npc.reset();
+					npc.setFaction(0);
 					setSpeed(10);
 					enableMoving(true);
 					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");

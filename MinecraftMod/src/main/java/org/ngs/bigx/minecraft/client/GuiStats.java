@@ -547,35 +547,35 @@ public class GuiStats extends GuiScreen {
 		        	
 		        	GL11.glPopMatrix();
 		        	
-		        	GL11.glPushMatrix();
-		        		
-		        		if (questTaskFightAndChasing.isChasingQuestOnCountDown() && questTaskFightAndChasing.getCountdown() < 6) {
-		        			targetAlpha = 1.0f;
-		        		} else {
-		        			targetAlpha = 0.0f;
-						    if (ClientEventHandler.animTickChasingFade < (ClientEventHandler.animTickChasingFadeLength + ClientEventHandler.animTickFadeTime))
-						    	if (ClientEventHandler.animTickChasingFade >= ClientEventHandler.animTickChasingFadeLength)
-						    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickChasingFade - ClientEventHandler.animTickChasingFadeLength) / ClientEventHandler.animTickFadeTime);
-						    	else
-						    		targetAlpha = 1.0f;
-		        		}
-			        	
-				        scaleX = 0.3f;
-			    		scaleY = 0.3f;
-			    		rectX = 256;
-				    	rectY = 256;
-				        GL11.glTranslatef(mcWidth/2 - (int)(rectX*scaleX/2f), 32, 0); 
-					    GL11.glScalef(scaleX, scaleY, 1.0f);
-					    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
-					    GL11.glEnable(GL11.GL_BLEND);
-					    ResourceLocation chosenImage = questTaskFightAndChasing.getCountdown() > 2 && questTaskFightAndChasing.getCountdown() < 6  ? TRAFFIC_NONE :
-					    	questTaskFightAndChasing.getCountdown() == 2 ? TRAFFIC_RED :
-					    		questTaskFightAndChasing.getCountdown() == 1 ? TRAFFIC_YELLOW : 
-					    			TRAFFIC_GREEN;
-				        mc.renderEngine.bindTexture(chosenImage);
-				        drawTexturedModalRect(0, 0, 0, 0, 256, 256);
-			        
-			        GL11.glPopMatrix();
+//		        	GL11.glPushMatrix();
+//		        		
+//		        		if (questTaskFightAndChasing.isChasingQuestOnCountDown() && questTaskFightAndChasing.getCountdown() < 6) {
+//		        			targetAlpha = 1.0f;
+//		        		} else {
+//		        			targetAlpha = 0.0f;
+//						    if (ClientEventHandler.animTickChasingFade < (ClientEventHandler.animTickChasingFadeLength + ClientEventHandler.animTickFadeTime))
+//						    	if (ClientEventHandler.animTickChasingFade >= ClientEventHandler.animTickChasingFadeLength)
+//						    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickChasingFade - ClientEventHandler.animTickChasingFadeLength) / ClientEventHandler.animTickFadeTime);
+//						    	else
+//						    		targetAlpha = 1.0f;
+//		        		}
+//			        	
+//				        scaleX = 0.3f;
+//			    		scaleY = 0.3f;
+//			    		rectX = 256;
+//				    	rectY = 256;
+//				        GL11.glTranslatef(mcWidth/2 - (int)(rectX*scaleX/2f), 32, 0); 
+//					    GL11.glScalef(scaleX, scaleY, 1.0f);
+//					    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
+//					    GL11.glEnable(GL11.GL_BLEND);
+//					    ResourceLocation chosenImage = questTaskFightAndChasing.getCountdown() > 2 && questTaskFightAndChasing.getCountdown() < 6  ? TRAFFIC_NONE :
+//					    	questTaskFightAndChasing.getCountdown() == 2 ? TRAFFIC_RED :
+//					    		questTaskFightAndChasing.getCountdown() == 1 ? TRAFFIC_YELLOW : 
+//					    			TRAFFIC_GREEN;
+//				        mc.renderEngine.bindTexture(chosenImage);
+//				        drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+//			        
+//			        GL11.glPopMatrix();
 		        
 		        	int time = 0;
 		        	

@@ -163,7 +163,8 @@ public class QuestEventHandler {
 		synchronized (questEventItemUseListAdd) {
 			for(IQuestEventItemUse questEventItemUse : questEventItemUseListAdd)
 			{
-				questEventItemUseList.add(questEventItemUse);
+				if(!questEventItemUseList.contains(questEventItemUse))
+					questEventItemUseList.add(questEventItemUse);
 			}
 			questEventItemUseListAdd.clear();
 		}
@@ -200,7 +201,10 @@ public class QuestEventHandler {
 						for(IQuestEventCheckComplete questEventCheckComplete : questEventCheckCompleteListAdd)
 						{
 							if(questEventCheckComplete != null)
-								questEventCheckCompleteList.add(questEventCheckComplete);
+							{
+								if(!questEventCheckCompleteList.contains(questEventCheckComplete))
+									questEventCheckCompleteList.add(questEventCheckComplete);
+							}
 						}
 						questEventCheckCompleteListAdd.clear();
 					}
@@ -283,7 +287,8 @@ public class QuestEventHandler {
 				synchronized (questEventAttackListAdd) {
 					for(IQuestEventAttack questEventAttack : questEventAttackListAdd)
 					{
-						questEventAttackList.add(questEventAttack);
+						if(!questEventAttackList.contains(questEventAttack))
+							questEventAttackList.add(questEventAttack);
 					}
 					questEventAttackListAdd.clear();
 				}
@@ -313,7 +318,10 @@ public class QuestEventHandler {
 			for(IQuestEventNpcInteraction questEventNpcInteraction : questEventNpcInteractionListAdd)
 			{
 				if(questEventNpcInteraction != null)
-					questEventNpcInteractionList.add(questEventNpcInteraction);
+				{
+					if(!questEventNpcInteractionList.contains(questEventNpcInteraction))
+						questEventNpcInteractionList.add(questEventNpcInteraction);
+				}
 			}
 			questEventNpcInteractionListAdd.clear();
 		}
@@ -391,7 +399,8 @@ public class QuestEventHandler {
 		synchronized (questEventItemPickUpListAdd) {
 			for(IQuestEventItemPickUp questEventItemPickUp : questEventItemPickUpListAdd)
 			{
-				questEventItemPickUpList.add(questEventItemPickUp);
+				if(!questEventItemPickUpList.contains(questEventItemPickUp))
+					questEventItemPickUpList.add(questEventItemPickUp);
 			}
 			questEventItemPickUpListAdd.clear();
 		}
@@ -439,7 +448,8 @@ public class QuestEventHandler {
 		synchronized (questEventRewardSessionListAdd) {
 			for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionListAdd)
 			{
-				questEventRewardSessionList.add(questEventRewardSession);
+				if(!questEventRewardSessionList.contains(questEventRewardSession))
+					questEventRewardSessionList.add(questEventRewardSession);
 			}
 			questEventRewardSessionListAdd.clear();
 		}

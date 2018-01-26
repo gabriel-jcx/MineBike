@@ -25,7 +25,9 @@ import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
+import org.ngs.bigx.minecraft.client.gui.GuiVictory;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
@@ -93,7 +95,7 @@ import noppes.npcs.entity.EntityNpcCrystal;
 public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
-	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
+	public static final String[] villainNames = {"Gold Thief","Diamond Thief","TNT Thief","Diamond Thief 2","Thief King",
 			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
@@ -1512,6 +1514,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 			levelSys.levelUp();
 			
+			if(levelSys.getPlayerLevel() > 2)
+			{
+				if(GuiChapter.getChapterNumber() == 3)
+				{
+					GuiChapter.proceedToNextChapter();
+				}
+			}
+			
 			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
 			endingZ = (int)player.posZ;
 			LeaderboardRow row = new LeaderboardRow();
@@ -1556,13 +1566,17 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+
+			Minecraft mc = Minecraft.getMinecraft();
+			if(mc.currentScreen == null)
+				mc.displayGuiScreen(new GuiVictory(mc));
 		}
 		else if(flagOpenQuestMenuGui)
 		{
 			flagOpenQuestMenuGui = false;
 			
 			Minecraft mc = Minecraft.getMinecraft();
-			System.out.println(serverContext instanceof BigxServerContext);
+//			System.out.println(serverContext instanceof BigxServerContext);
 			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(true); 
 
 			if(mc.currentScreen == null) {
