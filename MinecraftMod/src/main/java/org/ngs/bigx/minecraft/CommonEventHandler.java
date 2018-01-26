@@ -117,9 +117,9 @@ public class CommonEventHandler {
 			{
 				if(event.player.worldObj.provider.dimensionId == 0)
 				{
-					if(!( (event.player.posX >= 78) && (event.player.posX <=119) &&
+					if(!( (event.player.posX >= 70) && (event.player.posX <=132) &&
 						(event.player.posY >= 45) && (event.player.posY <= 100) &&
-						(event.player.posZ >= 142) && (event.player.posZ <=250)))
+						(event.player.posZ >= 140) && (event.player.posZ <=256)))
 					{
 						fightAndChaseQuestTick ++;
 					}
@@ -134,9 +134,9 @@ public class CommonEventHandler {
 							{
 								if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE) != null)
 								{	
-									if(!( (event.player.posX >= 78) && (event.player.posX <=119) &&
+									if(!( (event.player.posX >= 70) && (event.player.posX <=132) &&
 										(event.player.posY >= 45) && (event.player.posY <= 100) &&
-										(event.player.posZ >= 142) && (event.player.posZ <=250)))
+										(event.player.posZ >= 140) && (event.player.posZ <=256)))
 									{
 										// OPEN Monster Appears Gui
 										flagOpenMonsterEncounter = true;

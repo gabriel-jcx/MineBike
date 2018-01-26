@@ -154,7 +154,7 @@ public class GuiStats extends GuiScreen {
 	    			{
 	    				text = GuiChapter.getCurrentChapterSubtitleShort();
 	    				fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-			    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 20 - 50, 0xFFFFFF);
+			    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 25, 0xFFFFFF);
 	    			}
 				}
 	    	}
