@@ -90,6 +90,7 @@ public class CommonEventHandler {
 	int serverQuestTestTickCount = 10;
 	
 	int fightAndChaseQuestTick = 0;
+//	int fightAndChaseQuestTickCount = 90*20;
 	int fightAndChaseQuestTickCount = 500;
 	
 	private static int thiefMaxLevel = 1;

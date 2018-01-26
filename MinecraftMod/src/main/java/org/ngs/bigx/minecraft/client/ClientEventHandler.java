@@ -410,7 +410,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				
 				if(mc.currentScreen == null)
 				{
-					System.out.println("[BiGX] GuiChapter opens");
+					System.out.println("[BiGX] GuiChapter opens [" + GuiChapter.getChapterNumber() + "]");
 					
 					if(GuiChapter.isFlagProceedToNextChapter())
 						mc.displayGuiScreen(new GuiChapter(mc, GuiChapter.getChapterNumber(),true));
