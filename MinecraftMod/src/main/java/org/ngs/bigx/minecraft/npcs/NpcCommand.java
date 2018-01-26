@@ -80,7 +80,9 @@ public class NpcCommand {
 	    		MathHelper.floor_double(x),
 	    		MathHelper.floor_double(y),
 	    		MathHelper.floor_double(z)};
-	
+
+		npc.attackEntityAsMob(Minecraft.getMinecraft().thePlayer);
+		
 		w.spawnEntityInWorld(npc);
 	    npc.setHealth(999999999f);
 	

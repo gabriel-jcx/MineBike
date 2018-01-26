@@ -7,6 +7,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.QuestManager;
@@ -145,77 +146,18 @@ public class GuiStats extends GuiScreen {
 
 	    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    	
-//	    	/**
-//	    	 * Pedaling Mode Indicator Drawing
-//	    	 */
-//	    	//                         bike (blue),mine (red),build (green)
-//	    	int[] colors = new int[] { 0xFF00A0FF, 0xFFFF2000, 0xFF00FF00 };
-//	    	int chosenColor = colors[ClientEventHandler.pedalingModeState > 2 ? 2 : ClientEventHandler.pedalingModeState];
-//	    	
-//			float targetY = -(rectY) * (ClientEventHandler.pedalingModeState);
-//		    if (ClientEventHandler.animTickSwitch < ClientEventHandler.animTickSwitchLength) {
-//		    	targetY = lerp(-(rectY-2) * (ClientEventHandler.pedalingModeState - 1),
-//		    			-(rectY) * (ClientEventHandler.pedalingModeState),
-//		    			(float)ClientEventHandler.animTickSwitch / ClientEventHandler.animTickSwitchLength);
-//		    }
-//		    
-//		    // TOP PORTION (unselected items, meant to fade out)
-//	    	GL11.glPushMatrix();
-//	    		
-//			    if (ClientEventHandler.animTickFade < (ClientEventHandler.animTickFadeLength + ClientEventHandler.animTickFadeTime))
-//			    	if (ClientEventHandler.animTickFade >= ClientEventHandler.animTickFadeLength)
-//			    		targetAlpha = lerp(1.0f, 0.0f, (float)(ClientEventHandler.animTickFade - ClientEventHandler.animTickFadeLength) / ClientEventHandler.animTickFadeTime);
-//			    	else
-//			    		targetAlpha = 1.0f;
-//			    
-//			    // Draw picture
-//			    GL11.glTranslatef(12, mcHeight - 135, 0); 
-//			    GL11.glScalef(scaleX, scaleY, 1.0f);
-//			    GL11.glColor4f(1.0F, 1.0F, 1.0F, targetAlpha);
-//			    GL11.glEnable(GL11.GL_BLEND);
-//			    mc.renderEngine.bindTexture(PEDALINGMODE_TEXTURE);
-//			    drawTexturedModalRect(0, 0, 0, (int) targetY, 256, 256-85);
-//			    
-//			    // Draw transparent overlays
-//				drawRect(0,		0,		rectX,	rectY,		(int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16));
-//				drawRect(0,		rectY,	rectX,	rectY*2,	(int)Long.parseLong(String.format("%02X", (int)(targetAlpha*160)) + "000000", 16));
-//				
-//	    	GL11.glPopMatrix();
-//	    	
-//	    	// TEXT (top of the items, fades out alongside top portion)
-//		    GL11.glPushMatrix();
-//		    	
-//			    GL11.glTranslatef(44, 95, 0);
-//		    	GL11.glScalef(1F, 1F, 1F);
-//		    	GL11.glEnable(GL11.GL_BLEND);
-//		    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-//		    	int a = targetAlpha < (4/255f) ? 0x04FFFFFF : (int)Long.parseLong(String.format("%02X", (int)(targetAlpha*255)) + "FFFFFF", 16);
-//		    	text = ClientEventHandler.pedalingModeState == 0 ? "Run Mode" : ClientEventHandler.pedalingModeState == 1 ? "Mine Mode" : "Build Mode";
-//		    	fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 0, a, true);
-//		    	
-//		    GL11.glPopMatrix();
-//		    
-//	    	// BOTTOM PORTION (selected item, always on screen)
-//	    	GL11.glPushMatrix();
-//	    	
-//		    	GL11.glTranslatef(12, mcHeight - 135, 0); 
-//			    GL11.glScalef(scaleX, scaleY, 1.0f);
-//			    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-//			    GL11.glEnable(GL11.GL_BLEND);
-//			    mc.renderEngine.bindTexture(PEDALINGMODE_TEXTURE);
-//			    
-//			    
-//		    	drawTexturedModalRect(0, 256-86, 0, (int) targetY - 86, 256, 87);
-//		        
-//				drawRect(0, 		rectY*2,		rectX,	rectY*2 + 4, chosenColor); // top line
-//				drawRect(0, 		rectY*2 + 2,	4,		rectY*3 + 2, chosenColor); // left line
-//				drawRect(rectX-4,	rectY*2 + 2,	rectX,	rectY*3 + 2, chosenColor); // right  line
-//				drawRect(0, 		rectY*3 + 1,	rectX,	rectY*3 + 5, chosenColor); // bottom line
-//				
-//	    	GL11.glPopMatrix();
-//	    	/**
-//	    	 * END OF Pedaling Mode Indicator Drawinge
-//	    	 */
+	    	if(mc.thePlayer.worldObj.provider.dimensionId == 0)
+	    	{
+	    		if(mc.currentScreen == null)
+				{
+	    			if(BigxClientContext.getIsGameSaveRead())
+	    			{
+	    				text = GuiChapter.getCurrentChapterSubtitleShort();
+	    				fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+			    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 20 - 50, 0xFFFFFF);
+	    			}
+				}
+	    	}
 	    	
 	    	/**
 	    	 * Pedaling Mode Related Drawing

@@ -4,6 +4,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
@@ -225,6 +226,7 @@ public class NpcEvents {
 		// TODO add confirmation prompt
 		if (player.worldObj.isRemote && player.inventory.getCurrentItem() == null) {
 			QuestTeleporter.teleport(player, 102, 512, 65, 0);
+			GuiChapter.proceedToNextChapter();
 		}
 	}
 	
