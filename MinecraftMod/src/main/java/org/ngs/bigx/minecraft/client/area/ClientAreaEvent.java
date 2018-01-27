@@ -120,7 +120,7 @@ public class ClientAreaEvent {
 		addArea(new Area(Vec3.createVectorHelper(99, 45, 176), Vec3.createVectorHelper(132, 69, 192), 
 				BiGXTextBoxDialogue.placeJail, AreaTypeEnum.BUILDING, 0, 8), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(78, 45, 151), Vec3.createVectorHelper(119, 100, 224), 
+		addArea(new Area(Vec3.createVectorHelper(70, 45, 140), Vec3.createVectorHelper(132, 100, 256), 
 				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE, 0, 9), AreaTypeEnum.PLACE);
 		
 		addArea(new Area(Vec3.createVectorHelper(93, 54, -55), Vec3.createVectorHelper(99, 74, -8), 

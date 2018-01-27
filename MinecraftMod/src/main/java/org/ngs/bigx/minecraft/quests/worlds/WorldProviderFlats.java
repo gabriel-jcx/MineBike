@@ -29,7 +29,6 @@ public class WorldProviderFlats extends WorldProvider {
 		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(flatBiomeID), 0F);
 		this.hasNoSky = false;
 		this.terrainType = WorldType.FLAT;
-		
 	}
 	
 	public IChunkProvider createChunkGenerator() {

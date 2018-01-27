@@ -254,18 +254,15 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			}
 		}
 		
-		if(event.entity instanceof EntityPlayer) {
+		if(event.world.isRemote && event.entity instanceof EntityPlayer) 
+		{
 			EntityPlayer player = (EntityPlayer) event.entity;
 			Minecraft mc = Minecraft.getMinecraft();
 			
 			if(player.worldObj.provider.dimensionId == 0)
 			{
 				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
-				
-				if(BigxClientContext.getIsGameSaveRead())
-				{
-					flagOpenChapterGui = true;
-				}
+				flagOpenChapterGui = true;
 			}
 		}
 	}
@@ -412,7 +409,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().thePlayer));
 			}
 			
-			if(flagOpenChapterGui && (Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0))
+			if(BigxClientContext.getIsGameSaveRead() && flagOpenChapterGui && (Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0))
 			{	
 				Minecraft mc = Minecraft.getMinecraft();
 				

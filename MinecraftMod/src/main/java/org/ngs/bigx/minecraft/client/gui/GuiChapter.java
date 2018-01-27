@@ -84,8 +84,7 @@ public class GuiChapter extends GuiScreen {
 		super();
 		didOneSecondPassed = false;
 		this.mc = mc;
-		this.chapterNumber = chapterNumber;
-		setTitleAndSubTitles(chapterNumber);
+		setChapter(this.chapterNumber);
 		this.flagUnlocked = flagUnlocked;
 
 		if(GuiChapter.isFlagProceedToNextChapter())
@@ -97,7 +96,7 @@ public class GuiChapter extends GuiScreen {
 		}
 	}
 	
-	public GuiChapter(BigxClientContext c,Minecraft mc, int chapterNumber, boolean flagUnlocked) {
+	public GuiChapter(BigxClientContext c, Minecraft mc, int chapterNumber, boolean flagUnlocked) {
 		this(mc, chapterNumber, flagUnlocked);
 		context = c;
 	}
@@ -176,6 +175,9 @@ public class GuiChapter extends GuiScreen {
 				if(mc.currentScreen instanceof GuiChapter)
 				{
 					didOneSecondPassed = true;
+					
+					// Play Sound
+					Minecraft.getMinecraft().thePlayer.playSound("chaptertada", 1.0f, 1.0f);
 				}
 			}
 		}, 1*1000);
@@ -215,22 +217,22 @@ public class GuiChapter extends GuiScreen {
 		    if(flagUnlocked)
 		    {
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(strUnlocked, -1 * fontRendererObj.getStringWidth(strUnlocked)/2, mcHeight/4 - 35, 0xFF5555);
+	    		fontRendererObj.drawString(strUnlocked, -1 * fontRendererObj.getStringWidth(strUnlocked)/2, mcHeight/4 - 40, 0xFF3333);
 		    }
 	
         	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
     		fontRendererObj.drawString(chapterText, -1 * fontRendererObj.getStringWidth(chapterText)/2, mcHeight/4 - 30, 0xFFFFFF);
 
         	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 25, 0xFFFFFF);
+    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 20, 0xFFFFFF);
     		
     		if(didOneSecondPassed)
     		{
     			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4 - 15, 0xEEEEEE);
+        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4, 0xCCCCCC);
 
             	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4 - 10, 0xEEEEEE);
+        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4 + 10, 0xCCCCCC);
     		}
 		GL11.glPopMatrix();
 		

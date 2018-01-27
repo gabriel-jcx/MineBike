@@ -59,6 +59,10 @@
     "category": "player",
     "sounds": [{"name":"victory","stream": true}]
   },
+  "chaptertada": {
+    "category": "player",
+    "sounds": [{"name":"chaptertada","stream": true}]
+  },
   "bg_random": {
     "category": "player",
 	"sounds": [

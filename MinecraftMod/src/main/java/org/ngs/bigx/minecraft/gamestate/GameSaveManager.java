@@ -152,7 +152,7 @@ public class GameSaveManager {
 			setEnableFightAndChasingQuestFlag();
 			
 			// SET CHAPTER
-			GuiChapter.setChapter(gameSaveJson.getBoundaryProgress());
+			GuiChapter.setChapter(gameSaveJson.getChapter());
 			
 //			QuestTaskChasing.getLevelSystem().getPlayerLevel()
 //			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
@@ -374,6 +374,8 @@ public class GameSaveManager {
 			}
 
 			save.setSkills(accumulatedSkillState);
+			
+			save.setChapter(GuiChapter.getChapterNumber());
 		}
 		catch(Exception ee)
 		{
