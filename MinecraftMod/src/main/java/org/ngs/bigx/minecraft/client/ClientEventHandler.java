@@ -227,7 +227,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (event.world.isRemote && event.entity instanceof EntityClientPlayerMP) {
+		if (event.entity.worldObj.provider.dimensionId == 0 && event.world.isRemote && event.entity instanceof EntityClientPlayerMP) {
 			// TODO fill in JSON boundary int when it's implemented
 			int bounds = 0;
 			
@@ -238,11 +238,19 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
 			} else if (bounds == 1) {
+				p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+			} else if (bounds == 2) {
 				p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
 				p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+				p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
 			}
 		}
 		
