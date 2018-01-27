@@ -268,6 +268,15 @@ public class QuestEventHandler {
 				}
 			}
 			
+			for(String villanName : QuestTaskFightAndChasing.villainNames)
+			{
+				if(villanName.equals(target.display.name))
+				{
+					isVillain = true;
+					break;
+				}
+			}
+			
 			if(isVillain)
 			{
 				if( (System.currentTimeMillis() - duplicateAttackEventPreventorTimeStamp) < 100 )

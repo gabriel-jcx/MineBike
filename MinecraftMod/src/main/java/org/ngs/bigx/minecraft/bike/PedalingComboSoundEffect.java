@@ -23,12 +23,12 @@ public class PedalingComboSoundEffect implements IPedalingComboEvent {
 		if(oldLevel > newLevel) {
 			// Level Decrease
 			System.out.println("onLevelChange[sound down]["+oldLevel+"]["+newLevel+"]");
-			player.worldObj.playSoundAtEntity(player, "pedalingleveldown", 1.0f, 1.0f);
+			player.worldObj.playSoundAtEntity(player, "minebike:pedalingleveldown", 1.0f, 1.0f);
 		}
 		else if(oldLevel < newLevel) {
 			// Level Increase
 			System.out.println("onLevelChange[sound up]");
-			player.worldObj.playSoundAtEntity(player, "powerup", 1.0f, 1.0f);
+			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 		}
 	}
 

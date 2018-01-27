@@ -41,7 +41,7 @@ public class GuiVictory extends GuiScreen {
 		isKOTimeout = true;
 		
 		// Play Vicotry Sound
-		Minecraft.getMinecraft().thePlayer.playSound("victory", 1.5f, 1.0f);
+		Minecraft.getMinecraft().thePlayer.playSound("minebike:victory", 1.5f, 1.0f);
 	}
 	
 	public GuiVictory(BigxClientContext c, Minecraft mc) {

@@ -92,7 +92,7 @@ public class GuiChapter extends GuiScreen {
 			GuiChapter.unsetFlagProceedToNextChapter();
 			
 			// Play Sound
-			Minecraft.getMinecraft().thePlayer.playSound("victory", 1.5f, 1.0f);
+			Minecraft.getMinecraft().thePlayer.playSound("minebike:victory", 1.5f, 1.0f);
 		}
 	}
 	
@@ -177,7 +177,7 @@ public class GuiChapter extends GuiScreen {
 					didOneSecondPassed = true;
 					
 					// Play Sound
-					Minecraft.getMinecraft().thePlayer.playSound("chaptertada", 1.0f, 1.0f);
+					Minecraft.getMinecraft().thePlayer.playSound("minebike:chaptertada", 1.0f, 1.0f);
 				}
 			}
 		}, 1*1000);

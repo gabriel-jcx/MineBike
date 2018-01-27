@@ -68,8 +68,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
-	public static final String[] villainNames = {"Gold Thief","Element Thief","Key Thief","Thief Master","Thief King",
-			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
+	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac"};
 
 	public static ArrayList<ArrayList<String>> monsterTypes = GetMonsterTypes();
 	
@@ -196,8 +195,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		this.questSourceDimensionId = 0;
 		
 		this.questChaseType = questChaseType;
-		
-		monsterTypes = new ArrayList<ArrayList<String>>();
 	}
 	
 	public QuestTaskFightAndChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
@@ -1759,8 +1756,10 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void onAttackEntityEvent(AttackEntityEvent event) {
 		synchronized (questManager) {
+			System.out.println("[BiGX] Attacked B4!!");
 			if(questManager.getActiveQuestId() != Quest.QUEST_ID_STRING_FIGHT_CHASE)
 				return;
+			System.out.println("[BiGX] Attacked A4!!");
 			
 			if( (chasingQuestOnGoing) && (!chasingQuestOnCountDown) )
 			{
@@ -1823,19 +1822,19 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		ArrayList<ArrayList<String>> types = new ArrayList<ArrayList<String>>();
 		
 		ArrayList<String> type1 = new ArrayList<String>();
-		type1.add("Normal Monster");
+		type1.add(villainNames[0]);
 		type1.add("50");
 		type1.add("customnpcs:textures/entity/monstermale/ZombieSteve.png");
 		ArrayList<String> type2 = new ArrayList<String>();
-		type2.add("Angry Monster");
+		type2.add(villainNames[1]);
 		type2.add("80");
 		type2.add("customnpcs:textures/entity/monstermale/ZombieSteve.png");
 		ArrayList<String> type3 = new ArrayList<String>();
-		type3.add("Brutish Monster");
+		type3.add(villainNames[2]);
 		type3.add("115");
 		type3.add("customnpcs:textures/entity/orcmale/GenericOrc1.png");
 		ArrayList<String> type4 = new ArrayList<String>();
-		type4.add("Maniac Monster");
+		type4.add(villainNames[3]);
 		type4.add("150");
 		type4.add("customnpcs:textures/entity/orcmale/MercenaryOrc1.png");
 		
