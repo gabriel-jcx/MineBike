@@ -25,6 +25,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import noppes.npcs.client.ClientEventHandler;
 import noppes.npcs.client.gui.player.GuiQuestLog;
 
 public class GuiChapter extends GuiScreen {
@@ -66,6 +67,7 @@ public class GuiChapter extends GuiScreen {
 
 	public static void proceedToNextChapter()
 	{
+		System.out.println("[BiGX] Next Chapter Initiated.");
 		chapterNumber ++;
 		GuiChapter.setChapter(chapterNumber);
 		flagProceedToNextChapter = true;

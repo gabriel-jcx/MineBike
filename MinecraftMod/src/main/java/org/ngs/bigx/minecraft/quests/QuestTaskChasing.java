@@ -1162,7 +1162,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				else
 					chosenSong = "minebike:mus_breaks";
 				
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.4f");
 				
 			}
 			if(countdown == 8)

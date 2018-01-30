@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
 public class ClientAreaEvent {
-	private static boolean areaChangedFlag = false;
+	private static boolean areaChangedFlag = true;
 	
 	public static Area previousArea = null;
 

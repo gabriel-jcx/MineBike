@@ -30,6 +30,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NpcMiscInventory;
+import noppes.npcs.client.ClientEventHandler;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
@@ -77,13 +78,14 @@ public class NpcEvents {
 	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
 		if (!player.worldObj.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
+		
 		try {
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			Quest quest;
 			
 			if(player.worldObj.isRemote)
 			{
-				System.out.println("InteractWithOfficer Quest Generation: CLIENT");
+				System.out.println("InteractWithFather Quest Generation: CLIENT");
 				
 				if(BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null) {
 					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
@@ -101,15 +103,20 @@ public class NpcEvents {
 				quest.addTasks(questTaskChasing);
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+				
 				// TODO add this zone update to GameSave boundary value
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+				
+				// Unlock the next chapter and open Gui Chapter
+				GuiChapter.proceedToNextChapter();
+				org.ngs.bigx.minecraft.client.ClientEventHandler.flagOpenChapterGui = true;
 			}
 			else
 			{
-				System.out.println("InteractWithOfficer Quest Generation: SERVER");
+				System.out.println("InteractWithFather Quest Generation: SERVER");
 				
 				if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null)
 				{

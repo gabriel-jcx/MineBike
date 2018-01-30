@@ -934,7 +934,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					chosenSong = "minebike:mus_breaks";
 
 //				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop @p 0.4f");
 				
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 				setThiefLevel(levelSys.getPlayerLevel());

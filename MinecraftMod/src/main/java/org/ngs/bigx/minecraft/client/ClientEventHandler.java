@@ -102,7 +102,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
 	
-	private static boolean flagOpenChapterGui = false;
+	public static boolean flagOpenChapterGui = false;
 	
 	private static ClientEventHandler handler;
 	private String previousSong;
@@ -622,13 +622,16 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeMarket) {
 						chosenSong = "minebike:bg_faire loop";
 					}
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeVillage) {
+					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeVillage) {
 						chosenSong = "minebike:bg_camelot loop";
 					}
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placePoliceDepartment) {
+					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeHome) {
+						chosenSong = "minebike:bg_camelot loop";
+					}
+					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placePoliceDepartment) {
 						chosenSong = "minebike:bg_avalon loop";
 					}
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeContinentPangea) {
+					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeContinentPangea) {
 						chosenSong = "minebike:bg_ladylake loop";
 					}
 					
@@ -643,7 +646,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong);
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " @p 0.4f");
+					}
+					else
+					{
+						System.out.println("[BiGX] chsone[" + chosenSong + "] prevs[" + previousSong + "]");
 					}
 						
 					
