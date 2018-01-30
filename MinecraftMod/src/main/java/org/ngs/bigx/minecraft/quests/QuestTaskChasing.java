@@ -182,7 +182,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
 	private boolean menuOpen = false;
-	private static GuiChasingQuest guiChasingQuest;
+	public static GuiChasingQuest guiChasingQuest;
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;

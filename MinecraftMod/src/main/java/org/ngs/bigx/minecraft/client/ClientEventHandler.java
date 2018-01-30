@@ -35,6 +35,7 @@ import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
@@ -263,6 +264,20 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			{
 				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
 				flagOpenChapterGui = true;
+				
+				if(GuiChapter.getChapterNumber() == 3)
+				{
+					if(QuestTaskChasing.guiChasingQuest != null)
+					{
+						int currentLevel = QuestTaskChasing.guiChasingQuest.getSelectedQuestLevelIndex() + 1;
+						
+						if(currentLevel > 2)
+						{
+							GuiChapter.proceedToNextChapter();
+							flagOpenChapterGui = true;
+						}
+					}
+				}
 			}
 		}
 	}
