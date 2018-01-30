@@ -15,6 +15,7 @@ import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskTalk;
 import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
@@ -105,10 +106,7 @@ public class NpcEvents {
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 				
 				// TODO add this zone update to GameSave boundary value
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
 				
 				// Unlock the next chapter and open Gui Chapter
 				if(GuiChapter.getChapterNumber() == 1)
@@ -160,10 +158,28 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithDungeonBoss(EntityPlayer player, EntityInteractEvent event) {
-		System.out.println("Interacting with Baddest Guy...");
-		// TODO look at police officer interaction for proper chase setup
 		if (player.worldObj.isRemote) {
+			System.out.println("Interacting with dungeon boss (client)...");
+			Quest quest = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 			
+			try {
+				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = true;
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
+			} catch (QuestException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Interacting with dungeon boss (server)...");
+			Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+			
+			try {
+				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = true;
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
+			} catch (QuestException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

@@ -72,6 +72,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static ArrayList<ArrayList<String>> monsterTypes = GetMonsterTypes();
 	
+	public static boolean isBoss = false;
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
 
 	private static boolean flagAccomplished = false;
@@ -295,8 +296,12 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void initThiefStat()
 	{
+		if (isBoss) {
+			thiefHealthMax = 250;
+		} else {
+			thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
+		}
 		thiefLevel = 1;
-		thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
 		thiefHealthCurrent = thiefHealthMax;
 	}
 	
@@ -307,7 +312,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			thiefMaxLevel = thiefLevel;
 		
 //		thiefHealthMax = 41 + (int) Math.pow(9, thiefLevel);
-		thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
+		if (isBoss) {
+			thiefHealthMax = 250;
+		} else {
+			thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
+		}
 		thiefHealthCurrent = thiefHealthMax;
 		
 		System.out.println("Thief's level has been set!");
@@ -1053,8 +1062,13 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //					};
 
 //					npc.attackEntityAsMob(player);
-					ArrayList<String> monsterType = monsterTypes.get(thiefLevel-1);
-					npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));
+					
+					if (isBoss) {
+						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Baddest Guy", "customnpcs:textures/entity/humanmale/RobesBlackSteve.png");
+					} else {
+						ArrayList<String> monsterType = monsterTypes.get(thiefLevel-1);
+						npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));
+					}
 					
 					npc.ai.stopAndInteract = false;
 					setNpc(npc);
