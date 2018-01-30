@@ -111,8 +111,11 @@ public class NpcEvents {
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
 				
 				// Unlock the next chapter and open Gui Chapter
-				GuiChapter.proceedToNextChapter();
-				org.ngs.bigx.minecraft.client.ClientEventHandler.flagOpenChapterGui = true;
+				if(GuiChapter.getChapterNumber() == 1)
+				{
+					GuiChapter.proceedToNextChapter();
+					org.ngs.bigx.minecraft.client.ClientEventHandler.flagOpenChapterGui = true;
+				}
 			}
 			else
 			{
@@ -143,17 +146,17 @@ public class NpcEvents {
 		
 //		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
 //				"Dad: Just in case you need\nit, take this potion");
-		
-		if (!player.inventory.hasItem(Items.paper)){
-			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
-		}
-		if (!player.inventory.hasItem(Item.getItemById(4801))){
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
-			if (!player.worldObj.isRemote)
-				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
-		}
+//		
+//		if (!player.inventory.hasItem(Items.paper)){
+//			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+//			if (!player.worldObj.isRemote)
+//				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
+//		}
+//		if (!player.inventory.hasItem(Item.getItemById(4801))){
+//			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
+//			if (!player.worldObj.isRemote)
+//				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
+//		}
 	}
 	
 	private static void InteractWithDungeonBoss(EntityPlayer player, EntityInteractEvent event) {
@@ -233,6 +236,11 @@ public class NpcEvents {
 		// TODO add confirmation prompt
 		if (player.worldObj.isRemote && player.inventory.getCurrentItem() == null) {
 			QuestTeleporter.teleport(player, 102, 512, 65, 0);
+		}
+
+		// Unlock the next chapter and open Gui Chapter
+		if(GuiChapter.getChapterNumber() == 2)
+		{
 			GuiChapter.proceedToNextChapter();
 		}
 	}

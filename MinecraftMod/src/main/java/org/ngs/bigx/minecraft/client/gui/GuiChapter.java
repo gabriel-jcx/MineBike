@@ -127,12 +127,11 @@ public class GuiChapter extends GuiScreen {
 	}
 	
 	private static void setTitleAndSubTitles(int chapterNumber)
-	{
-		chapterText = "~ Chapter " + chapterNumber + " ~";
-		
+	{	
 		switch(chapterNumber)
 		{
 		case 1:
+			chapterText = "~ Chapter 1 ~";
 			title = STR_CHAPTER_1_TITLE;
 			subtitleLine1 = STR_CHAPTER_1_SUBTITLE_LINE_1;
 			subtitleLine2 = STR_CHAPTER_1_SUBTITLE_LINE_2;
@@ -153,6 +152,7 @@ public class GuiChapter extends GuiScreen {
 			subtitleLineShort = STR_CHAPTER_3_SUBTITLE_LINE_SHORT;
 			break;
 		case 4:
+			chapterText = "~ Chapter 2 ~";
 			title = STR_CHAPTER_4_TITLE;
 			subtitleLine1 = STR_CHAPTER_4_SUBTITLE_LINE_1;
 			subtitleLine2 = STR_CHAPTER_4_SUBTITLE_LINE_2;
