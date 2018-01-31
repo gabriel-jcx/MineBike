@@ -248,16 +248,16 @@ public class NpcEvents {
 	private static void InteractWithTutorialGuy(EntityPlayer player, EntityInteractEvent event) {
 		System.out.println("Interact with Tutorial Guy");
 		EntityCustomNpc npc = (EntityCustomNpc) event.target;
-		
-		// TODO add confirmation prompt
-		if (player.worldObj.isRemote && player.inventory.getCurrentItem() == null) {
-			QuestTeleporter.teleport(player, 102, 512, 65, 0);
-		}
 
 		// Unlock the next chapter and open Gui Chapter
 		if(GuiChapter.getChapterNumber() == 2)
 		{
 			GuiChapter.proceedToNextChapter();
+		}
+		
+		// TODO add confirmation prompt
+		if (player.worldObj.isRemote && player.inventory.getCurrentItem() == null) {
+			QuestTeleporter.teleport(player, 102, 512, 65, 0);
 		}
 	}
 	

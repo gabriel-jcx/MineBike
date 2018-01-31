@@ -18,7 +18,7 @@ public class NpcLocations {
 	public static Vec3 jailedthief1 = Vec3.createVectorHelper(123, 65, 177);
 	
 	//New Tutorial NPC
-	public static Vec3 tutorialGuy = Vec3.createVectorHelper(91, 71, 228);
+	public static Vec3 tutorialGuy = Vec3.createVectorHelper(90, 71, 247);
 	public static Vec3 trainingBot = Vec3.createVectorHelper(580, 66, 0);
 	public static Vec3 tutorialExit = Vec3.createVectorHelper(602, 66, 0);
 	
