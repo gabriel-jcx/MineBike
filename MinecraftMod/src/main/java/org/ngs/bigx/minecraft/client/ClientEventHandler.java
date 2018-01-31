@@ -653,6 +653,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					if (p.dimension == WorldProviderEmpty.dimID || p.dimension == WorldProviderDungeon.dimID) {
 						chosenSong = "minebike:bg_rama loop";
 					}
+					else if (p.dimension == WorldProviderFlats.dimID) {
+						previousSong = "";
+						chosenSong = "";
+					}
 					
 					if (chosenSong != "" && chosenSong != previousSong) {
 						previousSong = chosenSong;
