@@ -63,6 +63,14 @@
     "category": "player",
     "sounds": [{"name":"chaptertada","stream": true}]
   },
+  "itemearned": {
+    "category": "player",
+    "sounds": [{"name":"itemearned","stream": true}]
+  },
+  "victorywinfcquest": {
+    "category": "player",
+    "sounds": [{"name":"victorywinfcquest","stream": true}]
+  },
   "bg_random": {
     "category": "player",
 	"sounds": [

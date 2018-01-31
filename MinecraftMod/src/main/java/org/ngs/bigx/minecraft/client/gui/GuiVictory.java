@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.client.gui;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,9 +32,8 @@ public class GuiVictory extends GuiScreen {
 
 	private static boolean isKOTimeout = false;
 
-	private String victoryMessageLine1 = "Nice Work!";
-	private String victoryMessageLine2 = "You earned ";
-	private String victoryMessageLine3 = "Collect them from the floor!";
+	private String victoryMessageLine1 = "VICTORY!";
+	private String victoryMessageLine2 = "Collect items from the floor!";
 	
 	public GuiVictory(Minecraft mc) {
 		super();
@@ -41,7 +41,7 @@ public class GuiVictory extends GuiScreen {
 		isKOTimeout = true;
 		
 		// Play Vicotry Sound
-		Minecraft.getMinecraft().thePlayer.playSound("minebike:victory", 1.5f, 1.0f);
+		Minecraft.getMinecraft().thePlayer.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
 	}
 	
 	public GuiVictory(BigxClientContext c, Minecraft mc) {
@@ -75,7 +75,7 @@ public class GuiVictory extends GuiScreen {
 					isKOTimeout = false;
 				}
 			}
-		}, 3*1000);
+		}, 6*1000);
 	}
 	
 	@Override
@@ -96,16 +96,21 @@ public class GuiVictory extends GuiScreen {
 		
 		if(isKOTimeout)
 		{
-			
 			// SHOW K.O
 			GL11.glPushMatrix();
 			    GL11.glTranslatef(mcWidth/2, 0, 0);
-		    	GL11.glScalef(3F, 3F, 3F);
+		    	GL11.glScalef(4F, 4F, 3F);
 		    	
 		    	text = "K.O";
+		    	
+		    	float fdx = (new Random()).nextFloat();
+		    	float fdy = (new Random()).nextFloat();
+		    	
+		    	int dx = (fdx>0.66f)?1:(fdx>0.33)?0:-1;
+		    	int dy = (fdy>0.66f)?1:(fdy>0.33)?0:-1;
 		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 30, 0xFF8888);
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2 + dx, mcHeight/4 - 30 + dy, 0xFF8888);
     		
     		GL11.glPopMatrix();
 		}
@@ -120,11 +125,6 @@ public class GuiVictory extends GuiScreen {
 		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 30, 0xFFFFFF);
-		    	
-		    	text = victoryMessageLine2;
-		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 20, 0xFFFFFF);
 		    	
 		    	text = victoryMessageLine2;
 		

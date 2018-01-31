@@ -1064,7 +1064,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //					npc.attackEntityAsMob(player);
 					
 					if (isBoss) {
-						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Ifrit", "customnpcs:textures/entity/humanmale/RobesBlackSteve.png");
+						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Baddest Guy", "customnpcs:textures/entity/humanmale/RobesBlackSteve.png");
 					} else {
 						ArrayList<String> monsterType = monsterTypes.get(thiefLevel-1);
 						npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));
@@ -1087,6 +1087,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
 					
 					npc.setFaction(2);
+				    npc.setHealth(999999999f);
 					
 					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
 					
