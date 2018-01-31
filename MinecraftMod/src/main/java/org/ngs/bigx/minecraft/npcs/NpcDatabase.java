@@ -43,7 +43,7 @@ public class NpcDatabase {
 	
 	private static Map<String, Vec3> populateDungeon() {
 		HashMap<String, Vec3> map = new HashMap<String, Vec3>();
-		map.put("Baddest Guy", NpcLocations.baddestGuy);
+		map.put("Ifrit", NpcLocations.baddestGuy);
 		return map;
 	}
 	
@@ -106,7 +106,7 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
 		if (name.contains("Trainer"))
 			return "customnpcs:textures/entity/humanmale/CasualSteve.png";
-		if (name.contains("Baddest Guy"))
+		if (name.contains("Ifrit"))
 			return "customnpcs:textures/entity/humanmale/RobesBlackSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
