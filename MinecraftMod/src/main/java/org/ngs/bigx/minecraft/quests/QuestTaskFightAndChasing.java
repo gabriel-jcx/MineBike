@@ -303,6 +303,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void initThiefStat()
 	{
+		if(thiefLevel >= monsterTypes.size())
+			thiefLevel = monsterTypes.size()-1;
+		
 		if (isBoss) {
 			thiefHealthMax = 250;
 		} else {
@@ -317,6 +320,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		thiefLevel = level;
 		if (thiefLevel > thiefMaxLevel)
 			thiefMaxLevel = thiefLevel;
+
+		if(thiefLevel >= monsterTypes.size())
+			thiefLevel = monsterTypes.size()-1;
 		
 //		thiefHealthMax = 41 + (int) Math.pow(9, thiefLevel);
 		if (isBoss) {
@@ -1072,6 +1078,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					if (isBoss) {
 						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Ifrit", "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png");
 					} else {
+						if(thiefLevel >= monsterTypes.size())
+							thiefLevel = monsterTypes.size()-1;
+
 						ArrayList<String> monsterType = monsterTypes.get(thiefLevel-1);
 						npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));
 					}
