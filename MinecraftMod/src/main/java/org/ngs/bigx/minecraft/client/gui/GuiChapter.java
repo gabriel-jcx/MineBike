@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.client.gui;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +11,15 @@ import java.util.TimerTask;
 import javafx.collections.SetChangeListener;
 
 import org.lwjgl.opengl.GL11;
+import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
+import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
+import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
+import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import com.ibm.icu.impl.ICUService.Key;
 
@@ -64,6 +70,33 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_4_SUBTITLE_LINE_SHORT = "Defeat the Thief Boss";
 	
 	public static boolean didOneSecondPassed = false;
+	
+	public static void sendChapterGameTag(int chapterNumber)
+	{
+		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
+		try {			
+			int chapterNumberTypeEnum = (0xfff & chapterNumber);
+			BiGXGameTag biGXGameTag = new BiGXGameTag();
+			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_CHAPTER_BEGINNING | chapterNumberTypeEnum));
+			
+			BigxClientContext.sendGameTag(biGXGameTag);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXNetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BiGXInternalGamePluginExcpetion e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public static void proceedToNextChapter()
 	{
@@ -71,6 +104,8 @@ public class GuiChapter extends GuiScreen {
 		chapterNumber ++;
 		GuiChapter.setChapter(chapterNumber);
 		flagProceedToNextChapter = true;
+		
+		sendChapterGameTag(chapterNumber);
 	}
 	
 	public static boolean isFlagProceedToNextChapter() {
