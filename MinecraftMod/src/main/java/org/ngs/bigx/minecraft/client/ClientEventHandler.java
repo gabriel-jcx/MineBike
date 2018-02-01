@@ -435,6 +435,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				{
 					System.out.println("[BiGX] GuiChapter opens [" + GuiChapter.getChapterNumber() + "]");
 					
+					if(GuiChapter.getChapterNumber() < 3)
+					{
+						
+					}
+					
 					if(GuiChapter.isFlagProceedToNextChapter())
 						mc.displayGuiScreen(new GuiChapter(mc, GuiChapter.getChapterNumber(),true));
 					else
@@ -458,7 +463,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				String chosenSong = "minebike:monsterencounter";
 
 				Minecraft.getMinecraft().thePlayer.playSound(chosenSong, 1.5f, 1.0f);
-//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
 				
 				CommonEventHandler.flagOpenMonsterEncounter = false;
 				
@@ -467,16 +471,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				if(mc.currentScreen == null)
 					mc.displayGuiScreen(new GuiMonsterAppears(BiGX.instance().clientContext, mc));
 			}
-
-//			/**
-//			 * TODO: Need to remove this testing code from the release version
-//			 */
-//			// Natural decrease of the pedaling gauge
-//			if(ClientEventHandler.pedalingCombo.getGauge() < 10000)
-//			{
-//				ClientEventHandler.pedalingCombo.increaseGauge(10);
-//			}
-//			ClientEventHandler.pedalingCombo.decraseGauge();
 			
 			QuestManager playerQuestManager = context.getQuestManager();
 			

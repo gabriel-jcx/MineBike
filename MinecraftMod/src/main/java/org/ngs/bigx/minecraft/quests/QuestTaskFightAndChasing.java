@@ -176,6 +176,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public boolean isStunnedGuiHappend = false;
 	
+	public void setPreviousLocationBeforeTheQuest(int dim, int x, int y, int z)
+	{
+		this.questSourceDimensionId = dim;
+		this.returnLocation.xCoord = x;
+		this.returnLocation.yCoord = y;
+		this.returnLocation.zCoord = z;
+	}
+
 	public static LevelSystem getLevelSystem()
 	{
 		return levelSys;

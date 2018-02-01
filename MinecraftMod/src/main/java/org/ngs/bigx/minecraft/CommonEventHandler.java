@@ -91,7 +91,7 @@ public class CommonEventHandler {
 	
 	int fightAndChaseQuestTick = 0;
 //	int fightAndChaseQuestTickCount = 90*20;
-	int fightAndChaseQuestTickCount = 500;
+	int fightAndChaseQuestTickCount = 1000; // Every 20 seconds (10 seconds is too short)
 	
 	private static int thiefMaxLevel = 1;
 	
@@ -115,7 +115,7 @@ public class CommonEventHandler {
 		{	
 			if(!event.player.worldObj.isRemote)
 			{
-				if(event.player.worldObj.provider.dimensionId == 0)
+				if( (event.player.worldObj.provider.dimensionId == 0) || (event.player.worldObj.provider.dimensionId == 105) )
 				{
 					if(!( (event.player.posX >= 70) && (event.player.posX <=132) &&
 						(event.player.posY >= 45) && (event.player.posY <= 100) &&
@@ -145,6 +145,10 @@ public class CommonEventHandler {
 							}
 						}
 					}
+				}
+				else
+				{
+					fightAndChaseQuestTick = 0;
 				}
 			}
 		}
@@ -227,6 +231,7 @@ public class CommonEventHandler {
 				try {
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.worldObj.provider.dimensionId, (int)event.player.posX, (int)event.player.posY, (int)event.player.posZ);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 				} catch (QuestException e) {
 					e.printStackTrace();

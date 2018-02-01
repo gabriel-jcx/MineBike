@@ -1768,6 +1768,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 		}
 	}
+
+	public void setPreviousLocationBeforeTheQuest(int dim, int x, int y, int z)
+	{
+		this.questSourceDimensionId = dim;
+		this.returnLocation.xCoord = x;
+		this.returnLocation.yCoord = y;
+		this.returnLocation.zCoord = z;
+	}
 	
 	@Override
 	public void onNpcInteraction(EntityInteractEvent event) {
@@ -1787,7 +1795,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					e.printStackTrace();
 				}
 				EntityPlayer player = event.entityPlayer;
-				
+
+				setPreviousLocationBeforeTheQuest(0, (int)player.posX, (int)player.posY, (int)player.posZ);
 				handleQuestStart();
 			}
 		}

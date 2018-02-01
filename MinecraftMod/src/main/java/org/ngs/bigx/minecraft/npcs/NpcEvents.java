@@ -173,6 +173,7 @@ public class NpcEvents {
 			try {
 				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = true;
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(105, (int)player.posX, (int)player.posY, (int)player.posZ);
 				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 			} catch (QuestException e) {
 				e.printStackTrace();
@@ -184,6 +185,7 @@ public class NpcEvents {
 			try {
 				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = true;
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(105, (int)player.posX, (int)player.posY, (int)player.posZ);
 				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 			} catch (QuestException e) {
 				e.printStackTrace();
