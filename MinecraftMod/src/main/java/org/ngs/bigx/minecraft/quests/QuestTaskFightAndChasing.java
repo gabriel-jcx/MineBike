@@ -1116,7 +1116,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			if (countdown == 1)
 			{	
 //				npc.ai.canLeap = false;
-//			    npc.setHealth(999999999f);
+			    npc.setHealth(10000f);
 //			    npc.faction.attackFactions.remove(player);
 //			    npc.ai.avoidsWater = true;
 //			    npc.ai.onAttack = 3;
@@ -1434,13 +1434,19 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				checkComboCount();
 				
 				if(chasingQuestOnGoing)
-				{
+				{	
 					if(chasingQuestOnCountDown)
 					{
+						if(npc != null)
+							npc.setHealth(10000f);
+						
 						handleCountdown();
 					}
 					else if(getThiefHealthCurrent() < (getThiefHealthMax() * 0.15))
 					{
+						if(npc != null)
+							npc.setHealth(10000f);
+					    
 						if(!isStunnedGuiHappend)
 						{
 							isStunnedGuiHappend = true;
@@ -1471,6 +1477,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 							System.out.println("handlePlayTimeOnClient");
 							handlePlayTimeOnClient();
 						}
+					}
+					else if(getThiefHealthCurrent() > 0)
+					{
+						if(npc != null)
+							npc.setHealth(10000f);
 					}
 				}
 				

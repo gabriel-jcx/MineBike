@@ -284,11 +284,12 @@ public class NpcCommand {
 				if( (npc.motionZ == 0) && (!npc.isDead))
 				{
 					npc.reset();
+					npc.setHealth(10000f);
 					npc.setFaction(0);
 					setSpeed(10);
 					enableMoving(true);
-					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");
-					System.out.println("[BiGX] CQ Var: [" + npc.ai.movingType + "] [" + npc.ai.movingPause + "] [" + npc.getSpeed() + "]");
+//					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");
+//					System.out.println("[BiGX] CQ Var: [" + npc.ai.movingType + "] [" + npc.ai.movingPause + "] [" + npc.getSpeed() + "]");
 				}
 			}
 		}, 0, 200);
@@ -360,6 +361,7 @@ public class NpcCommand {
 			npc.ai.movingPause = true;
 		}
 		npc.updateTasks();
+		npc.setHealth(10000f);
 	}
 	
 	public void makeTransporter(boolean enable) {
