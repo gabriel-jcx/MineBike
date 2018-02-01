@@ -1773,10 +1773,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void onAttackEntityEvent(AttackEntityEvent event) {
 		synchronized (questManager) {
-			System.out.println("[BiGX] Attacked B4!!");
 			if(questManager.getActiveQuestId() != Quest.QUEST_ID_STRING_FIGHT_CHASE)
 				return;
-			System.out.println("[BiGX] Attacked A4!!");
 			
 			if( (chasingQuestOnGoing) && (!chasingQuestOnCountDown) )
 			{
