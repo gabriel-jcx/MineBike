@@ -66,8 +66,16 @@ public class NpcEvents {
 			InteractWithTeleportExit(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(0, -1, 0), NpcLocations.tutorialGuy.addVector(1, 0, 1)))
 			InteractWithTutorialGuy(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.baddestGuy.addVector(0, -1, 0), NpcLocations.tutorialGuy.addVector(1, 0, 1)))
-			InteractWithDungeonBoss(player, event);
+		
+		if(player.worldObj.provider.dimensionId == 105)
+		{
+			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.baddestGuy.addVector(-3, -3, -3), NpcLocations.baddestGuy.addVector(3, 3, 3)))
+			{
+				InteractWithDungeonBoss(player, event);
+			}
+			
+			System.out.println("Interaction with Ifrit dim[" + player.worldObj.provider.dimensionId + "]");
+		}
 	}
 	
 	private static void InteractWithTeleportExit(EntityPlayer player, EntityInteractEvent event) {
