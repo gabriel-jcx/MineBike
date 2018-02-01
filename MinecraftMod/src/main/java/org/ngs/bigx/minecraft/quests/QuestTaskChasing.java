@@ -1083,7 +1083,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					setNpc(npc);
 					
 					command = new NpcCommand(serverContext, npc);
-					command.setSpeed(10);
+					command.setSpeed(0);
 					command.enableMoving(false);
 					command.runInDirection(ForgeDirection.SOUTH);
 					
@@ -1140,6 +1140,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //			initThiefStat();
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
+			command.setSpeed(10);
 			command.enableMoving(true);
 			countdown = 11;
 			lastCountdownTickTimestamp = 0;

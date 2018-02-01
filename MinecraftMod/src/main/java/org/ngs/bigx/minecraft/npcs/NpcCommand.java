@@ -84,7 +84,7 @@ public class NpcCommand {
 		npc.attackEntityAsMob(Minecraft.getMinecraft().thePlayer);
 		
 		w.spawnEntityInWorld(npc);
-	    npc.setHealth(999999999f);
+	    npc.setHealth(10000f);
 	
 	    return npc;
 	}
@@ -100,7 +100,7 @@ public class NpcCommand {
 	    		MathHelper.floor_double(z)};
 	
 		w.spawnEntityInWorld(npc);
-	    npc.setHealth(999999999f);
+	    npc.setHealth(10000f);
 	
 	    return npc;
 	}

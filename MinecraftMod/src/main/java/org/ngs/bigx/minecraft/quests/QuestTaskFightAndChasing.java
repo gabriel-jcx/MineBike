@@ -1076,7 +1076,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					npc.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1);
 					
 					command = new NpcCommand(serverContext, npc);
-					
+
+				    npc.setHealth(10000f);
 					npc.faction.neutralPoints = 2000;
 					npc.faction.friendlyPoints = 3000;
 					npc.faction.defaultPoints = 2500;
@@ -1087,7 +1088,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
 					
 					npc.setFaction(2);
-				    npc.setHealth(999999999f);
+				    npc.setHealth(10000f);
 					
 					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
 					
@@ -1412,13 +1413,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 			while(isActive)
 			{	
-//				System.out.println("[BiGX] FQ AF[" + isActive + "]");
-				
 				if(checkChasingQuestTaskActivityFlags() == 2)
 					continue;
 
-//				System.out.println("[BiGX] FQ AF[checkChasingQuestTaskActivityFlags]");
-				
 				checkComboCount();
 				
 				if(chasingQuestOnGoing)
@@ -1434,7 +1431,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 							isStunnedGuiHappend = true;
 
 							npc.ai.canLeap = false;
-						    npc.setHealth(999999999f);
+						    npc.setHealth(10000f);
 						    npc.faction.attackFactions.remove(player);
 						    npc.ai.avoidsWater = true;
 						    npc.ai.onAttack = 3;
