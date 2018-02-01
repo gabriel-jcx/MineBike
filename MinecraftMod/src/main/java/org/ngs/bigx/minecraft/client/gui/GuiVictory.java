@@ -33,6 +33,10 @@ public class GuiVictory extends GuiScreen {
 	private static boolean isKOTimeout = false;
 
 	private String victoryMessageLine1 = "VICTORY!";
+	private String victoryMessageLineExp = "";
+	private String victoryMessageLineGold = "";
+	private String victoryMessageLineExtraGold = "";
+	private String victoryMessageLineSpecialItem = "";
 	private String victoryMessageLine2 = "Collect items from the floor!";
 	
 	public GuiVictory(Minecraft mc) {
@@ -44,9 +48,13 @@ public class GuiVictory extends GuiScreen {
 		Minecraft.getMinecraft().thePlayer.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
 	}
 	
-	public GuiVictory(BigxClientContext c, Minecraft mc) {
+	public GuiVictory(BigxClientContext c, Minecraft mc, int exp, int gold, int extragold, String specialItem) {
 		this(mc);
 		context = c;
+		this.victoryMessageLineGold = "Gold: " + gold;
+		this.victoryMessageLineExtraGold = "Extra Gold (by Combo): " + extragold;
+		this.victoryMessageLineExp = "EXP: " + exp;
+		this.victoryMessageLineSpecialItem = "Item: " + specialItem;
 	}
 	
 	@Override
@@ -119,17 +127,39 @@ public class GuiVictory extends GuiScreen {
 			// SHOW K.O
 			GL11.glPushMatrix();
 			    GL11.glTranslatef(mcWidth/2, 0, 0);
-		    	GL11.glScalef(2F, 2F, 2F);
+				GL11.glPushMatrix();
+			    	GL11.glScalef(2F, 2F, 2F);
+			    	
+			    	text = victoryMessageLine1;
+			
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 40, 0xFFFFFF);
+	    		GL11.glPopMatrix();
 		    	
-		    	text = victoryMessageLine1;
+		    	text = victoryMessageLineExp;
 		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 30, 0xFFFFFF);
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 20, 0xFFFFFF);
+		    	
+		    	text = victoryMessageLineGold;
+		
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 10, 0xFFFFFF);
+		    	
+		    	text = victoryMessageLineExtraGold;
+		
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2, 0xFFFFFF);
+		    	
+		    	text = victoryMessageLineSpecialItem;
+		
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 + 10, 0xFFFFFF);
 		    	
 		    	text = victoryMessageLine2;
 		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 10, 0xFFFFFF);
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 + 20, 0xFFFFFF);
     		
     		GL11.glPopMatrix();
 		}

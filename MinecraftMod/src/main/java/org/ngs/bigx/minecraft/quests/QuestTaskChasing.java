@@ -95,7 +95,7 @@ import noppes.npcs.entity.EntityNpcCrystal;
 public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
-	public static final String[] villainNames = {"Gold Thief","Diamond Thief","TNT Thief","Diamond Thief 2","Thief King",
+	public static final String[] villainNames = {"Iron Thief","Gold Thief","Diamond Thief","TNT Thief","Thief King",
 			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
@@ -894,57 +894,13 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		if (thiefLevel == 3){//levelSys.getPlayerLevel() == 3){
 			ItemStack key = new ItemStack(Item.getItemById(4424));
 			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
-			//TODO: add Next Quest (normal -> fire -> air -> earth -> water)
-			//TODO: fix descriptions for this quest
-//			try {
-//				QuestChaseTypeEnum newQuestType;
-//				String newQuestID;
-//				switch(this.questChaseType)
-//				{
-//				case REGULAR:
-//					newQuestType = QuestChaseTypeEnum.FIRE;
-//					newQuestID = Quest.QUEST_ID_STRING_CHASE_FIRE;
-//					break;
-//				default:
-//					 newQuestType = QuestChaseTypeEnum.REGULAR;
-//					 newQuestID = Quest.QUEST_ID_STRING_CHASE_REG;
-//					break;
-//				};
-//				
-//				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
-//				Quest quest;
-//				
-//				if(player.worldObj.isRemote)
-//				{
-//					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: CLIENT");
-//					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
-//					quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4));
-//					if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
-//						BiGX.instance().clientContext.getQuestManager().setActiveQuest(newQuestID);
-//				}
-//				else
-//				{
-//					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: SERVER");
-//					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
-//					quest.addTasks(new QuestTaskChasing(new LevelSystem(), BiGX.instance().serverContext.getQuestManager(), player, ws, 1, 4));
-//					if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
-//						BiGX.instance().serverContext.getQuestManager().setActiveQuest(newQuestID);
-//				}
-//			} catch (QuestException e) {
-//				e.printStackTrace();
-//			}
 		}
 		
-		//System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
 		levelSys.levelUp();
-//		if(levelSys.getPlayerLevel() == thiefLevel && levelSys.incExp(50/levelSys.getPlayerLevel())){ //Can be changed later so it's more variable
-//			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.levelUpMsg);
-//			levelSys.giveLevelUpRewards(player);
-//		}
 		
 		isActive = false;
 		completed = true;
-//		player.setGameType(GameType.SURVIVAL);
+
 		goBackToTheOriginalWorld(ws, player);
 	}
 	
@@ -1556,9 +1512,82 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			
 			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
 			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+
+			virtualCurrency = 20 + thiefLevel*10;
+			String specialItemName = "";
+			
+			switch(thiefLevel)
+			{
+			case 1:
+				specialItemName = "3 Iron Ignot";
+				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.iron_ingot), 1);
+				break;
+			case 2:
+				virtualCurrency = 80;
+				break;
+			case 3:
+				specialItemName = "3 Diamond Gem";
+				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.diamond), 1);
+				break;
+			case 4:
+				specialItemName = "3 TNT";
+				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Blocks.tnt), 1);
+				break;
+			case 5:
+				specialItemName = "2 TNT 2 Diamond Gem";
+				for(int i=0; i<2; i++) 
+				{ 
+					npc.entityDropItem(new ItemStack(Blocks.tnt), 1); 
+					npc.entityDropItem(new ItemStack(Items.diamond), 1);
+				}
+				break;
+			case 6:
+				specialItemName = "1 Diamond Axe 2 Diamond Gem";
+				for(int i=0; i<2; i++) 
+				{ 
+					npc.entityDropItem(new ItemStack(Items.diamond), 1);
+				}
+				npc.entityDropItem(new ItemStack(Items.diamond_axe), 1);
+				break;
+			case 7:
+				specialItemName = "10 TNT";
+				for(int i=0; i<10; i++) 
+				{ 
+					npc.entityDropItem(new ItemStack(Blocks.tnt), 1); 
+				}
+				break;
+			case 8:
+				specialItemName = "Each Diamond Tools (1)";
+				npc.entityDropItem(new ItemStack(Items.diamond_axe), 1);
+				npc.entityDropItem(new ItemStack(Items.diamond_hoe), 1);
+				npc.entityDropItem(new ItemStack(Items.diamond_pickaxe), 1);
+				npc.entityDropItem(new ItemStack(Items.diamond_shovel), 1);
+				break;
+			case 9:
+				specialItemName = "Each Diamond Tools (2)";
+				npc.entityDropItem(new ItemStack(Items.diamond_sword), 1);
+				npc.entityDropItem(new ItemStack(Items.diamond_boots), 1);
+				npc.entityDropItem(new ItemStack(Items.diamond_chestplate), 1);
+				npc.entityDropItem(new ItemStack(Items.diamond_helmet), 1); 
+				npc.entityDropItem(new ItemStack(Items.diamond_leggings), 1); 
+				break;
+			case 10:
+				specialItemName = "20 Diamond, 20 TNT";
+				for(int i=0; i<20; i++) 
+				{ 
+					npc.entityDropItem(new ItemStack(Items.diamond), 1); 
+					npc.entityDropItem(new ItemStack(Blocks.tnt), 1); 
+				}
+				break;
+			};
+			
+			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+			
 			for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
 				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
 			}
+			
 			//Combo Bonus
 			for (int i = 0; i < (bestCombo/2); ++i){
 				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);
@@ -1568,8 +1597,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 
 			Minecraft mc = Minecraft.getMinecraft();
+			
 			if(mc.currentScreen == null)
-				mc.displayGuiScreen(new GuiVictory(mc));
+				mc.displayGuiScreen(new GuiVictory(BiGX.instance().clientContext, mc, totalXP, BiGXEventTriggers.convertCoinsToGold(virtualCurrency), (bestCombo/2), specialItemName));
 		}
 		else if(flagOpenQuestMenuGui)
 		{

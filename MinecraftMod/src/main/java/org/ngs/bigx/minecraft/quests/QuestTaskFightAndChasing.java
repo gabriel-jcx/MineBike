@@ -1524,6 +1524,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			int totalXP = 15;
 			int xpGiven; // ignore pls
 			
+			String specialItemName = "";
+			
 			while (totalXP > 0) {
 		         xpGiven = random.nextBoolean() || totalXP == 1 ? 1 : 2;
 		         totalXP -= xpGiven;
@@ -1545,7 +1547,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 			Minecraft mc = Minecraft.getMinecraft();
 			if(mc.currentScreen == null)
-				mc.displayGuiScreen(new GuiVictory(mc));
+				mc.displayGuiScreen(new GuiVictory(BiGX.instance().clientContext, mc, totalXP, BiGXEventTriggers.convertCoinsToGold(virtualCurrency), (bestCombo/2), specialItemName));
 		}
 		else if(flagOpenQuestMenuGui)
 		{

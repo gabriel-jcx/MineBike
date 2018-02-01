@@ -256,7 +256,7 @@ public class NpcEvents {
 		}
 		
 		// TODO add confirmation prompt
-		if (player.worldObj.isRemote && player.inventory.getCurrentItem() == null) {
+		if (player.worldObj.isRemote) {
 			QuestTeleporter.teleport(player, 102, 512, 65, 0);
 		}
 	}
