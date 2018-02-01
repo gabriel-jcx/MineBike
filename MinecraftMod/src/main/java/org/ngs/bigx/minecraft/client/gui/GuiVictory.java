@@ -151,15 +151,18 @@ public class GuiVictory extends GuiScreen {
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2, 0xFFFFFF);
 		    	
-		    	text = victoryMessageLineSpecialItem;
+	    		if(!victoryMessageLineSpecialItem.equals(""))
+		    	{
+	    			text = victoryMessageLineSpecialItem;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 + 10, 0xFFFFFF);
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 10, 0xFFFFFF);
+		    	}
 		    	
 		    	text = victoryMessageLine2;
 		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 + 20, 0xFFFFFF);
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 20, 0xFFFFFF);
     		
     		GL11.glPopMatrix();
 		}

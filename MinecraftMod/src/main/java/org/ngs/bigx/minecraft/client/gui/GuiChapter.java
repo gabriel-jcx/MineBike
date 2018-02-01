@@ -53,9 +53,9 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_2 = "";
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_SHORT = "Go talk to a trainer";
 	
-	public static final String STR_CHAPTER_3_TITLE = "CATCH DIAMOND THIEF";
+	public static final String STR_CHAPTER_3_TITLE = "CATCH GOLD THIEF";
 	public static final String STR_CHAPTER_3_SUBTITLE_LINE_1 = "Go talk to a police officer";
-	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "at police station";
+	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "at police station and defeat \"Gold Thief\"";
 	public static final String STR_CHAPTER_3_SUBTITLE_LINE_SHORT = "Go talk to a police officer and defeat \"Gold Thief\"";
 	
 	public static final String STR_CHAPTER_4_TITLE = "THE JOURNEY STARTS";
