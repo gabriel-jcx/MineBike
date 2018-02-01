@@ -441,7 +441,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			time = 0;
 		}
 
-		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
 		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 		QuestTeleporter.teleport(player, 100, 1, 11, 0);
 
