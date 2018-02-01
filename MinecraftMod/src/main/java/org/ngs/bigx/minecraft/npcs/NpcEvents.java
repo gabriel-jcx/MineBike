@@ -113,9 +113,6 @@ public class NpcEvents {
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 				
-				// TODO add this zone update to GameSave boundary value
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-				
 				// Unlock the next chapter and open Gui Chapter
 				if(GuiChapter.getChapterNumber() == 1)
 				{
@@ -149,20 +146,6 @@ public class NpcEvents {
 		} catch (QuestException e) {
 			e.printStackTrace();
 		}
-		
-//		BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Tutorial", 
-//				"Dad: Just in case you need\nit, take this potion");
-//		
-//		if (!player.inventory.hasItem(Items.paper)){
-//			player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
-//			if (!player.worldObj.isRemote)
-//				GuiMessageWindow.showMessage("Don't forget your Quest\nPapers!");
-//		}
-//		if (!player.inventory.hasItem(Item.getItemById(4801))){
-//			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
-//			if (!player.worldObj.isRemote)
-//				GuiMessageWindow.showMessage("Don't forget your Bike\nMode Changing Phone!");
-//		}
 	}
 	
 	private static void InteractWithDungeonBoss(EntityPlayer player, EntityInteractEvent event) {
