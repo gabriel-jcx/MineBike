@@ -68,7 +68,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
-	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac"};
+	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac","Ifrit"};
 
 	public static ArrayList<ArrayList<String>> monsterTypes = GetMonsterTypes();
 	
