@@ -1064,7 +1064,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //					npc.attackEntityAsMob(player);
 					
 					if (isBoss) {
-						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Baddest Guy", "customnpcs:textures/entity/humanmale/RobesBlackSteve.png");
+						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Ifrit", "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png");
 					} else {
 						ArrayList<String> monsterType = monsterTypes.get(thiefLevel-1);
 						npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));

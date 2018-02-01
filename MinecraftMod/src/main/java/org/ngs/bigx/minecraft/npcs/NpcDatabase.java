@@ -107,7 +107,7 @@ public class NpcDatabase {
 		if (name.contains("Trainer"))
 			return "customnpcs:textures/entity/humanmale/CasualSteve.png";
 		if (name.contains("Ifrit"))
-			return "customnpcs:textures/entity/humanmale/RobesBlackSteve.png";
+			return "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}
