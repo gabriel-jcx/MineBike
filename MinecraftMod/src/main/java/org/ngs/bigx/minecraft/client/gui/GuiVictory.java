@@ -106,8 +106,8 @@ public class GuiVictory extends GuiScreen {
 		    	float fdx = (new Random()).nextFloat();
 		    	float fdy = (new Random()).nextFloat();
 		    	
-		    	int dx = (fdx>0.66f)?1:(fdx>0.33)?0:-1;
-		    	int dy = (fdy>0.66f)?1:(fdy>0.33)?0:-1;
+		    	int dx = (fdx>0.80f)?1:(fdx>0.20)?0:-1;
+		    	int dy = (fdy>0.80f)?1:(fdy>0.20)?0:-1;
 		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2 + dx, mcHeight/4 - 30 + dy, 0xFF8888);
