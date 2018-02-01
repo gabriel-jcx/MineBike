@@ -10,7 +10,6 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
-import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 
@@ -137,33 +136,6 @@ public class NpcCommand {
 			command.runInDirection(ForgeDirection.SOUTH);
 	
 			questTaskChasing.setNpcCommand(command);
-		}
-	}
-	
-	public static void spawnTheifOnFightAndChaseQuest(BigxContext context) {	
-		if(theifOnFightAndChaseQuestSpawnFlag) {
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-			QuestTaskFightAndChasing questTaskFightAndChasing = (QuestTaskFightAndChasing)bigxContext.getQuestManager().getQuestTaskFightAndChasing();
-			EntityCustomNpc npc;
-			NpcCommand command;
-	
-			if(questTaskFightAndChasing == null)
-				return;
-	
-			theifOnFightAndChaseQuestSpawnFlag = false;
-	
-			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-//			npc.ai.stopAndInteract = false;
-			npc.faction.neutralPoints = 20000;
-	
-			questTaskFightAndChasing.setNpc(npc);
-	
-			command = new NpcCommand(context, npc);
-//			command.setSpeed(10);
-			command.enableMoving(true);
-//			command.runInDirection(ForgeDirection.SOUTH);
-	
-			questTaskFightAndChasing.setNpcCommand(command);
 		}
 	}
 	

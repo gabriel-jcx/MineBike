@@ -179,9 +179,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public void setPreviousLocationBeforeTheQuest(int dim, int x, int y, int z)
 	{
 		this.questSourceDimensionId = dim;
-		this.returnLocation.xCoord = x;
-		this.returnLocation.yCoord = y;
-		this.returnLocation.zCoord = z;
+
+		returnLocation = Vec3.createVectorHelper(x, y, z);
 	}
 
 	public static LevelSystem getLevelSystem()
@@ -1415,7 +1414,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void run()
 	{
-		System.out.println("[BiGX] Quest Chasing Task Started");
+		System.out.println("[BiGX] Quest Fight And Chasing Task Started");
  		synchronized (questManager) {
 			init();
 

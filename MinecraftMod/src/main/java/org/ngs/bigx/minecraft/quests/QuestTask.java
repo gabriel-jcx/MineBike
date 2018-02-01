@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft.quests;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.TimerTask;
 
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
@@ -27,6 +28,8 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 	protected boolean isActive = false;
 	protected BigxClientContext clientContext;
 	protected BigxServerContext serverContext;
+	
+	protected static ArrayList<Thread> taskThread = new ArrayList<Thread>();
 	
 	protected int questTypeId = 0;
 	
@@ -112,7 +115,19 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 	{
 		this.isActive = true;
 		this.registerEvents();
-		new Thread(this).start();
+		
+		Thread newThread = new Thread(this);
+		taskThread.add(newThread);
+		newThread.start();
+		
+		int aliveThreadCount = 0;
+		for(int i=0; i<taskThread.size(); i++)
+		{
+			if(taskThread.get(i).isAlive())
+				aliveThreadCount++;
+		}
+		
+		System.out.println("[BiGX] Thread Count[" + taskThread.size() + "] alive[" + aliveThreadCount + "]");
 		
 		this.sendQuestGameTag(QuestActivityTagEnum.STARTED);
 	}
@@ -120,7 +135,19 @@ public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete,
 	public void reactivateTask()
 	{
 		this.isActive = true;
-		new Thread(this).start();
+		
+		Thread newThread = new Thread(this);
+		taskThread.add(newThread);
+		newThread.start();
+		
+		int aliveThreadCount = 0;
+		for(int i=0; i<taskThread.size(); i++)
+		{
+			if(taskThread.get(i).isAlive())
+				aliveThreadCount++;
+		}
+		
+		System.out.println("[BiGX] Thread Count[" + taskThread.size() + "] alive[" + aliveThreadCount + "]");
 		
 		this.sendQuestGameTag(QuestActivityTagEnum.STARTED);
 	}
