@@ -64,7 +64,7 @@ public class NpcEvents {
 			InteractWithOfficer(player, event);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
 			InteractWithTeleportExit(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(0, -1, 0), NpcLocations.tutorialGuy.addVector(1, 0, 1)))
+		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(-5, -5, -5), NpcLocations.tutorialGuy.addVector(5, 5, 5)))
 			InteractWithTutorialGuy(player, event);
 		
 		if(player.worldObj.provider.dimensionId == 105)
