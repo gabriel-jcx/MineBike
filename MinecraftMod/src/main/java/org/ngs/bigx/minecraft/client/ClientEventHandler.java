@@ -36,6 +36,7 @@ import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
@@ -63,6 +64,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -254,6 +256,19 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
 					p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
 					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+				}
+				
+				switch(GuiChapter.getChapterNumber())
+				{
+				case 1:
+				case 2:
+					if(!( (p.posX >= 86) && (p.posX <=103) &&
+							(p.posY >= 45) && (p.posY <= 100) &&
+							(p.posZ >= 235) && (p.posZ <=250)))
+					{
+						QuestTeleporter.teleport(p, 0, 95, 72, 240);
+					}
+					break;
 				}
 			}
 		}
