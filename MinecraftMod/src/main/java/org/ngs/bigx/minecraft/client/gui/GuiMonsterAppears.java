@@ -58,7 +58,10 @@ public class GuiMonsterAppears extends GuiScreen {
 				if(mc.currentScreen instanceof GuiMonsterAppears)
 				{
 					System.out.println("[Bigx] GuiMonsterAppears timer ticks");
-					Minecraft.getMinecraft().thePlayer.closeScreen();
+
+			        if(mc.currentScreen != null) {
+			        	Minecraft.getMinecraft().thePlayer.closeScreen();
+			        }
 				}
 			}
 		}, 3*1000);

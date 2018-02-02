@@ -227,7 +227,9 @@ public class GuiChapter extends GuiScreen {
 				if(mc.currentScreen instanceof GuiChapter)
 				{
 					didOneSecondPassed = false;
-					Minecraft.getMinecraft().thePlayer.closeScreen();
+			        if(mc.currentScreen != null) {
+			        	Minecraft.getMinecraft().thePlayer.closeScreen();
+			        }
 				}
 			}
 		}, 4*1000);

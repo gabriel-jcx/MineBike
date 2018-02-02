@@ -229,8 +229,10 @@ public class GuiChasingQuest extends GuiScreen {
 				System.out.println("Chasing Quest Hard Selected");
 				break;
 			case 4:
-	    		Minecraft.getMinecraft().thePlayer.closeScreen();
-				System.out.println("Chasing Quest START Selected");
+		        if(mc.currentScreen != null) {
+		    		Minecraft.getMinecraft().thePlayer.closeScreen();
+					System.out.println("Chasing Quest START Selected");
+		        }
 				break;
 			default:
 				System.out.println("Clicked Unimplemented Button");
