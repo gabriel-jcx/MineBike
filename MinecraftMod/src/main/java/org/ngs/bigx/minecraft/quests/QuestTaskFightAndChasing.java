@@ -813,31 +813,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		this.command = npcCommand;
 	}
 	
-	private void waitForRewardPickupAndContinue() {
-		
-		// Don't continue if there's an item on the ground nearby
-		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc, AxisAlignedBB.getBoundingBox(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
-			if (e instanceof EntityItem || e instanceof EntityXPOrb) {
-				return;
-			}
-		}
-		
-		if (thiefLevel == 2){//levelSys.getPlayerLevel() == 2){
-			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4615)));//4420))); //water element
-		}
-		if (thiefLevel == 3){//levelSys.getPlayerLevel() == 3){
-			ItemStack key = new ItemStack(Item.getItemById(4424));
-			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
-		}
-		
-		//System.out.println("[BiGX] increased exp: " + levelSys.incExp(100 * levelSys.getPlayerLevel()));
-		levelSys.levelUp();
-		
-		isActive = false;
-		completed = true;
-		goBackToTheOriginalWorld(ws, player);
-	}
-	
 	@Override
 	public void CheckComplete() {
 		// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
@@ -868,14 +843,12 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			npc.setDead();
 			
 			if (endOfChaseItemCounter > 0) {
+				endOfChaseItemCounter--;
+				
 				List<EntityItem> nearbyItems = npc.worldObj.getEntitiesWithinAABB(EntityItem.class,
 						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
 				List<EntityXPOrb> nearbyOrbs = npc.worldObj.getEntitiesWithinAABB(EntityXPOrb.class,
 						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
-				
-				if (endOfChaseItemCounter == 0) {
-					// TODO move items to player
-				}
 				
 				if (nearbyItems.size() == 0 && nearbyOrbs.size() == 0) {
 					endOfChaseItemCounter = 0;
@@ -883,7 +856,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 			else if(endOfChaseItemCounter == 0)
 			{
-				flagOpenQuestMenuGui = true;
+				flagLeave = true;
 			}
 			
 			if(isExitSelected)
@@ -1422,18 +1395,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			row.time_elapsed = "" + time;
 			row.combo = "" + bestCombo;
 			
-			try {
-				GuiLeaderBoard.writeToLeaderboard(row);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
 			command.setSpeed(0);
-//			npc.setHealth(0f);
 			npc.setDead();
 			
 			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
-			endOfChaseItemCounter = 15;
+			endOfChaseItemCounter = 10;
 			
 			Random random = new Random();
 			
@@ -1465,21 +1431,21 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			if(mc.currentScreen == null)
 				mc.displayGuiScreen(new GuiVictory(BiGX.instance().clientContext, mc, totalXP, BiGXEventTriggers.convertCoinsToGold(virtualCurrency), (bestCombo/2), specialItemName));
 		}
-		else if(flagOpenQuestMenuGui)
-		{
-			flagOpenQuestMenuGui = false;
-			
-			Minecraft mc = Minecraft.getMinecraft();
-			System.out.println(serverContext instanceof BigxServerContext);
-			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(true); 
-
-			if(mc.currentScreen == null) {
-				mc.displayGuiScreen(gui);
-			}
-			
-			// Set another 15 second timer to open gui
-			endOfChaseItemCounter = 15;
-		}
+//		else if(flagOpenQuestMenuGui)
+//		{
+//			flagOpenQuestMenuGui = false;
+//			
+//			Minecraft mc = Minecraft.getMinecraft();
+//			System.out.println(serverContext instanceof BigxServerContext);
+//			GuiFinishChasingQuest gui = new GuiFinishChasingQuest(true); 
+//
+////			if(mc.currentScreen == null) {
+////				mc.displayGuiScreen(gui);
+////			}
+//			
+//			// Set another 15 second timer to open gui
+//			endOfChaseItemCounter = 10;
+//		}
 		else if(flagGiveup)
 		{
 			flagGiveup = false;
