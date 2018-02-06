@@ -913,7 +913,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					chosenSong = "minebike:mus_breaks";
 
 //				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop @p 0.4f");
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop @p 0.5f");
 				
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 				setThiefLevel(levelSys.getPlayerLevel());
@@ -1349,6 +1349,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						if(npc != null)
 							npc.setHealth(10000f);
 					}
+					
+					Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 				}
 				
 				if(!player.worldObj.isRemote)
@@ -1379,6 +1381,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		
 		if(flagAccomplished)
 		{
+			// Play Monster Scream Sound
+			player.worldObj.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
+			
 			System.out.println("flagAccomplished");
 			
 			flagAccomplished = false;
@@ -1667,6 +1672,10 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				else
 					deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 			}
+
+			// Play Monster Hit Sound
+			int randomNumber = (new Random()).nextInt() % 4 + 1;
+			player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 		}
 	}
 

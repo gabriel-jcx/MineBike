@@ -71,6 +71,10 @@
     "category": "player",
     "sounds": [{"name":"victorywinfcquest","stream": true}]
   },
+  "monsterdeath": {
+    "category": "player",
+    "sounds": [{"name":"monsterdeath","stream": true}]
+  },
   "bg_random": {
     "category": "player",
 	"sounds": [

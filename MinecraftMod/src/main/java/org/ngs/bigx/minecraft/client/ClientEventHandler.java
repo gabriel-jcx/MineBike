@@ -679,7 +679,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " @p 0.4f");
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " @p 0.5f");
 					}
 					else
 					{

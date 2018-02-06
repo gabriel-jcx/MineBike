@@ -232,7 +232,7 @@ public class GuiChapter extends GuiScreen {
 			        }
 				}
 			}
-		}, 4*1000);
+		}, 7*1000); // Originally 4 seconds but suggested to have longer exposure
 	}
 	
 	@Override
