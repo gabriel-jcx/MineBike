@@ -73,17 +73,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public static ArrayList<ArrayList<String>> monsterTypes = GetMonsterTypes();
 	
 	public static boolean isBoss = false;
-	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
-
-	private static boolean flagAccomplished = false;
-	private static boolean flagFallBehind = false;
-	private static boolean flagRetry = false;
-	private static boolean flagGiveup = false;
-	private static boolean flagContinue = false;
-	private static boolean flagOpenQuestMenuGui = false;
-	private static boolean flagLeave = false;
 	
-	private static boolean isRewardState = false;
+	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
 	
 	private String id = "QUEST_TASK_CHASE";
 	
@@ -114,7 +105,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
-	private boolean doMakeBlocks;
 	float ratio;
 	private Vec3 returnLocation;
 	
@@ -122,7 +112,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	private EntityCustomNpc npc;
 	private NpcCommand command;
 	
-	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
 	protected float speedchange = 0f;
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	protected boolean chasingQuestOnGoing = false;
@@ -152,29 +141,41 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	private int questDestinationDimensionId = WorldProviderFlats.dimID;
 	private int questSourceDimensionId = 0;
 	
-	private static LevelSystem levelSys;
-	
 	public EntityPlayer player;
 	private List<Vec3> blocks = new ArrayList<Vec3>();
 	
 	private boolean menuOpen = false;
-
-	public static final int speedUpEffectTickCountMax = 60;
-	public static final int damageUpEffectTickCountMax = 60;
-	private static int speedUpEffectTickCount = 0;
-	private static int damageUpEffectTickCount = 0;
 	
 	private int questTypeId = 1;
 	
 	private int initialHunger;
 	
 	public String chosenSong = "";
+	
+	public boolean isStunnedGuiHappend = false;
+	
+	private static LevelSystem levelSys;
+
+	public static final int speedUpEffectTickCountMax = 60;
+	public static final int damageUpEffectTickCountMax = 60;
+	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	
+	private static int speedUpEffectTickCount = 0;
+	private static int damageUpEffectTickCount = 0;
 
 	public static boolean isContinueSelected = false;
 	public static boolean isRetrySelected = false;
 	public static boolean isExitSelected = false;
+
+	private static boolean flagAccomplished = false;
+	private static boolean flagFallBehind = false;
+	private static boolean flagRetry = false;
+	private static boolean flagGiveup = false;
+	private static boolean flagContinue = false;
+	private static boolean flagOpenQuestMenuGui = false;
+	private static boolean flagLeave = false;
 	
-	public boolean isStunnedGuiHappend = false;
+	private static boolean isRewardState = false;
 	
 	public void setPreviousLocationBeforeTheQuest(int dim, int x, int y, int z)
 	{
@@ -303,16 +304,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void initThiefStat()
 	{
-		if(thiefLevel >= monsterTypes.size())
-			thiefLevel = monsterTypes.size()-1;
-		
-		if (isBoss) {
-			thiefHealthMax = 250;
-		} else {
-			thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
-		}
-		thiefLevel = 1;
-		thiefHealthCurrent = thiefHealthMax;
+		this.setThiefLevel(1);
 	}
 	
 	public void setThiefLevel(int level)
@@ -324,7 +316,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		if(thiefLevel >= monsterTypes.size())
 			thiefLevel = monsterTypes.size()-1;
 		
-//		thiefHealthMax = 41 + (int) Math.pow(9, thiefLevel);
 		if (isBoss) {
 			thiefHealthMax = 250;
 		} else {
@@ -420,12 +411,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		dist = 0;
 		pausedTime = 0;
 		completed = false;
-		
-//		if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
-//			setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
-//		else
-//			setThiefLevel(levelSys.getPlayerLevel());
-//		System.out.println("Thief's level is: " + getThiefLevel());
 		
 		// INIT questSettings ArrayList if there is any
 		if(serverContext.isSuggestedGamePropertiesReady())
@@ -1018,63 +1003,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 					
-//					switch(this.questChaseType)
-//					{
-//					case REGULAR:
-//						System.out.println("Spawning thief...");
-//						switch(thiefLevel)
-//						{
-//						case 1:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/GangsterSteve.png");
-//							break;
-//						case 2:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/FireSteve.png");
-//							break;
-//						case 3:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/RaggedyBardSteve.png");
-//							break;
-//						case 4:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve.png");
-//							break;
-//						case 5:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/humanmale/MercenarySteve 2.png");
-//							break;
-//						case 6:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Ogre.png");
-//							break;
-//						case 7:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/SandMonster.png");
-//							break;
-//						case 8:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/StoneGolem.png");
-//							break;
-//						case 9:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/EnderMage.png");
-//							break;
-//						case 10:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Undead King.png");
-//							break;
-//						default:
-//							npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief", "customnpcs:textures/entity/humanmale/GangsterSteve.png");
-//							break;
-//						}
-//						
-//						npc.ai.stopAndInteract = false;
-//						break;
-//					case FIRE:
-//						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
-//						npc.ai.stopAndInteract = false;
-//						npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
-//						break;
-//					default:
-//						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-//						npc.ai.stopAndInteract = false;
-//						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
-//						break;
-//					};
-
-//					npc.attackEntityAsMob(player);
-					
 					if (isBoss) {
 						npc = NpcCommand.spawnNpc(0, 11, 5, ws, "Ifrit", "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png");
 					} else {
@@ -1115,44 +1043,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			
 			if (countdown == 1)
 			{	
-//				npc.ai.canLeap = false;
 			    npc.setHealth(10000f);
-//			    npc.faction.attackFactions.remove(player);
-//			    npc.ai.avoidsWater = true;
-//			    npc.ai.onAttack = 3;
-//			    npc.setResponse();
-
-			    // TODO: START RUNNING FOR QUEST FIGHT AND CHASE QUEST
-//				command.setSpeed(10);
-//				command.runInDirection(ForgeDirection.SOUTH);
 			}
-//			if(countdown == 9)
-//			{
-//				player.rotationPitch = 0f;
-//				player.rotationYaw = 0f;
-//				
-//				/**
-//				 * PLAYING MUSIC FOR CHASING QUEST
-//				 */
-//				
-//				if (thiefLevel < 2 || thiefLevel > 3)
-//					chosenSong = "minebike:mus_metal";
-//				else
-//					chosenSong = "minebike:mus_breaks";
-//				
-//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
-//			}
-//			if(countdown == 8)
-//			{
-//				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
-//				setThiefLevel(levelSys.getPlayerLevel());
-//				System.out.println("Thief's level is: " + getThiefLevel());
-//				thiefLevelSet = true;
-//				
-//				if(player.worldObj.isRemote) {
-//					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
-//				}
-//			}
 		} else {
 			chasingQuestOnCountDown = false;
 //			System.out.println("GO!");
@@ -1166,6 +1058,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			ClientEventHandler.animTickChasingFade = 0;
 
 			Minecraft mc = Minecraft.getMinecraft();
+			
 			if(mc.currentScreen == null)
 				mc.displayGuiScreen(new GuiMonsterReadyFight(BiGX.instance().clientContext, mc));
 		}
@@ -1442,7 +1335,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						
 						handleCountdown();
 					}
-					else if(getThiefHealthCurrent() < (getThiefHealthMax() * 0.15))
+					else if(getThiefHealthCurrent() < (getThiefHealthMax() * 0.5))
 					{
 						if(npc != null)
 							npc.setHealth(10000f);
@@ -1698,6 +1591,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public void init()
 	{
 		World world = player.worldObj;
+		isStunnedGuiHappend = false;
 		time = 0;
 		virtualCurrency = 0;
 		initThiefStat();
@@ -1705,6 +1599,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		countdown = 5;
 		pausedTime = 0;
 		comboCount = 0;
+		bestCombo = 0;
 		isRewardState = false;
 		thiefLevelSet = false;
 		

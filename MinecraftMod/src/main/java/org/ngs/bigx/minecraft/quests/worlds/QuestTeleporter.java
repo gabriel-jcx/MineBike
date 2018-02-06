@@ -31,9 +31,6 @@ public class QuestTeleporter {
 
     // Move the Entity to the portal
     public static void teleport(Entity entity, int targetDimensionId,int x,int y,int z) {
-    	if (entity.worldObj.provider.dimensionId != targetDimensionId) {
-    		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + targetDimensionId + " " + x + " " + y + " " + z);
-    	}
-        Minecraft.getMinecraft().thePlayer.sendChatMessage("/tp" + " " + x + " " + y + " " + z);
+		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + targetDimensionId + " " + x + " " + y + " " + z);
     }
 }
