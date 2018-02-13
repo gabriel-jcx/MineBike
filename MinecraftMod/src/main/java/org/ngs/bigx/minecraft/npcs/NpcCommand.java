@@ -10,7 +10,6 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
-import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 
 import net.minecraft.client.Minecraft;
@@ -367,14 +366,6 @@ public class NpcCommand {
 	public void makeTransporter(boolean enable) {
 		if (enable) {
 			role = 1;
-		}
-	}
-	
-	public void transportPlayer() {
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
-		EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
-		if (ws != null) {
-			 QuestTeleporter.teleport(player, WorldProviderDark.dimID);
 		}
 	}
 	

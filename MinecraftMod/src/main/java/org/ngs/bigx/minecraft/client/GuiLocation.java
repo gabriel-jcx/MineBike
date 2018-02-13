@@ -132,7 +132,7 @@ public class GuiLocation extends GuiScreen {
 	    		text = text.substring(text.indexOf("< ")+2, text.indexOf(" >"));
 	    	int w = mcWidth/2 - 100;
 	    	
-		    GL11.glTranslatef((fontRendererObj.getStringWidth(text)/2 + (mcWidth/2 - (90 + fontRendererObj.getStringWidth(text)/2)))/2, mcHeight-16, 0);
+		    GL11.glTranslatef((mcWidth - 45), 70, 0);
 	    	
 		    float xScale = 1F;
 		    if (fontRendererObj.getStringWidth(text) > w && fontRendererObj.getStringWidth(text) != 0)

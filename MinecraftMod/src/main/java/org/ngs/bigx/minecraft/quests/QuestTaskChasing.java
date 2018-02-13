@@ -269,8 +269,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
 		chosenSong = "";
 		
-		System.out.println("goBackToTheOriginalWorld");
-//		deactivateTask();
+		System.out.println("goBackToTheOriginalWorld isRemote[" + world.isRemote + "]");
 		
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
@@ -289,19 +288,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		
 		if(npc != null)
 			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
-
-//		switch(this.questChaseType)
-//		{
-//		case REGULAR:
-//			returnLocation = Vec3.createVectorHelper(96, 58, -52);
-//			break;
-//		case FIRE:
-//			returnLocation = Vec3.createVectorHelper(96, 73, -8);
-//			break;
-//		default:
-//			returnLocation = Vec3.createVectorHelper(96, 73, -8);
-//			break;	
-//		};
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 100, (int)entity.posZ + 16);

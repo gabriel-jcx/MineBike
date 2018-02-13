@@ -368,14 +368,6 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onPlayerUse(PlayerInteractEvent event){
 		EntityPlayer p = event.entityPlayer;
-//		itemOnPlayersHand.getDisplayName().contains("Teleportation Potion")
-//		if(itemOnPlayersHand.getItem() == Items.paper)
-//		if (!p.inventory.hasItem(Items.paper)){
-//			p.inventory.addItemStackToInventory(new ItemStack(Items.paper));
-//		}
-//		if (!p.inventory.hasItem(Item.getItemById(4801))){
-//			p.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));	
-//		}
 		
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
@@ -437,16 +429,6 @@ public class CommonEventHandler {
 				System.out.println("pedalingModeState[" + ClientEventHandler.pedalingModeState + "]");
 			}
 		}
-	}
-	
-	@SubscribeEvent
-	public void onItemUse(final PlayerUseItemEvent.Start event) {
-		System.out.println("Item being used...");
-		System.out.println(BiGX.instance().clientContext.getQuestManager().getActiveQuestId());
-		if (event.item.getDisplayName().contains("Past"))
-			QuestTeleporter.teleport(event.entityPlayer, 0, 88, 78, 243);
-		if (event.item.getDisplayName().contains("Tutorial"))
-			QuestTeleporter.teleport(event.entityPlayer, 102, 512, 65, 0);
 	}
 	
 	@SubscribeEvent

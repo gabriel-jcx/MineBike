@@ -25,12 +25,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class QuestTeleporter {
-    public static void teleport(Entity entity,int targetDimensionId) {
-    	teleport(entity,targetDimensionId,0,0,0);
-    }
-
     // Move the Entity to the portal
     public static void teleport(Entity entity, int targetDimensionId,int x,int y,int z) {
 		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + targetDimensionId + " " + x + " " + y + " " + z);
+		
+		if(targetDimensionId == Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId)
+		{
+			System.out.println("[BiGX] Teleport to the same dimension?? isRemote[" + Minecraft.getMinecraft().thePlayer.worldObj.isRemote + "]");
+			(new Exception()).printStackTrace();
+		}
     }
 }
