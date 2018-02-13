@@ -59,15 +59,15 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_2 = "";
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_SHORT = "Go talk to a trainer";
 	
-	public static final String STR_CHAPTER_3_TITLE = "CATCH GOLD THIEF";
-	public static final String STR_CHAPTER_3_SUBTITLE_LINE_1 = "Go talk to a police officer";
-	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "at police station and defeat \"Gold Thief\"";
+	public static final String STR_CHAPTER_3_TITLE = "CATCH THE GOLD THIEF";
+	public static final String STR_CHAPTER_3_SUBTITLE_LINE_1 = "Go talk to a police officer at the";
+	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "police station and defeat the \"Gold Thief\"";
 	public static final String STR_CHAPTER_3_SUBTITLE_LINE_SHORT = "Go talk to a police officer and defeat \"Gold Thief\"";
 	
 	public static final String STR_CHAPTER_4_TITLE = "THE JOURNEY STARTS";
-	public static final String STR_CHAPTER_4_SUBTITLE_LINE_1 = "Defeat the Thief Boss from the cave";
-	public static final String STR_CHAPTER_4_SUBTITLE_LINE_2 = "located on top of the mountain!";
-	public static final String STR_CHAPTER_4_SUBTITLE_LINE_SHORT = "Defeat the Thief Boss";
+	public static final String STR_CHAPTER_4_SUBTITLE_LINE_1 = "Defeat the Monster \"Ifrit\" from the cave";
+	public static final String STR_CHAPTER_4_SUBTITLE_LINE_2 = "located on top of the northern mountain!";
+	public static final String STR_CHAPTER_4_SUBTITLE_LINE_SHORT = "Go to the cave on the northern mountain. And defeat the Ifrit";
 	
 	public static boolean didOneSecondPassed = false;
 	

@@ -37,7 +37,7 @@ public class GuiVictory extends GuiScreen {
 	private String victoryMessageLineGold = "";
 	private String victoryMessageLineExtraGold = "";
 	private String victoryMessageLineSpecialItem = "";
-	private String victoryMessageLine2 = "Collect items from the floor!";
+	private String victoryMessageLine2 = "Pick up the items!";
 	
 	public GuiVictory(Minecraft mc) {
 		super();

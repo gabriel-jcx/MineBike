@@ -32,6 +32,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.NPCEntityHelper;
 import net.minecraft.entity.NpcMerchant;
@@ -91,7 +92,7 @@ public class CommonEventHandler {
 	
 	int fightAndChaseQuestTick = 0;
 //	int fightAndChaseQuestTickCount = 90*20;
-	int fightAndChaseQuestTickCount = 1000; // Every 20 seconds (10 seconds is too short)
+	int fightAndChaseQuestTickCount = 2000; // Every 20 seconds (10 seconds is too short)
 	
 	private static int thiefMaxLevel = 1;
 	
@@ -507,7 +508,10 @@ public class CommonEventHandler {
 //				World current_world = MinecraftServer.getServer().getEntityWorld();
 
 				if(Minecraft.getMinecraft().thePlayer != null)
+				{
 					Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamerule doDaylightCycle false");
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamemode s");
+				}
 //				current_world.setWorldTime(8000);
 			}
 			

@@ -66,19 +66,19 @@ public class BiGXTextBoxDialogue {
 	public static final String questChase1Title = "Defeat Thief";
 	public static final String questChase1Description = "A thief has stolen gold from the villagers.";
 	
-	//Instructions
+	//Instructions - tutorial
 	public static final String instructionsInteractNPC = "Press X to interact\nwith characters.";
-	public static final String instructionsAttackNPC = "Press Y to hit the bot.";
+	public static final String instructionsAttackNPC = "Aim the bot using joystick\nand Press B to hit the bot.";
 	public static final String instructionsPedalForward = "Pedal forward to\nmove forward!";
 	public static final String instructionsPedalBackward = "Pedal backward to\nmove back!";
 	public static final String instructionsJump = "Press A to jump!";
 	public static final String instructionsDashJump = "Pedal and press A to\nDash jump!";
-	public static final String instructionsMine = "Press Y and hold to mine!\nMine a path to proceed!";
-	public static final String instructionsBuild = "Press X to place blocks!\nMake steps to proceed!";
+	public static final String instructionsMine = "Press and hold B to mine!\nMine a path to proceed!";
+	public static final String instructionsBuild = "Select Dirt Block using LT or RT.\nPress X to place blocks!\nMake steps to proceed!";
 	public static final String instructionsExitTutorial = "Talk to this NPC to exit\nthe tutorial! Good luck!";
 	
 	public static final String instructionsInteractEnvironment = "Press  to interact with\nlevers, doors, etc.";
-	public static final String instructionsChestOpen = "Press X to\nopen the chest.";
+	public static final String instructionsChestOpen = "Press X to open the chest.\nAnd Press Start to close menu.";
 	public static final String instructionsChestOpenLocked = "Use the specified key to\nopen the chest.";
 	public static final String instructionsOpenInventory = "Press [] to open your inventory.";
 	public static final String instructionsChangeMode = "Press DPAD LEFT to\nswitch pedalling modes.";

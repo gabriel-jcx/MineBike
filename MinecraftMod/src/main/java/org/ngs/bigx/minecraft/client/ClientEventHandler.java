@@ -106,6 +106,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
 	
 	public static boolean flagOpenChapterGui = false;
+	public static boolean flagChapterCorrectionFromLoading = false;
 	
 	private static ClientEventHandler handler;
 	private String previousSong;
@@ -238,38 +239,27 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(p.worldObj.provider.dimensionId == 0)
 			{
-				if (GuiChapter.getChapterNumber() < 3) {
-					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-				} else if (GuiChapter.getChapterNumber() < 4) {
-					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-				} else {
-					p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-				}
-				
-				switch(GuiChapter.getChapterNumber())
-				{
-				case 1:
-				case 2:
-					if(!( (p.posX >= 86) && (p.posX <=103) &&
-							(p.posY >= 45) && (p.posY <= 100) &&
-							(p.posZ >= 235) && (p.posZ <=250)))
-					{
-						QuestTeleporter.teleport(p, 0, 95, 72, 240);
-					}
-					break;
-				}
+//				if (GuiChapter.getChapterNumber() < 3) {
+//					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
+//				} else if (GuiChapter.getChapterNumber() < 4) {
+//					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+//				} else {
+//					p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+//					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+//				}
+
+				flagChapterCorrectionFromLoading = true;
 			}
 		}
 		
@@ -464,6 +454,43 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					
 					flagOpenChapterGui = false;
 				}
+			}
+			
+			if(BigxClientContext.getIsGameSaveRead() && flagChapterCorrectionFromLoading && (Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0))
+			{
+				EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+				
+				if (GuiChapter.getChapterNumber() < 3) {
+					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
+				} else if (GuiChapter.getChapterNumber() < 4) {
+					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+				} else {
+					p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+				}
+				
+				if(GuiChapter.getChapterNumber() < 3)
+				{
+					if(!( (p.posX >= 86) && (p.posX <=103) &&
+							(p.posY >= 45) && (p.posY <= 100) &&
+							(p.posZ >= 235) && (p.posZ <=250)))
+					{
+						QuestTeleporter.teleport(p, 0, 95, 72, 240);
+					}
+				}
+				
+				flagChapterCorrectionFromLoading = false;
 			}
 			
 			if(GuiMonsterAppears.isGuiMonsterAppearsOpened)
