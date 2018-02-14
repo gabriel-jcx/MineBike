@@ -21,6 +21,7 @@ import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
 import org.ngs.bigx.minecraft.client.gui.GuiChapter;
+import org.ngs.bigx.minecraft.client.gui.GuiControllerGuide;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
@@ -90,6 +91,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static KeyBinding keyBindingToggleBuildingGui;
 	public static KeyBinding keyBindingToggleBike;
 	public static KeyBinding keyBindingToggleBikeToMining;
+	public static KeyBinding keyBindingToggleControllerInstructionMenu;
 	
 	public static int animTickSwitch;
 	public static final int animTickSwitchLength = 5;
@@ -185,6 +187,18 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //			animTickSwitch = 0;
 //			animTickFade = 0;
 //			System.out.println("pedalingModeState[" + pedalingModeState + "]");
+		}
+		if(keyBindingToggleControllerInstructionMenu.isPressed())
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+			
+			if(mc.currentScreen == null)
+			{
+				if(mc.thePlayer != null)
+				{
+					mc.displayGuiScreen(new GuiControllerGuide(BiGX.instance().clientContext, mc));
+				}
+			}
 		}
 		if (keyBindingToggleBike.isPressed()) {
 			enableBike = !enableBike;

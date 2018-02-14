@@ -372,7 +372,6 @@ public class CommonEventHandler {
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
 		if (itemOnPlayersHand != null){
-//			System.out.println("Item Name["+itemOnPlayersHand.getDisplayName()+"]");
 			if (itemOnPlayersHand.getItem() == Items.enchanted_book){
 				if (itemOnPlayersHand.getDisplayName().contains("Skill")){
 					System.out.println("Adding Skill!");	
@@ -386,7 +385,6 @@ public class CommonEventHandler {
 						}
 					}
 					p.inventory.consumeInventoryItem(itemOnPlayersHand.getItem());
-//					p.inventory.clearInventory(itemOnPlayersHand.getItem(), -1);
 					System.out.println("Skill Added!");
 				}
 			}
