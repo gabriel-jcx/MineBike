@@ -50,6 +50,17 @@ public class GuiControllerGuide extends GuiScreen {
 		this(mc);
 		context = c;
 	}
+
+    @Override
+    public void keyTyped(char c, int i)
+    {
+    	super.keyTyped(c, i);
+    	
+    	if( (c == 'q') || (c=='Q') )
+    	{
+    		Minecraft.getMinecraft().thePlayer.closeScreen();
+    	}
+    }
 	
 	@Override
 	public void initGui() {
