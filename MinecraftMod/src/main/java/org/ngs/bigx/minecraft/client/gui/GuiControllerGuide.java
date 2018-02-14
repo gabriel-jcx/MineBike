@@ -74,6 +74,7 @@ public class GuiControllerGuide extends GuiScreen {
 		
 		GL11.glPushMatrix();
 			// Draw controller picture
+			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			mc.renderEngine.bindTexture(CONTROLLERMENU_TEXTURE);
 	        drawTexturedModalRect(mcWidth/2 - 128, mcHeight/2 - 128, 0, 0, 256 , 256);
 		GL11.glPopMatrix();
