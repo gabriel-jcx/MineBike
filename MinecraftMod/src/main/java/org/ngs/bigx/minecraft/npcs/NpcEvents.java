@@ -341,8 +341,8 @@ public class NpcEvents {
 		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),9));
 		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),27));
 		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266), 81));
-		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),5));
+		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),5));
 	}
 
 }

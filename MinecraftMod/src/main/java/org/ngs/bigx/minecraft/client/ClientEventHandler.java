@@ -679,7 +679,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
 							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE, false);
 						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsExitTutorial)
-							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.instructionsExitTutorial);
+							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsExitTutorial, GuiMessageWindow.TALK_TEXTURE, false);
 						else
 							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}

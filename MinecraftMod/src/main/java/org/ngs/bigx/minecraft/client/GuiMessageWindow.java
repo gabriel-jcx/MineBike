@@ -34,7 +34,8 @@ public class GuiMessageWindow extends GuiScreen {
 	public static ResourceLocation JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/jump.png");
 	public static ResourceLocation MINE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/icon-break.png");
 	public static ResourceLocation BUILD_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/icon-build.png");
-	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/hit.png");
+	public static ResourceLocation HIT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/aimandhit.png");
+	public static ResourceLocation TALK_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/aimandtalk.png");
 	public static ResourceLocation DASH_JUMP_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/run-jump.png");
 	public static ResourceLocation POTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/potion.png");
 	public static ResourceLocation CHEST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/chest.png");
@@ -45,7 +46,8 @@ public class GuiMessageWindow extends GuiScreen {
 	private static ResourceLocation currentImage = null;
 	
 	// Fixed animation times for various stages of showing messages/images
-	private final long durationShowWindow = 5000;
+//	private final long durationShowWindow = 5000;
+	private final long durationShowWindow = 8000;
 	private final long durationFadeIn = 250;
 	private final long durationFadeOut = 1000;
 	private final long delayReplaceText = 2500;

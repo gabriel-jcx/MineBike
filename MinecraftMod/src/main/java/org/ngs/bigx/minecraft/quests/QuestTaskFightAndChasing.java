@@ -317,7 +317,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			thiefLevel = monsterTypes.size()-1;
 		
 		if (isBoss) {
-			thiefHealthMax = 250;
+			thiefHealthMax = 1000;
 		} else {
 			thiefHealthMax = Integer.parseInt(monsterTypes.get(thiefLevel).get(1));
 		}
