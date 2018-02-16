@@ -24,8 +24,7 @@ public class NpcLocations {
 	
 	public static Vec3 baddestGuy = Vec3.createVectorHelper(20, 79, -76);
 	
-
-	public static Vec3 guard1 = Vec3.createVectorHelper(71, 71, 144);
+	public static Vec3 guard1 = Vec3.createVectorHelper(91, 71, 144);
 	public static Vec3 guard2 = Vec3.createVectorHelper(98, 71, 145);
 	public static Vec3 sergeantWeirdo = Vec3.createVectorHelper(83, 72, 153);
 	public static Vec3 wanderer = Vec3.createVectorHelper(86, 71, 162);
