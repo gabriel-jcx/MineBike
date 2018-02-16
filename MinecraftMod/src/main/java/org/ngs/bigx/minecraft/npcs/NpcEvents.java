@@ -28,6 +28,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import noppes.npcs.CustomItems;
@@ -43,6 +44,8 @@ public class NpcEvents {
 	public static final String[] skillNames = { "Skill - Boost Speed","Skill - Boost Damage","Skill - Boost Mining"};
 	public static int botHealth = 10;
 	
+	public enum villagerEnum {guard1, guard2, sergeantWeirdo, wanderer, doctor, farmer, cook, marketPlaceAd, thiefInCage };
+	
 	public NpcEvents() {
 	}
 	
@@ -51,22 +54,43 @@ public class NpcEvents {
 //		System.out.println(event.target.posX + " " + event.target.posY + " " + event.target.posZ);
 		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.dad, NpcLocations.dad.addVector(1, 1, 1))) //checks to see if NPC is Dad
 			InteractWithFather(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch
 			InteractWithWeaponsMerchant(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
 			InteractWithBlacksmith(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.skillSeller, NpcLocations.skillSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.skillSeller, NpcLocations.skillSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
 			InteractWithSkillSeller(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
 			InteractWithTrainingBot(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
 			InteractWithOfficer(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
 			InteractWithTeleportExit(player, event);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(-5, -5, -5), NpcLocations.tutorialGuy.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(-5, -5, -5), NpcLocations.tutorialGuy.addVector(5, 5, 5)))
 			InteractWithTutorialGuy(player, event);
+		
+
+		
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.guard1.addVector(-5, -5, -5), NpcLocations.guard1.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.guard1);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.guard2.addVector(-5, -5, -5), NpcLocations.guard2.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.guard2);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.sergeantWeirdo.addVector(-5, -5, -5), NpcLocations.sergeantWeirdo.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.sergeantWeirdo);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.wanderer.addVector(-5, -5, -5), NpcLocations.wanderer.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.wanderer);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.doctor.addVector(-5, -5, -5), NpcLocations.doctor.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.doctor);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.farmer.addVector(-5, -5, -5), NpcLocations.farmer.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.farmer);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.cook.addVector(-5, -5, -5), NpcLocations.cook.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.cook);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.marketPlaceAd.addVector(-5, -5, -5), NpcLocations.marketPlaceAd.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.marketPlaceAd);
+		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.thiefInCage.addVector(-5, -5, -5), NpcLocations.thiefInCage.addVector(5, 5, 5)))
+			InteractWithVillagers(villagerEnum.thiefInCage);
 		
 		if(player.worldObj.provider.dimensionId == 105)
 		{
@@ -77,6 +101,48 @@ public class NpcEvents {
 			
 			System.out.println("Interaction with Ifrit dim[" + player.worldObj.provider.dimensionId + "]");
 		}
+	}
+	
+	private static void InteractWithVillagers(villagerEnum villagerEnum){
+		System.out.println("Interacting with Villagers...");
+		
+		String text = "Hello! How are you?";
+		
+		switch(villagerEnum)
+		{
+		case guard1:
+			text = "The cave is on the northern\nmountain. Go north!";
+			break;
+		case guard2:
+			text = "There are monsters out \nthere. Be careful.";
+			break;
+		case cook:
+			text = "Watsup dude!";
+			break;
+		case doctor:
+			text = "So sad... Recently there are monsters\neverywhere. They hurt people...";
+			break;
+		case farmer:
+			text = "Is the harvest time\napproaching...?";
+			break;
+		case marketPlaceAd:
+			text = "Oh Market Place!!! \nI want better swords!!!!";
+			break;
+		case sergeantWeirdo:
+			text = "Shhh... Monsters are incoming";
+			break;
+		case thiefInCage:
+			text = "Grrrrrr..... This item is \nuseless now... You take it.";
+			break;
+		case wanderer:
+			text = "Wow... I've already seen\nten monsters today...";
+			break;
+		default:
+			text = "Hello! How are you?";
+			break;
+		}
+		
+		GuiMessageWindow.showMessage(text);
 	}
 	
 	private static void InteractWithTeleportExit(EntityPlayer player, EntityInteractEvent event) {

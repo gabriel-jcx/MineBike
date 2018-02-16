@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
+import noppes.npcs.constants.EnumMovingType;
+import noppes.npcs.controllers.DialogOption;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class NpcDatabase {
@@ -30,6 +32,18 @@ public class NpcDatabase {
 		map.put("Police Officer", NpcLocations.officer);
 //		map.put("Thief", NpcLocations.jailedthief1);
 		map.put("Trainer", NpcLocations.tutorialGuy);
+		
+		// NPCs in the village
+		map.put("Gate Guard Ivan", NpcLocations.guard1);
+		map.put("Gate Guard Roy", NpcLocations.guard2);
+		map.put("sergeant Weirdo", NpcLocations.sergeantWeirdo);
+		map.put("George", NpcLocations.wanderer);
+		map.put("Dr. Jose", NpcLocations.doctor);
+		map.put("Farmer Sam", NpcLocations.farmer);
+		map.put("B.F.F James", NpcLocations.cook);
+		map.put("Paul", NpcLocations.marketPlaceAd);
+		map.put("Johnson", NpcLocations.thiefInCage);
+		
 		return map;
 	}
 	
@@ -66,6 +80,8 @@ public class NpcDatabase {
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, 
 					MinecraftServer.getServer().worldServerForDimension(0), name, getTexture(name));
+			npc.ai.movingType = getMovement(name);
+//			int dialogId = getDialog(name);
 		}
 		else if (dimID == 102){
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, 
@@ -89,25 +105,93 @@ public class NpcDatabase {
 		return npcs.get(name);
 	}
 	
+	private static int getDialog(String name)
+	{
+		if (name.contains("Gate Guard Ivan"))
+			return 4;
+		else if (name.contains("Gate Guard Roy"))
+			return 5;
+		else if (name.contains("sergeant Weirdo"))
+			return 6;
+		else if (name.contains("George"))
+			return 2;
+		else if (name.contains("Dr. Jose"))
+			return 7;
+		else if (name.contains("Farmer Sam"))
+			return 8;
+		else if (name.contains("B.F.F James"))
+			return 9;
+		else if (name.contains("Paul"))
+			return 13;
+		else if (name.contains("Johnson"))
+			return 10;
+		
+		return -1;
+	}
+	
+	private static EnumMovingType getMovement(String name)
+	{
+		if (name.contains("Gate Guard Ivan"))
+			return EnumMovingType.Standing;
+		else if (name.contains("Gate Guard Roy"))
+			return EnumMovingType.Standing;
+		else if (name.contains("sergeant Weirdo"))
+			return EnumMovingType.Standing;
+		else if (name.contains("George"))
+			return EnumMovingType.Standing;
+		else if (name.contains("Dr. Jose"))
+			return EnumMovingType.Standing;
+		else if (name.contains("Farmer Sam"))
+			return EnumMovingType.Standing;
+		else if (name.contains("B.F.F James"))
+			return EnumMovingType.Standing;
+		else if (name.contains("Paul"))
+			return EnumMovingType.Standing;
+		else if (name.contains("Johnson"))
+			return EnumMovingType.Standing;
+		else
+			return EnumMovingType.Standing;
+	}
+	
 	private static String getTexture(String name) {
 		if (name.equals("Dad"))
 			return "customnpcs:textures/entity/humanmale/VillagerSteve.png";
-		if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller") || name.contains("Trader"))
+		else if (name.contains("Merchant") || name.contains("Blacksmith") || name.contains("Seller") || name.contains("Trader"))
 			return "customnpcs:textures/entity/humanmale/TraderSteve.png";
-		if (name.contains("Scientist"))
+		else if (name.contains("Scientist"))
 			return "customnpcs:textures/entity/humanmale/DoctorSteve.png";
-		if (name.contains("Training Bot"))
+		else if (name.contains("Training Bot"))
 			return "customnpcs:textures/entity/humanmale/RobesBrownSteve.png";
-		if (name.contains("Police"))
+		else if (name.contains("Police"))
 			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
-		if (name.contains("Thief"))
+		else if (name.contains("Thief"))
 			return "customnpcs:textures/entity/humanmale/BodyguardSteve.png";
-		if (name.contains("Telly Port"))
+		else if (name.contains("Telly Port"))
 			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
-		if (name.contains("Trainer"))
+		else if (name.contains("Trainer"))
 			return "customnpcs:textures/entity/humanmale/CasualSteve.png";
-		if (name.contains("Ifrit"))
+		else if (name.contains("Ifrit"))
 			return "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
+		
+
+		else if (name.contains("Gate Guard Ivan"))
+			return "customnpcs:textures/entity/humanmale/GuardSteve.png";
+		else if (name.contains("Gate Guard Roy"))
+			return "customnpcs:textures/entity/humanmale/GuardSteve.png";
+		else if (name.contains("sergeant Weirdo"))
+			return "customnpcs:textures/entity/humanmale/CamoSpecOpsSteve.png";
+		else if (name.contains("George"))
+			return "customnpcs:textures/entity/humanmale/TownsmanSteve.png";
+		else if (name.contains("Dr. Jose"))
+			return "customnpcs:textures/entity/humanmale/WizardSteve.png";
+		else if (name.contains("Farmer Sam"))
+			return "customnpcs:textures/entity/humanmale/VillagerOldSteve.png";
+		else if (name.contains("B.F.F James"))
+			return "customnpcs:textures/entity/humanmale/ChefSteve.png";
+		else if (name.contains("Paul"))
+			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
+		else if (name.contains("Johnson"))
+			return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}

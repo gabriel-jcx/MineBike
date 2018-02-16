@@ -23,4 +23,15 @@ public class NpcLocations {
 	public static Vec3 tutorialExit = Vec3.createVectorHelper(602, 66, 0);
 	
 	public static Vec3 baddestGuy = Vec3.createVectorHelper(20, 79, -76);
+	
+
+	public static Vec3 guard1 = Vec3.createVectorHelper(71, 71, 144);
+	public static Vec3 guard2 = Vec3.createVectorHelper(98, 71, 145);
+	public static Vec3 sergeantWeirdo = Vec3.createVectorHelper(83, 72, 153);
+	public static Vec3 wanderer = Vec3.createVectorHelper(86, 71, 162);
+	public static Vec3 doctor = Vec3.createVectorHelper(83, 72, 169);
+	public static Vec3 farmer = Vec3.createVectorHelper(84, 72, 185);
+	public static Vec3 cook = Vec3.createVectorHelper(83, 72, 202);
+	public static Vec3 marketPlaceAd = Vec3.createVectorHelper(93, 71, 207);
+	public static Vec3 thiefInCage = Vec3.createVectorHelper(124, 66, 176);
 }

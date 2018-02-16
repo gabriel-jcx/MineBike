@@ -122,7 +122,8 @@ public class CommonEventHandler {
 						(event.player.posY >= 45) && (event.player.posY <= 100) &&
 						(event.player.posZ >= 140) && (event.player.posZ <=256)))
 					{
-						fightAndChaseQuestTick ++;
+						if(!Minecraft.getMinecraft().isGamePaused())
+							fightAndChaseQuestTick ++;
 					}
 					
 					if(fightAndChaseQuestTick >= fightAndChaseQuestTickCount)

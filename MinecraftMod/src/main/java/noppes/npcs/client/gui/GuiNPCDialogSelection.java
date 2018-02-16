@@ -3,6 +3,7 @@ package noppes.npcs.client.gui;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import noppes.npcs.client.Client;
@@ -86,6 +87,7 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
             Client.sendData(EnumPacketServer.DialogsGet, new Object[]{this.data.get(this.slot.selected)});
          } else {
             this.dialog = ((Integer)this.data.get(this.slot.selected)).intValue();
+//            System.out.println("BIGX-HACK: dialogid[" + this.dialog + "]");
             this.close();
             NoppesUtil.openGUI(super.player, this.parent);
          }
