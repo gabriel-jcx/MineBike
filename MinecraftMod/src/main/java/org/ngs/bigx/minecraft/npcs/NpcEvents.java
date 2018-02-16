@@ -5,6 +5,7 @@ import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.gui.GuiChapter;
+import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
 import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
 import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
@@ -149,26 +150,19 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithDungeonBoss(EntityPlayer player, EntityInteractEvent event) {
-		if (player.worldObj.isRemote) {
-			System.out.println("Interacting with dungeon boss (client)...");
-			Quest quest = BiGX.instance().clientContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+		if (!player.worldObj.isRemote) 
+		{
 			
-			try {
-				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
-				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = true;
-				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(105, (int)player.posX, (int)player.posY, (int)player.posZ);
-				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
-			} catch (QuestException e) {
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("Interacting with dungeon boss (server)...");
+			// This gets triggered when the screen closes
+			System.out.println("[BiGX] Start Boss Fight And Chase Quest");									
 			Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 			
 			try {
 				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = true;
-				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(105, (int)player.posX, (int)player.posY, (int)player.posZ);
+				int posy = ((int) player.posY == player.posY)?(int) player.posY:((int) player.posY)+1;
+				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(105, (int)player.posX, posy, (int)player.posZ);
 				((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 			} catch (QuestException e) {
 				e.printStackTrace();

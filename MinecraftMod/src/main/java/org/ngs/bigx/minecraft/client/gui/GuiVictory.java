@@ -39,6 +39,8 @@ public class GuiVictory extends GuiScreen {
 	private String victoryMessageLineSpecialItem = "";
 	private String victoryMessageLine2 = "Pick up the items!";
 	
+	private static Object guiVictoryLock = new Object();
+	
 	public GuiVictory(Minecraft mc) {
 		super();
 		this.mc = mc;
@@ -77,10 +79,12 @@ public class GuiVictory extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(mc.currentScreen instanceof GuiVictory)
-				{
-					Minecraft.getMinecraft().thePlayer.closeScreen();
-					isKOTimeout = false;
+				synchronized (guiVictoryLock) {
+					if(mc.currentScreen instanceof GuiVictory)
+					{
+						Minecraft.getMinecraft().thePlayer.closeScreen();
+						isKOTimeout = false;
+					}
 				}
 			}
 		}, 6*1000);

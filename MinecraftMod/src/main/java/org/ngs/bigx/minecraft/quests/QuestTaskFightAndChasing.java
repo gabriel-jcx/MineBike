@@ -1343,6 +1343,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 							System.out.println("handlePlayTimeOnClient");
 							handlePlayTimeOnClient();
 						}
+						
+						if( (npc.motionZ == 0) && (!npc.isDead) )
+						{
+							command.correctRunningDirection(ForgeDirection.SOUTH);
+						}
 					}
 					else if(getThiefHealthCurrent() > 0)
 					{

@@ -430,7 +430,13 @@ public class QuestEventHandler {
 			synchronized (questEventRewardSessionList) {
 				for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionList)
 				{
-					questEventRewardSession.onRewardSessionContinueClicked();
+					if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
+						if(questEventRewardSession instanceof QuestTaskChasing)
+							questEventRewardSession.onRewardSessionContinueClicked();
+					} else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_FIGHT_CHASE) {
+						if(questEventRewardSession instanceof QuestTaskFightAndChasing)
+							questEventRewardSession.onRewardSessionContinueClicked();
+					}
 				}
 			}
 			break;
@@ -438,7 +444,13 @@ public class QuestEventHandler {
 			synchronized (questEventRewardSessionList) {
 				for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionList)
 				{
-					questEventRewardSession.onRewardSessionRetryClicked();
+					if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
+						if(questEventRewardSession instanceof QuestTaskChasing)
+							questEventRewardSession.onRewardSessionRetryClicked();
+					} else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_FIGHT_CHASE) {
+						if(questEventRewardSession instanceof QuestTaskFightAndChasing)
+							questEventRewardSession.onRewardSessionRetryClicked();
+					}
 				}
 			}
 			break;
@@ -446,7 +458,13 @@ public class QuestEventHandler {
 			synchronized (questEventRewardSessionList) {
 				for(IQuestEventRewardSession questEventRewardSession : questEventRewardSessionList)
 				{
-					questEventRewardSession.onRewardSessionExitClicked();
+					if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
+						if(questEventRewardSession instanceof QuestTaskChasing)
+							questEventRewardSession.onRewardSessionExitClicked();
+					} else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_FIGHT_CHASE) {
+						if(questEventRewardSession instanceof QuestTaskFightAndChasing)
+							questEventRewardSession.onRewardSessionExitClicked();
+					}
 				}
 			}
 			break;

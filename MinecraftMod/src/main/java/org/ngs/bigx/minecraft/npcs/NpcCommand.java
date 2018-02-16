@@ -41,6 +41,8 @@ public class NpcCommand {
 	
 	private double runStartX, runStartZ;
 	
+	private static Object NPCCOMMANDLOCK = new Object();
+	
 	public NpcCommand(BigxContext bigxContext, EntityCustomNpc npc) {
 		this.npc = npc;
 		this.role = 0;
@@ -238,10 +240,55 @@ public class NpcCommand {
 		*/
 	}
 	
+	public void correctRunningDirection(final ForgeDirection direction)
+	{
+		synchronized (NPCCOMMANDLOCK)
+		{
+			int yy = (int)npc.posY;
+			npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
+			npc.ai.setMovingPath(new ArrayList());
+			switch(direction) {
+			case NORTH:
+				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 20});
+				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 30});
+				break;
+			case SOUTH:
+				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 20});
+				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 30});
+				break;
+			case EAST:
+				npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 20, yy, (int)runStartZ});
+				npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 30, yy, (int)runStartZ});
+				break;
+			case WEST:
+				npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)runStartZ});
+				npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)runStartZ});
+				break;
+			default:
+				System.out.println("[BiGX] Direction to NO WHERE!");
+				break;
+			}
+			
+			npc.ai.getMovingPath().remove(0);
+			
+			if( (npc.motionZ == 0) && (!npc.isDead))
+			{
+				npc.reset();
+				npc.setHealth(10000f);
+				npc.setFaction(0);
+				setSpeed(10);
+				enableMoving(true);
+//					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");
+//					System.out.println("[BiGX] CQ Var: [" + npc.ai.movingType + "] [" + npc.ai.movingPause + "] [" + npc.getSpeed() + "]");
+			}
+		}
+	}
+	
 	public void runInDirection(final ForgeDirection direction) {
 		final Timer timer = new Timer();
-		
-		runStartX = npc.posX;
+
+//		runStartX = npc.posX;
+		runStartX = 0;
 		runStartZ = npc.posZ;
 		
 		timer.scheduleAtFixedRate(new TimerTask() {
@@ -251,47 +298,9 @@ public class NpcCommand {
 					timer.cancel();
 				}
 				
-//				System.out.println("[BiGX] AI : " + npc.motionX + " " + npc.motionZ);
-				
-				int yy = (int)npc.posY;
-				npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
-				npc.ai.setMovingPath(new ArrayList());
-				switch(direction) {
-				case NORTH:
-					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 20});
-					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 30});
-					break;
-				case SOUTH:
-					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 20});
-					npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 30});
-					break;
-				case EAST:
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 20, yy, (int)runStartZ});
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 30, yy, (int)runStartZ});
-					break;
-				case WEST:
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)runStartZ});
-					npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)runStartZ});
-					break;
-				default:
-					System.out.println("[BiGX] Direction to NO WHERE!");
-					break;
-				}
-				
-				npc.ai.getMovingPath().remove(0);
-				
-				if( (npc.motionZ == 0) && (!npc.isDead))
-				{
-					npc.reset();
-					npc.setHealth(10000f);
-					npc.setFaction(0);
-					setSpeed(10);
-					enableMoving(true);
-//					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");
-//					System.out.println("[BiGX] CQ Var: [" + npc.ai.movingType + "] [" + npc.ai.movingPause + "] [" + npc.getSpeed() + "]");
-				}
+				correctRunningDirection(direction);
 			}
-		}, 0, 200);
+		}, 0, 400);
 	}
 	
 	public void addPathPoint(int x, int y, int z) {

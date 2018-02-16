@@ -1785,6 +1785,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				}
 				EntityPlayer player = event.entityPlayer;
 
+				int posy = ((int) player.posY == player.posY)?(int) player.posY:((int) player.posY)+1;
 				setPreviousLocationBeforeTheQuest(0, (int)player.posX, (int)player.posY, (int)player.posZ);
 				handleQuestStart();
 			}

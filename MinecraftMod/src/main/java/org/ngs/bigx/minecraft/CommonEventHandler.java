@@ -232,6 +232,8 @@ public class CommonEventHandler {
 				try {
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
+					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = false;
+					int posy = ((int) event.player.posY == event.player.posY)?(int) event.player.posY:((int) event.player.posY)+1;
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.worldObj.provider.dimensionId, (int)event.player.posX, (int)event.player.posY, (int)event.player.posZ);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 				} catch (QuestException e) {
