@@ -124,9 +124,10 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	 */
 	public BiGXConnectionStateManagerClass connectionStateManager;
 //	public static String ipAddress = "128.195.55.237";
-	public static String ipAddress = "128.200.115.181";
+//	public static String ipAddress = "128.200.115.181";
 //	public static String ipAddress = "192.168.0.53";
 //	public static String ipAddress = "localhost";
+	public static String ipAddress = "192.168.0.161";
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
@@ -465,7 +466,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		}
 	}
 	
-	public void readPlayerProfile()
+	public void readPlayerProfile() 
 	{
 		if(isBiGXConnected)
 			return;
@@ -491,10 +492,17 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				}
 				else {
 					// TODO: Need to disable this hard coded portion
+					try{
+						GameSaveConfig gameSaveConfig = GameSaveManager.readGameSaveServerConfigFile();
+						ipAddress = gameSaveConfig.getIpbike();
+					} catch(IOException e){
+						e.printStackTrace();
+					}
 //					ipAddress = "128.195.54.79";
-					ipAddress = "128.200.115.181";
+//					ipAddress = "128.200.115.181";
 //					ipAddress = "128.195.55.199";
 //					ipAddress = "192.168.0.53";
+//					ipAddress = "192.168.0.161";
 					isMiddlwareIPAvailable = true;
 				}
 			}

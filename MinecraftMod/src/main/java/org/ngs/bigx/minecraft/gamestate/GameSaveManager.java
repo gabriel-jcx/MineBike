@@ -57,7 +57,8 @@ public class GameSaveManager {
 	
 	public static final String gameServerListFileName = System.getProperty("user.home") + "\\bigxGameServerList.dat";
 
-	public static final String serverip = "128.195.54.50";
+//	public static final String serverip = "128.195.54.50";
+	public static final String serverip = "192.168.0.151"; //new one
 //	public static final String serverip = "localhost";
 	public static final int serverportnumber = 2331;
 
@@ -156,6 +157,8 @@ public class GameSaveManager {
 			
 //			QuestTaskChasing.getLevelSystem().getPlayerLevel()
 //			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
+			
+			br.close();
 			
 			returnValue = true;
 		}

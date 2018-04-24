@@ -55,6 +55,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 	    public static final String BIGXSERVERIP = "128.195.54.50";
 //	    public static final String BIGXSERVERIP = "192.168.0.51";
+//	    public static final String BIGXSERVERIP = "192.168.0.151";
 	    
 	    public static SimpleNetworkWrapper network;
 	    
