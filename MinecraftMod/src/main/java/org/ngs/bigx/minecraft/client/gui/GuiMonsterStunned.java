@@ -54,6 +54,7 @@ public class GuiMonsterStunned extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				mc = Minecraft.getMinecraft();
 				if(mc.currentScreen instanceof GuiMonsterStunned)
 				{
 					Minecraft.getMinecraft().thePlayer.closeScreen();
@@ -70,6 +71,7 @@ public class GuiMonsterStunned extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
+		mc = Minecraft.getMinecraft();
 	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();

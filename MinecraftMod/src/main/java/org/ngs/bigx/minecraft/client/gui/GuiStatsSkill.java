@@ -132,6 +132,17 @@ public class GuiStatsSkill extends GuiScreen {
 		        
 			    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
 		        drawTexturedModalRect(0, 60, 40, 0, 20 , 20);
+		        
+			    mc.renderEngine.bindTexture(SKILLS_TEXTURE);
+		        drawTexturedModalRect(0, 90, 0, 20, 20 , 20);
+		        
+		        /**
+		         * Update Heart Rate Text
+		         */
+		        text = "" + context.heartrate;
+		    	
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, 10-fontRendererObj.getStringWidth(text)/2, 96, 0x0);
 
 		        /**
 		         * Skills Status

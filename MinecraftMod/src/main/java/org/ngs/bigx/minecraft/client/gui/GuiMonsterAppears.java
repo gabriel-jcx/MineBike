@@ -55,6 +55,7 @@ public class GuiMonsterAppears extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				mc = Minecraft.getMinecraft();
 				if(mc.currentScreen instanceof GuiMonsterAppears)
 				{
 					System.out.println("[Bigx] GuiMonsterAppears timer ticks");
@@ -75,6 +76,7 @@ public class GuiMonsterAppears extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {	
+		mc = Minecraft.getMinecraft();
 	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();

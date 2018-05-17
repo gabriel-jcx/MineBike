@@ -52,6 +52,7 @@ public class GuiMonsterReadyFight extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				mc = Minecraft.getMinecraft();
 				if(mc.currentScreen instanceof GuiMonsterReadyFight)
 				{
 			        if(mc.currentScreen != null) {
@@ -79,6 +80,7 @@ public class GuiMonsterReadyFight extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
+		mc = Minecraft.getMinecraft();
 	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
@@ -89,7 +91,7 @@ public class GuiMonsterReadyFight extends GuiScreen {
 		    GL11.glTranslatef(mcWidth/2, 0, 0);
 	    	GL11.glScalef(2F, 2F, 2F);
 
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+        	fontRendererObj = mc.fontRenderer;
     		fontRendererObj.drawStringWithShadow(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
 		GL11.glPopMatrix();
 		
