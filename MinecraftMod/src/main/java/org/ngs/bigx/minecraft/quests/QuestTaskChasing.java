@@ -82,6 +82,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -1366,17 +1367,20 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	private static void setBlock(World world, int x, int y, int z, Block block)
 	{
-		world.setBlock(x, y, z, block);
+		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+			world.setBlock(x, y, z, block);
 	}
 	
 	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
 	{
-		world.setBlock(x, y, z, block, direction, 3);
+		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+			world.setBlock(x, y, z, block, direction, 3);
 	}
 	
 	private static void cleanBlock(World world, int x, int y, int z, Block block)
 	{
-		world.setBlock(x, y, z, block);
+		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+			world.setBlock(x, y, z, block);
 	}
 
 	@Override
