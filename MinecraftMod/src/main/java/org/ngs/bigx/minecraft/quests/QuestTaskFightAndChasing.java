@@ -67,6 +67,8 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
+
+	public static final int NPCRUNNINGSPEED = 11;
 	
 	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac","Ifrit"};
 
@@ -1125,11 +1127,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
-					command.setSpeed(7);
+					command.setSpeed((int)(NPCRUNNINGSPEED*.7));
 				}
 				else{
 					timeFallBehind = 0;
-					command.setSpeed(10);
+					command.setSpeed(NPCRUNNINGSPEED);
 				}
 				
 				this.time++;
@@ -1311,7 +1313,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						
 						handleCountdown();
 					}
-					else if(getThiefHealthCurrent() < (getThiefHealthMax() * 0.5))
+					else if(getThiefHealthCurrent() < (getThiefHealthMax() * 0.75))
 					{
 						if(npc != null)
 							npc.setHealth(10000f);
@@ -1327,7 +1329,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						    npc.ai.onAttack = 3;
 						    npc.setResponse();
 							
-							command.setSpeed(10);
+							command.setSpeed(NPCRUNNINGSPEED);
 							command.runInDirection(ForgeDirection.SOUTH);
 
 							// OPEN Monster Stunned GUI

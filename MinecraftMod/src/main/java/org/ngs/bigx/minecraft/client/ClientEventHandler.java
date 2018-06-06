@@ -100,9 +100,12 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static final int animTickFadeTime = 10;
 	public static int animTickChasingFade;
 	public static final int animTickChasingFadeLength = 20;
-	
+
 	private static int gaugeTaggingTickCount = 0;
+	private static int hungerTickCount = 0;
+	
 	private static final int gaugeTaggingTickCountMax = 5*10*3; // Every Three Seconds
+	private static final int hungerTickCountMax = 5*10*10; // Every Ten Seconds
 	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
 	private static final MouseHelper defaultMouseHelper = new MouseHelper();
@@ -640,6 +643,16 @@ public class ClientEventHandler implements IPedalingComboEvent {
 
 				sendGaugeGameTag(pedalingCombo.getGaugePercentage());
 			}
+
+			hungerTickCount++;
+			
+			if(hungerTickCount == hungerTickCountMax)
+			{
+				hungerTickCount = 0;
+				
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/effect @p 23 2 255");				
+			}
+
 			
 			/**
 			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
