@@ -94,7 +94,9 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
 public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
-public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
+	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
+
+	public static final int NPCRUNNINGSPEED = 11;
 	
 	public static final String[] villainNames = {"Iron Thief","Gold Thief","Diamond Thief","TNT Thief","Thief King",
 			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
@@ -1126,7 +1128,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //			initThiefStat();
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
-			command.setSpeed(10);
+			command.setSpeed(NPCRUNNINGSPEED);
 			command.enableMoving(true);
 			countdown = 11;
 			lastCountdownTickTimestamp = 0;
@@ -1220,11 +1222,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
-					command.setSpeed(7);
+					command.setSpeed((int)(NPCRUNNINGSPEED * .7));
 				}
 				else{
 					timeFallBehind = 0;
-					command.setSpeed(10);
+					command.setSpeed(NPCRUNNINGSPEED);
 				}
 				
 				this.time++;

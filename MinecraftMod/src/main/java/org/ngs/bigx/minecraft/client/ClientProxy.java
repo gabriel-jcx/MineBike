@@ -74,6 +74,9 @@ public class ClientProxy extends CommonProxy {
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("Toggle Bike Input", Keyboard.KEY_MINUS, "Bike Mod");
     	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("Toggle Bike Mining", Keyboard.KEY_M, "Bike Mod");
     	ClientEventHandler.keyBindingToggleControllerInstructionMenu = new KeyBinding("Toggle Controller Menu", Keyboard.KEY_Q, "Bike Mod");
+
+    	ClientEventHandler.keyBindingSwitchToLeftItem = new KeyBinding("Switch to the Left Item", Keyboard.KEY_X, "Bike Mod");
+    	ClientEventHandler.keyBindingSwitchToRightItem = new KeyBinding("Switch to the Right Item", Keyboard.KEY_C, "Bike Mod");
     	
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBuildingGui);
@@ -81,6 +84,9 @@ public class ClientProxy extends CommonProxy {
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchSkills);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBikeToMining);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleControllerInstructionMenu);
+
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchToLeftItem);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchToRightItem);
     	
     	MineBikeEntityRegistry.RegisterMineBikeRenders();
     	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());
