@@ -69,6 +69,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRe
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int NPCRUNNINGSPEED = 11;
+	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac","Ifrit"};
 
@@ -160,10 +161,19 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
+	public static final int thiefSpeedUpEffectTickCountMax = 20;
 	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
 	
 	private static int speedUpEffectTickCount = 0;
 	private static int damageUpEffectTickCount = 0;
+	private static int thiefSpeedUpEffectTickCount = 0;
+	
+	public static int sprintTickCount = 0;
+	public static int sprintTickCountMax = 120;
+	public static int sprintTickCountMinMax = 10; // 7 seconds
+	
+	public static int positionSelectionTickCount = 0;
+	public static int positionSelectionTickCountMax = 100;
 
 	public static boolean isContinueSelected = false;
 	public static boolean isRetrySelected = false;
@@ -1094,6 +1104,33 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			if(damageUpEffectTickCount > 0)
 				damageUpEffectTickCount--;
 			
+			if(thiefSpeedUpEffectTickCount > 0)
+				thiefSpeedUpEffectTickCount --;
+			
+			if(sprintTickCount > 0)
+			{
+				sprintTickCount --;
+			}
+			else
+			{
+				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
+				sprintTickCount = sprintTickCountMax;
+				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
+				player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+			}
+			
+			if(positionSelectionTickCount > 0)
+			{
+				positionSelectionTickCount --;
+			}
+			else
+			{
+				int nextPosition = (new Random()).nextInt(2) - 1;
+				positionSelectionTickCount = positionSelectionTickCountMax;
+				command.setRunStartX(nextPosition);
+				player.worldObj.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
+			}
+			
 			long timeNow = System.currentTimeMillis();
 			if( (timeNow - lastTickTime - pausedTime) < 125 )
 			{
@@ -1127,11 +1164,18 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
-					command.setSpeed((int)(NPCRUNNINGSPEED*.7));
+
+					int tempThiefSpeed = (int)(NPCRUNNINGSPEED*.7);
+					if(thiefSpeedUpEffectTickCount > 0)
+						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
+					command.setSpeed(tempThiefSpeed);
 				}
 				else{
 					timeFallBehind = 0;
-					command.setSpeed(NPCRUNNINGSPEED);
+					int tempThiefSpeed = NPCRUNNINGSPEED;
+					if(thiefSpeedUpEffectTickCount > 0)
+						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
+					command.setSpeed(tempThiefSpeed);
 				}
 				
 				this.time++;
@@ -1328,8 +1372,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						    npc.ai.avoidsWater = true;
 						    npc.ai.onAttack = 3;
 						    npc.setResponse();
-							
-							command.setSpeed(NPCRUNNINGSPEED);
+
+							int tempThiefSpeed = NPCRUNNINGSPEED;
+							if(thiefSpeedUpEffectTickCount > 0)
+								tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
+							command.setSpeed(tempThiefSpeed);
 							command.runInDirection(ForgeDirection.SOUTH);
 
 							// OPEN Monster Stunned GUI
