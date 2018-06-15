@@ -97,6 +97,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int NPCRUNNINGSPEED = 11;
+	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Iron Thief","Gold Thief","Diamond Thief","TNT Thief","Thief King",
 			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
@@ -189,8 +190,18 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
+	public static final int thiefSpeedUpEffectTickCountMax = 20;
+	
 	private static int speedUpEffectTickCount = 0;
 	private static int damageUpEffectTickCount = 0;
+	private static int thiefSpeedUpEffectTickCount = 0;
+	
+	public static int sprintTickCount = 0;
+	public static int sprintTickCountMax = 120;
+	public static int sprintTickCountMinMax = 10; // 7 seconds
+	
+	public static int positionSelectionTickCount = 0;
+	public static int positionSelectionTickCountMax = 100;
 	
 	private int questTypeId = 1;
 	
@@ -1128,7 +1139,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 //			initThiefStat();
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
-			command.setSpeed(NPCRUNNINGSPEED);
+			int tempThiefSpeed = NPCRUNNINGSPEED;
+			if(thiefSpeedUpEffectTickCount > 0)
+				tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
+			command.setSpeed(tempThiefSpeed);
 			command.enableMoving(true);
 			countdown = 11;
 			lastCountdownTickTimestamp = 0;
@@ -1189,6 +1203,33 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			if(damageUpEffectTickCount > 0)
 				damageUpEffectTickCount--;
 			
+			if(thiefSpeedUpEffectTickCount > 0)
+				thiefSpeedUpEffectTickCount --;
+			
+			if(sprintTickCount > 0)
+			{
+				sprintTickCount --;
+			}
+			else
+			{
+				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
+				sprintTickCount = sprintTickCountMax;
+				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
+				player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+			}
+			
+			if(positionSelectionTickCount > 0)
+			{
+				positionSelectionTickCount --;
+			}
+			else
+			{
+				int nextPosition = (new Random()).nextInt(2) - 1;
+				positionSelectionTickCount = positionSelectionTickCountMax;
+				command.setRunStartX(nextPosition);
+				player.worldObj.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
+			}
+			
 			long timeNow = System.currentTimeMillis();
 			if( (timeNow - lastTickTime - pausedTime) < 125 )
 			{
@@ -1222,11 +1263,17 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
-					command.setSpeed((int)(NPCRUNNINGSPEED * .7));
+					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
+					if(thiefSpeedUpEffectTickCount > 0)
+						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
+					command.setSpeed(tempThiefSpeed);
 				}
 				else{
 					timeFallBehind = 0;
-					command.setSpeed(NPCRUNNINGSPEED);
+					int tempThiefSpeed = NPCRUNNINGSPEED;
+					if(thiefSpeedUpEffectTickCount > 0)
+						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
+					command.setSpeed(tempThiefSpeed);
 				}
 				
 				this.time++;

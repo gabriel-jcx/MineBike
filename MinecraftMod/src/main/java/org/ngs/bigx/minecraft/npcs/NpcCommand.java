@@ -43,6 +43,11 @@ public class NpcCommand {
 	
 	private static Object NPCCOMMANDLOCK = new Object();
 	
+	public void setRunStartX(int posX)
+	{
+		runStartX = posX;
+	}
+	
 	public NpcCommand(BigxContext bigxContext, EntityCustomNpc npc) {
 		this.npc = npc;
 		this.role = 0;

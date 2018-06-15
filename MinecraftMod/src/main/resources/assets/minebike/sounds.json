@@ -71,6 +71,14 @@
     "category": "player",
     "sounds": [{"name":"victorywinfcquest","stream": true}]
   },
+  "getawayfromme": {
+    "category": "player",
+    "sounds": [{"name":"getawayfromme","stream": true}]
+  },
+  "boop": {
+    "category": "player",
+    "sounds": [{"name":"boop","stream": true}]
+  },
   "monsterdeath": {
     "category": "player",
     "sounds": [{"name":"monsterdeath","stream": true}]
