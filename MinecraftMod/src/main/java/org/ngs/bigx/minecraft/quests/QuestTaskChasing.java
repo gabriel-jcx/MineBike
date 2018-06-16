@@ -190,7 +190,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
-	public static final int thiefSpeedUpEffectTickCountMax = 20;
+	public static final int thiefSpeedUpEffectTickCountMax = 10;
 	
 	private static int speedUpEffectTickCount = 0;
 	private static int damageUpEffectTickCount = 0;
@@ -1140,7 +1140,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			chasingQuestOnCountDown = false;
 			System.out.println("GO!");
 			int tempThiefSpeed = NPCRUNNINGSPEED;
-			if(thiefSpeedUpEffectTickCount > 0)
+			if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 				tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 			command.setSpeed(tempThiefSpeed);
 			command.enableMoving(true);
@@ -1215,7 +1215,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
 				sprintTickCount = sprintTickCountMax;
 				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
-				player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+				if(thiefLevel>1)
+					player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
 			}
 			
 			if(positionSelectionTickCount > 0)
@@ -1264,14 +1265,14 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
 					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
-					if(thiefSpeedUpEffectTickCount > 0)
+					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 					command.setSpeed(tempThiefSpeed);
 				}
 				else{
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED;
-					if(thiefSpeedUpEffectTickCount > 0)
+					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 					command.setSpeed(tempThiefSpeed);
 				}

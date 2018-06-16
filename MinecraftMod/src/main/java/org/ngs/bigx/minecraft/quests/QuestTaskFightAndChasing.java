@@ -161,7 +161,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
-	public static final int thiefSpeedUpEffectTickCountMax = 20;
+	public static final int thiefSpeedUpEffectTickCountMax = 10;
 	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
 	
 	private static int speedUpEffectTickCount = 0;
