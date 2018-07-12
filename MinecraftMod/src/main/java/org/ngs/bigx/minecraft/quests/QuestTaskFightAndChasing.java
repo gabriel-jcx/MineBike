@@ -68,7 +68,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
-	public static final int NPCRUNNINGSPEED = 11;
+	public static final int NPCRUNNINGSPEED = 10;
 	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac","Ifrit"};
@@ -1161,7 +1161,12 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
 				
-				if (ratio < 0) {
+				if((player.posZ-2) > npc.posZ) {
+					timeFallBehind = 0;
+					int tempThiefSpeed = NPCRUNNINGSPEED + 3;
+					command.setSpeed(tempThiefSpeed);
+				}
+				else if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
 
@@ -1728,6 +1733,16 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					deductThiefHealth(null);
 				else
 					deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+				
+				npc.setHealth(10000f);
+				
+				if( (getThiefHealthCurrent() < (getThiefHealthMax() * 0.75)) && (getThiefHealthCurrent() > 0))
+				{
+					if( (npc.motionZ == 0) && (!npc.isDead) )
+					{
+						command.correctRunningDirection(ForgeDirection.SOUTH);
+					}
+				}
 			}
 
 			// Play Monster Hit Sound
@@ -1796,11 +1811,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		type2.add("customnpcs:textures/entity/monstermale/ZombieSteve.png");
 		ArrayList<String> type3 = new ArrayList<String>();
 		type3.add(villainNames[2]);
-		type3.add("115");
+		type3.add("150");
 		type3.add("customnpcs:textures/entity/orcmale/GenericOrc1.png");
 		ArrayList<String> type4 = new ArrayList<String>();
 		type4.add(villainNames[3]);
-		type4.add("150");
+		type4.add("400");
 		type4.add("customnpcs:textures/entity/orcmale/MercenaryOrc1.png");
 		
 		types.add(type1);

@@ -96,11 +96,11 @@ import noppes.npcs.entity.EntityNpcCrystal;
 public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
-	public static final int NPCRUNNINGSPEED = 11;
+	public static final int NPCRUNNINGSPEED = 10;
 	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Iron Thief","Gold Thief","Diamond Thief","TNT Thief","Thief King",
-			"Ogre","Sand Monster","Stone Golem","Ender Mage","Undead King"};
+			"Lapis Ogre","Emerald Monster","Obsidian Golem","Undead King","Dragon Slayer"};
 
 	protected QuestChaseTypeEnum questChaseType = QuestChaseTypeEnum.REGULAR;
 
@@ -1055,10 +1055,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/StoneGolem.png");
 							break;
 						case 9:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/EnderMage.png");
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Undead King.png");
 							break;
 						case 10:
-							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/Undead King.png");
+							npc = NpcCommand.spawnNpc(0, 11, 20, ws, villainNames[thiefLevel-1], "customnpcs:textures/entity/monstermale/EnderMage.png");
 							break;
 						default:
 							npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief", "customnpcs:textures/entity/humanmale/GangsterSteve.png");
@@ -1261,7 +1261,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
 				
-				if (ratio < 0) {
+				if((player.posZ-4) > npc.posZ) {
+					timeFallBehind = 0;
+					int tempThiefSpeed = NPCRUNNINGSPEED + 4;
+					command.setSpeed(tempThiefSpeed);
+				}
+				else if (ratio < 0) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
 					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
@@ -1575,8 +1580,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.diamond), 1);
 				break;
 			case 4:
-				specialItemName = "3 TNT";
-				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Blocks.tnt), 1);
+				specialItemName = "4 TNT";
+				for(int i=0; i<4; i++) npc.entityDropItem(new ItemStack(Blocks.tnt), 1);
 				break;
 			case 5:
 				specialItemName = "2 TNT 2 Diamond Gem";
@@ -1587,41 +1592,43 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				}
 				break;
 			case 6:
-				specialItemName = "1 Diamond Axe 2 Diamond Gem";
-				for(int i=0; i<2; i++) 
+				specialItemName = "12 Lapis Ore";
+				for(int i=0; i<12; i++) 
 				{ 
-					npc.entityDropItem(new ItemStack(Items.diamond), 1);
+					npc.entityDropItem(new ItemStack(Blocks.lapis_ore), 1);
 				}
-				npc.entityDropItem(new ItemStack(Items.diamond_axe), 1);
 				break;
 			case 7:
-				specialItemName = "10 TNT";
-				for(int i=0; i<10; i++) 
+				specialItemName = "12 Emerald Ore";
+				for(int i=0; i<12; i++) 
 				{ 
-					npc.entityDropItem(new ItemStack(Blocks.tnt), 1); 
+					npc.entityDropItem(new ItemStack(Blocks.emerald_ore), 1); 
 				}
 				break;
 			case 8:
-				specialItemName = "Each Diamond Tools (1)";
+				specialItemName = "6 Obsidian Blocks";
+				for(int i=0; i<6; i++) 
+				{ 
+					npc.entityDropItem(new ItemStack(Blocks.obsidian), 1); 
+				}
+				break;
+			case 9:
+				specialItemName = "Diamond Tool Set";
 				npc.entityDropItem(new ItemStack(Items.diamond_axe), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_hoe), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_pickaxe), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_shovel), 1);
-				break;
-			case 9:
-				specialItemName = "Each Diamond Tools (2)";
 				npc.entityDropItem(new ItemStack(Items.diamond_sword), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_boots), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_chestplate), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_helmet), 1); 
-				npc.entityDropItem(new ItemStack(Items.diamond_leggings), 1); 
+				npc.entityDropItem(new ItemStack(Items.diamond_leggings), 1);
 				break;
 			case 10:
-				specialItemName = "20 Diamond, 20 TNT";
-				for(int i=0; i<20; i++) 
+				specialItemName = "3 Ender Pearl";
+				for(int i=0; i<3; i++) 
 				{ 
-					npc.entityDropItem(new ItemStack(Items.diamond), 1); 
-					npc.entityDropItem(new ItemStack(Blocks.tnt), 1); 
+					npc.entityDropItem(new ItemStack(Items.ender_pearl), 1); 
 				}
 				break;
 			};
@@ -1916,6 +1923,8 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					deductThiefHealth(null);
 				else
 					deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+
+				npc.setHealth(10000f);
 			}
 
 			// Play Monster Hit Sound
