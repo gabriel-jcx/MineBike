@@ -96,7 +96,7 @@ import noppes.npcs.entity.EntityNpcCrystal;
 public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
-	public static final int NPCRUNNINGSPEED = 6;
+	public static final int NPCRUNNINGSPEED = 11; // 11: FAST (70-80) 10: Medium (60-70) 9: Slow (50-60)
 	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Iron Thief","Gold Thief","Diamond Thief","TNT Thief","Thief King",
