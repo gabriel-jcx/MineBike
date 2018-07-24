@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "4.5.medium"
+version = "4.6.light"
 group= "org.ngs.bigx" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "bigx"
 

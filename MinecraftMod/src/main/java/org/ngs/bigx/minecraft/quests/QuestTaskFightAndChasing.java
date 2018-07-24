@@ -68,7 +68,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
-	public static final int NPCRUNNINGSPEED = 10;
+	public static final int NPCRUNNINGSPEED = 6;
 	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac","Ifrit"};

@@ -22,6 +22,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import noppes.npcs.client.gui.player.GuiQuestLog;
@@ -31,6 +32,7 @@ public class GuiVictory extends GuiScreen {
 	private BigxClientContext context;
 
 	private static boolean isKOTimeout = false;
+	private static boolean isVictoryMsgTimeout = false;
 
 	private String victoryMessageLine1 = "VICTORY!";
 	private String victoryMessageLineExp = "";
@@ -38,6 +40,12 @@ public class GuiVictory extends GuiScreen {
 	private String victoryMessageLineExtraGold = "";
 	private String victoryMessageLineSpecialItem = "";
 	private String victoryMessageLine2 = "Pick up the items!";
+
+	private String hintMessageLineTitle = "HINT!";
+	private String hintMessageLine1 = "Exchanged gold bars for useful items at Market Place";
+	private String hintMessageLine2 = "Spend your gold wisely!";
+
+	private ResourceLocation HINT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/marketplacehint.png");
 	
 	private static Object guiVictoryLock = new Object();
 	
@@ -45,6 +53,7 @@ public class GuiVictory extends GuiScreen {
 		super();
 		this.mc = mc;
 		isKOTimeout = true;
+		isVictoryMsgTimeout = true;
 		
 		// Play Vicotry Sound
 		Minecraft.getMinecraft().thePlayer.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
@@ -73,6 +82,14 @@ public class GuiVictory extends GuiScreen {
 				isKOTimeout = false;
 			}
 		}, 2*1000);
+        
+        timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				isVictoryMsgTimeout = false;
+			}
+		}, 5*1000);
 		
 		// Start Timer for close screen
         timer = new Timer(true);
@@ -84,10 +101,11 @@ public class GuiVictory extends GuiScreen {
 					{
 						Minecraft.getMinecraft().thePlayer.closeScreen();
 						isKOTimeout = false;
+						isVictoryMsgTimeout = false;
 					}
 				}
 			}
-		}, 6*1000);
+		}, 9*1000);
 	}
 	
 	@Override
@@ -126,9 +144,9 @@ public class GuiVictory extends GuiScreen {
     		
     		GL11.glPopMatrix();
 		}
-		else
+		else if(isVictoryMsgTimeout)
 		{
-			// SHOW K.O
+			// SHOW VICOTRY
 			GL11.glPushMatrix();
 			    GL11.glTranslatef(mcWidth/2, 0, 0);
 				GL11.glPushMatrix();
@@ -170,6 +188,38 @@ public class GuiVictory extends GuiScreen {
     		
     		GL11.glPopMatrix();
 		}
+		else
+		{
+			// SHOW HINT
+			GL11.glPushMatrix();
+			    GL11.glTranslatef(mcWidth/2, 0, 0);
+				GL11.glPushMatrix();
+			    	GL11.glScalef(2F, 2F, 2F);
+			    	
+			    	text = hintMessageLineTitle;
+			
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 50, 0xFFFFFF);
+	    		GL11.glPopMatrix();
+	    		
+	    		mc.renderEngine.bindTexture(HINT_TEXTURE);
+		        drawTexturedModalRect(-200, mcHeight/2 - 70, 0, 0, 120 , 120);
+		        drawTexturedModalRect(-60, mcHeight/2 - 70, 120, 0, 120 , 120);
+		        drawTexturedModalRect(80, mcHeight/2 - 70, 0, 120, 120 , 120);
+		    	
+		    	text = hintMessageLine1;
+		
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 60, 0xFFFFFF);
+		    	
+		    	text = hintMessageLine2;
+		
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 75, 0xFFFFFF);
+    		
+    		GL11.glPopMatrix();
+		}
+		
 		
 		super.drawScreen(mx, my, partialTicks);
 	}
