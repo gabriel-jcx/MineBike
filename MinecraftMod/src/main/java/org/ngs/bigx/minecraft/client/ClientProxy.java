@@ -70,20 +70,22 @@ public class ClientProxy extends CommonProxy {
     	ClientEventHandler.keyBindingToggleMouse = new KeyBinding("Chase Quest Lock", Keyboard.KEY_P, "Bike Mod");
     	ClientEventHandler.keyBindingUseSkills = new KeyBinding("Use Skills", Keyboard.KEY_J, "Bike Mod");
     	ClientEventHandler.keyBindingSwitchSkills = new KeyBinding("Switch Skills", Keyboard.KEY_K, "Bike Mod");
-    	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("Building GUI", Keyboard.KEY_N, "Bike Mod");
+//    	ClientEventHandler.keyBindingToggleBuildingGui = new KeyBinding("Building GUI", Keyboard.KEY_N, "Bike Mod");
     	ClientEventHandler.keyBindingToggleBike = new KeyBinding("Toggle Bike Input", Keyboard.KEY_MINUS, "Bike Mod");
     	ClientEventHandler.keyBindingToggleBikeToMining = new KeyBinding("Toggle Bike Mining", Keyboard.KEY_M, "Bike Mod");
     	ClientEventHandler.keyBindingToggleControllerInstructionMenu = new KeyBinding("Toggle Controller Menu", Keyboard.KEY_Q, "Bike Mod");
+    	ClientEventHandler.keyBindingToggleAlchemyMenu = new KeyBinding("Toggle Alchemy Menu", Keyboard.KEY_N, "Bike Mod");
 
     	ClientEventHandler.keyBindingSwitchToLeftItem = new KeyBinding("Switch to the Left Item", Keyboard.KEY_X, "Bike Mod");
     	ClientEventHandler.keyBindingSwitchToRightItem = new KeyBinding("Switch to the Right Item", Keyboard.KEY_C, "Bike Mod");
     	
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleMouse);
-    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBuildingGui);
+//    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBuildingGui);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingUseSkills);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchSkills);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleBikeToMining);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleControllerInstructionMenu);
+    	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingToggleAlchemyMenu);
 
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchToLeftItem);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchToRightItem);

@@ -19,6 +19,7 @@ import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.client.area.Area;
 import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiAlchemy;
 import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
 import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.gui.GuiControllerGuide;
@@ -92,6 +93,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static KeyBinding keyBindingToggleBike;
 	public static KeyBinding keyBindingToggleBikeToMining;
 	public static KeyBinding keyBindingToggleControllerInstructionMenu;
+	public static KeyBinding keyBindingToggleAlchemyMenu;
 
 	public static KeyBinding keyBindingSwitchToLeftItem;
 	public static KeyBinding keyBindingSwitchToRightItem;	
@@ -206,33 +208,45 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				}
 			}
 		}
+		if(keyBindingToggleAlchemyMenu.isPressed())
+		{
+			Minecraft mc = Minecraft.getMinecraft();
+			
+			if(mc.currentScreen == null)
+			{
+				if(mc.thePlayer != null)
+				{
+					mc.displayGuiScreen(new GuiAlchemy(BiGX.instance().clientContext, mc));
+				}
+			}
+		}
 		if (keyBindingToggleBike.isPressed()) {
 			enableBike = !enableBike;
 			System.out.println("Toggle Bike Movement: " + enableBike);
 		}
-		if(keyBindingToggleBuildingGui.isPressed())
-		{
-			Minecraft mc = Minecraft.getMinecraft();
-			GuiBuildinglistManager guiBuildinglistManager = new GuiBuildinglistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
-			
-			ArrayList<String> buildingIdList = new ArrayList<String>();
-			buildingIdList.add("default.tree");
-			buildingIdList.add("default.waterbasin");
-			buildingIdList.add("default.bush");
-			buildingIdList.add("default.store");
-			buildingIdList.add("default.cactus");
-			
-			try {
-				guiBuildinglistManager.addBuildingReferences(buildingIdList);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			if(mc.currentScreen == null)
-				mc.displayGuiScreen(guiBuildinglistManager);
-			System.out.println("Display Building Id List");
-		}
+//		if(keyBindingToggleBuildingGui.isPressed())
+//		{
+//			Minecraft mc = Minecraft.getMinecraft();
+//			GuiBuildinglistManager guiBuildinglistManager = new GuiBuildinglistManager((BigxClientContext)BigxClientContext.getInstance(), mc);
+//			
+//			ArrayList<String> buildingIdList = new ArrayList<String>();
+//			buildingIdList.add("default.tree");
+//			buildingIdList.add("default.waterbasin");
+//			buildingIdList.add("default.bush");
+//			buildingIdList.add("default.store");
+//			buildingIdList.add("default.cactus");
+//			
+//			try {
+//				guiBuildinglistManager.addBuildingReferences(buildingIdList);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//			if(mc.currentScreen == null)
+//				mc.displayGuiScreen(guiBuildinglistManager);
+//			System.out.println("Display Building Id List");
+//		}
 		if(keyBindingSwitchSkills.isPressed()) // "K"
 		{
 			// SWITCH SKILLs
