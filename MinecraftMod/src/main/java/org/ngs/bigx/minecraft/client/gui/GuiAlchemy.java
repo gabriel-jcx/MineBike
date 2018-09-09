@@ -41,7 +41,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import noppes.npcs.client.gui.player.GuiQuestLog;
 
 public class GuiAlchemy extends GuiScreen {
 	private Minecraft mc;
@@ -65,6 +64,10 @@ public class GuiAlchemy extends GuiScreen {
 	    INITIAL, INPROGRESS, FINAL 
 	}
 	
+	public enum AlchemyProcessStage {
+		IDLE, SPINNING, SHRINKING, EXPANDING, FINALE, DONE
+	}
+	
 	
 	private ResourceLocation ALCHEMIST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/alchemist.png");
 	private ResourceLocation ALCHEMY_ON_PROGRESS_BG_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/alchemy-icons-bg.png");
@@ -72,18 +75,42 @@ public class GuiAlchemy extends GuiScreen {
 	private ResourceLocation tempItemTexture = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/originalIcons/items/chest.png");
 	
 	private AlchemyGuiMode alchemyGuiMode = AlchemyGuiMode.INITIAL;
+	private AlchemyProcessStage alchemyProcessStage = AlchemyProcessStage.IDLE;
 	private CustomGuiButton cbtn;
 	private ItemStack[] inventoryItemStack = new ItemStack[36];
 	private ArrayList<ItemToBeAlchemied> listOfItemToBeAlchemied = new ArrayList<ItemToBeAlchemied>();
 	
 	private static Object lockListOfItemToBeAlchemied = new Object();
+	private static float twinkleTwinkleLittleStarTiming = 0f;
+	private static long  twinkleTwinkleLittleStarStarTime = 0;
+	private static float pedalingSpeed = 0;
+	private static long pedalingSpeedTickTimestamp = 0;
+	private static Object pedalingLock = new Object();
+	private static float pedalingRotationAngle = 0;
+	private static Timer timer;
+	
+	public static float pedalingSpeedNatualDecelerationRate = 10000f;
+	public static int pedalingSpeedTickInterval = 100;
+	public static Object drawingLock = new Object();
+	
 //	
 //	private static Object guiVictoryLock = new Object();
 	
 	public GuiAlchemy(Minecraft mc) {
 		super();
 		this.mc = mc;
-		this.alchemyGuiMode = AlchemyGuiMode.INITIAL;
+		
+		if(timer ==  null)
+		{
+			// Start Timer for close screen
+	        timer = new Timer(true);
+	        timer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					decreasePedalingSpeedByTick();
+				}
+			}, 0, pedalingSpeedTickInterval);
+		}
 	}
 	
 	public GuiAlchemy(BigxClientContext c, Minecraft mc) {
@@ -91,13 +118,47 @@ public class GuiAlchemy extends GuiScreen {
 		context = c;
 	}
 	
+	public static void increasePedalingSpeed(int speed)
+	{
+		if(speed == 0)
+			return;
+		System.out.println("ts["+System.currentTimeMillis()+"] speed["+speed+"]");
+		synchronized (pedalingLock) {
+			pedalingSpeed += speed;
+		}
+	}
+	
+	public static void decreasePedalingSpeedByTick()
+	{
+		synchronized (pedalingLock) {
+//			pedalingSpeed -= pedalingSpeedNatualDecelerationRate;
+			pedalingSpeed -= 2f;
+			
+			if(pedalingSpeed <= 0)
+			{
+				pedalingSpeed = 0;
+			}
+		}
+		
+//		pedalingRotationAngle += pedalingSpeed/60f*5f;
+	}
+	
 	@Override
 	public void initGui() {
 		super.initGui();
+
+		this.alchemyGuiMode = AlchemyGuiMode.INITIAL;
+		this.alchemyProcessStage = AlchemyProcessStage.IDLE;
+		
+		pedalingSpeedTickTimestamp = System.currentTimeMillis();
+		pedalingRotationAngle = 0;
 		
 //		this.inventoryItemStack.clear();
 		this.listOfItemToBeAlchemied.clear();
-		inventoryItemStack = new ItemStack[36];
+		this.inventoryItemStack = new ItemStack[36];
+		this.pedalingSpeed = 0;
+		
+		twinkleTwinkleLittleStarStarTime = System.currentTimeMillis();
 		
 		for(int i=0; i<36; i++)
 		{
@@ -186,8 +247,8 @@ public class GuiAlchemy extends GuiScreen {
 	    				{
 	    					for(j=0; j<6; j++)
 	    					{
-	    						drawRect(j*boxSize, i*boxSize, (j+1)*boxSize - 1, (i+1)*boxSize - 1, 0xFF4B380C); // The Boundary for the items
-	    						drawRect(j*boxSize + 1, i*boxSize + 1, (j+1)*boxSize - 2, (i+1)*boxSize - 2, 0xAA999999); // The Background for the items
+	    						drawRect(j*boxSize, i*boxSize, (j+1)*boxSize - 1, (i+1)*boxSize - 1, 			0xFF4B380C); // The Boundary for the items
+	    						drawRect(j*boxSize + 1, i*boxSize + 1, (j+1)*boxSize - 2, (i+1)*boxSize - 2, 	0x99FFFFFF); // The Background for the items
 	    	    		    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 //	    	    		    	EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -232,7 +293,7 @@ public class GuiAlchemy extends GuiScreen {
 	    					for(j=0; j<2; j++)
 	    					{
 	    						drawRect(j*2*boxSize,     i*boxSize*3/2,     (j*2+1)*boxSize - 1, i*boxSize*3/2 + boxSize - 1, 0xFF6D380C); // The Boundary for the items
-	    						drawRect(j*2*boxSize + 1, i*boxSize*3/2 + 1, (j*2+1)*boxSize - 2, i*boxSize*3/2 + boxSize - 2, 0xAA999999); // The Background for the items
+	    						drawRect(j*2*boxSize + 1, i*boxSize*3/2 + 1, (j*2+1)*boxSize - 2, i*boxSize*3/2 + boxSize - 2, 0x99FFFFFF); // The Background for the items
 	    	    		    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    	    		    	
 	    	    		    	if((i*2 + j) < this.listOfItemToBeAlchemied.size())
@@ -280,11 +341,109 @@ public class GuiAlchemy extends GuiScreen {
 			        break;
 	    		case INPROGRESS:
 	    			cbtn.visible = false;
-		    		/**
-		    		 * Draws alchemy progress screen
-		    		 */
-				    mc.renderEngine.bindTexture(ALCHEMY_ON_PROGRESS_BG_TEXTURE);
-			        drawTexturedModalRect(mcWidth/2, 25, 0, 0, 185 , 185);
+
+	    			int itemBoxSize = 31;
+	    			int starSize = 185;
+	    			int leftX = 0 - (int)(starSize/4*1.7f) - 8 - itemBoxSize/2;
+	    			int rightX = 0 + (int)(starSize/4*1.7f) + 8 - itemBoxSize/2;
+	    			int topY = starSize*-1/4-itemBoxSize/2;
+	    			int bottomY = starSize*1/4-itemBoxSize/2 -3;
+	    			int[][] itemLocation = { 
+	    					{(itemBoxSize)/-2, starSize/-2 - itemBoxSize/2}, 
+	    					{leftX, topY},  
+	    					{rightX, topY}, 
+	    					{leftX, bottomY}, 
+	    					{rightX, bottomY}, 
+	    					{(itemBoxSize)/-2, starSize/2 - itemBoxSize/2} };
+	    			
+	    			int twinkleRate = 2000;
+	    			int halfTwinkleRate = twinkleRate/2;
+	    			int quarterTwinkleRate = twinkleRate/4;
+	    			int octoTwinkleRate = twinkleRate/8;
+	    			
+	    			long currentTimeStampForTTLS = (System.currentTimeMillis() - twinkleTwinkleLittleStarStarTime) % twinkleRate;
+	    			
+	    			if(currentTimeStampForTTLS < halfTwinkleRate)
+	    			{
+    					if(currentTimeStampForTTLS < quarterTwinkleRate)
+    						twinkleTwinkleLittleStarTiming = (float)(Math.pow((currentTimeStampForTTLS%quarterTwinkleRate)/(float)quarterTwinkleRate,2)/2f);
+    					else
+    						twinkleTwinkleLittleStarTiming = (float)(Math.pow((quarterTwinkleRate-currentTimeStampForTTLS%quarterTwinkleRate)/(float)quarterTwinkleRate,2)/2f);
+	    			}
+	    			else
+	    			{
+	    				currentTimeStampForTTLS = currentTimeStampForTTLS%quarterTwinkleRate;
+    					if(currentTimeStampForTTLS < octoTwinkleRate)
+    						twinkleTwinkleLittleStarTiming = (float)(Math.pow((currentTimeStampForTTLS%octoTwinkleRate)/(float)octoTwinkleRate,2)/2f);
+    					else
+    						twinkleTwinkleLittleStarTiming = (float)(Math.pow((octoTwinkleRate-currentTimeStampForTTLS%octoTwinkleRate)/(float)octoTwinkleRate,2)/2f);
+	    			}
+	    			
+//	    			float rotationSpeed = 0;
+//	    			long tempVal = (System.currentTimeMillis() - twinkleTwinkleLittleStarStarTime)%3600;
+//	    			rotationSpeed += tempVal/1f;
+//	    			if(rotationSpeed >= 360)
+//	    			{
+//	    				rotationSpeed -= 360;
+//	    			}
+	    			
+//	    			pedalingRotationAngle += pedalingSpeed/60f*5f;
+//	    			pedalingSpeedTickInterval+1;
+	    			synchronized (drawingLock) {
+	    				if(pedalingRotationAngle > 360)
+	    					pedalingRotationAngle -= 360;
+		    			pedalingRotationAngle += (System.currentTimeMillis() - pedalingSpeedTickTimestamp)/(float)pedalingSpeedTickInterval*pedalingSpeed;
+//		    			System.out.println("pedalingRotationAngle[" + pedalingRotationAngle + "]");
+		    			pedalingSpeedTickTimestamp = System.currentTimeMillis();
+					}
+	    			
+	    			GL11.glPushMatrix();
+	    				GL11.glTranslatef(mcWidth/2 - 30 + starSize/2, 25 + starSize/2, 0);
+			    		GL11.glRotatef(pedalingRotationAngle, 0, 0, 1);
+			    		
+//			    		if( (System.currentTimeMillis() - twinkleTwinkleLittleStarStarTime) > 1000 )
+//	    				{
+//			    			float scaleSpeed = 1f - rotationSpeed/360f;
+//	    					GL11.glScalef(scaleSpeed, scaleSpeed, scaleSpeed);
+//	    				}
+			    		/**
+			    		 * Draws alchemy progress screen
+			    		 */
+			    		GL11.glPushMatrix();
+	    		    		GL11.glColor4f(.5F + twinkleTwinkleLittleStarTiming, .5F + twinkleTwinkleLittleStarTiming, .5F + twinkleTwinkleLittleStarTiming, 1.0F);
+						    mc.renderEngine.bindTexture(ALCHEMY_ON_PROGRESS_BG_TEXTURE);
+					        drawTexturedModalRect(starSize/-2, starSize/-2, 0, 0, starSize , starSize);
+				        GL11.glPopMatrix();
+				        
+				        for(i=0; i<6; i++)
+				        {
+				    		GL11.glPushMatrix();
+		    		    		GL11.glColor4f(.5F + twinkleTwinkleLittleStarTiming, .5F + twinkleTwinkleLittleStarTiming, .5F + twinkleTwinkleLittleStarTiming, 1.0F);
+					        	drawRect(itemLocation[i][0],     itemLocation[i][1],     itemLocation[i][0] + itemBoxSize - 1, itemLocation[i][1] + itemBoxSize - 1, 0xFF4B380C + (int)(0xFF*twinkleTwinkleLittleStarTiming)<<32); // The Boundary for the items
+	    						drawRect(itemLocation[i][0] + 1, itemLocation[i][1] + 1, itemLocation[i][0] + itemBoxSize - 2, itemLocation[i][1] + itemBoxSize - 2, 0xEE8B7844 + (int)(0xFF*twinkleTwinkleLittleStarTiming)<<32); // The Background for the items
+    				        GL11.glPopMatrix();
+    						
+    						if((i) < this.listOfItemToBeAlchemied.size())
+    	    		    	{
+	    						if(this.listOfItemToBeAlchemied.get(i) != null) {
+		    		            	ItemStack item = this.listOfItemToBeAlchemied.get(i).item;
+		    	    		    	UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
+		    	    		    	String itemID;
+		    	    		    	
+				    		    	itemID = "textures/originalIcons/items/" + UID.name + ".png";
+				    		    	ResourceLocation tempItemTexture = new ResourceLocation(BiGX.TEXTURE_PREFIX, itemID);
+				    		    	mc.renderEngine.bindTexture(tempItemTexture);
+				    		    	GL11.glPushMatrix();
+		    	    		    		GL11.glTranslatef(itemLocation[i][0] + 3, itemLocation[i][1] + 3, 0);
+			    	    		    	GL11.glPushMatrix();
+					    		    		GL11.glScalef(0.094f, 0.094f, 0.094f);
+					    		    			drawTexturedModalRect(0, 0, 0, 0, 256, 256);
+								        GL11.glPopMatrix();
+					    			GL11.glPopMatrix();
+	    						}
+    	    		    	}
+				        }
+	    			GL11.glPopMatrix();
 			        break;
 	    		case FINAL:
 	    			cbtn.visible = false;
@@ -309,6 +468,7 @@ public class GuiAlchemy extends GuiScreen {
 			{
 			case 1:
 				this.alchemyGuiMode = AlchemyGuiMode.INPROGRESS;
+				buttonList.clear();
 				System.out.println("Start Button Clicked.");
 				break;
 			default:

@@ -9,6 +9,8 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
+import org.ngs.bigx.minecraft.client.gui.GuiAlchemy;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.QuestManager;
@@ -65,59 +67,66 @@ public class BiGXPacketHandler {
 					}
 //					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
 					
-					if(chasingQuestOnGoing)
+					if(Minecraft.getMinecraft().currentScreen instanceof GuiAlchemy)
 					{
-						if(!chasingQuestOnCountDown)
-						{
-							maxSpeed = QuestTaskChasing.chaseRunBaseSpeed + speedchange;
-							
-							if(speedBoostTickCountLeft > 0)
-							{
-								maxSpeed *= 1.3f;
-								change *= 1.3f;
-							}
-							
-							if(context.getSpeed() + ((double)change) >= 0){
-								context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-							}
-							else{
-								context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-							}
-						}
-						else{
-							context.setSpeed(0);
-						}
+						GuiAlchemy.increasePedalingSpeed(change);
 					}
 					else
 					{
-						switch(ClientEventHandler.pedalingModeState)
+						if(chasingQuestOnGoing)
 						{
-						case 0:
-							context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
-							
-							/**
-							 * Speed Boost By Pedaling Gauge
-							 */
-							if(isSpeedBoostSkillOn)
+							if(!chasingQuestOnCountDown)
 							{
-								context.setSpeed(context.getSpeed() * 1.3f);
+								maxSpeed = QuestTaskChasing.chaseRunBaseSpeed + speedchange;
+								
+								if(speedBoostTickCountLeft > 0)
+								{
+									maxSpeed *= 1.3f;
+									change *= 1.3f;
+								}
+								
+								if(context.getSpeed() + ((double)change) >= 0){
+									context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+								}
+								else{
+									context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
+								}
 							}
-							break;
-						case 2:
-							if(change < 0)
-								change *= -1;
-							
-							if(PedalingToBuildEventHandler.pedalingToBuild != null)
-								PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
-							break;
-						};
-						
-						// Increase Fuel for Combo
+							else{
+								context.setSpeed(0);
+							}
+						}
+						else
 						{
-							int fuel = change;
-							if(fuel < 0)
-								fuel *= -1;
-							ClientEventHandler.pedalingCombo.increaseGauge(fuel);
+							switch(ClientEventHandler.pedalingModeState)
+							{
+							case 0:
+								context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+								
+								/**
+								 * Speed Boost By Pedaling Gauge
+								 */
+								if(isSpeedBoostSkillOn)
+								{
+									context.setSpeed(context.getSpeed() * 1.3f);
+								}
+								break;
+							case 2:
+								if(change < 0)
+									change *= -1;
+								
+								if(PedalingToBuildEventHandler.pedalingToBuild != null)
+									PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
+								break;
+							};
+							
+							// Increase Fuel for Combo
+							{
+								int fuel = change;
+								if(fuel < 0)
+									fuel *= -1;
+								ClientEventHandler.pedalingCombo.increaseGauge(fuel);
+							}
 						}
 					}
 				}
