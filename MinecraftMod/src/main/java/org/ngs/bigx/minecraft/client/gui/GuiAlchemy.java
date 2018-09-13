@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 
 import com.ibm.icu.impl.ICUService.Key;
+import com.sun.xml.internal.bind.util.Which;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -64,22 +65,46 @@ public class GuiAlchemy extends GuiScreen {
 	    INITIAL, INPROGRESS, FINAL 
 	}
 	
-	public enum AlchemyProcessStage {
-		IDLE, SPINNING, SHRINKING, EXPANDING, FINALE, DONE
+	public static enum AlchemyProcessStageEnum {
+		SPINNING(0), SPARKLING(1), SHRINKING(2), EXPANDING(3), FINALE(4), DONE(5);
+		
+		private int alchemyProcessStageEnum = 0;
+		
+		AlchemyProcessStageEnum(int res) {
+			alchemyProcessStageEnum = res;
+		}
+		
+		public int getAlchemyProcessStageEnum() {
+			return alchemyProcessStageEnum;
+		}
+		
+		public static AlchemyProcessStageEnum fromId(int id) {
+            for (AlchemyProcessStageEnum type : values()) {
+                if (type.getAlchemyProcessStageEnum() == id) {
+                    return type;
+                }
+            }
+            return null;
+        }
 	}
+	
+	public static int[] AlchemyProcessStageTransitionTime = {
+		0, 1500, 6000, 8500, 10000, 12000, 20000
+	};
 	
 	
 	private ResourceLocation ALCHEMIST_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/alchemist.png");
 	private ResourceLocation ALCHEMY_ON_PROGRESS_BG_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/alchemy-icons-bg.png");
 	private ResourceLocation ALCHEMY_ON_PROGRESS_DONE_ICON_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/alchemy-icons.png");
+	private static ResourceLocation ALCHEMY_ON_PROGRESS_EFFECT_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/alchemy_gui_effects.png");
 	private ResourceLocation tempItemTexture = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/originalIcons/items/chest.png");
 	
 	private AlchemyGuiMode alchemyGuiMode = AlchemyGuiMode.INITIAL;
-	private AlchemyProcessStage alchemyProcessStage = AlchemyProcessStage.IDLE;
 	private CustomGuiButton cbtn;
 	private ItemStack[] inventoryItemStack = new ItemStack[36];
 	private ArrayList<ItemToBeAlchemied> listOfItemToBeAlchemied = new ArrayList<ItemToBeAlchemied>();
-	
+
+	private static AlchemyProcessStageEnum alchemyProcessStage = AlchemyProcessStageEnum.SPINNING;
 	private static Object lockListOfItemToBeAlchemied = new Object();
 	private static float twinkleTwinkleLittleStarTiming = 0f;
 	private static long  twinkleTwinkleLittleStarStarTime = 0;
@@ -88,10 +113,19 @@ public class GuiAlchemy extends GuiScreen {
 	private static Object pedalingLock = new Object();
 	private static float pedalingRotationAngle = 0;
 	private static Timer timer;
+	private static long enlapsedTimeOfPedalingOverThreshold=0;
+	private static boolean pedalingStateChangeFlag = false;
+	private static boolean pedalingStateChangeInTransitionFlag = false;
+	private static boolean pedalingStateChangeDirection = true; // true to next, false to move back
+	private static long pedalingStateChangeInTransitionTick = 0;
+	private static ArrayList<FlatExplosion> flatExplosionsArray = new ArrayList<FlatExplosion>();
 	
-	public static float pedalingSpeedNatualDecelerationRate = 10000f;
+	public static float pedalingSpeedNatualDecelerationRate = 2f;
 	public static int pedalingSpeedTickInterval = 100;
+	public static float pedalingSpeedThreshold = 1000f;
 	public static Object drawingLock = new Object();
+	public static Object enlapsedTimeOfPedalingOverThresholdLock = new Object();
+	public static Object pedalingStateChangeTransitionLock = new Object();
 	
 //	
 //	private static Object guiVictoryLock = new Object();
@@ -108,6 +142,9 @@ public class GuiAlchemy extends GuiScreen {
 				@Override
 				public void run() {
 					decreasePedalingSpeedByTick();
+					checkIfSpeedIsOverThreshold();
+					checkCurrentPedalingState();
+					addExplosionAnimation();
 				}
 			}, 0, pedalingSpeedTickInterval);
 		}
@@ -118,21 +155,98 @@ public class GuiAlchemy extends GuiScreen {
 		context = c;
 	}
 	
+	public static void addExplosionAnimation()
+	{
+		float newrandomFloat = (new Random()).nextFloat();
+		
+		if(newrandomFloat < 0.2f)
+		{
+			FlatExplosion explosion = new FlatExplosion();
+			explosion.timeEffectStarts = System.currentTimeMillis();
+			explosion.xPos = (int) (((new Random()).nextFloat() - .5f) * 250);
+			explosion.yPos = (int) (((new Random()).nextFloat() - .5f) * 250);
+			flatExplosionsArray.add(explosion);
+		}
+	}
+	
+	public static void checkIfSpeedIsOverThreshold()
+	{
+		synchronized (enlapsedTimeOfPedalingOverThresholdLock) {
+			if(pedalingSpeed > pedalingSpeedThreshold)
+			{
+				enlapsedTimeOfPedalingOverThreshold += pedalingSpeedTickInterval;
+			}
+			else
+			{
+				enlapsedTimeOfPedalingOverThreshold -= pedalingSpeedTickInterval;
+			}
+		}
+	}
+	
+	public static void checkCurrentPedalingState()
+	{
+		int currentStateIdx = 0;
+		int IterationCount = AlchemyProcessStageTransitionTime.length-1;
+		
+		for(currentStateIdx=0; currentStateIdx < IterationCount; currentStateIdx ++)
+		{
+			if( (enlapsedTimeOfPedalingOverThreshold >= AlchemyProcessStageTransitionTime[currentStateIdx]) && (enlapsedTimeOfPedalingOverThreshold < AlchemyProcessStageTransitionTime[currentStateIdx+1]) )
+			{
+				break;
+			}
+		}
+		
+		AlchemyProcessStageEnum nextEnum = AlchemyProcessStageEnum.fromId(currentStateIdx);
+		
+		if(nextEnum != alchemyProcessStage)
+		{
+			synchronized (pedalingStateChangeTransitionLock) {
+				pedalingStateChangeFlag = true;
+				pedalingStateChangeInTransitionFlag = true;
+				pedalingStateChangeDirection = false;
+				pedalingStateChangeInTransitionTick = System.currentTimeMillis();
+				
+				if(nextEnum.getAlchemyProcessStageEnum() > alchemyProcessStage.getAlchemyProcessStageEnum())
+				{
+					pedalingStateChangeDirection = true;
+				}
+				
+				alchemyProcessStage = nextEnum;	
+			}
+		}
+	}
+	
 	public static void increasePedalingSpeed(int speed)
 	{
 		if(speed == 0)
+		{
+			decreasePedalingSpeedByValue(4f);
 			return;
+		}
 		System.out.println("ts["+System.currentTimeMillis()+"] speed["+speed+"]");
 		synchronized (pedalingLock) {
 			pedalingSpeed += speed;
 		}
 	}
 	
+	public static void decreasePedalingSpeedByValue(float value)
+	{
+		synchronized (pedalingLock) {
+			pedalingSpeed -= value;
+			
+			if(pedalingSpeed <= 0)
+			{
+				pedalingSpeed = 0;
+			}
+		}
+		
+//		pedalingRotationAngle += pedalingSpeed/60f*5f;
+	}
+	
 	public static void decreasePedalingSpeedByTick()
 	{
 		synchronized (pedalingLock) {
-//			pedalingSpeed -= pedalingSpeedNatualDecelerationRate;
-			pedalingSpeed -= 2f;
+			pedalingSpeed -= pedalingSpeedNatualDecelerationRate;
 			
 			if(pedalingSpeed <= 0)
 			{
@@ -148,10 +262,12 @@ public class GuiAlchemy extends GuiScreen {
 		super.initGui();
 
 		this.alchemyGuiMode = AlchemyGuiMode.INITIAL;
-		this.alchemyProcessStage = AlchemyProcessStage.IDLE;
+		this.alchemyProcessStage = AlchemyProcessStageEnum.SPINNING;
 		
+		flatExplosionsArray = new ArrayList<FlatExplosion>();
 		pedalingSpeedTickTimestamp = System.currentTimeMillis();
 		pedalingRotationAngle = 0;
+		enlapsedTimeOfPedalingOverThreshold= 0 ;
 		
 //		this.inventoryItemStack.clear();
 		this.listOfItemToBeAlchemied.clear();
@@ -378,17 +494,7 @@ public class GuiAlchemy extends GuiScreen {
     					else
     						twinkleTwinkleLittleStarTiming = (float)(Math.pow((octoTwinkleRate-currentTimeStampForTTLS%octoTwinkleRate)/(float)octoTwinkleRate,2)/2f);
 	    			}
-	    			
-//	    			float rotationSpeed = 0;
-//	    			long tempVal = (System.currentTimeMillis() - twinkleTwinkleLittleStarStarTime)%3600;
-//	    			rotationSpeed += tempVal/1f;
-//	    			if(rotationSpeed >= 360)
-//	    			{
-//	    				rotationSpeed -= 360;
-//	    			}
-	    			
-//	    			pedalingRotationAngle += pedalingSpeed/60f*5f;
-//	    			pedalingSpeedTickInterval+1;
+
 	    			synchronized (drawingLock) {
 	    				if(pedalingRotationAngle > 360)
 	    					pedalingRotationAngle -= 360;
@@ -397,15 +503,57 @@ public class GuiAlchemy extends GuiScreen {
 		    			pedalingSpeedTickTimestamp = System.currentTimeMillis();
 					}
 	    			
+	    			if(pedalingStateChangeInTransitionFlag)
+			    	{
+			    		if( (System.currentTimeMillis() - pedalingStateChangeInTransitionTick) > 500 )
+			    		{
+			    			synchronized (pedalingStateChangeTransitionLock) {
+				    			pedalingStateChangeInTransitionFlag = false;
+				    			pedalingStateChangeFlag = false;
+							}
+			    		}
+			    	}
+	    			
+	    			
+	    			if(alchemyProcessStage.getAlchemyProcessStageEnum() > AlchemyProcessStageEnum.SPINNING.getAlchemyProcessStageEnum())
+	    			{
+		    			GL11.glPushMatrix();
+		    				// Draw the Wing below
+						    int wingWidth = 250;
+						    int wingHeight = 120;
+						    float wingWidthScale = 1f;
+						    
+						    if(alchemyProcessStage == AlchemyProcessStageEnum.SPARKLING)
+						    {
+						    	if(pedalingStateChangeInTransitionFlag)
+						    	{
+						    		wingWidthScale = (System.currentTimeMillis() - pedalingStateChangeInTransitionTick) / 500f;
+						    		
+						    		if(wingWidthScale > 1f)
+						    		{
+						    			wingWidthScale = 1f;
+						    		}
+						    		
+						    		wingWidthScale = (float) Math.pow(wingWidthScale, 2);
+						    		
+						    		GL11.glScalef(wingWidthScale, 0, 0);
+						    	}
+						    }
+						    GL11.glTranslatef(mcWidth/2 - 30 + starSize/2, 25 + starSize/2 + 30, 0);
+	    		    		GL11.glColor4f(1F - twinkleTwinkleLittleStarTiming, 1F - twinkleTwinkleLittleStarTiming, 1F - twinkleTwinkleLittleStarTiming, 1.0F);
+						    mc.renderEngine.bindTexture(ALCHEMY_ON_PROGRESS_EFFECT_TEXTURE);
+					        drawTexturedModalRect(wingWidth/-2, wingHeight/-2, 0, 0, wingWidth , wingHeight);
+					        
+					        // Draw the bubble effects
+					        drawFlatExplosions(flatExplosionsArray, mcWidth, mcHeight);
+		    			GL11.glPopMatrix();
+	    			}
+	    			
+	    			// Draws the Item Rotation
 	    			GL11.glPushMatrix();
 	    				GL11.glTranslatef(mcWidth/2 - 30 + starSize/2, 25 + starSize/2, 0);
 			    		GL11.glRotatef(pedalingRotationAngle, 0, 0, 1);
-			    		
-//			    		if( (System.currentTimeMillis() - twinkleTwinkleLittleStarStarTime) > 1000 )
-//	    				{
-//			    			float scaleSpeed = 1f - rotationSpeed/360f;
-//	    					GL11.glScalef(scaleSpeed, scaleSpeed, scaleSpeed);
-//	    				}
+
 			    		/**
 			    		 * Draws alchemy progress screen
 			    		 */
@@ -459,6 +607,134 @@ public class GuiAlchemy extends GuiScreen {
 		}
 		
 		super.drawScreen(mx, my, partialTicks);
+	}
+	
+	public void drawFlatExplosions(ArrayList<FlatExplosion> flatExplosionsArray, int mcWidth, int mcHeight)
+	{
+		synchronized (flatExplosionsArray) {
+			ArrayList<FlatExplosion> explosionToBeRemoved = new ArrayList<FlatExplosion>();
+			long currentTime = System.currentTimeMillis();
+			float whiteCircleSizeRatio = 1f;
+			float darkCircleSizeRatio = 1f;
+			float yellowCircleSizeRatio = 1f;
+			
+			float whiteCircleAlphaRatio = 1f;
+			float darkCircleAlphaRatio = 1f;
+			float yellowCircleAlphaRatio = .6f;
+			
+			float animationTickTime = 250f;
+			long totalAnimationTime = (long) (animationTickTime * 6);
+			Minecraft mc = Minecraft.getMinecraft();
+			
+			// Iterates the array
+			for(FlatExplosion explosion : flatExplosionsArray)
+			{
+				// Chek if the timestamp is outdated
+				if( (System.currentTimeMillis() - explosion.timeEffectStarts) > totalAnimationTime )
+				{
+					explosionToBeRemoved.add(explosion);
+				}
+				else
+				{
+					GL11.glPushMatrix();
+					GL11.glTranslatef(explosion.xPos, explosion.yPos, 0);
+						currentTime = System.currentTimeMillis();
+						whiteCircleSizeRatio = 1f;
+						darkCircleSizeRatio = 1f;
+						yellowCircleSizeRatio = 1f;
+						
+						whiteCircleAlphaRatio = 1f;
+						darkCircleAlphaRatio = 1f;
+						yellowCircleAlphaRatio = .6f;
+						
+						animationTickTime = 250f;
+						
+						// Draw the white circle
+						if(currentTime < animationTickTime * 4)
+						{
+							GL11.glPushMatrix();
+								// Calculate size ratio
+								if(currentTime < animationTickTime) {
+									whiteCircleSizeRatio = (float)currentTime/animationTickTime;
+									
+									if(whiteCircleSizeRatio < 0)
+										whiteCircleSizeRatio = 0;
+								}
+								else if(currentTime < animationTickTime*2) {
+									float sizeExpansionRatio = (float)Math.log10((float)(currentTime-animationTickTime)/animationTickTime*10f + 1);
+									whiteCircleSizeRatio = 1f + sizeExpansionRatio * .25f;
+								}
+								else if(currentTime < animationTickTime*3) {
+									whiteCircleAlphaRatio = (1f - (currentTime-animationTickTime*2)/animationTickTime);
+								}
+								// Calculate alpha ratio
+								GL11.glScalef(whiteCircleSizeRatio,	whiteCircleSizeRatio, whiteCircleSizeRatio);
+								GL11.glColor4d(1f, 1f, 1f, whiteCircleAlphaRatio);
+							    mc.renderEngine.bindTexture(ALCHEMY_ON_PROGRESS_EFFECT_TEXTURE);
+						        drawTexturedModalRect(mcWidth - 114 , mcHeight/2 - 24, 0, 150, 50, 50);
+					        GL11.glPopMatrix();
+						}
+						
+						// Draw the Dark circle
+						if( (currentTime > animationTickTime) && (currentTime < animationTickTime * 5) )
+						{
+							GL11.glPushMatrix();
+								// Calculate size ratio
+								if(currentTime < animationTickTime*2) {
+									darkCircleSizeRatio = (float)(currentTime-animationTickTime)/animationTickTime;
+									
+									if(darkCircleSizeRatio < 0)
+										darkCircleSizeRatio = 0;
+								}
+								else if(currentTime < animationTickTime*3) {
+									float sizeExpansionRatio = (float)Math.log10((float)(currentTime-animationTickTime*2)/animationTickTime*10f + 1);
+									darkCircleSizeRatio = 1f + sizeExpansionRatio * .25f;
+								}
+								else if(currentTime < animationTickTime*4) {
+									darkCircleAlphaRatio = (1f - (currentTime-animationTickTime*3)/animationTickTime);
+								}
+								// Calculate alpha ratio
+								GL11.glScalef(darkCircleSizeRatio,	darkCircleSizeRatio, darkCircleSizeRatio);
+								GL11.glColor4d(.133f, .133f, .133f, darkCircleAlphaRatio);
+							    mc.renderEngine.bindTexture(ALCHEMY_ON_PROGRESS_EFFECT_TEXTURE);
+						        drawTexturedModalRect(mcWidth - 114 , mcHeight/2 - 24, 0, 150, 50, 50);
+					        GL11.glPopMatrix();
+						}
+						
+						// Draw the Yellow circle
+						if( (currentTime > animationTickTime*2) && (currentTime < animationTickTime * 6) )
+						{
+							GL11.glPushMatrix();
+								// Calculate size ratio
+								if(currentTime < animationTickTime*3) {
+									yellowCircleSizeRatio = (float)(currentTime-animationTickTime*2)/animationTickTime;
+									
+									if(yellowCircleSizeRatio < 0)
+										yellowCircleSizeRatio = 0;
+								}
+								else if(currentTime < animationTickTime*4) {
+									float sizeExpansionRatio = (float)Math.log10((float)(currentTime-animationTickTime*3)/animationTickTime*10f + 1);
+									yellowCircleSizeRatio = 1f + sizeExpansionRatio * .25f;
+								}
+								else if(currentTime < animationTickTime*5) {
+									yellowCircleAlphaRatio = .6f * (1f - (currentTime-animationTickTime*4)/animationTickTime);
+								}
+								// Calculate alpha ratio
+								GL11.glScalef(yellowCircleSizeRatio, yellowCircleSizeRatio, yellowCircleSizeRatio);
+								GL11.glColor4d(.39f, .39f, .086f, yellowCircleAlphaRatio);
+							    mc.renderEngine.bindTexture(ALCHEMY_ON_PROGRESS_EFFECT_TEXTURE);
+						        drawTexturedModalRect(mcWidth - 114 , mcHeight/2 - 24, 0, 150, 50, 50);
+					        GL11.glPopMatrix();
+						}
+					GL11.glPopMatrix();
+				}
+			}
+			
+			for(FlatExplosion explosion : explosionToBeRemoved)
+			{
+				flatExplosionsArray.remove(explosion);
+			}
+		}
 	}
 	
 	@Override
@@ -555,4 +831,6 @@ public class GuiAlchemy extends GuiScreen {
 		public int itemStackId = -1;
 		public ItemStack item;
 	}
+	
+	
 }
