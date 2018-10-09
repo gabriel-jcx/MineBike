@@ -53,7 +53,10 @@ public class GuiMonsterReadyFight extends GuiScreen {
 			@Override
 			public void run() {
 				mc = Minecraft.getMinecraft();
-				if(mc.currentScreen instanceof GuiMonsterReadyFight)
+				if(mc.currentScreen == null) {
+					return;
+				}
+				else if(mc.currentScreen instanceof GuiMonsterReadyFight)
 				{
 			        if(mc.currentScreen != null) {
 			        	Minecraft.getMinecraft().thePlayer.closeScreen();

@@ -97,7 +97,10 @@ public class GuiVictory extends GuiScreen {
 			@Override
 			public void run() {
 				synchronized (guiVictoryLock) {
-					if(mc.currentScreen instanceof GuiVictory)
+					if(mc.currentScreen == null) {
+						return;
+					}
+					else if(mc.currentScreen instanceof GuiVictory)
 					{
 						Minecraft.getMinecraft().thePlayer.closeScreen();
 						isKOTimeout = false;

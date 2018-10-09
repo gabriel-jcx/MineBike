@@ -209,7 +209,10 @@ public class GuiChapter extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(mc.currentScreen instanceof GuiChapter)
+				if(mc.currentScreen == null) {
+					return;
+				}
+				else if(mc.currentScreen instanceof GuiChapter)
 				{
 					didOneSecondPassed = true;
 					
@@ -224,7 +227,10 @@ public class GuiChapter extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(mc.currentScreen instanceof GuiChapter)
+				if(mc.currentScreen == null) {
+					return;
+				}
+				else if(mc.currentScreen instanceof GuiChapter)
 				{
 					didOneSecondPassed = false;
 			        if(mc.currentScreen != null) {

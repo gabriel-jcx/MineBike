@@ -353,6 +353,7 @@ public class GuiStats extends GuiScreen {
 					    		questTaskChasing.getCountdown() == 1 ? TRAFFIC_YELLOW : 
 					    			TRAFFIC_GREEN;
 				        mc.renderEngine.bindTexture(chosenImage);
+				        				        
 				        drawTexturedModalRect(0, 0, 0, 0, 256, 256);
 			        
 			        GL11.glPopMatrix();

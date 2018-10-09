@@ -68,8 +68,8 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
-	public static final int NPCRUNNINGSPEED = 9;
-	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
+	public static final int NPCRUNNINGSPEED = QuestTaskChasing.NPCRUNNINGSPEED;
+	public static final double NPCRUNNINGSPEEDBOOSTRATE = QuestTaskChasing.NPCRUNNINGSPEEDBOOSTRATE;
 	
 	public static final String[] villainNames = {"Zombie","Zombie","Ogre","Maniac","Ifrit"};
 
@@ -1166,19 +1166,26 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					int tempThiefSpeed = NPCRUNNINGSPEED + 3;
 					command.setSpeed(tempThiefSpeed);
 				}
-				else if (ratio < 0) {
+				else if ( (ratio < 0) || (time > 60 * 6) ) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
-
-					int tempThiefSpeed = (int)(NPCRUNNINGSPEED*.7);
-					if(thiefSpeedUpEffectTickCount > 0)
+					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .3);
+					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 					command.setSpeed(tempThiefSpeed);
 				}
 				else{
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED;
-					if(thiefSpeedUpEffectTickCount > 0)
+					
+					if ( (ratio < 0.15f) || (time > 60*5) ) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .4);
+					}
+					else if ( (ratio < 0.33f) || (time > 60*4) ) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
+					}
+					
+					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 					command.setSpeed(tempThiefSpeed);
 				}

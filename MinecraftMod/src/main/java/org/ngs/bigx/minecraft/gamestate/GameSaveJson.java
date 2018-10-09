@@ -9,6 +9,7 @@ public class GameSaveJson {
 	private int skills = 0x0;
 	private int boundaryProgress;
 	private int chapter = 1;
+	private int targetplayerlevel = 3;
 	
 	public int getChapter() {
 		return chapter;
@@ -39,5 +40,11 @@ public class GameSaveJson {
 	}
 	public int getBoundaryProgress() {
 		return boundaryProgress;
+	}
+	public int getTargetplayerlevel() {
+		return targetplayerlevel;
+	}
+	public void setTargetplayerlevel(int targetplayerlevel) {
+		this.targetplayerlevel = targetplayerlevel;
 	}
 }

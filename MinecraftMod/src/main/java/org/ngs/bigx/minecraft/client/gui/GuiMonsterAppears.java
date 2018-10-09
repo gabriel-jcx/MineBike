@@ -56,7 +56,10 @@ public class GuiMonsterAppears extends GuiScreen {
 			@Override
 			public void run() {
 				mc = Minecraft.getMinecraft();
-				if(mc.currentScreen instanceof GuiMonsterAppears)
+				if(mc.currentScreen == null) {
+					return;
+				}
+				else if(mc.currentScreen instanceof GuiMonsterAppears)
 				{
 					System.out.println("[Bigx] GuiMonsterAppears timer ticks");
 

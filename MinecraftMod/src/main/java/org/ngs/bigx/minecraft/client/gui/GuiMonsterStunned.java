@@ -55,7 +55,10 @@ public class GuiMonsterStunned extends GuiScreen {
 			@Override
 			public void run() {
 				mc = Minecraft.getMinecraft();
-				if(mc.currentScreen instanceof GuiMonsterStunned)
+				if(mc.currentScreen == null) {
+					return;
+				}
+				else if(mc.currentScreen instanceof GuiMonsterStunned)
 				{
 					Minecraft.getMinecraft().thePlayer.closeScreen();
 				}
