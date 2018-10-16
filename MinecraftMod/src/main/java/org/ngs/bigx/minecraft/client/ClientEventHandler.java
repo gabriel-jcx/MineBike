@@ -120,6 +120,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	private static ClientEventHandler handler;
 	private String previousSong;
+	private ArrayList<String> previousSongs = new ArrayList();
 	
 	public ClientEventHandler(BigxClientContext con) {
 		context = con;
@@ -750,23 +751,23 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					
 					String chosenSong = "";
 					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeMarket) {
-						chosenSong = "minebike:bg_faire loop";
+						chosenSong = "minebike:bg_faire";
 					}
 					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeVillage) {
-						chosenSong = "minebike:bg_camelot loop";
+						chosenSong = "minebike:bg_camelot";
 					}
 					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeHome) {
-						chosenSong = "minebike:bg_camelot loop";
+						chosenSong = "minebike:bg_camelot";
 					}
 					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placePoliceDepartment) {
-						chosenSong = "minebike:bg_avalon loop";
+						chosenSong = "minebike:bg_avalon";
 					}
 					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeContinentPangea) {
-						chosenSong = "minebike:bg_ladylake loop";
+						chosenSong = "minebike:bg_ladylake";
 					}
 					
 					if (p.dimension == WorldProviderEmpty.dimID || p.dimension == WorldProviderDungeon.dimID) {
-						chosenSong = "minebike:bg_rama loop";
+						chosenSong = "minebike:bg_rama";
 					}
 					else if (p.dimension == WorldProviderFlats.dimID) {
 						previousSong = "";
@@ -775,12 +776,18 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					
 					if (chosenSong != "" && chosenSong != previousSong) {
 						previousSong = chosenSong;
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_faire stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " @p 0.5f");
+//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_faire stop");
+//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
+//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
+//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
+//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
+						
+						stopPreviousTracks();
+
+						addTheCurrenTrack(chosenSong);
+						addTheCurrenTrack(previousSong);
+						
+						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
 					}
 					else
 					{
@@ -849,6 +856,21 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 	}
 	
+	private void addTheCurrenTrack(String songToBeAdded) {
+		synchronized (previousSongs) {
+			previousSongs.add(songToBeAdded);	
+		}
+	}
+
+	private void stopPreviousTracks() {
+		synchronized (previousSongs) {
+			for(String previousSong : previousSongs)
+				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + previousSong + " stop");
+			
+			previousSongs.clear();	
+		}
+	}
+
 	public static void sendResistanceGameTag(int resistanceId)
 	{
 		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])

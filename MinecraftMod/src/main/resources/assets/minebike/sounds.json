@@ -63,6 +63,180 @@
     "category": "player",
     "sounds": [{"name":"chaptertada","stream": true}]
   },
+  "aimathim_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/aimathim_1"}
+    ]
+  },
+  "aimathim_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/aimathim_2"}
+    ]
+  },
+  "amazing_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/amazing_1"}
+    ]
+  },
+  "hithim_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/hithim_1"}
+    ]
+  },
+  "behindyou_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/behindyou_1"}
+    ]
+  },
+  "behindyou_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/behindyou_2"}
+    ]
+  },
+  "behindyou_3": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/behindyou_3"}
+    ]
+  },
+  "fantastic_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/fantastic_1"}
+    ]
+  },
+  "fantastic_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/fantastic_2  "}
+    ]
+  },
+  "focus_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/focus_1"}
+    ]
+  },
+  "focus_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/focus_2"}
+    ]
+  },
+  "focus_3": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/focus_3"}
+    ]
+  },
+  "cheering_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/cheering_1"}
+    ]
+  },
+  "cheering_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/cheering_2"}
+    ]
+  },
+  "cheering_3": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/cheering_3"}
+    ]
+  },
+  "getcloser_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/getcloser_1"}
+    ]
+  },
+  "getcloser_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/getcloser_2"}
+    ]
+  },
+  "getcloser_3": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/getcloser_3"}
+    ]
+  },
+  "getcloser_4": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/getcloser_4"}
+    ]
+  },
+  "getcloser_5": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/getcloser_5"}
+    ]
+  },
+  "goaroundit_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/goaroundit_1"}
+    ]
+  },
+  "goaroundit_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/goaroundit_2"}
+    ]
+  },
+  "goaroundit_3": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/goaroundit_3"}
+    ]
+  },
+  "goaroundit_4": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/goaroundit_4"}
+    ]
+  },
+  "goodjob_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/goodjob_1"}
+    ]
+  },
+  "goodjob_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/goodjob_2"}
+    ]
+  },
+  "greatjob_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/greatjob_1"}
+    ]
+  },
+  "yeh_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/yeh_1"}
+    ]
+  },
+  "soclose": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/soclose_1"}
+    ]
+  },
   "itemearned": {
     "category": "player",
     "sounds": [{"name":"itemearned","stream": true}]
@@ -166,5 +340,29 @@
   "mus_breaks4": {
     "category": "player",
 	"sounds": [{"name":"Nasty","stream": true}]
+  },
+  "narration_chapter_1": {
+    "category": "player",
+    "sounds": [
+      {"name":"narration/narration_chapter_1"}
+    ]
+  },
+  "narration_chapter_2": {
+    "category": "player",
+    "sounds": [
+      {"name":"narration/narration_chapter_2"}
+    ]
+  },
+  "narration_chapter_3": {
+    "category": "player",
+    "sounds": [
+      {"name":"narration/narration_chapter_3"}
+    ]
+  },
+  "narration_chapter_4": {
+    "category": "player",
+    "sounds": [
+      {"name":"narration/narration_chapter_4"}
+    ]
   }
 }

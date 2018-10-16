@@ -277,6 +277,12 @@ public class GuiStats extends GuiScreen {
 	    		return;
 	    	}
 	    	
+	    	if(bigxServerContext.getQuestManager().getActiveQuest() == null)
+	    	{
+	    		System.out.println("bigxServerContext.getQuestManager().getActiveQuest() is null");
+	    		return;
+	    	}
+	    	
 	    	synchronized (bigxServerContext.getQuestManager()) {
 	    		boolean isQuestTaskChasing = false;
 	    		boolean isQuestTaskFightAndChasing = false;
@@ -512,6 +518,20 @@ public class GuiStats extends GuiScreen {
 		    		{
 		    			quest.checkComboCount();
 		    		}
+		    		
+		    		if(System.currentTimeMillis() - cheeringMessageTimeStamp < 1000)
+		    		{
+		    			int combotextColor = 0xFFFFFF;
+		    			
+	    				GL11.glPushMatrix();
+					    GL11.glTranslatef(0, 0, 0);
+				    	GL11.glScalef(2F, 2F, 2F);
+				    		text = cheeringMessageText;
+			
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawStringWithShadow(text, 5, mcHeight/4 - 20, combotextColor);
+			    		GL11.glPopMatrix();
+		    		}
 		    	}
 		    	else if(isQuestTaskFightAndChasing)
 		    	{
@@ -658,6 +678,20 @@ public class GuiStats extends GuiScreen {
 			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 60, 22, 0);
 			        }
 			        
+			        if(System.currentTimeMillis() - cheeringMessageTimeStamp < 10000)
+		    		{
+		    			int combotextColor = 0xFFFFFF;
+		    			
+	    				GL11.glPushMatrix();
+					    GL11.glTranslatef(0, 0, 0);
+				    	GL11.glScalef(1F, 1F, 1F);
+				    		text = cheeringMessageText;
+			
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, 20, mcHeight/6 - 20, combotextColor);
+			    		GL11.glPopMatrix();
+		    		}
+			        
 			        if(QuestTaskFightAndChasing.getDamageBoostTickCountLeft() > 0)
 			        {
 			        	time = QuestTaskFightAndChasing.getDamageBoostTickCountLeft() * 50;
@@ -732,6 +766,8 @@ public class GuiStats extends GuiScreen {
 		    		{
 		    			quest.checkComboCount();
 		    		}
+		    		
+		    		
 		    	}
 	    	}
 	    	/**
@@ -754,5 +790,14 @@ public class GuiStats extends GuiScreen {
 
 	public static void setServerContext(BigxServerContext serverContext) {
 		GuiStats.serverContext = serverContext;
+	}
+	
+	public static long cheeringMessageTimeStamp = System.currentTimeMillis();
+	public static String cheeringMessageText = "";
+
+	public static void showCheeringMessage(String text) {
+		cheeringMessageTimeStamp = System.currentTimeMillis();
+		cheeringMessageText = text;
+		System.out.println("[][][] show cheering ts["+cheeringMessageTimeStamp+"]");
 	}
 }

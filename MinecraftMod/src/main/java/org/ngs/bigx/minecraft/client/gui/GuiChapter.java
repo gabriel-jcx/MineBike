@@ -130,6 +130,16 @@ public class GuiChapter extends GuiScreen {
 			
 			// Play Sound
 			Minecraft.getMinecraft().thePlayer.playSound("minebike:victory", 1.5f, 1.0f);
+
+			// Start Timer for close screen
+	        Timer timer = new Timer(true);
+	        timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+		    		// Play Sound
+					Minecraft.getMinecraft().thePlayer.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
+				}
+			}, 750);
 		}
 	}
 	
@@ -218,6 +228,19 @@ public class GuiChapter extends GuiScreen {
 					
 					// Play Sound
 					Minecraft.getMinecraft().thePlayer.playSound("minebike:chaptertada", 1.0f, 1.0f);
+					
+					if(GuiChapter.chapterNumber == 1)
+					{
+						// Start Timer for close screen
+				        Timer timer = new Timer(true);
+				        timer.schedule(new TimerTask() {
+							@Override
+							public void run() {
+					    		// Play Sound
+								Minecraft.getMinecraft().thePlayer.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
+							}
+						}, 750);
+					}
 				}
 			}
 		}, 1*1000);

@@ -1166,7 +1166,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					int tempThiefSpeed = NPCRUNNINGSPEED + 3;
 					command.setSpeed(tempThiefSpeed);
 				}
-				else if ( (ratio < 0) || (time > 60 * 6) ) {
+				else if ( (dist > 40) || (time > 60 * 6) ) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
 					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .3);
@@ -1178,10 +1178,20 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED;
 					
-					if ( (ratio < 0.15f) || (time > 60*5) ) {
-						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .4);
+					if (time > 60*5) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
 					}
-					else if ( (ratio < 0.33f) || (time > 60*4) ) {
+					else if (time > 6*45) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .8);
+					}
+					else if (time > 60*4) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .9);
+					}
+					
+//					if (dist > 40) {
+//						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .4);
+//					}
+					if (dist > 20) {
 						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
 					}
 					

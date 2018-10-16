@@ -78,6 +78,7 @@ public class BiGXPacketHandler {
 							if(!chasingQuestOnCountDown)
 							{
 								maxSpeed = QuestTaskChasing.chaseRunBaseSpeed + speedchange;
+//								maxSpeed = 3 + speedchange;
 								
 								if(speedBoostTickCountLeft > 0)
 								{
@@ -91,6 +92,16 @@ public class BiGXPacketHandler {
 								else{
 									context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
 								}
+//								context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
+//								
+//								/**
+//								 * Speed Boost By Pedaling Gauge
+//								 */
+//								if(isSpeedBoostSkillOn)
+//								{
+//									context.setSpeed(context.getSpeed() * 1.3f);
+//								}
+//								break;
 							}
 							else{
 								context.setSpeed(0);

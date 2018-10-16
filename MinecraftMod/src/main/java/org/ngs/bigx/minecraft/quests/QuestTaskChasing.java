@@ -46,6 +46,8 @@ import org.ngs.bigx.minecraft.npcs.NpcEvents;
 import org.ngs.bigx.minecraft.npcs.NpcLocations;
 import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing.QuestChaseTypeEnum;
+import org.ngs.bigx.minecraft.quests.chase.AudioFeedback;
+import org.ngs.bigx.minecraft.quests.chase.IAudioFeedbackPlayback;
 import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
@@ -94,10 +96,10 @@ import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
 
-public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
+public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlayback, IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
-	public static final int NPCRUNNINGSPEED = 9; // 11: FAST (70-80) 10: Medium (60-70) 9: Slow (50-60)
+	public static final int NPCRUNNINGSPEED = 11; // 11: FAST (70-80) 10: Medium (60-70) 9: Slow (50-60)
 	public static final double NPCRUNNINGSPEEDBOOSTRATE = 1.3;
 	
 	public static final String[] villainNames = {"Iron Thief","Gold Thief","Diamond Thief","TNT Thief","Thief King",
@@ -151,8 +153,9 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	private CharacterProperty characterProperty = BiGX.instance().characterProperty;
 	private EntityCustomNpc npc;
 	private NpcCommand command;
-	
-	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
+
+//	public static final float chaseRunBaseSpeed = 2.1f; // 157 blocks per 15 seconds!!
+	public static final float chaseRunBaseSpeed = 3.5f; // 157 blocks per 15 seconds!!
 	protected float speedchange = 0f;
 	private final float chaseRunSpeedInBlocks = 157f/15f;
 	protected boolean chasingQuestOnGoing = false;
@@ -209,10 +212,17 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	private int initialHunger;
 	
 	public String chosenSong = "";
+	private static float distMovedLastFewSeconds;
+	private static float damageLastFewSeconds;
+	private static long progressStatTimeStamp;
 
 	public static boolean isContinueSelected = false;
 	public static boolean isRetrySelected = false;
 	public static boolean isExitSelected = false;
+	
+	private static AudioFeedback audioFeedback;
+	private static float playerPosZLastFewSecondsAgo;
+	private static float distToNpcLastFewSeconds;
 	
 	public static LevelSystem getLevelSystem()
 	{
@@ -245,6 +255,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		}
 		
 		this.questChaseType = questChaseType;
+		audioFeedback = new AudioFeedback(this);
 	}
 	
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
@@ -423,7 +434,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 						deduction = 10;
 					else
 						deduction = 8;
-					//TODO: Change ^
 			}
 		}
 		
@@ -458,6 +468,10 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 
 	public void handleQuestStart(){
 		showLevelSelectionGui();
+		
+		distMovedLastFewSeconds = 0;
+		damageLastFewSeconds = 0;
+		progressStatTimeStamp = 0;
 		
 		boolean isReboot = !isActive;
 //		player.setGameType(GameType.CREATIVE);
@@ -1066,16 +1080,19 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 							break;
 						}
 						
-						npc.ai.stopAndInteract = false;
+						npcStopAndInteractFalse(npc);
+//						npc.ai.stopAndInteract = false;
 						break;
 					case FIRE:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
-						npc.ai.stopAndInteract = false;
+						npcStopAndInteractFalse(npc);
+//						npc.ai.stopAndInteract = false;
 						npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
 						break;
 					default:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-						npc.ai.stopAndInteract = false;
+						npcStopAndInteractFalse(npc);
+//						npc.ai.stopAndInteract = false;
 						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 						break;
 					};
@@ -1120,8 +1137,16 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 				
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
 				
-				if(Minecraft.getMinecraft().currentScreen == null)
-					Minecraft.getMinecraft().displayGuiScreen(new GuiChasingQuestInstruction(BiGX.instance().clientContext, Minecraft.getMinecraft()));
+				synchronized (clientContext) {
+					if(Minecraft.getMinecraft().currentScreen == null)
+					{
+	//					if(player.worldObj.isRemote) 
+						{
+							System.out.println("BIGX: Show Gui Chasing Quest Instruction");
+							Minecraft.getMinecraft().displayGuiScreen(new GuiChasingQuestInstruction(BiGX.instance().clientContext, Minecraft.getMinecraft()));
+						}
+					}
+				}
 			}
 			if(countdown == 8)
 			{
@@ -1157,6 +1182,16 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		}
 	}
 	
+	private void npcStopAndInteractFalse(EntityCustomNpc npc2) {
+		try{
+			npc.ai.stopAndInteract = false;
+		}
+		catch(Exception ee)
+		{
+			ee.printStackTrace();
+		}
+	}
+
 	public void handleCountdown()
 	{
 		if (Minecraft.getMinecraft().isGamePaused())
@@ -1216,7 +1251,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			else
 			{
 				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
-				sprintTickCount = sprintTickCountMax;
+				if(time > 60*4) {
+					sprintTickCount = sprintTickCountMax/2;
+				}
+				else {
+					sprintTickCount = sprintTickCountMax;
+				}
 				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
 				if(thiefLevel>1)
 					player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
@@ -1250,8 +1290,16 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					obstacleRefreshed = 2;
 				else
 					obstacleRefreshed = 2;
+				
+				// Time Limit
+				if (time > 60*5) {
+					obstacleRefreshed = 8;
+				}
+				else if (time > 60*4) {
+					obstacleRefreshed = 4;
+				}
 					
-				System.out.println("GENERATING");
+//				System.out.println("GENERATING");
 				
 				lastTickStage ++;
 				
@@ -1269,23 +1317,25 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					int tempThiefSpeed = NPCRUNNINGSPEED + 4;
 					command.setSpeed(tempThiefSpeed);
 				}
-				else if ( (ratio < 0) || (time > 60 * 6) ) {
+				else if (dist > 40) {
 					warningMsgBlinkingTime = System.currentTimeMillis();
 					timeFallBehind++;
-					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .3);
+					int tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
 					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 					command.setSpeed(tempThiefSpeed);
 				}
 				else{
+					//TODO
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED;
 					
-					if ( (ratio < 0.15f) || (time > 60*5) ) {
-						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .4);
+					if (time > 60*6) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED - 1);
 					}
-					else if ( (ratio < 0.33f) || (time > 60*4) ) {
-						tempThiefSpeed = (int)(NPCRUNNINGSPEED * .7);
+					
+					if (dist > 30) {
+						tempThiefSpeed = (int)(NPCRUNNINGSPEED - 1);
 					}
 					
 					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
@@ -1306,7 +1356,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			}
 			else if(lastTickStage == 3)
 			{
-				System.out.println("CLEANING 1");
+//				System.out.println("CLEANING 1");
 				
 				lastTickStage++;
 
@@ -1324,7 +1374,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			}
 			else if(lastTickStage == 4)
 			{
-				System.out.println("CLEANING 2");
+//				System.out.println("CLEANING 2");
 
 				lastTickStage++;
 
@@ -1342,7 +1392,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			}
 			else if(lastTickStage == 5)
 			{
-				System.out.println("CLEANING 3");
+//				System.out.println("CLEANING 3");
 				
 				lastTickStage++;
 
@@ -1360,7 +1410,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			}
 			else if(lastTickStage == 6)
 			{
-				System.out.println("CLEANING 4");
+//				System.out.println("CLEANING 4");
 				
 				lastTickStage = 0;
 
@@ -1486,7 +1536,12 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 						// BUILD SIDE
 						player.setHealth(player.getMaxHealth());
 						if(!player.worldObj.isRemote)
+						{
 							handlePlayTimeOnServer();
+							
+							if(updateProgressStats((float)player.posZ, (float)player.getDistanceToEntity(npc)))
+								audioFeedback.updateState(getAudioFeedbackEnum((float)player.posZ, (float)npc.posZ, distMovedLastFewSeconds, damageLastFewSeconds, (damageLastFewSeconds>0)));
+						}
 						else
 						{
 							System.out.println("handlePlayTimeOnClient");
@@ -1517,6 +1572,67 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 		}
 	}
 	
+	private static boolean updateProgressStats(float playerPosZ, float distToNpc) {
+		boolean returnValue = false;
+		
+		if((System.currentTimeMillis() - progressStatTimeStamp) > 2000)
+		{
+			progressStatTimeStamp = System.currentTimeMillis();
+			distMovedLastFewSeconds = playerPosZ - playerPosZLastFewSecondsAgo;
+			playerPosZLastFewSecondsAgo = playerPosZ;
+			distToNpcLastFewSeconds += distToNpc;
+			
+			returnValue = true;
+		}
+		
+		return returnValue;
+	}
+
+	private AudioFeedBackEnum getAudioFeedbackEnum(float playerPosZ, float npcPosZ, float distMovedLastFewSeconds, float damageLastFewSeconds, boolean hitFlag) // Every Two Seconds
+	{
+		AudioFeedBackEnum returnValue = AudioFeedBackEnum.REGULAR;
+		
+		// 6) Good Job
+		if(hitFlag)
+		{
+			returnValue = AudioFeedBackEnum.GOODJOB;
+			QuestTaskChasing.damageLastFewSeconds = 0;
+		}
+		else {
+			// 2) Being ahead
+			if(npcPosZ < playerPosZ)
+			{
+				returnValue = AudioFeedBackEnum.AHEAD;
+			}
+			
+			// 3) Stuck an obstacles
+			else if(distMovedLastFewSeconds < 4)
+			{
+				System.out.println("BIGX Audio Effect NOMOVE["+distMovedLastFewSeconds+"]");
+				returnValue = AudioFeedBackEnum.NOMOVE;
+			}
+			
+			// 4) No able to hit him
+			else if( (damageLastFewSeconds < 2) && (distToNpcLastFewSeconds < 20) )
+			{
+				System.out.println("BIGX Audio Effect NOHIT["+distToNpcLastFewSeconds+"]");
+				returnValue = AudioFeedBackEnum.NOHIT;
+			}
+			
+			// 5) Not too far but no progress
+			else if(distToNpcLastFewSeconds < 100)
+			{
+				System.out.println("BIGX Audio Effect NOTCLOSEENOUGH["+distToNpcLastFewSeconds+"]");
+				returnValue = AudioFeedBackEnum.NOTCLOSEENOUGH;
+			}
+		}
+		
+		this.distMovedLastFewSeconds = 0;
+		this.distToNpcLastFewSeconds = 0;
+		
+		return returnValue;
+	}
+
 	private int checkChasingQuestTaskActivityFlags() {
 		int returnValue = 1;
 		
@@ -1533,7 +1649,7 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 			
 			if(levelSys.getPlayerLevel() > 2)
 			{
-				if(GuiChapter.getChapterNumber() == 3)
+				if(GuiChapter.getChapterNumber() == 5)
 				{
 					GuiChapter.proceedToNextChapter();
 				}
@@ -1852,7 +1968,6 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
 				} catch (QuestException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				EntityPlayer player = event.entityPlayer;
@@ -1936,6 +2051,13 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 					deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
 
 				npc.setHealth(10000f);
+				
+				damageLastFewSeconds ++;
+				
+				if((damageLastFewSeconds % 5) == 0)
+				{
+					playAudioFeedback(AudioFeedBackEnum.GOODJOB);
+				}
 			}
 
 			// Play Monster Hit Sound
@@ -2126,5 +2248,24 @@ public class QuestTaskChasing extends QuestTask implements IQuestEventRewardSess
 	public void onRewardSessionExitClicked() {
 		System.out.println("Exit Clicked");
 		isExitSelected = true;
+	}
+
+	@Override
+	public void playAudioFeedback(AudioFeedBackEnum audioFeedBackEnum) {
+		System.out.println("[BiGX] playAudioFeedback");
+		String text = "";
+		String audioEffectName = "focus";
+		
+		int randomNumber = new Random().nextInt(AudioFeedback.audioFeedbackLib[audioFeedBackEnum.getValue()].length);
+		
+		audioEffectName = AudioFeedback.audioFeedbackLib[audioFeedBackEnum.getValue()][randomNumber][0];
+		text = AudioFeedback.audioFeedbackLib[audioFeedBackEnum.getValue()][randomNumber][1];
+		
+		GuiStats.showCheeringMessage(text);
+		playAudioFeedBack(audioEffectName);
+	}
+
+	private void playAudioFeedBack(String audioEffectName) {
+		Minecraft.getMinecraft().thePlayer.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
 	}
 }

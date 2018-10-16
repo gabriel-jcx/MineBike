@@ -55,9 +55,6 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 		isAndTimeout = true;
 		isHitTimeout = true;
 		isStayCloseTimeout = true;
-		
-		// Play Vicotry Sound
-		Minecraft.getMinecraft().thePlayer.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
 	}
 	
 	public GuiChasingQuestInstruction(BigxClientContext c, Minecraft mc) {
@@ -78,7 +75,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			public void run() {
 				isStayCloseTimeout = false;
 			}
-		}, 2000);
+		}, 3000);
         
         timer = new Timer(true);
         timer.schedule(new TimerTask() {
@@ -86,7 +83,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			public void run() {
 				isAimTimeout = false;
 			}
-		}, 2700);
+		}, 3700);
         
         timer = new Timer(true);
         timer.schedule(new TimerTask() {
@@ -94,7 +91,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			public void run() {
 				isAndTimeout = false;
 			}
-		}, 3400);
+		}, 4400);
 		
 		// Start Timer for close screen
         timer = new Timer(true);
@@ -117,7 +114,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 					}
 				}
 			}
-		}, 5000);
+		}, 6000);
 	}
 	
 	@Override
@@ -134,6 +131,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 
 		drawRect(0, 0, mcWidth, mcHeight, 0xCC000000); // The Box on top
 		
+		int combotextColor = 0xFFFFFF;
 		String text = "";
 		
 		if(isStayCloseTimeout)
@@ -147,12 +145,13 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			    	text = "Stay Close";
 			
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 30, 0xFF8888);
+//		        	(text, 5, mcHeight/4 - 20, combotextColor);
+		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
 
+		    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
+			        drawTexturedModalRect(-50, mcHeight/4 - 25, 0, 0, 100 , 50);
 	    		GL11.glPopMatrix();
 	    		
-	    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
-		        drawTexturedModalRect(-50, mcHeight/2 - 50, 0, 0, 100 , 50);
     		GL11.glPopMatrix();
 		}
 		else
@@ -175,12 +174,12 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			    	}
 			
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 30, 0xFF8888);
-
-	    		GL11.glPopMatrix();
+//		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 40, 0xFFFFFF);
+		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
 	    		
-	    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
-		        drawTexturedModalRect(-50, mcHeight/2 - 50, 0, 50, 100 , 50);
+		    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
+			        drawTexturedModalRect(-50, mcHeight/4 - 25, 0, 50, 100 , 50);
+	    		GL11.glPopMatrix();
     		GL11.glPopMatrix();
 		}
 		
