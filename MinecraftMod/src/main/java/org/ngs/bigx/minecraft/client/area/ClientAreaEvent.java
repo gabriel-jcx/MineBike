@@ -10,6 +10,8 @@ import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxContext.LOGTYPE;
 import org.ngs.bigx.minecraft.quests.QuestTask.QuestActivityTagEnum;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
@@ -72,6 +74,8 @@ public class ClientAreaEvent {
 			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_LOCATION_BEGINNING | locationTypeEnum));
 			
 			BigxClientContext.sendGameTag(biGXGameTag);
+
+			BigxContext.logWriter(LOGTYPE.TAG, "" + Specification.GameTagType.GAMETAG_ID_LOCATION_BEGINNING + "\t" + locationTypeEnum + "\t");
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -10,6 +10,7 @@ import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
+import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
@@ -50,6 +51,7 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation QUESTLOCATION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "texture/GUI/questlocationicon.png");
 	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalingmode-reverse.png");
 	private ResourceLocation PEDALINGGAUGE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalinggaugebar.png");
+	private ResourceLocation CHAPTER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/chapterinstruction.png");
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	
@@ -155,6 +157,22 @@ public class GuiStats extends GuiScreen {
 	    				text = GuiChapter.getCurrentChapterSubtitleShort();
 	    				fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 			    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, 25, 0xFFFFFF);
+			    		
+			    		GL11.glPushMatrix();
+			    			GL11.glScalef(.5f, .5f, .5f);
+			    			// TODO
+				    		mc.renderEngine.bindTexture(CHAPTER_TEXTURE);
+				    		int chapterNumber = GuiChapter.getChapterNumber();
+				    		if(chapterNumber != 3)
+				    		{
+				    			drawTexturedModalRect(mcWidth     , 50 + 30, 64*(chapterNumber-1), 0,  64 , 64);
+				    		}
+				    		else
+				    		{
+				    			drawTexturedModalRect(mcWidth -64 - 10, 50 + 30, 64*(chapterNumber-1), 0,  64 , 64);
+				    			drawTexturedModalRect(mcWidth     + 10, 50 + 30, 64*(chapterNumber-1), 64, 64 , 64);
+				    		}
+			    		GL11.glPopMatrix();
 	    			}
 				}
 	    	}
@@ -476,6 +494,18 @@ public class GuiStats extends GuiScreen {
 	
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 30, 32, 0);
+		    		
+		    		if(NpcCommand.hasFallen)
+		    		{
+	    				GL11.glPushMatrix();
+					    GL11.glTranslatef(mcWidth/2, 0, 0);
+				    	GL11.glScalef(2F, 2F, 2F);
+				    		text = "THE THIEF HAS FALLEN!";
+			
+				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+				    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, 30, 0xFF00FF);
+			    		GL11.glPopMatrix();
+		    		}
 		    		
 		    		if(quest.getTimeFallBehind() > 0)
 		    		{

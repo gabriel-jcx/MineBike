@@ -15,6 +15,8 @@ import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxContext.LOGTYPE;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
@@ -29,6 +31,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import noppes.npcs.client.ClientEventHandler;
@@ -59,10 +62,10 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_2 = "";
 	public static final String STR_CHAPTER_2_SUBTITLE_LINE_SHORT = "Go talk to a trainer";
 	
-	public static final String STR_CHAPTER_3_TITLE = "CATCH THE GOLD THIEF";
+	public static final String STR_CHAPTER_3_TITLE = "CATCH THE DIAMOND THIEF";
 	public static final String STR_CHAPTER_3_SUBTITLE_LINE_1 = "Go talk to a police officer at the";
-	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "police station and defeat the \"Gold Thief\"";
-	public static final String STR_CHAPTER_3_SUBTITLE_LINE_SHORT = "Go talk to a police officer and defeat \"Gold Thief\"";
+	public static final String STR_CHAPTER_3_SUBTITLE_LINE_2 = "police station and defeat the \"Diamond Thief\"";
+	public static final String STR_CHAPTER_3_SUBTITLE_LINE_SHORT = "Go talk to a police officer and defeat \"Diamond Thief\"";
 	
 	public static final String STR_CHAPTER_4_TITLE = "THE JOURNEY STARTS";
 	public static final String STR_CHAPTER_4_SUBTITLE_LINE_1 = "Defeat the Monster \"Ifrit\" from the cave";
@@ -70,6 +73,8 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_4_SUBTITLE_LINE_SHORT = "Go to the cave on the northern mountain. And defeat the Ifrit";
 	
 	public static boolean didOneSecondPassed = false;
+	
+	private ResourceLocation CHAPTER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/chapterinstruction.png");
 	
 	public static void sendChapterGameTag(int chapterNumber)
 	{
@@ -80,20 +85,17 @@ public class GuiChapter extends GuiScreen {
 			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_CHAPTER_BEGINNING | chapterNumberTypeEnum));
 			
 			BigxClientContext.sendGameTag(biGXGameTag);
+			
+			BigxContext.logWriter(LOGTYPE.TAG, "" + Specification.GameTagType.GAMETAG_ID_CHAPTER_BEGINNING + "\t" + chapterNumberTypeEnum + "\t");
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BiGXNetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BiGXInternalGamePluginExcpetion e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -239,7 +241,7 @@ public class GuiChapter extends GuiScreen {
 					    		// Play Sound
 								Minecraft.getMinecraft().thePlayer.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
 							}
-						}, 750);
+						}, 1000);
 					}
 				}
 			}
@@ -280,27 +282,44 @@ public class GuiChapter extends GuiScreen {
 		
 		GL11.glPushMatrix();
 		    GL11.glTranslatef(mcWidth/2, 0, 0);
-	    	GL11.glScalef(2F, 2F, 2F);
-		    
-		    if(flagUnlocked)
-		    {
+		    GL11.glPushMatrix();
+		    	GL11.glScalef(2F, 2F, 2F);
+			    
+			    if(flagUnlocked)
+			    {
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawString(strUnlocked, -1 * fontRendererObj.getStringWidth(strUnlocked)/2, mcHeight/4 - 50, 0xFF3333);
+			    }
+		
 	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(strUnlocked, -1 * fontRendererObj.getStringWidth(strUnlocked)/2, mcHeight/4 - 40, 0xFF3333);
-		    }
+	    		fontRendererObj.drawString(chapterText, -1 * fontRendererObj.getStringWidth(chapterText)/2, mcHeight/4 - 40, 0xFFFFFF);
 	
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(chapterText, -1 * fontRendererObj.getStringWidth(chapterText)/2, mcHeight/4 - 30, 0xFFFFFF);
+	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 30, 0xFFFFFF);
+	    		
+	    		if(didOneSecondPassed)
+	    		{
+	    			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4 - 10, 0xCCCCCC);
+	
+	            	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+	        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4, 0xCCCCCC);
+	    		}
+    		GL11.glPopMatrix();
 
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 20, 0xFFFFFF);
-    		
     		if(didOneSecondPassed)
     		{
-    			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4, 0xCCCCCC);
-
-            	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4 + 10, 0xCCCCCC);
+	    		// TODO
+	    		mc.renderEngine.bindTexture(CHAPTER_TEXTURE);
+	    		if(chapterNumber != 3)
+	    		{
+	    			drawTexturedModalRect(-32     , mcHeight/2 + 10 + 32, 64*(chapterNumber-1), 0,  64 , 64);
+	    		}
+	    		else
+	    		{
+	    			drawTexturedModalRect(-64 - 20, mcHeight/2 + 10 + 32, 64*(chapterNumber-1), 0,  64 , 64);
+	    			drawTexturedModalRect(      20, mcHeight/2 + 10 + 32, 64*(chapterNumber-1), 64, 64 , 64);
+	    		}
     		}
 		GL11.glPopMatrix();
 		

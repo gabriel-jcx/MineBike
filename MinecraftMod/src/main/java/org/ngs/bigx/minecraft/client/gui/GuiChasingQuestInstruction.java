@@ -31,6 +31,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 	private Minecraft mc;
 	private BigxClientContext context;
 
+	private static boolean isFindThiefTimeout = false;
 	private static boolean isStayCloseTimeout = false;
 	private static boolean isAimTimeout = false;
 	private static boolean isAndTimeout = false;
@@ -51,10 +52,16 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 		this.mc = mc;
 //		isKOTimeout = true;
 //		isVictoryMsgTimeout = true;
+		isFindThiefTimeout = true;
 		isAimTimeout = true;
 		isAndTimeout = true;
 		isHitTimeout = true;
 		isStayCloseTimeout = true;
+		
+		// TODO Play bgm_chasingquest_instruction
+//		Minecraft.getMinecraft().thePlayer.playSound("minebike:bgm_chasingquest_instruction", 1.0f, 1.0f);
+//		System.out.println("Play sound");
+		
 	}
 	
 	public GuiChasingQuestInstruction(BigxClientContext c, Minecraft mc) {
@@ -73,6 +80,14 @@ public class GuiChasingQuestInstruction extends GuiScreen {
         timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				isFindThiefTimeout = false;
+			}
+		}, 1500);
+        
+        timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
 				isStayCloseTimeout = false;
 			}
 		}, 3000);
@@ -83,7 +98,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			public void run() {
 				isAimTimeout = false;
 			}
-		}, 3700);
+		}, 3500);
         
         timer = new Timer(true);
         timer.schedule(new TimerTask() {
@@ -91,7 +106,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			public void run() {
 				isAndTimeout = false;
 			}
-		}, 4400);
+		}, 4000);
 		
 		// Start Timer for close screen
         timer = new Timer(true);
@@ -107,6 +122,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 						Minecraft.getMinecraft().thePlayer.closeScreen();
 //						isKOTimeout = false;
 //						isVictoryMsgTimeout = false;
+						isFindThiefTimeout = false;
 						isAimTimeout = false;
 						isAndTimeout = false;
 						isHitTimeout = false;
@@ -114,7 +130,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 					}
 				}
 			}
-		}, 6000);
+		}, 5000);
 	}
 	
 	@Override
@@ -134,7 +150,27 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 		int combotextColor = 0xFFFFFF;
 		String text = "";
 		
-		if(isStayCloseTimeout)
+		if(isFindThiefTimeout)
+		{
+			// SHOW Stay Close
+			GL11.glPushMatrix();
+			    GL11.glTranslatef(mcWidth/2, 0, 0);
+			    GL11.glPushMatrix();
+			    	GL11.glScalef(2F, 2F, 2F);
+			    	
+			    	text = "Look around. And find the thief";
+			
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+//		        	(text, 5, mcHeight/4 - 20, combotextColor);
+		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
+
+		    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
+			        drawTexturedModalRect(-27, mcHeight/4 - 27, 0, 100, 54 , 54);
+	    		GL11.glPopMatrix();
+	    		
+    		GL11.glPopMatrix();
+		}
+		else if(isStayCloseTimeout)
 		{
 			// SHOW Stay Close
 			GL11.glPushMatrix();

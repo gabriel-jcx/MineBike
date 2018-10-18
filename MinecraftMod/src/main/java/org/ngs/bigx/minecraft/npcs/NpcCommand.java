@@ -21,6 +21,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+import noppes.npcs.constants.EnumAnimation;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -42,6 +43,8 @@ public class NpcCommand {
 	private double runStartX, runStartZ;
 	
 	private static Object NPCCOMMANDLOCK = new Object();
+	public static boolean hasFallen = false;
+	public static boolean isSiting = false;
 	
 	public void setRunStartX(int posX)
 	{
@@ -303,7 +306,22 @@ public class NpcCommand {
 					timer.cancel();
 				}
 				
-				correctRunningDirection(direction);
+				if(NpcCommand.hasFallen)
+				{
+					npc.ai.movingType = EnumMovingType.Standing;
+					npc.ai.movingPause = true;
+					
+					if(NpcCommand.isSiting)
+						npc.ai.animationType = EnumAnimation.SITTING;
+					else
+						npc.ai.animationType = EnumAnimation.CRAWLING;
+				}
+				else
+				{
+					npc.ai.movingType = EnumMovingType.MovingPath;
+					npc.ai.animationType = EnumAnimation.NONE;
+					correctRunningDirection(direction);
+				}
 			}
 		}, 0, 400);
 	}

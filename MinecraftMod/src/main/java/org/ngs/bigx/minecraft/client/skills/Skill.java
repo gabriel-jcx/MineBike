@@ -10,6 +10,8 @@ import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
+import org.ngs.bigx.minecraft.context.BigxContext.LOGTYPE;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
@@ -79,6 +81,8 @@ public abstract class Skill {
 			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_SKILL_BEGINNING | skillTypeEnum));
 			
 			BigxClientContext.sendGameTag(biGXGameTag);
+			
+			BigxContext.logWriter(LOGTYPE.TAG, "" + Specification.GameTagType.GAMETAG_ID_SKILL_BEGINNING + "\t" + skillTypeEnum + "\t" + gaugePercentage);
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

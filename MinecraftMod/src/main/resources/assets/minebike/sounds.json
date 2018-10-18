@@ -364,5 +364,17 @@
     "sounds": [
       {"name":"narration/narration_chapter_4"}
     ]
+  },
+  "buyweaponandgetstronger": {
+    "category": "player",
+    "sounds": [
+      {"name":"cqvoice/buyweaponandgetstronger"}
+    ]
+  },
+  "bgm_chasingquest_instruction": {
+    "category": "player",
+    "sounds": [
+      {"name":"bgm_chasingquest_instruction"}
+    ]
   }
 }

@@ -224,6 +224,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	private static float playerPosZLastFewSecondsAgo;
 	private static float distToNpcLastFewSeconds;
 	
+	private static boolean isNpcFellDown = false;
+	private static boolean npcFellDownFlag = false;
+	private static int npcFellDownTimestamp = 0;
+	private static int npcFellDownLength = 3;
+	private static int npcFellDownPeriod = 20;
+	
 	public static LevelSystem getLevelSystem()
 	{
 		return levelSys;
@@ -467,6 +473,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 
 	public void handleQuestStart(){
+		// TODO
 		showLevelSelectionGui();
 		
 		distMovedLastFewSeconds = 0;
@@ -1028,6 +1035,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				dist = 0;
 				startingZ = (int)player.posZ;
 				endingZ = (int)player.posZ;
+				
+				isNpcFellDown = false;
+				npcFellDownTimestamp = 0;
 			}
 			if (countdown == 5) {
 				if(player.worldObj.isRemote) {
@@ -1109,6 +1119,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			}
 			else if (countdown == 1)
 			{
+				isNpcFellDown = false;
+				npcFellDownTimestamp = 0;
 //				try {
 //					context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
 //				} catch (SocketException e) {
@@ -1134,18 +1146,42 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					chosenSong = "minebike:mus_metal";
 				else
 					chosenSong = "minebike:mus_breaks";
-				
+
 				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
 				
 				synchronized (clientContext) {
 					if(Minecraft.getMinecraft().currentScreen == null)
 					{
-	//					if(player.worldObj.isRemote) 
+//						if(player.worldObj.isRemote) 
 						{
 							System.out.println("BIGX: Show Gui Chasing Quest Instruction");
 							Minecraft.getMinecraft().displayGuiScreen(new GuiChasingQuestInstruction(BiGX.instance().clientContext, Minecraft.getMinecraft()));
 						}
 					}
+				}
+
+				chasingQuestInitialPosX = 1;
+				chasingQuestInitialPosY = 10;
+				chasingQuestInitialPosZ = 0;
+				
+				blocks = new ArrayList<Vec3>();
+				
+				for (int z = -16; z < (int)player.posZ+64; ++z) {
+					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+				}
+				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
+					setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+				}
+				
+				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
+					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
 				}
 			}
 			if(countdown == 8)
@@ -1243,10 +1279,49 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			
 			if(thiefSpeedUpEffectTickCount > 0)
 				thiefSpeedUpEffectTickCount --;
+
+			if((time > 60*7) && (time > (npcFellDownTimestamp + npcFellDownLength + npcFellDownPeriod)))
+			{
+//				npcFellDownFlag = true;
+				isNpcFellDown = true;
+				NpcCommand.hasFallen = true;
+				NpcCommand.isSiting = false;
+				playFellDownSound();
+				npcFellDownTimestamp = time;
+			}
+			else
+			{
+				if(isNpcFellDown)
+				{
+					if(time > (npcFellDownTimestamp + npcFellDownLength))
+					{
+						NpcCommand.hasFallen = false;
+						NpcCommand.isSiting = false;
+						isNpcFellDown = false;
+					}
+					else if(time > (npcFellDownTimestamp + npcFellDownLength - 1))
+					{
+						NpcCommand.isSiting = true;
+					}
+				}
+				else
+				{
+					NpcCommand.hasFallen = false;
+					NpcCommand.isSiting = false;
+				}
+			}
+			
+//			if(npcFellDownFlag)
+//			{
+//				npcFellDownFlag = false;
+//			}
+			
+			
 			
 			if(sprintTickCount > 0)
 			{
-				sprintTickCount --;
+				if(!isNpcFellDown)
+					sprintTickCount --;
 			}
 			else
 			{
@@ -1292,7 +1367,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					obstacleRefreshed = 2;
 				
 				// Time Limit
-				if (time > 60*5) {
+				if (time > 60*6) {
+					obstacleRefreshed = 16;
+				}else if (time > 60*5) {
 					obstacleRefreshed = 8;
 				}
 				else if (time > 60*4) {
@@ -1312,7 +1389,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
 				
-				if((player.posZ-4) > npc.posZ) {
+				if(isNpcFellDown)
+				{
+					command.setSpeed(0);
+				}
+				else if((player.posZ-4) > npc.posZ) {
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED + 4;
 					command.setSpeed(tempThiefSpeed);
@@ -1429,6 +1510,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		}
 	}
 	
+	private void playFellDownSound() {
+		int randomNumber = (new Random()).nextInt() % 4 + 1;
+		player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+	}
+
 	public void handlePlayTimeOnClient()
 	{
 		// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
@@ -1528,7 +1614,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //					}
 					if(chasingQuestOnCountDown)
 					{
-						handleCountdown();
+						if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+							handleCountdown();
+						else
+							countdown = 11;
 					}
 					else
 					{

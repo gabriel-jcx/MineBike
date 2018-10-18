@@ -33,7 +33,9 @@ import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostMining;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
+import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
+import org.ngs.bigx.minecraft.context.BigxContext.LOGTYPE;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
@@ -137,6 +139,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	private boolean showLeaderboard;
 	private int leaderboardSeconds;
+
+	private long previousLocationLogTimeStamp = System.currentTimeMillis();
+	private static Object previousLocationLogTimeStampLock = new Object();
 	
 	@SubscribeEvent
 	public void onLivingJump(LivingJumpEvent event) {
@@ -390,102 +395,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 	}
 	
-	@SubscribeEvent
-	public void onBlockDrawHighlight(DrawBlockHighlightEvent event) {
-		// What a helpful event for this effect
-		
-		// BIKE MODE - highlighting the block the player is looking at with a transparent white overlay
-		
-//		event.context.drawOutlinedBoundingBox(p_147590_0_, p_147590_1_);(AxisAlignedBB, int);
-		
-//		int minX = event.target.blockX;
-//		int maxX = event.target.blockX + 1;
-//		int minY = event.target.blockY;
-//		int maxY = event.target.blockY + 1;
-//		int minZ = event.target.blockZ;
-//		int maxZ = event.target.blockZ + 1;
-		
-		// TODO re-enable and fix when we need to highlight blocks again!
-		/*
-		GL11.glPushMatrix();
-		
-		GL11.glTranslatef(event.target.blockX, event.target.blockY, event.target.blockZ);
-		
-	    Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-
-        tessellator.setColorRGBA(0, 0, 0, 128);
-        
-        // -Z
-        tessellator.setNormal(0, 0, -1);
-        tessellator.addVertex(1.0, 0.0, 0.0);
-        tessellator.addVertex(0.0, 0.0, 0.0);
-        tessellator.addVertex(0.0, 0.5, 0.0);
-        tessellator.addVertex(1.0, 0.5, 0.0);
-        // +Z
-        tessellator.setNormal(0, 0, 1);
-        tessellator.addVertex(0.0, 0.0, 1.0);
-        tessellator.addVertex(1.0, 0.0, 1.0);
-        tessellator.addVertex(1.0, 0.5, 1.0);
-        tessellator.addVertex(0.0, 0.5, 1.0);
-        // -X
-        tessellator.setNormal(-1, 0, 0);
-        tessellator.addVertex(0.0, 0.0, 0.0);
-        tessellator.addVertex(0.0, 0.0, 1.0);
-        tessellator.addVertex(0.0, 0.5, 1.0);
-        tessellator.addVertex(0.0, 0.5, 0.0);
-        // +X
-        tessellator.setNormal(1, 0, 0);
-        tessellator.addVertex(1.0, 0.0, 1.0);
-        tessellator.addVertex(1.0, 0.0, 0.0);
-        tessellator.addVertex(1.0, 0.5, 0.0);
-        tessellator.addVertex(1.0, 0.5, 1.0);
-        // -Y
-        tessellator.setNormal(0, -1, 0);
-        tessellator.addVertex(0.0, 0.0, 1.0);
-        tessellator.addVertex(0.0, 0.0, 0.0);
-        tessellator.addVertex(1.0, 0.0, 0.0);
-        tessellator.addVertex(1.0, 0.0, 1.0);
-        // +Y
-        tessellator.setNormal(0, 1, 0);
-        tessellator.addVertex(1.0, 0.5, 1.0);
-        tessellator.addVertex(1.0, 0.5, 0.0);
-        tessellator.addVertex(0.0, 0.5, 0.0);
-        tessellator.addVertex(0.0, 0.5, 1.0);
-        
-        tessellator.draw();
-		
-        GL11.glPopMatrix();
-        */
-	}
-	
-//	protected void sendLocationGameTag(LocationChangeTagEnum questActivityTagEnum)
-//	{
-//		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
-//		try {
-//			int questTypeEnum = ((0xff & questTypeId) << 4) | (0xf & questActivityTagEnum.getQuestActivityTagEnum());
-//			BiGXGameTag biGXGameTag = new BiGXGameTag();
-//			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_QUEST_BEGINNING | questTypeEnum));
-//			
-//			BigxClientContext.sendGameTag(biGXGameTag);
-//		} catch (NumberFormatException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (SocketException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (BiGXNetException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (BiGXInternalGamePluginExcpetion e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//	}
-	
 	//Called whenever the client ticks
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
@@ -493,6 +402,15 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	{
 		if ((Minecraft.getMinecraft().thePlayer!=null) 
 				&& (event.phase==TickEvent.Phase.END)) {
+			
+			// TODO
+			synchronized (previousLocationLogTimeStampLock) {
+				if((System.currentTimeMillis() - previousLocationLogTimeStamp ) < 2000)
+				{
+					BigxContext.logWriter(LOGTYPE.LOCATION, "" + Minecraft.getMinecraft().thePlayer.dimension + "\t" + Minecraft.getMinecraft().thePlayer.posX + "\t" + Minecraft.getMinecraft().thePlayer.posY + "\t" + Minecraft.getMinecraft().thePlayer.posZ);
+					previousLocationLogTimeStamp = System.currentTimeMillis();
+				}
+			}
 			
 			if(context.getQuestManager() == null)
 			{
@@ -775,17 +693,18 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					}
 					
 					if (chosenSong != "" && chosenSong != previousSong) {
-						previousSong = chosenSong;
 //						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_faire stop");
 //						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
 //						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
 //						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
 //						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
 						
-						stopPreviousTracks();
+						stopPreviousTracks(chosenSong);
 
 						addTheCurrenTrack(chosenSong);
 						addTheCurrenTrack(previousSong);
+						
+						previousSong = chosenSong;
 						
 						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
 					}
@@ -862,10 +781,16 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 	}
 
-	private void stopPreviousTracks() {
+	private void stopPreviousTracks(String chosenSong) {
 		synchronized (previousSongs) {
 			for(String previousSong : previousSongs)
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + previousSong + " stop");
+			{
+				if(!chosenSong.equals(previousSong))
+				{
+					Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + previousSong + " stop");
+					System.out.println("bigx Song["+previousSong+"]");
+				}
+			}
 			
 			previousSongs.clear();	
 		}
@@ -880,20 +805,17 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_RESISTANCE_BEGINNING | resistanceTypeEnum));
 			
 			BigxClientContext.sendGameTag(biGXGameTag);
+			
+			BigxContext.logWriter(LOGTYPE.TAG, "" + Specification.GameTagType.GAMETAG_ID_RESISTANCE_BEGINNING + "\t" + resistanceTypeEnum);
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BiGXNetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BiGXInternalGamePluginExcpetion e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -907,23 +829,20 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			int locationTypeEnum = (0xfff & gaugePercentage);
 			BiGXGameTag biGXGameTag = new BiGXGameTag();
-			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_LOCATION_BEGINNING | locationTypeEnum));
+			biGXGameTag.setTagName("" + (Specification.GameTagType.GAMETAG_ID_GAUGE_BEGINNING | locationTypeEnum));
 			
 			BigxClientContext.sendGameTag(biGXGameTag);
+			
+			BigxContext.logWriter(LOGTYPE.TAG, "" + Specification.GameTagType.GAMETAG_ID_GAUGE_BEGINNING + "\t" + locationTypeEnum);
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SocketException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BiGXNetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (BiGXInternalGamePluginExcpetion e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

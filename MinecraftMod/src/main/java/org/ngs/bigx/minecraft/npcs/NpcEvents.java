@@ -320,38 +320,38 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency));
 		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,3));
 		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,9));
-		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,27));
-		inventoryCurrency.setInventorySlotContents(4, new ItemStack(currency,81));
+//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,27));
+//		inventoryCurrency.setInventorySlotContents(4, new ItemStack(currency,81));
 	}
 	
 	private static void createWeaponsSold(NpcMiscInventory inventorySold){
 		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(268)));
 		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(267)));
 		inventorySold.setInventorySlotContents(2, new ItemStack(CustomItems.swordBronze));
-		inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
-		inventorySold.setInventorySlotContents(4, new ItemStack(CustomItems.swordEmerald));
+//		inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
+//		inventorySold.setInventorySlotContents(4, new ItemStack(CustomItems.swordEmerald));
 	}
 	
 	//////////Blacksmith Market
 	private static void createBlacksmithCurrency(NpcMiscInventory inventoryCurrency){
 		//Exchanges for Swords
-		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
-		inventoryCurrency.setInventorySlotContents(18, new ItemStack(Item.getItemById(4420)));//water elemental
-		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(268)));
-		inventoryCurrency.setInventorySlotContents(19, new ItemStack(Item.getItemById(4421)));//fire elemental
-		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(268)));
-		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4419)));//earth elemental
-		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(268)));
-		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4422)));//air elemental
+//		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
+//		inventoryCurrency.setInventorySlotContents(18, new ItemStack(Item.getItemById(4420)));//water elemental
+//		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(268)));
+//		inventoryCurrency.setInventorySlotContents(19, new ItemStack(Item.getItemById(4421)));//fire elemental
+//		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(268)));
+//		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4419)));//earth elemental
+//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(268)));
+//		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4422)));//air elemental
 	}
 		
 	
 	private static void createBlacksmithSold(NpcMiscInventory inventorySold){
 		//Swords
-		inventorySold.addItemStack(new ItemStack(CustomItems.swordFrost));
-		inventorySold.addItemStack(new ItemStack(CustomItems.swordDemonic));
-		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveFrost));
-		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
+//		inventorySold.addItemStack(new ItemStack(CustomItems.swordFrost));
+//		inventorySold.addItemStack(new ItemStack(CustomItems.swordDemonic));
+//		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveFrost));
+//		inventorySold.addItemStack(new ItemStack(CustomItems.glaiveDemonic));
 	}
 	
 	//////////Skill Seller Market

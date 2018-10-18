@@ -88,6 +88,9 @@ public class GuiVictory extends GuiScreen {
 			@Override
 			public void run() {
 				isVictoryMsgTimeout = false;
+				// TODO
+	    		// Play Sound
+				Minecraft.getMinecraft().thePlayer.playSound("minebike:buyweaponandgetstronger", 1.0f, 1.0f);
 			}
 		}, 5*1000);
 		

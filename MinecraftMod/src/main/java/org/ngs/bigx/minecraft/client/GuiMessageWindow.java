@@ -116,6 +116,9 @@ public class GuiMessageWindow extends GuiScreen {
 		
 		Pair message = messages.remove(0);
 		
+		if(message == null)
+			return;
+		
 		String messageText = (String) message.getKey();
 		ResourceLocation messageImage = (ResourceLocation) message.getValue();
 		
