@@ -227,8 +227,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	private static boolean isNpcFellDown = false;
 	private static boolean npcFellDownFlag = false;
 	private static int npcFellDownTimestamp = 0;
-	private static int npcFellDownLength = 3;
-	private static int npcFellDownPeriod = 20;
+	private static int npcFellDownLength = 10;
+	private static int npcFellDownPeriod = 12;
 	
 	public static LevelSystem getLevelSystem()
 	{
@@ -1281,6 +1281,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				thiefSpeedUpEffectTickCount --;
 
 			if((time > 60*7) && (time > (npcFellDownTimestamp + npcFellDownLength + npcFellDownPeriod)))
+//				if((time > (npcFellDownTimestamp + npcFellDownLength + npcFellDownPeriod)))
 			{
 //				npcFellDownFlag = true;
 				isNpcFellDown = true;
@@ -2163,7 +2164,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				
 				damageLastFewSeconds ++;
 				
-				if((damageLastFewSeconds % 5) == 0)
+				if((damageLastFewSeconds % 5) == 1)
 				{
 					playAudioFeedback(AudioFeedBackEnum.GOODJOB);
 				}

@@ -196,8 +196,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	private static boolean isNpcFellDown = false;
 	private static boolean npcFellDownFlag = false;
 	private static int npcFellDownTimestamp = 0;
-	private static int npcFellDownLength = 3;
-	private static int npcFellDownPeriod = 20;
+	private static int npcFellDownLength = 10;
+	private static int npcFellDownPeriod = 12;
 	
 	private static AudioFeedback audioFeedback;
 	private static float playerPosZLastFewSecondsAgo;
