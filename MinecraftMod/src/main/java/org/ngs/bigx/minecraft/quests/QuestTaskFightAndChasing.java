@@ -15,6 +15,7 @@ import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.client.GuiStats;
 import org.ngs.bigx.minecraft.client.LeaderboardRow;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterReadyFight;
 import org.ngs.bigx.minecraft.client.gui.GuiMonsterStunned;
@@ -27,10 +28,13 @@ import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
+import org.ngs.bigx.minecraft.quests.chase.AudioFeedback;
+import org.ngs.bigx.minecraft.quests.chase.IAudioFeedbackPlayback;
 import org.ngs.bigx.minecraft.quests.chase.ObstacleBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiome;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
+import org.ngs.bigx.minecraft.quests.chase.IAudioFeedbackPlayback.AudioFeedBackEnum;
 import org.ngs.bigx.minecraft.quests.chase.fire.TerrainBiomeFire;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventAttack;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventItemPickUp;
@@ -65,7 +69,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 
-public class QuestTaskFightAndChasing extends QuestTask implements IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
+public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbackPlayback, IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
 public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int NPCRUNNINGSPEED = QuestTaskChasing.NPCRUNNINGSPEED;
@@ -188,6 +192,20 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	private static boolean flagLeave = false;
 	
 	private static boolean isRewardState = false;
+	
+	private static boolean isNpcFellDown = false;
+	private static boolean npcFellDownFlag = false;
+	private static int npcFellDownTimestamp = 0;
+	private static int npcFellDownLength = 3;
+	private static int npcFellDownPeriod = 20;
+	
+	private static AudioFeedback audioFeedback;
+	private static float playerPosZLastFewSecondsAgo;
+	private static float distToNpcLastFewSeconds;
+	
+	private static float distMovedLastFewSeconds;
+	private static float damageLastFewSeconds;
+	private static long progressStatTimeStamp;
 	
 	public void setPreviousLocationBeforeTheQuest(int dim, int x, int y, int z)
 	{
@@ -423,6 +441,10 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		dist = 0;
 		pausedTime = 0;
 		completed = false;
+		
+		distMovedLastFewSeconds = 0;
+		damageLastFewSeconds = 0;
+		progressStatTimeStamp = 0;
 		
 		// INIT questSettings ArrayList if there is any
 		if(serverContext.isSuggestedGamePropertiesReady())
@@ -1024,6 +1046,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					
 					setNpcCommand(command);
 				}
+				
+				isNpcFellDown = false;
+				npcFellDownTimestamp = 0;
 			}
 			
 			if (countdown == 1)
@@ -1107,6 +1132,37 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			if(thiefSpeedUpEffectTickCount > 0)
 				thiefSpeedUpEffectTickCount --;
 			
+			if((time > 60*7) && (time > (npcFellDownTimestamp + npcFellDownLength + npcFellDownPeriod)))
+			{
+//				npcFellDownFlag = true;
+				isNpcFellDown = true;
+				NpcCommand.hasFallen = true;
+				NpcCommand.isSiting = false;
+				playFellDownSound();
+				npcFellDownTimestamp = time;
+			}
+			else
+			{
+				if(isNpcFellDown)
+				{
+					if(time > (npcFellDownTimestamp + npcFellDownLength))
+					{
+						NpcCommand.hasFallen = false;
+						NpcCommand.isSiting = false;
+						isNpcFellDown = false;
+					}
+					else if(time > (npcFellDownTimestamp + npcFellDownLength - 1))
+					{
+						NpcCommand.isSiting = true;
+					}
+				}
+				else
+				{
+					NpcCommand.hasFallen = false;
+					NpcCommand.isSiting = false;
+				}
+			}
+			
 			if(sprintTickCount > 0)
 			{
 				sprintTickCount --;
@@ -1161,7 +1217,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
 				
-				if((player.posZ-2) > npc.posZ) {
+				if(isNpcFellDown)
+				{
+					command.setSpeed(0);
+				}
+				else if((player.posZ-2) > npc.posZ) {
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED + 3;
 					command.setSpeed(tempThiefSpeed);
@@ -1286,6 +1346,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		}
 	}
 	
+	private void playFellDownSound() {
+		int randomNumber = (new Random()).nextInt() % 4 + 1;
+		player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+	}
+
 	public void handlePlayTimeOnClient()
 	{
 		// SPEED CHANGE LOGIC BASED ON THE HEART RATE AND THE RPM OF THE PEDALLING
@@ -1411,7 +1476,12 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 						player.setHealth(player.getMaxHealth());
 						if(!player.worldObj.isRemote)
+						{
 							handlePlayTimeOnServer();
+							
+							if(updateProgressStats((float)player.posZ, (float)player.getDistanceToEntity(npc)))
+								audioFeedback.updateState(getAudioFeedbackEnum((float)player.posZ, (float)npc.posZ, distMovedLastFewSeconds, damageLastFewSeconds, (damageLastFewSeconds>0)));
+						}
 						else
 						{
 							System.out.println("handlePlayTimeOnClient");
@@ -1453,6 +1523,67 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			pausedTime = 0;
 			((BigxServerContext)serverContext).updateQuestInformationToClient(null);
 		}
+	}
+	
+	private static boolean updateProgressStats(float playerPosZ, float distToNpc) {
+		boolean returnValue = false;
+		
+		if((System.currentTimeMillis() - progressStatTimeStamp) > 2000)
+		{
+			progressStatTimeStamp = System.currentTimeMillis();
+			distMovedLastFewSeconds = playerPosZ - playerPosZLastFewSecondsAgo;
+			playerPosZLastFewSecondsAgo = playerPosZ;
+			distToNpcLastFewSeconds += distToNpc;
+			
+			returnValue = true;
+		}
+		
+		return returnValue;
+	}
+
+	private AudioFeedBackEnum getAudioFeedbackEnum(float playerPosZ, float npcPosZ, float distMovedLastFewSeconds, float damageLastFewSeconds, boolean hitFlag) // Every Two Seconds
+	{
+		AudioFeedBackEnum returnValue = AudioFeedBackEnum.REGULAR;
+		
+		// 6) Good Job
+		if(hitFlag)
+		{
+			returnValue = AudioFeedBackEnum.GOODJOB;
+			QuestTaskFightAndChasing.damageLastFewSeconds = 0;
+		}
+		else {
+			// 2) Being ahead
+			if(npcPosZ < playerPosZ)
+			{
+				returnValue = AudioFeedBackEnum.AHEAD;
+			}
+			
+			// 3) Stuck an obstacles
+			else if(distMovedLastFewSeconds < 4)
+			{
+				System.out.println("BIGX Audio Effect NOMOVE["+distMovedLastFewSeconds+"]");
+				returnValue = AudioFeedBackEnum.NOMOVE;
+			}
+			
+			// 4) No able to hit him
+			else if( (damageLastFewSeconds < 2) && (distToNpcLastFewSeconds < 20) )
+			{
+				System.out.println("BIGX Audio Effect NOHIT["+distToNpcLastFewSeconds+"]");
+				returnValue = AudioFeedBackEnum.NOHIT;
+			}
+			
+			// 5) Not too far but no progress
+			else if(distToNpcLastFewSeconds < 100)
+			{
+				System.out.println("BIGX Audio Effect NOTCLOSEENOUGH["+distToNpcLastFewSeconds+"]");
+				returnValue = AudioFeedBackEnum.NOTCLOSEENOUGH;
+			}
+		}
+		
+		this.distMovedLastFewSeconds = 0;
+		this.distToNpcLastFewSeconds = 0;
+		
+		return returnValue;
 	}
 	
 	private int checkChasingQuestTaskActivityFlags() {
@@ -1753,6 +1884,13 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				
 				npc.setHealth(10000f);
 				
+				damageLastFewSeconds ++;
+				
+				if((damageLastFewSeconds % 5) == 0)
+				{
+					playAudioFeedback(AudioFeedBackEnum.GOODJOB);
+				}
+				
 				if( (getThiefHealthCurrent() < (getThiefHealthMax() * 0.75)) && (getThiefHealthCurrent() > 0))
 				{
 					if( (npc.motionZ == 0) && (!npc.isDead) )
@@ -1937,5 +2075,24 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public void onRewardSessionExitClicked() {
 		System.out.println("Exit Clicked");
 		isExitSelected = true;
+	}
+
+	@Override
+	public void playAudioFeedback(AudioFeedBackEnum audioFeedBackEnum) {
+		System.out.println("[BiGX] playAudioFeedback");
+		String text = "";
+		String audioEffectName = "focus";
+		
+		int randomNumber = new Random().nextInt(AudioFeedback.audioFeedbackLib[audioFeedBackEnum.getValue()].length);
+		
+		audioEffectName = AudioFeedback.audioFeedbackLib[audioFeedBackEnum.getValue()][randomNumber][0];
+		text = AudioFeedback.audioFeedbackLib[audioFeedBackEnum.getValue()][randomNumber][1];
+		
+		GuiStats.showCheeringMessage(text);
+		playAudioFeedBack(audioEffectName);
+	}
+
+	private void playAudioFeedBack(String audioEffectName) {
+		Minecraft.getMinecraft().thePlayer.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
 	}
 }
