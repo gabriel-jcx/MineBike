@@ -246,22 +246,22 @@ public class CommonEventHandler {
 					int posy = ((int) event.player.posY == event.player.posY)?(int) event.player.posY:((int) event.player.posY)+1;
 					int origX = (int)event.player.posX, origY = (int)event.player.posY, origZ = (int)event.player.posZ;
 					
-					for(int i=-1; i<2; i++) // z
-					{
-						for(int j=-1; j<2; j++) // y
-						{
-							for(int k=-1; k<2; k++) // x
-							{
-								if(event.player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.air)
-								{
-									origX = origX + k;
-									origY = origY + j;
-									origZ = origZ + i;
-									break;
-								}
-							}
-						}
-					}
+//					for(int i=-1; i<2; i++) // z
+//					{
+//						for(int j=-1; j<2; j++) // y
+//						{
+//							for(int k=-1; k<2; k++) // x
+//							{
+//								if(event.player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.air)
+//								{
+//									origX = origX + k;
+//									origY = origY + j;
+//									origZ = origZ + i;
+//									break;
+//								}
+//							}
+//						}
+//					}
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.worldObj.provider.dimensionId, origX, origY, origZ);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 				} catch (QuestException e) {

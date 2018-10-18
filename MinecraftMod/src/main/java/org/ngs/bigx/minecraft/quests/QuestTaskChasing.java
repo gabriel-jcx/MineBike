@@ -2066,22 +2066,22 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				//TODO
 				int origX = (int)player.posX, origY = (int)player.posY, origZ = (int)player.posZ;
 				
-				for(int i=-1; i<2; i++) // z
-				{
-					for(int j=-1; j<2; j++) // y
-					{
-						for(int k=-1; k<2; k++) // x
-						{
-							if(player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.air)
-							{
-								origX = origX + k;
-								origY = origY + j;
-								origZ = origZ + i;
-								break;
-							}
-						}
-					}
-				}
+//				for(int i=-1; i<2; i++) // z
+//				{
+//					for(int j=-1; j<2; j++) // y
+//					{
+//						for(int k=-1; k<2; k++) // x
+//						{
+//							if(player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.air)
+//							{
+//								origX = origX + k;
+//								origY = origY + j;
+//								origZ = origZ + i;
+//								break;
+//							}
+//						}
+//					}
+//				}
 				
 				setPreviousLocationBeforeTheQuest(0, origX, origY, origZ);
 				handleQuestStart();
