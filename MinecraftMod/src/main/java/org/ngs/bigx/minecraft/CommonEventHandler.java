@@ -152,6 +152,15 @@ public class CommonEventHandler {
 				{
 					fightAndChaseQuestTick = 0;
 				}
+				
+				if(QuestTeleporter.teleportFlag)
+				{
+					if(event.player.dimension == QuestTeleporter.dimId)
+					{
+						event.player.setPosition(QuestTeleporter.posX, QuestTeleporter.posY, QuestTeleporter.posZ);
+						QuestTeleporter.teleportFlag = false;
+					}
+				}
 			}
 		}
 		
@@ -235,7 +244,25 @@ public class CommonEventHandler {
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = false;
 					int posy = ((int) event.player.posY == event.player.posY)?(int) event.player.posY:((int) event.player.posY)+1;
-					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.worldObj.provider.dimensionId, (int)event.player.posX, (int)event.player.posY, (int)event.player.posZ);
+					int origX = (int)event.player.posX, origY = (int)event.player.posY, origZ = (int)event.player.posZ;
+					
+					for(int i=-1; i<2; i++) // z
+					{
+						for(int j=-1; j<2; j++) // y
+						{
+							for(int k=-1; k<2; k++) // x
+							{
+								if(event.player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.air)
+								{
+									origX = origX + k;
+									origY = origY + j;
+									origZ = origZ + i;
+									break;
+								}
+							}
+						}
+					}
+					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.worldObj.provider.dimensionId, origX, origY, origZ);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 				} catch (QuestException e) {
 					e.printStackTrace();

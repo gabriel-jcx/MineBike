@@ -25,9 +25,18 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class QuestTeleporter {
+	public static boolean teleportFlag = false;
+	public static int dimId, posX, posY, posZ;
+	
     // Move the Entity to the portal
     public static void teleport(Entity entity, int targetDimensionId,int x,int y,int z) {
 		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + targetDimensionId + " " + x + " " + y + " " + z);
+		
+		teleportFlag = true;
+		dimId = targetDimensionId;
+		posX = x;
+		posY = y;
+		posZ = z;
 		
 		if(targetDimensionId == Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId)
 		{
