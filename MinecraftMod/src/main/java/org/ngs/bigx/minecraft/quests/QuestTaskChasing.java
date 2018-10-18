@@ -133,6 +133,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	protected int lastTickStage = 0;
 	protected int timeFallBehind = 0;
 	public int endOfChaseItemCounter = 0;
+	public long endOfChaseItemCounterTimestamp = 0;
 	protected NpcCommand activecommand;
 
 	protected int obstacleRefreshed = 4;
@@ -969,6 +970,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				if (nearbyItems.size() == 0 && nearbyOrbs.size() == 0) {
 					endOfChaseItemCounter = 0;
 				}
+				
+				if((System.currentTimeMillis() - endOfChaseItemCounterTimestamp) > 19000)
+				{
+					endOfChaseItemCounter = 0;
+				}
 			}
 			else if(endOfChaseItemCounter == 0)
 			{
@@ -1765,6 +1771,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			
 			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
 			endOfChaseItemCounter = 15;
+			endOfChaseItemCounterTimestamp = System.currentTimeMillis();
 			
 			Random random = new Random();
 			
@@ -1884,6 +1891,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			
 			// Set another 15 second timer to open gui
 			endOfChaseItemCounter = 15;
+			endOfChaseItemCounterTimestamp = System.currentTimeMillis();
 		}
 		else if(flagGiveup)
 		{
