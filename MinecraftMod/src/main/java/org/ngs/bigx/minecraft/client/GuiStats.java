@@ -708,17 +708,17 @@ public class GuiStats extends GuiScreen {
 			    		fontRendererObj.drawString(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2 + 60, 22, 0);
 			        }
 			        
-			        if(System.currentTimeMillis() - cheeringMessageTimeStamp < 10000)
+			        if(System.currentTimeMillis() - cheeringMessageTimeStamp < 1000)
 		    		{
 		    			int combotextColor = 0xFFFFFF;
 		    			
 	    				GL11.glPushMatrix();
 					    GL11.glTranslatef(0, 0, 0);
-				    	GL11.glScalef(1F, 1F, 1F);
+				    	GL11.glScalef(2F, 2F, 2F);
 				    		text = cheeringMessageText;
 			
 				        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-				    		fontRendererObj.drawString(text, 20, mcHeight/6 - 20, combotextColor);
+				    		fontRendererObj.drawStringWithShadow(text, 5, mcHeight/4 - 20, combotextColor);
 			    		GL11.glPopMatrix();
 		    		}
 			        

@@ -405,7 +405,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			// TODO
 			synchronized (previousLocationLogTimeStampLock) {
-				if((System.currentTimeMillis() - previousLocationLogTimeStamp ) < 2000)
+				if((System.currentTimeMillis() - previousLocationLogTimeStamp ) > 2000)
 				{
 					BigxContext.logWriter(LOGTYPE.LOCATION, "" + Minecraft.getMinecraft().thePlayer.dimension + "\t" + Minecraft.getMinecraft().thePlayer.posX + "\t" + Minecraft.getMinecraft().thePlayer.posY + "\t" + Minecraft.getMinecraft().thePlayer.posZ);
 					previousLocationLogTimeStamp = System.currentTimeMillis();

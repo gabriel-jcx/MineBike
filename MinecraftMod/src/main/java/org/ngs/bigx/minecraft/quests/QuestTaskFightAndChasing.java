@@ -234,6 +234,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		this.questSourceDimensionId = 0;
 		
 		this.questChaseType = questChaseType;
+		audioFeedback = new AudioFeedback(this);
 	}
 	
 	public QuestTaskFightAndChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
@@ -310,6 +311,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 100, (int)entity.posZ + 16);
 		System.out.println("[BiGX] Cleaning Done.");
+		System.out.println("Teleport x["+(int)returnLocation.xCoord+"] y["+(int)returnLocation.yCoord+"] z["+(int)returnLocation.zCoord+"]");
 		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
 		System.out.println("[BiGX] Teleport Called");
 	}
@@ -1204,7 +1206,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				else
 					obstacleRefreshed = 2;
 					
-				System.out.println("GENERATING");
+//				System.out.println("GENERATING");
 				
 				lastTickStage ++;
 				
@@ -1273,7 +1275,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 			else if(lastTickStage == 3)
 			{
-				System.out.println("CLEANING 1");
+//				System.out.println("CLEANING 1");
 				
 				lastTickStage++;
 
@@ -1291,7 +1293,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 			else if(lastTickStage == 4)
 			{
-				System.out.println("CLEANING 2");
+//				System.out.println("CLEANING 2");
 
 				lastTickStage++;
 
@@ -1309,7 +1311,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 			else if(lastTickStage == 5)
 			{
-				System.out.println("CLEANING 3");
+//				System.out.println("CLEANING 3");
 				
 				lastTickStage++;
 
@@ -1327,7 +1329,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			}
 			else if(lastTickStage == 6)
 			{
-				System.out.println("CLEANING 4");
+//				System.out.println("CLEANING 4");
 				
 				lastTickStage = 0;
 
@@ -1472,7 +1474,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 								mc.displayGuiScreen(new GuiMonsterStunned(BiGX.instance().clientContext, mc));
 						}
 						
-						System.out.println("[BiGX] FQ AF[!chasingQuestOnCountDown]");
+//						System.out.println("[BiGX] FQ AF[!chasingQuestOnCountDown]");
 
 						player.setHealth(player.getMaxHealth());
 						if(!player.worldObj.isRemote)
