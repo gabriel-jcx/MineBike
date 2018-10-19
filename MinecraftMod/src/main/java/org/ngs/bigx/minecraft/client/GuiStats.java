@@ -34,6 +34,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class GuiStats extends GuiScreen {
 	
+
 	public static int tick = 0;
 	
 	private Minecraft mc;
@@ -52,6 +53,8 @@ public class GuiStats extends GuiScreen {
 	private ResourceLocation PEDALINGMODE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalingmode-reverse.png");
 	private ResourceLocation PEDALINGGAUGE_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/pedalinggaugebar.png");
 	private ResourceLocation CHAPTER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/chapterinstruction.png");
+	private ResourceLocation FIRSTINSTRUCTION_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/arrowsoffirstinstruction.png");
+	
 	private int HEART_OFFSET = 54;
 	private int HEART_SIZE = 16;
 	
@@ -196,6 +199,44 @@ public class GuiStats extends GuiScreen {
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
 				}
+	    	}
+	    	
+	    	/**
+	    	 * Draw the fist instruction screen
+	    	 * 88, 74, 241), Vec3.createVectorHelper(91, 80, 244
+	    	 */
+	    	if( (mc.thePlayer.dimension == 0) && (GuiChapter.getChapterNumber() == 1) )
+	    	{
+	    		if( (mc.thePlayer.posX >= 88) && (mc.thePlayer.posX <= 91) &&
+	    				(mc.thePlayer.posY >= 74) && (mc.thePlayer.posY <=80) &&
+	    				(mc.thePlayer.posZ >= 241) && (mc.thePlayer.posZ <= 244) )
+	    		{
+	    			GL11.glPushMatrix();
+	    				GL11.glPushMatrix();
+	    					drawRect(0, 0, mcWidth, mcHeight, 0x44000000); // The Box on top
+	    				GL11.glPopMatrix();
+	    			// TODO
+					    GL11.glTranslatef(mcWidth/2, 12f, 0); 
+					    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					    GL11.glEnable(GL11.GL_BLEND);
+					    GL11.glScalef(.5f, .5f, .5f);
+					    mc.renderEngine.bindTexture(FIRSTINSTRUCTION_TEXTURE);
+				        drawTexturedModalRect(-160, 45, 0, 0, 83 , 65);
+
+					    mc.renderEngine.bindTexture(FIRSTINSTRUCTION_TEXTURE);
+				        drawTexturedModalRect(70, 100, 0, 65, 83 , 65);
+	    			GL11.glPopMatrix();
+	    			
+	    			text = "Describes the current task";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-90-fontRendererObj.getStringWidth(text)/2, 70, 0xFFFFFF);
+	    			
+	    			text = "Describes where to go or whom to talk";
+
+		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2+80-fontRendererObj.getStringWidth(text)/2, 100, 0xFFFFFF);
+	    		}
 	    	}
 	    	
 	    	/**
