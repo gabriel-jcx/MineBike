@@ -413,8 +413,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 						
 						isGameSaveRead = true;
 						
-						if(Minecraft.getMinecraft().thePlayer.dimension == 0)
-							GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
+//						if(Minecraft.getMinecraft().thePlayer.dimension == 0)
+//							GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
 					}
 				}
 				else
@@ -446,6 +446,15 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				}
 				
 				System.out.println("[BiGX] Game Saved.");
+			}
+			
+			try
+			{
+				GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
+			}
+			catch(Exception ee)
+			{
+				ee.printStackTrace();
 			}
 		}
 		

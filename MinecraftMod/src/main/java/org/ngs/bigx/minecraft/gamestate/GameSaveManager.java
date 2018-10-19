@@ -414,6 +414,7 @@ public class GameSaveManager {
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileName));
 		writer.write(parcedSaveObject);
+//		System.out.println("save[" + parcedSaveObject + "]");
 		 
 		writer.close();
 	}
