@@ -345,6 +345,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				
 				GuiChapter.sendChapterGameTag(GuiChapter.getChapterNumber());
 				
+				if(BigxClientContext.getIsGameSaveRead())
+					GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
+				
 				if(GuiChapter.getChapterNumber() == 3)
 				{
 					if(QuestTaskChasing.guiChasingQuest != null)
@@ -438,42 +441,75 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					flagOpenChapterGui = false;
 				}
 			}
-			
-			if(BigxClientContext.getIsGameSaveRead() && flagChapterCorrectionFromLoading && (Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0))
+			//TODO
+			if(BigxClientContext.getIsGameSaveRead() && flagChapterCorrectionFromLoading)
 			{
-				EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
-				
-				if (GuiChapter.getChapterNumber() < 3) {
-					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-				} else if (GuiChapter.getChapterNumber() < 4) {
-					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-				} else {
-					p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
-					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-				}
-				
-				if(GuiChapter.getChapterNumber() < 3)
-				{
-					if(!( (p.posX >= 86) && (p.posX <=103) &&
-							(p.posY >= 45) && (p.posY <= 100) &&
-							(p.posZ >= 235) && (p.posZ <=250)))
+				if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0) {
+					EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+					
+					if( (!GuiChapter.isTodayWorkoutDone()) && (GuiChapter.getChapterNumber() > 3) ) {
+						System.out.println("Chasing Seq 1 dim["+p.dimension+"]");
+						p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
+						// TODO (99, 45, 179), Vec3.createVectorHelper(120, 100, 192)
+						if(!( (p.posX >= 99) && (p.posX <=120) &&
+								(p.posY >= 45) && (p.posY <= 100) &&
+								(p.posZ >= 179) && (p.posZ <=192)))
+						{
+							p.sendChatMessage("/tpx 0 107 72 185");
+						}
+					}
+					else if (GuiChapter.getChapterNumber() < 3) {
+						p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
+					} else if (GuiChapter.getChapterNumber() < 4) {
+						p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+					} else {
+						p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+						p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+					}
+					
+					if(GuiChapter.getChapterNumber() < 3)
 					{
-						QuestTeleporter.teleport(p, 0, 95, 72, 240);
+						if(!( (p.posX >= 86) && (p.posX <=103) &&
+								(p.posY >= 45) && (p.posY <= 100) &&
+								(p.posZ >= 235) && (p.posZ <=250)))
+						{
+							QuestTeleporter.teleport(p, 0, 95, 72, 240);
+						}
+					}
+					
+					flagChapterCorrectionFromLoading = false;
+				}
+				else {
+					EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+					
+					if(p.dimension != 100)
+					{
+//						System.out.println("Chasing Seq 2 dim["+p.dimension+"]");
+						if( (!GuiChapter.isTodayWorkoutDone()) && (GuiChapter.getChapterNumber() > 3) ){
+							p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+							p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+							p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+							p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+							p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
+							p.sendChatMessage("/tpx 0 107 72 185");
+						}
 					}
 				}
-				
-				flagChapterCorrectionFromLoading = false;
 			}
 			
 			if(GuiMonsterAppears.isGuiMonsterAppearsOpened)

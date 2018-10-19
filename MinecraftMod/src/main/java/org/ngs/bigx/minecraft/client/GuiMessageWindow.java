@@ -183,6 +183,11 @@ public class GuiMessageWindow extends GuiScreen {
 	    		}
 	    	}
 	    	
+	    	if (textLineArray == null)
+	    	{
+	    		return;
+	    	}
+	    	
 	    	if (timeDifference < durationShowWindow)
 	    	{
 	    		if (timeDifference <= durationFadeIn)

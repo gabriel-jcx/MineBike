@@ -166,7 +166,13 @@ public class GuiStats extends GuiScreen {
 			    			// TODO
 				    		mc.renderEngine.bindTexture(CHAPTER_TEXTURE);
 				    		int chapterNumber = GuiChapter.getChapterNumber();
-				    		if(chapterNumber != 3)
+				    		
+				    		if(!GuiChapter.isTodayWorkoutDone())
+				    		{
+				    			drawTexturedModalRect(mcWidth -64 - 10, 50 + 30, 64*(3-1), 0,  64 , 64);
+				    			drawTexturedModalRect(mcWidth     + 10, 50 + 30, 64*(3-1), 64, 64 , 64);
+				    		}
+				    		else if(chapterNumber != 3)
 				    		{
 				    			drawTexturedModalRect(mcWidth     , 50 + 30, 64*(chapterNumber-1), 0,  64 , 64);
 				    		}

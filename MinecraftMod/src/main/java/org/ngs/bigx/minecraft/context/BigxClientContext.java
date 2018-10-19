@@ -29,11 +29,13 @@ import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 //import org.ngs.bigx.minecraft.bike.PedalingComboSoundEffect;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.quests.QuestManager;
+import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -410,6 +412,9 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 						System.out.println("[BiGX] Game Save Read");
 						
 						isGameSaveRead = true;
+						
+						if(Minecraft.getMinecraft().thePlayer.dimension == 0)
+							GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
 					}
 				}
 				else

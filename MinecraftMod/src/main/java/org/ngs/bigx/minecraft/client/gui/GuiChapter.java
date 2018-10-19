@@ -48,6 +48,9 @@ public class GuiChapter extends GuiScreen {
 	private static String subtitleLine2 = "";
 	private static String subtitleLineShort = "";
 	private static String strUnlocked = "UNLOCKED NEW CHAPTER";
+	
+	private static boolean isTodayWorkoutDone = true;
+	private static int targetedLevel = 0;
 
 	private boolean flagUnlocked = false;
 	private static boolean flagProceedToNextChapter = false;
@@ -71,6 +74,11 @@ public class GuiChapter extends GuiScreen {
 	public static final String STR_CHAPTER_4_SUBTITLE_LINE_1 = "Defeat the Monster \"Ifrit\" from the cave";
 	public static final String STR_CHAPTER_4_SUBTITLE_LINE_2 = "located on top of the northern mountain!";
 	public static final String STR_CHAPTER_4_SUBTITLE_LINE_SHORT = "Go to the cave on the northern mountain. And defeat the Ifrit";
+	
+	public static final String STR_CHAPTER_N1_TITLE = "HELP POLICE OFFICER";
+	public static final String STR_CHAPTER_N1_SUBTITLE_LINE_1 = "Go talk to a police officer at the";
+	public static final String STR_CHAPTER_N1_SUBTITLE_LINE_2 = "police station and help to defeat thieves";
+	public static final String STR_CHAPTER_N1_SUBTITLE_LINE_SHORT = "Go talk to a police officer and defeat thieves";
 	
 	public static boolean didOneSecondPassed = false;
 	
@@ -175,38 +183,48 @@ public class GuiChapter extends GuiScreen {
 	
 	private static void setTitleAndSubTitles(int chapterNumber)
 	{	
-		switch(chapterNumber)
+		if( (isTodayWorkoutDone) || (chapterNumber < 4) )
 		{
-		case 1:
-			chapterText = "~ Chapter 1 ~";
-			title = STR_CHAPTER_1_TITLE;
-			subtitleLine1 = STR_CHAPTER_1_SUBTITLE_LINE_1;
-			subtitleLine2 = STR_CHAPTER_1_SUBTITLE_LINE_2;
-			subtitleLineShort = STR_CHAPTER_1_SUBTITLE_LINE_SHORT;
-			break;
-		case 2:
+			switch(chapterNumber)
+			{
+			case 1:
+				chapterText = "~ Chapter 1 ~";
+				title = STR_CHAPTER_1_TITLE;
+				subtitleLine1 = STR_CHAPTER_1_SUBTITLE_LINE_1;
+				subtitleLine2 = STR_CHAPTER_1_SUBTITLE_LINE_2;
+				subtitleLineShort = STR_CHAPTER_1_SUBTITLE_LINE_SHORT;
+				break;
+			case 2:
+				chapterText = "~~";
+				title = STR_CHAPTER_2_TITLE;
+				subtitleLine1 = STR_CHAPTER_2_SUBTITLE_LINE_1;
+				subtitleLine2 = STR_CHAPTER_2_SUBTITLE_LINE_2;
+				subtitleLineShort = STR_CHAPTER_2_SUBTITLE_LINE_SHORT;
+				break;
+			case 3:
+				chapterText = "~~";
+				title = STR_CHAPTER_3_TITLE;
+				subtitleLine1 = STR_CHAPTER_3_SUBTITLE_LINE_1;
+				subtitleLine2 = STR_CHAPTER_3_SUBTITLE_LINE_2;
+				subtitleLineShort = STR_CHAPTER_3_SUBTITLE_LINE_SHORT;
+				break;
+			case 4:
+				chapterText = "~ Chapter 2 ~";
+				title = STR_CHAPTER_4_TITLE;
+				subtitleLine1 = STR_CHAPTER_4_SUBTITLE_LINE_1;
+				subtitleLine2 = STR_CHAPTER_4_SUBTITLE_LINE_2;
+				subtitleLineShort = STR_CHAPTER_4_SUBTITLE_LINE_SHORT;
+				break;
+			default:
+				break;
+			}
+		}
+		else {
 			chapterText = "~~";
-			title = STR_CHAPTER_2_TITLE;
-			subtitleLine1 = STR_CHAPTER_2_SUBTITLE_LINE_1;
-			subtitleLine2 = STR_CHAPTER_2_SUBTITLE_LINE_2;
-			subtitleLineShort = STR_CHAPTER_2_SUBTITLE_LINE_SHORT;
-			break;
-		case 3:
-			chapterText = "~~";
-			title = STR_CHAPTER_3_TITLE;
-			subtitleLine1 = STR_CHAPTER_3_SUBTITLE_LINE_1;
-			subtitleLine2 = STR_CHAPTER_3_SUBTITLE_LINE_2;
-			subtitleLineShort = STR_CHAPTER_3_SUBTITLE_LINE_SHORT;
-			break;
-		case 4:
-			chapterText = "~ Chapter 2 ~";
-			title = STR_CHAPTER_4_TITLE;
-			subtitleLine1 = STR_CHAPTER_4_SUBTITLE_LINE_1;
-			subtitleLine2 = STR_CHAPTER_4_SUBTITLE_LINE_2;
-			subtitleLineShort = STR_CHAPTER_4_SUBTITLE_LINE_SHORT;
-			break;
-		default:
-			break;
+			title = STR_CHAPTER_N1_TITLE;
+			subtitleLine1 = STR_CHAPTER_N1_SUBTITLE_LINE_1;
+			subtitleLine2 = STR_CHAPTER_N1_SUBTITLE_LINE_2;
+			subtitleLineShort = STR_CHAPTER_N1_SUBTITLE_LINE_SHORT;
 		}
 	}
 	
@@ -311,7 +329,12 @@ public class GuiChapter extends GuiScreen {
     		{
 	    		// TODO
 	    		mc.renderEngine.bindTexture(CHAPTER_TEXTURE);
-	    		if(chapterNumber != 3)
+	    		if(!GuiChapter.isTodayWorkoutDone())
+	    		{
+	    			drawTexturedModalRect(-64 - 20, mcHeight/2 + 10 + 32, 64*(3-1), 0,  64 , 64);
+	    			drawTexturedModalRect(      20, mcHeight/2 + 10 + 32, 64*(3-1), 64, 64 , 64);
+	    		}
+	    		else if(chapterNumber != 3)
 	    		{
 	    			drawTexturedModalRect(-32     , mcHeight/2 + 10 + 32, 64*(chapterNumber-1), 0,  64 , 64);
 	    		}
@@ -328,5 +351,21 @@ public class GuiChapter extends GuiScreen {
 	
 	public int getTopMargin() {
 		return 30;
+	}
+
+	public static boolean isTodayWorkoutDone() {
+		return isTodayWorkoutDone;
+	}
+
+	public static void setTodayWorkoutDone(boolean isTodayWorkoutDone) {
+		GuiChapter.isTodayWorkoutDone = isTodayWorkoutDone;
+	}
+
+	public static int getTargetedLevel() {
+		return targetedLevel;
+	}
+
+	public static void setTargetedLevel(int targetplayerlevel) {
+		GuiChapter.targetedLevel = targetplayerlevel;
 	}
 }

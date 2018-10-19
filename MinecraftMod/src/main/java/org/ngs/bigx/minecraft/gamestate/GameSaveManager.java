@@ -155,6 +155,12 @@ public class GameSaveManager {
 			// SET CHAPTER
 			GuiChapter.setChapter(gameSaveJson.getChapter());
 			
+			// SET WORKWORK DONE
+			GuiChapter.setTodayWorkoutDone(gameSaveJson.getPlayerLevel() >= gameSaveJson.getTargetplayerlevel());
+			
+			// SET Targeted Level
+			GuiChapter.setTargetedLevel(gameSaveJson.getTargetplayerlevel());
+			
 //			QuestTaskChasing.getLevelSystem().getPlayerLevel()
 //			save.setPlayerLevel(QuestTaskChasing.getLevelSystem().getPlayerLevel());
 			
