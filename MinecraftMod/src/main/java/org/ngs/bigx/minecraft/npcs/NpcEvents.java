@@ -24,6 +24,7 @@ import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -318,9 +319,9 @@ public class NpcEvents {
 	//////////WeaponsMerchant Market
 	private static void createWeaponsCurrency(NpcMiscInventory inventoryCurrency, Item currency){
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency));
-		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,3));
-		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,9));
-//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,27));
+		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,9));
+		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,27));
+		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,81));
 //		inventoryCurrency.setInventorySlotContents(4, new ItemStack(currency,81));
 	}
 	
@@ -328,7 +329,7 @@ public class NpcEvents {
 		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(268)));
 		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(267)));
 		inventorySold.setInventorySlotContents(2, new ItemStack(CustomItems.swordBronze));
-//		inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
+		inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
 //		inventorySold.setInventorySlotContents(4, new ItemStack(CustomItems.swordEmerald));
 	}
 	
@@ -375,34 +376,56 @@ public class NpcEvents {
 	//////////Trader Market
 	private static void createTraderCurrency(NpcMiscInventory inventoryCurrency){
 		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(266),1));
-		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(266),1));
-		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(266),1));
-		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(3),32)); //Dirt block
-		inventoryCurrency.setInventorySlotContents(4, new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
-		inventoryCurrency.setInventorySlotContents(5, new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
-		inventoryCurrency.setInventorySlotContents(6, new ItemStack(Items.wooden_sword)); //Wood Sword
-		inventoryCurrency.setInventorySlotContents(7, new ItemStack(Items.iron_sword)); //Iron Sword
-		inventoryCurrency.setInventorySlotContents(8, new ItemStack(CustomItems.swordBronze)); //Bronze Sword
-		inventoryCurrency.setInventorySlotContents(9, new ItemStack(CustomItems.swordMithril)); //Mithril Sword
-		inventoryCurrency.setInventorySlotContents(10, new ItemStack(CustomItems.swordEmerald)); //Emerald Sword
-		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Items.feather,5)); //Feather
-		inventoryCurrency.setInventorySlotContents(12, new ItemStack(Items.blaze_powder,5)); //Burn Element thing
+		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(3),32)); //Dirt block
+		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
+		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
+		inventoryCurrency.setInventorySlotContents(4, new ItemStack(Items.wooden_sword)); //Wood Sword
+		inventoryCurrency.setInventorySlotContents(5, new ItemStack(Items.iron_sword)); //Iron Sword
+		inventoryCurrency.setInventorySlotContents(6, new ItemStack(CustomItems.swordBronze)); //Bronze Sword
+		inventoryCurrency.setInventorySlotContents(7, new ItemStack(CustomItems.swordMithril)); //Mithril Sword
+		inventoryCurrency.setInventorySlotContents(8, new ItemStack(Items.feather,6)); //Feather
+		inventoryCurrency.setInventorySlotContents(9, new ItemStack(Items.blaze_powder,6)); //Burn Element thing
+		inventoryCurrency.setInventorySlotContents(10, new ItemStack(Blocks.cactus,12)); //Burn Element thing
+		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Item.getItemById(37),12));
+		inventoryCurrency.setInventorySlotContents(12, new ItemStack(Item.getItemById(295),12));
+		inventoryCurrency.setInventorySlotContents(13, new ItemStack(Item.getItemById(265),2));
+		inventoryCurrency.setInventorySlotContents(14, new ItemStack(Item.getItemById(46),2));
+		inventoryCurrency.setInventorySlotContents(15, new ItemStack(Item.getItemById(366),4));
+		inventoryCurrency.setInventorySlotContents(16, new ItemStack(Item.getItemById(260),6));
 	}
 	
 	private static void createTraderSold(NpcMiscInventory inventorySold){
-		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(3),32)); //Dirt block
-		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(4), 8)); //Cobblestone Block
-		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
-		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
+//		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(3),32)); //Dirt block
+//		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(4), 8)); //Cobblestone Block
+//		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
+//		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
+//		inventorySold.setInventorySlotContents(4, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.setInventorySlotContents(6, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.setInventorySlotContents(7, new ItemStack(Item.getItemById(266),3));
+//		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),9));
+//		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),27));
+//		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266), 81));
+//		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),1));
+
+		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
+		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
+		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1));
 		inventorySold.setInventorySlotContents(4, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(6, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(7, new ItemStack(Item.getItemById(266),3));
-		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),9));
-		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),27));
-		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266), 81));
+		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),9));
+		inventorySold.setInventorySlotContents(6, new ItemStack(Item.getItemById(266),27));
+		inventorySold.setInventorySlotContents(7, new ItemStack(Item.getItemById(266), 81));
+		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266),1));
 		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),1));
 		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(13, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(14, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(15, new ItemStack(Item.getItemById(266),1));
+		inventorySold.setInventorySlotContents(16, new ItemStack(Item.getItemById(266),1));
 	}
 
 }
