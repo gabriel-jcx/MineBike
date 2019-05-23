@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ngs.bigx.minecraft.npcs.custom.CustomNPCAbstract;
+import org.ngs.bigx.minecraft.npcs.custom.CustomNPCStorage;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 
 import net.minecraft.item.Item;
@@ -18,9 +20,25 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class NpcDatabase {
 	
+	private static ArrayList<CustomNPCAbstract> customNPCs = CustomNPCStorage.customNPCs;
+	
 	private static Map<String, Vec3> npcs = populateMap();
 	private static Map<String, Vec3> npcsTutorial = populateMapTutorial();
 	private static Map<String, Vec3> npcsDungeon = populateDungeon();
+	
+	private static boolean customNPCSInitialized = registerCustomNPCs();
+	
+	public static void registerNPC(String name, Vec3 location)
+	{
+		if (npcs == null)
+		{
+			System.out.println("I AM NULL THIS IS THE CAUSE OF THE ERROR!!!!!");
+		}
+		else
+		{
+			npcs.put(name, location);
+		}
+	}
 	
 	private static Map<String, Vec3> populateMap() {
 		Map<String, Vec3> map = new HashMap<String, Vec3>();
@@ -44,7 +62,20 @@ public class NpcDatabase {
 		map.put("Paul", NpcLocations.marketPlaceAd);
 		map.put("Johnson", NpcLocations.thiefInCage);
 		
+		//testing down here
+//		map.put("jeff", NpcLocations.jeff);
+//		registerCustomNPCs();
+		
 		return map;
+	}
+	
+	private static boolean registerCustomNPCs()
+	{
+		for(CustomNPCAbstract npc : customNPCs)
+		{
+			npc.register();
+		}
+		return true;
 	}
 	
 	private static Map<String, Vec3> populateMapTutorial() {
@@ -63,6 +94,7 @@ public class NpcDatabase {
 	
 	public static List<String> NpcNames(int dimID) {
 		List<String> toReturn = new ArrayList<String>();
+		//dimID is dimension ID - 0: the home world, 102: the tutorial dimension, else: ?
 		if (dimID == 0)
 			for (Map.Entry<String, Vec3> item : npcs.entrySet())
 				toReturn.add(item.getKey());
@@ -192,6 +224,12 @@ public class NpcDatabase {
 			return "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
 		else if (name.contains("Johnson"))
 			return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
+		
+		for(CustomNPCAbstract npc : customNPCs)
+		{
+			if (name.contains(npc.getName()))
+				return npc.getTexture();
+		}
 		
 		return "customnpcs:textures/entity/humanmale/GangsterSteve.png";
 	}

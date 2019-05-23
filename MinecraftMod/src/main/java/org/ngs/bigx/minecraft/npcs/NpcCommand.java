@@ -135,7 +135,7 @@ public class NpcCommand {
 	
 			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 			npc.ai.stopAndInteract = false;
-			//npc.faction.isAggressiveToPlayer(true)
+//			npc.faction.isAggressiveToPlayer(true)
 	
 			questTaskChasing.setNpc(npc);
 	

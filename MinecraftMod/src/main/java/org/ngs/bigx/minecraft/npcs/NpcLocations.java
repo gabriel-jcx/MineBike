@@ -33,4 +33,7 @@ public class NpcLocations {
 	public static Vec3 cook = Vec3.createVectorHelper(83, 72, 202);
 	public static Vec3 marketPlaceAd = Vec3.createVectorHelper(93, 71, 207);
 	public static Vec3 thiefInCage = Vec3.createVectorHelper(124, 66, 176);
+	
+	//testing down here - this is in the grass field to the right as you exit the starter house
+	public static Vec3 jeff = Vec3.createVectorHelper(116, 70, 238);
 }

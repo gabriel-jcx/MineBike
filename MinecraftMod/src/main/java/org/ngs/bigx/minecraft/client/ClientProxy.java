@@ -16,6 +16,7 @@ import org.ngs.bigx.minecraft.client.skills.SkillEventHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
 import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
+import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestEventHandler;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -54,6 +55,7 @@ public class ClientProxy extends CommonProxy {
     	skillEventHandler = new SkillEventHandler(context);
 		FMLCommonHandler.instance().bus().register(skillEventHandler);
     	MinecraftForge.EVENT_BUS.register(skillEventHandler);
+    	MinecraftForge.EVENT_BUS.register(new CustomQuestEventHandler()); 
     	MinecraftForge.EVENT_BUS.register(new GuiStats(context,Minecraft.getMinecraft()));
     	MinecraftForge.EVENT_BUS.register(new GuiLocation(context,Minecraft.getMinecraft()));
     	MinecraftForge.EVENT_BUS.register(new GuiStatsSkill(context,Minecraft.getMinecraft()));

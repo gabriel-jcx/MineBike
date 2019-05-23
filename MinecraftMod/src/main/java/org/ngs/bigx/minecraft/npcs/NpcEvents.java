@@ -12,6 +12,8 @@ import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotIte
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
+import org.ngs.bigx.minecraft.npcs.custom.CustomNPCAbstract;
+import org.ngs.bigx.minecraft.npcs.custom.CustomNPCStorage;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestException;
@@ -45,7 +47,7 @@ public class NpcEvents {
 	public static final String[] skillNames = { "Skill - Boost Speed","Skill - Boost Damage","Skill - Boost Mining"};
 	public static int botHealth = 10;
 	
-	public enum villagerEnum {guard1, guard2, sergeantWeirdo, wanderer, doctor, farmer, cook, marketPlaceAd, thiefInCage };
+	public enum villagerEnum {guard1, guard2, sergeantWeirdo, wanderer, doctor, farmer, cook, marketPlaceAd, thiefInCage, jeff };
 	
 	public NpcEvents() {
 	}
@@ -93,6 +95,13 @@ public class NpcEvents {
 		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.thiefInCage.addVector(-5, -5, -5), NpcLocations.thiefInCage.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.thiefInCage);
 		
+		//checking the custom NPCs for proximity and then interacting with them
+		for(CustomNPCAbstract npc : CustomNPCStorage.customNPCs)
+		{
+			if (BiGXEventTriggers.checkEntityInArea(event.target, npc.getLocation().addVector(-5, -5, -5), npc.getLocation().addVector(5, 5, 5)))
+				npc.onInteraction();
+		}
+		
 		if(player.worldObj.provider.dimensionId == 105)
 		{
 			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.baddestGuy.addVector(-3, -3, -3), NpcLocations.baddestGuy.addVector(3, 3, 3)))
@@ -137,6 +146,9 @@ public class NpcEvents {
 			break;
 		case wanderer:
 			text = "Wow... I've already seen\nten monsters today...";
+			break;
+		case jeff:
+			text = "My name is jeff.";
 			break;
 		default:
 			text = "Hello! How are you?";
@@ -276,7 +288,7 @@ public class NpcEvents {
 	}
 	
 	private static void InteractWithSkillSeller(EntityPlayer player, EntityInteractEvent event){
-		System.out.println("Interacting with Potion Seller NPC");
+		System.out.println("Interacting with Skill Seller NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.target;
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
@@ -375,16 +387,16 @@ public class NpcEvents {
 	
 	//////////Trader Market
 	private static void createTraderCurrency(NpcMiscInventory inventoryCurrency){
-		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(266),1));
-		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(3),32)); //Dirt block
-		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
-		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
-		inventoryCurrency.setInventorySlotContents(4, new ItemStack(Items.wooden_sword)); //Wood Sword
-		inventoryCurrency.setInventorySlotContents(5, new ItemStack(Items.iron_sword)); //Iron Sword
-		inventoryCurrency.setInventorySlotContents(6, new ItemStack(CustomItems.swordBronze)); //Bronze Sword
-		inventoryCurrency.setInventorySlotContents(7, new ItemStack(CustomItems.swordMithril)); //Mithril Sword
-		inventoryCurrency.setInventorySlotContents(8, new ItemStack(Items.feather,6)); //Feather
-		inventoryCurrency.setInventorySlotContents(9, new ItemStack(Items.blaze_powder,6)); //Burn Element thing
+		inventoryCurrency.setInventorySlotContents(0,  new ItemStack(Item.getItemById(266),1));
+		inventoryCurrency.setInventorySlotContents(1,  new ItemStack(Item.getItemById(3),32)); //Dirt block
+		inventoryCurrency.setInventorySlotContents(2,  new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
+		inventoryCurrency.setInventorySlotContents(3,  new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
+		inventoryCurrency.setInventorySlotContents(4,  new ItemStack(Items.wooden_sword)); //Wood Sword
+		inventoryCurrency.setInventorySlotContents(5,  new ItemStack(Items.iron_sword)); //Iron Sword
+		inventoryCurrency.setInventorySlotContents(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
+		inventoryCurrency.setInventorySlotContents(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
+		inventoryCurrency.setInventorySlotContents(8,  new ItemStack(Items.feather,6)); //Feather
+		inventoryCurrency.setInventorySlotContents(9,  new ItemStack(Items.blaze_powder,6)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(10, new ItemStack(Blocks.cactus,12)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Item.getItemById(37),12));
 		inventoryCurrency.setInventorySlotContents(12, new ItemStack(Item.getItemById(295),12));
