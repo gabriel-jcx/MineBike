@@ -4,20 +4,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
@@ -33,6 +28,7 @@ import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
+import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
 import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
@@ -41,7 +37,14 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
+
 public class GameSaveManager {
+	private static ArrayList<CustomQuestAbstract> quests = new ArrayList<CustomQuestAbstract>();
+	
 	private Object lockGameSave = new Object();
 	private BigxClientContext bigxContext;
 	
@@ -343,6 +346,88 @@ public class GameSaveManager {
 			quest.addTasks(questTaskChasing);
 			if(BiGX.instance().serverContext.getQuestManager().addAvailableQuestList(quest))
 				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
+		}
+	}
+	
+	public static void registerQuest(CustomQuestAbstract quest)
+	{
+		quests.add(quest);
+	}
+	
+	public static void loadCustomQuests(String caseid) throws IOException
+	{
+		for(CustomQuestAbstract quest : quests)
+		{
+			File folderCheck = new File(gameSaveRootFolderName);
+			
+			if(!folderCheck.exists())
+			{
+				// make the folder
+				folderCheck.mkdir();
+			}
+			
+			folderCheck = new File(gameSaveFolderName);
+			
+			if(!folderCheck.exists())
+			{
+				// make the folder
+				folderCheck.mkdir();
+			}
+			
+			File filedesc = new File(gameSaveFolderName + "\\gamesave_" + caseid + "_" + quest.getName() + ".sav");
+			
+			if(!filedesc.exists())
+			{
+				throw(new IOException("Quest data for user: " + caseid + " and quest: " + quest.getName() + " does not exist yet"));
+			}
+			
+			InputStream in = new FileInputStream(filedesc);
+			byte[] buffer = new byte[1024];
+			in.read(buffer);
+			in.close();
+			
+			String questData = (new String(buffer)).trim();
+			
+			CustomQuestJson questJson = (new Gson()).fromJson(questData, CustomQuestJson.class);
+			
+			
+			quest.loadFromJson(questJson);
+		}
+	}
+	
+	public static void saveCustomQuests(String caseid) throws IOException
+	{
+		//for all the quests, convert them to json and then save them
+		for (CustomQuestAbstract quest : quests)
+		{
+			Gson gson = new Gson();
+			
+			CustomQuestJson data = new CustomQuestJson(quest);
+			
+			String parcedSaveObject = gson.toJson(data);
+			
+			File folderCheck = new File(gameSaveRootFolderName);
+					
+			if(!folderCheck.exists())
+			{
+				// make the folder
+				folderCheck.mkdir();
+			}
+			
+			folderCheck = new File(gameSaveFolderName);
+			
+			if(!folderCheck.exists())
+			{
+				// make the folder
+				folderCheck.mkdir();
+			}
+			
+			String saveFileName = gameSaveFolderName + "\\gamesave_" + caseid + "_" + quest.getName() + ".sav";
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(saveFileName));
+			writer.write(parcedSaveObject);
+			 
+			writer.close();
 		}
 	}
 	

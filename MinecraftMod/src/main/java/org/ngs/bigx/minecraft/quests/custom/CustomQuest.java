@@ -10,20 +10,24 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 public class CustomQuest extends CustomQuestAbstract 
 {
-	private boolean completed;
 	private boolean pickedUpItem;
 	
 	public CustomQuest()
 	{
 		super();
+		progress = 0;
+		name = "CustomQuest";
 		completed = false;
 		pickedUpItem = false;
+		
+		register();
 	}
 	
 	
 	@Override
 	public void start()
 	{
+		progress = 0;
 		super.start();
 	}
 	
@@ -39,6 +43,7 @@ public class CustomQuest extends CustomQuestAbstract
 			if (pickedUpItem)
 			{
 				GuiMessageWindow.showMessage("Thank you for picking up the item.");
+				progress = 2;
 				super.complete();
 			}
 		}
@@ -46,6 +51,8 @@ public class CustomQuest extends CustomQuestAbstract
 	
 	public void onItemPickUp(EntityItemPickupEvent event)
 	{
+		progress = 1;
+		System.out.println(event.item.toString());
 		System.out.println("sub class item pickup event!!!");
 		System.out.println("Talk to jeff to turn the quest in now...");
 		
@@ -53,5 +60,4 @@ public class CustomQuest extends CustomQuestAbstract
 		
 		pickedUpItem = true;
 	}
-
 }

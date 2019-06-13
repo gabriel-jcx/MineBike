@@ -10,6 +10,7 @@ public class CustomNPCStorage
 	{
 		ArrayList<CustomNPCAbstract> returned = new ArrayList<CustomNPCAbstract>();
 		returned.add(new jeff());
+		returned.add(new john());
 		
 		return returned;
 	}

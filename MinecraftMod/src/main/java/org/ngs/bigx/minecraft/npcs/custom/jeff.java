@@ -1,14 +1,14 @@
 package org.ngs.bigx.minecraft.npcs.custom;
 
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.npcs.NpcDatabase;
-import org.ngs.bigx.minecraft.npcs.NpcLocations;
+import org.ngs.bigx.minecraft.client.gui.quest.custom.jeffGui;
 import org.ngs.bigx.minecraft.quests.custom.CustomQuest;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
-import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class jeff extends CustomNPCAbstract
 {
@@ -29,10 +29,13 @@ public class jeff extends CustomNPCAbstract
 	}
 
 	@Override
-	public void onInteraction() 
+	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
 	{
+		//this happens when the player interacts with jeff
 		if (!quest.isStarted())
 			GuiMessageWindow.showMessage("My name is jeff!");
+		
+		Minecraft.getMinecraft().displayGuiScreen(new jeffGui((CustomQuest)quest));
 		
 		quest.start();
 			

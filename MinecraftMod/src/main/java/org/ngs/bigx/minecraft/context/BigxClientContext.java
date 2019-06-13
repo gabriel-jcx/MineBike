@@ -463,6 +463,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	public boolean readGameSave(String caseid, EntityPlayer player)
 	{	
 		try {
+			GameSaveManager.loadCustomQuests(caseid);
 			return GameSaveManager.readGameSaveByUserCaseId(caseid, player);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -475,6 +476,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	{
 		try {
 			GameSaveManager.writeGameSaveByUserCaseId(caseid);
+			GameSaveManager.saveCustomQuests(caseid);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
