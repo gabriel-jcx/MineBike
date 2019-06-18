@@ -9,8 +9,7 @@ public class CustomNPCStorage
 	public static ArrayList<CustomNPCAbstract> genCustomNPCs()
 	{
 		ArrayList<CustomNPCAbstract> returned = new ArrayList<CustomNPCAbstract>();
-		returned.add(new jeff());
-		returned.add(new john());
+		returned.add(new Raul());
 		
 		return returned;
 	}

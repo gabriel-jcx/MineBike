@@ -33,11 +33,12 @@ public class jeff extends CustomNPCAbstract
 	{
 		//this happens when the player interacts with jeff
 		if (!quest.isStarted())
+		{
 			GuiMessageWindow.showMessage("My name is jeff!");
+			quest.start();
+		}
 		
 		Minecraft.getMinecraft().displayGuiScreen(new jeffGui((CustomQuest)quest));
-		
-		quest.start();
 			
 		//this is what happens when the player interacts with this NPC
 		
