@@ -99,7 +99,7 @@ public class NpcEvents {
 		for(CustomNPCAbstract npc : CustomNPCStorage.customNPCs)
 		{
 			if (BiGXEventTriggers.checkEntityInArea(event.target, npc.getLocation().addVector(-5, -5, -5), npc.getLocation().addVector(5, 5, 5)))
-				npc.onInteraction();
+				npc.onInteraction(player, event);
 		}
 		
 		if(player.worldObj.provider.dimensionId == 105)
