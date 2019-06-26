@@ -6,6 +6,7 @@ import net.minecraft.world.WorldType;
 
 public class WorldProviderTRON extends WorldProviderFlats 
 {
+	public static final int TRONDIMENSIONID = 210;
 	public static String TRONDimName = "TRONDimension";
 	
 	@Override
@@ -14,7 +15,7 @@ public class WorldProviderTRON extends WorldProviderFlats
 	}
 	
 	public void registerWorldChunkManager() {
-		this.dimensionId = TRONQuest.TRONDIMENSIONID;
+		this.dimensionId = TRONDIMENSIONID;
 		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(flatBiomeID), 0F);
 		this.hasNoSky = true;
 		this.terrainType = WorldType.FLAT;
