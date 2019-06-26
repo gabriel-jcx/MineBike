@@ -8,6 +8,7 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public abstract class CustomNPCAbstract 
 {
+	//Three properties of an NPC
 	protected String name;
 	protected Vec3 location;
 	protected String texture;
