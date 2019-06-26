@@ -15,7 +15,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	private int enemyScore;
 	
 	public static final int SOCCERDIMENSIONID = 106;
-	
+	//constructor
 	public SoccerQuest()
 	{
 		super();
