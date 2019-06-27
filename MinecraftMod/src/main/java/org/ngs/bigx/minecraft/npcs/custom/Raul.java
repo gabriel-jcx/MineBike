@@ -16,6 +16,7 @@ public class Raul extends CustomNPCAbstract
 	
 	private CustomQuestAbstract quest;
 	
+	//Constructor for Raul
 	public Raul()
 	{
 		name = NAME;
@@ -23,6 +24,8 @@ public class Raul extends CustomNPCAbstract
 		texture = TEXTURE;
 		
 		quest = new SoccerQuest();
+		
+		this.register();
 	}
 	
 	@Override

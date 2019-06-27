@@ -5,6 +5,7 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.item.EntityMinecartEmpty;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -26,11 +27,12 @@ public class SoccerQuest extends CustomQuestAbstract
 	
 	public SoccerQuest()
 	{
-		super();
+		super();	
 		progress = 0;
 		name = "SoccerQuest";
 		completed = false;
 		
+		//playerScore
 		playerScore = 0;
 		enemyScore = 0;
 		
@@ -38,6 +40,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		register();
 	}
+	
 	static boolean pickup = false;
 	@Override
 	public void onItemPickUp(EntityItemPickupEvent event)
@@ -53,6 +56,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		worldLoaded = false;
 		super.complete();
 		completed = false;
+		ball.isDead = true;
 	}
 	
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -73,20 +77,7 @@ public class SoccerQuest extends CustomQuestAbstract
 //	static EntityCreeper creeper;
 	@Override
 	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
-	{
-//		if (creeper != null)
-//		{
-//			creeper.setPosition(creeper.getPosition(1.0f).xCoord, 11.0, creeper.getPosition(1.0f).zCoord);
-////			creeper.setLocationAndAngles(p_70012_1_, p_70012_3_, p_70012_5_, p_70012_7_, p_70012_8_);
-//			creeper.setVelocity(creeper.motionX, 0.0, creeper.motionZ);
-//			creeper.setVelocity(creeper.motionX*2, 0.0, creeper.motionZ);
-//			if(creeper.isCollidedHorizontally)
-//			{
-////				if(creeper.getPosition(1.0f).xCoord > )
-//				
-//			}
-//		}
-		
+	{	
 		//if the world is not loaded or the event happend on the client, skip
 		if (!worldLoaded)
 			return;
@@ -98,14 +89,8 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		if (!ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
 		{	
-//			if ( == "Hello")
-			
-//			EntityCreeper ball = new EntityCreeper(event.world.provider.worldObj);
-//			ball.setPosition(0, 14, 0);
-			
 			System.out.println("Spawning creeper!");
-//			creeper = new EntityCreeper(event.world.provider.worldObj);
-//			EntityMinecartEmpty creeper = new EntityMinecartEmpty(event.world.provider.worldObj);
+
 			ball = new SoccerBall(event.world.provider.worldObj);
 			ball.setPosition(0, 10, 0);
 			ball.setLocationAndAngles(0, 10, 0, 0.0f, 0.0f);
@@ -117,6 +102,21 @@ public class SoccerQuest extends CustomQuestAbstract
 		{
 			
 		}
+	}
+	
+	public static boolean entityInsideRedGoal(EntityLiving e)
+	{
+		double x = e.getPosition(1.0f).xCoord;
+		double z = e.getPosition(1.0f).zCoord;
+		
+		return (x < 3.0 || x  > -2.0) && z < -26;
+	}
+	
+	public static boolean entityInsideBlueGoal(EntityLiving e)
+	{
+		double x = e.getPosition(1.0f).xCoord;
+		double z = e.getPosition(1.0f).zCoord;
+		return (x < 3.0 || x  > -2.0) && z > 27;
 	}
 		
 	@Override
