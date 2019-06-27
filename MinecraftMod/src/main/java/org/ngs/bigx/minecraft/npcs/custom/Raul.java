@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 public class Raul extends CustomNPCAbstract 
 {
 	public static final String NAME = "Raul";
-	public static final Vec3 LOCATION = jeff.LOCATION.addVector(5.0, 0.0, 1.0);
+	public static final Vec3 LOCATION = Vec3.createVectorHelper(121, 70, 239);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/SoccerSteve.png";
 	
 	private CustomQuestAbstract quest;
@@ -29,6 +29,7 @@ public class Raul extends CustomNPCAbstract
 	@Override
 	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
 	{
+		System.out.println("Interacting with raul!");
 		quest.start();
 	}
 
