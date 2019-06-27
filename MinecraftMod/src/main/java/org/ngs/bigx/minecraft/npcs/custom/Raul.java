@@ -16,6 +16,7 @@ public class Raul extends CustomNPCAbstract
 	
 	private CustomQuestAbstract quest;
 	
+	//Constructor for Raul
 	public Raul()
 	{
 		name = NAME;
