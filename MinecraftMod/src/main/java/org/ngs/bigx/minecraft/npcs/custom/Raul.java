@@ -24,6 +24,8 @@ public class Raul extends CustomNPCAbstract
 		texture = TEXTURE;
 		
 		quest = new SoccerQuest();
+		
+		this.register();
 	}
 	
 	@Override
