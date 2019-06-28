@@ -26,10 +26,6 @@ public class MineBikeCustomItems
             e.printStackTrace();
         }
         
-        
-        //add your item in this format
-
-        
         return returned;
     }
     
