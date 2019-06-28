@@ -2,7 +2,6 @@ package org.ngs.bigx.minecraft.items;
 
 import java.util.ArrayList;
 
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
@@ -13,19 +12,19 @@ public class MineBikeCustomItems
         ArrayList<Item> returned = new ArrayList<Item>();
         
         //this try catch is because the make Item method tries to cast an Object to an Item
-//        try {
-//            //
-//        } catch (InstantiationException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
+        //you have to uncomment this try catch to add your items, then add them inside the try
         
-        
-        //add your item in this format
-        //returned.add(makeItem(myItem.class, "myItemName");
+        try {
+            //add items here with this format:
+        	  //returned.add(makeItem(myItem.class, "myItemName", "myItemResourceLocation");
+        	returned.add(makeItem(OvercookedLettuce.class, "lettuce", "customnpcs:minebike/lettuce"));
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
         return returned;
     }
