@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import scala.collection.parallel.mutable.ParHashSetCombiner.AddingFlatHashTable;
 
 public class MineBikeCustomItems
 {
@@ -18,6 +19,10 @@ public class MineBikeCustomItems
             //add items here with this format:
         	  //returned.add(makeItem(myItem.class, "myItemName", "myItemResourceLocation");
         	returned.add(makeItem(OvercookedLettuce.class, "lettuce", "customnpcs:minebike/lettuce"));
+        	returned.add(makeItem(OvercookedHamburger.class, "hamburger", "customnpcs:minebike/hamburger"));
+        	returned.add(makeItem(OvercookedSandwich.class, "sandwich", "customnpcs:minebike/sandwich"));
+        	returned.add(makeItem(OvercookedHamburgerbun.class, "hamburgerbun", "customnpcs:minebike/hamburgerbun"));
+        	returned.add(makeItem(OvercookedSandwichbread.class, "sandwichbread", "customnpcs:minebike/sandwichbread"));
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

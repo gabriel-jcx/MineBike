@@ -6,7 +6,7 @@ import net.minecraft.world.WorldType;
 
 public class WorldProviderOvercooked extends WorldProviderFlats 
 {
-	public static String overcookedDimName = "SoccerDimension";
+	public static String overcookedDimName = "OvercookedDimension";
 	public static int overcookedDimID = 240;
 	
 	@Override
