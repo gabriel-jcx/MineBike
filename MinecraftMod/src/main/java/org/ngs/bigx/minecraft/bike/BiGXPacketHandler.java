@@ -147,7 +147,7 @@ public class BiGXPacketHandler {
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:
 				context.rpm = buf.getInt();
-				int change = packet.data[1] | (packet.data[2] << 8);
+				change = packet.data[1] | (packet.data[2] << 8);
 				//if(change == 0){context.setSpeed(0);}
 				break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.TIMELAPSE_HEARTRATEREQUIREMENT:
