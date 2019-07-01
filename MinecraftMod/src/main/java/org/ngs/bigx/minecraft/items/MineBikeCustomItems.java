@@ -2,40 +2,44 @@ package org.ngs.bigx.minecraft.items;
 
 import java.util.ArrayList;
 
-import org.ngs.bigx.minecraft.entity.item.JahCoin;
-
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.RegistryNamespaced;
+import scala.collection.parallel.mutable.ParHashSetCombiner.AddingFlatHashTable;
 
-public class MineBikeCustomItems 
+public class MineBikeCustomItems
 {
-	public static final RegistryNamespaced itemRegistry = GameData.getItemRegistry();
-	public static ArrayList<Item> createItems()
-	{
-		ArrayList<Item> returned = new ArrayList<Item>();
-		
-		try {
-			returned.add(makeItem(JahCoin.class, "JahCoin", "customnpcs:jahcoin"));
-			returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod"));
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		//add your item in this format 
-		//returned.add(makeItem(myItem.class, "myItemName");
-		
-		return returned;
-	}
-	
-	public static Item makeItem(Class itemClass, String name, String ResourceLocation) throws InstantiationException, IllegalAccessException
-	{
-		return ((Item)(itemClass.newInstance())).setUnlocalizedName(name).setFull3D().setCreativeTab(CreativeTabs.tabMisc).setTextureName(ResourceLocation);
-	}
+    public static ArrayList<Item> createItems()
+    {
+        ArrayList<Item> returned = new ArrayList<Item>();
+        
+        //this try catch is because the make Item method tries to cast an Object to an Item
+        //you have to uncomment this try catch to add your items, then add them inside the try
+        
+        try {
+            //add items here with this format:
+        	  //returned.add(makeItem(myItem.class, "myItemName", "myItemResourceLocation");
+          //overcooked items
+        	returned.add(makeItem(OvercookedLettuce.class, "lettuce", "customnpcs:minebike/lettuce"));
+        	returned.add(makeItem(OvercookedHamburger.class, "hamburger", "customnpcs:minebike/hamburger"));
+        	returned.add(makeItem(OvercookedSandwich.class, "sandwich", "customnpcs:minebike/sandwich"));
+        	returned.add(makeItem(OvercookedHamburgerbun.class, "hamburgerbun", "customnpcs:minebike/hamburgerbun"));
+        	returned.add(makeItem(OvercookedSandwichbread.class, "sandwichbread", "customnpcs:minebike/sandwichbread"));
+          
+          //fishing items
+			    returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod"));
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return returned;
+    }
+    
+    public static Item makeItem(Class itemClass, String name, String ResourceLocation) throws InstantiationException, IllegalAccessException
+    {
+        return ((Item)(itemClass.newInstance())).setUnlocalizedName(name).setFull3D().setCreativeTab(CreativeTabs.tabMisc).setTextureName(ResourceLocation);
+    }
 }
