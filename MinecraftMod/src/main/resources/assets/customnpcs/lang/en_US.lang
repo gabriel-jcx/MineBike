@@ -855,6 +855,9 @@ item.npcMoney.name=Money
 item.npcNecklace.name=Necklace
 item.npcUsbStick.name=USB-Stick
 
+item.JahCoin.name =Jah Coin
+item.OlReliable.name=Ol' Reliable
+
 enchantment.damage=Damage
 enchantment.confusion=Confusion
 enchantment.infinite=Infinite
