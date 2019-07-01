@@ -24,6 +24,8 @@ import net.minecraft.client.Minecraft;
 
 public class BiGXPacketHandler {
 	
+	public static int change;
+	
 	public static boolean Handle(BiGXNetClient client, BiGXNetPacket packet) {
 		ByteBuffer buf = ByteBuffer.wrap(packet.data,1,packet.DATALENGTH-1);
 		buf.order(java.nio.ByteOrder.LITTLE_ENDIAN);
@@ -38,7 +40,8 @@ public class BiGXPacketHandler {
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.MOVE_FORWARDBACKWARD:
 				if (Minecraft.getMinecraft().thePlayer!=null) {
-					int change = packet.data[1] | (packet.data[2] << 8);
+					change = packet.data[1] | (packet.data[2] << 8);
+					
 					double maxSpeed = .0;
 					
 					if(change >= 512) {
