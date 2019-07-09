@@ -104,8 +104,6 @@ import noppes.npcs.CustomItems;
 	    	{
 	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
 	    	}
-	        
-	        
 	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
 	    	
 	    	instance = this;
