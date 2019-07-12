@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.items;
 
+
 import java.util.ArrayList;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,10 +20,13 @@ public class MineBikeCustomItems
             //add items here with this format:
         	  //returned.add(makeItem(myItem.class, "myItemName", "myItemResourceLocation");
         	returned.add(makeItem(OvercookedLettuce.class, "lettuce", "customnpcs:minebike/lettuce"));
-        	returned.add(makeItem(OvercookedHamburger.class, "hamburger", "customnpcs:minebike/hamburger"));
-        	returned.add(makeItem(OvercookedSandwich.class, "sandwich", "customnpcs:minebike/sandwich"));
         	returned.add(makeItem(OvercookedHamburgerbun.class, "hamburgerbun", "customnpcs:minebike/hamburgerbun"));
         	returned.add(makeItem(OvercookedSandwichbread.class, "sandwichbread", "customnpcs:minebike/sandwichbread"));
+        	
+        	returned.add(makeItem(OvercookedHamburger.class, "hamburger", "customnpcs:minebike/hamburger"));
+        	
+        	returned.add(makeItem(OvercookedSandwich.class, "sandwich", "customnpcs:minebike/sandwich"));
+        	
         } catch (InstantiationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
