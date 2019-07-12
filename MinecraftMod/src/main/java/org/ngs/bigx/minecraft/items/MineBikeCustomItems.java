@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.items;
 
+
 import java.util.ArrayList;
 
 import org.ngs.bigx.minecraft.entity.item.JahCoin;
