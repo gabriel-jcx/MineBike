@@ -17,7 +17,9 @@ public class HudString
 	public int y;
 	public boolean centerX;
 	public boolean centerY;
+	public float scale;
 	public String text;
+	public int color;
 	
 	/**
 	 * takes: <br>
@@ -30,11 +32,14 @@ public class HudString
 		this.x = x;
 		this.y = y;
 		
+		this.scale = 1.0f;
+		
 		this.centerX = false;
 		this.centerY = false;
 		
-		this.text = text;
+		this.color = 0xffffffff;
 		
+		this.text = text;
 	}
 	
 	/**
@@ -53,10 +58,68 @@ public class HudString
 		this.x = x;
 		this.y = y;
 		
+		this.scale = 1.0f;
+		
 		this.centerX = centerX;
 		this.centerY = centerY;
 		
 		this.text = text;
 		
+		this.color = 0xffffffff;
+	}
+	
+	/**
+	 * takes: <br>
+	 * top left 
+	 * x, y, <br>
+	 * text - the text to be drawn<br> <br>
+	 * centerX and centerY - these turn the starting x and y into relative coordinates from the center
+	 * of the screen vertically or horizontally <br>
+	 * scale - the scale of the font to be drawn at, larger than 1.0f makes it bigger
+	 * <br> 
+	 * i.e. centerX is true and screen resolution is 1920x1080, and x is -20, 
+	 * the rectangle's top left corner's x coordinate will be (1920/2) - 20 = 940 
+	 */
+	public HudString(int x, int y, String text, float scale, boolean centerX, boolean centerY)
+	{
+		this.x = x;
+		this.y = y;
+		
+		this.scale = scale;
+		
+		this.centerX = centerX;
+		this.centerY = centerY;
+		
+		this.text = text;
+		
+		this.color = 0xffffffff;
+	}
+	
+	/**
+	 * takes: <br>
+	 * top left 
+	 * x, y, <br>
+	 * text - the text to be drawn<br> <br>
+	 * centerX and centerY - these turn the starting x and y into relative coordinates from the center
+	 * of the screen vertically or horizontally <br>
+	 * scale - the scale of the font to be drawn at, larger than 1.0f makes it bigger
+	 * color - in the format 0xRRGGBB__ the last two hex digits don't matter
+	 * <br> 
+	 * i.e. centerX is true and screen resolution is 1920x1080, and x is -20, 
+	 * the rectangle's top left corner's x coordinate will be (1920/2) - 20 = 940 
+	 */
+	public HudString(int x, int y, String text, float scale, int color, boolean centerX, boolean centerY)
+	{
+		this.x = x;
+		this.y = y;
+		
+		this.scale = scale;
+		
+		this.centerX = centerX;
+		this.centerY = centerY;
+		
+		this.text = text;
+		
+		this.color = color;
 	}
 }
