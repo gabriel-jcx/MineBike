@@ -4,6 +4,7 @@ import org.ngs.bigx.minecraft.BiGX;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class SoccerBall extends EntityCreeper 
@@ -20,8 +21,13 @@ public class SoccerBall extends EntityCreeper
 	public SoccerBall(World p_i1733_1_) {
 		super(p_i1733_1_);
 		// TODO Auto-generated constructor stub
-		this.setHealth(100000.0f);
 	}
+	
+	@Override
+	public boolean getPowered()
+    {
+        return false;
+    }
 	
 	@Override
 	public void onUpdate()
@@ -48,5 +54,23 @@ public class SoccerBall extends EntityCreeper
 			this.setPosition(x, 10.0, z < -25 ? -24.9 : 25.9);
 			this.setVelocity(this.motionX, 0.0, this.motionZ* -1);
 		}
+	}
+	
+	@Override
+	public boolean isAIEnabled()
+	{
+		return false;
+	}
+
+	@Override
+	public int getCreeperState()
+	{
+		return -1;
+	}
+	
+	public void reset()
+	{
+		this.setPosition(0.0, 10.0, 0.0);
+		this.setVelocity(0.0, 0.0, 0.0);
 	}
 }
