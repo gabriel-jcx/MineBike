@@ -1,23 +1,18 @@
 package org.ngs.bigx.minecraft.items;
 
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class OlReliable extends ItemFishingRod
 {
-	 public static final OlReliable Ol_Reliable = (OlReliable)Item.itemRegistry.getObject("fighing_rod");
-	 private CustomFishHook fishHook = null;
+	 public CustomFishHook fishHook = null;
 	 
 	@SideOnly(Side.CLIENT)
 	private IIcon theIcon;
@@ -30,15 +25,22 @@ public class OlReliable extends ItemFishingRod
         this.theIcon = Icon.registerIcon(this.getIconString() + "_cast");
     }
 	
+	//Spawns and retracts the customfishhook
 	 @Override
 	    public ItemStack onItemRightClick(ItemStack item, World world, EntityPlayer player) 
 	 	{
-		 System.out.println(player.getCurrentEquippedItem().getItem());
+		 System.out.println(player.getCurrentEquippedItem());
 		 if (player.fishEntity != null)
 	        {
-			 int i = player.fishEntity.func_146034_e();
-	            item.damageItem(i, player);
-	            player.swingItem();
+//			 	System.out.println("Retracted");
+				if(fishHook.handleHookRetraction() != 1)
+				{
+					//retracts hook
+				 	int i = player.fishEntity.func_146034_e();
+				 	item.damageItem(i, player);
+				 	player.swingItem();
+				 	player.removePotionEffect(2);
+				} 	
 	        }
 	        else
 	        {
@@ -46,35 +48,13 @@ public class OlReliable extends ItemFishingRod
 	        	 
 	        	 if (!world.isRemote)
 	             {
-	        		world.spawnEntityInWorld(new CustomFishHook(world, player));
+//	        		System.out.println("Spawned");
+	        		fishHook = new CustomFishHook(world, player);
+	        		world.spawnEntityInWorld(fishHook);
 	             }
 	        	 
 	        	 player.swingItem();
 	        }
-		 
-		 /*
-         world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
-         if (fishHook == null)
-         {
-             if (!world.isRemote)
-             {
-             	fishHook = new CustomFishHook(world, player);
-                 world.spawnEntityInWorld(fishHook);
-             }
-         }
-         else
-         {
-        	 fishHook.func_146034_e();
-        	 fishHook.isDead = true;
-        	 fishHook = null;
-        	 player.fishEntity.func_146034_e();
-        }
-
-
-         player.swingItem();
-
-*/
 		 return item;
 	 	}
 	
@@ -84,4 +64,5 @@ public class OlReliable extends ItemFishingRod
     {
         return this.theIcon;
     }
+
 }

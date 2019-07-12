@@ -3,8 +3,10 @@ package org.ngs.bigx.minecraft.items;
 import java.util.ArrayList;
 
 import org.ngs.bigx.minecraft.entity.item.JahCoin;
+import org.ngs.bigx.minecraft.items.EnumFishType;
 
 import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.RegistryNamespaced;
@@ -19,6 +21,15 @@ public class MineBikeCustomItems
 		try {
 			returned.add(makeItem(JahCoin.class, "JahCoin", "customnpcs:jahcoin"));
 			returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod"));
+	    	for (EnumFishType fish: EnumFishType.values())
+			{
+				Item item = new ItemFish(fish.getHealAmount(), fish.getSaturationModifier(), false);
+				item.setUnlocalizedName("ItemFish." + fish.getName());
+				item.setTextureName("customnpcs:" + fish.getName());
+				returned.add(item);
+//				GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
+//				Item.itemRegistry.addObject(id, item.getUnlocalizedName().substring(5), item);
+			}
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
