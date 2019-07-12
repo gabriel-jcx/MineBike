@@ -12,6 +12,7 @@ public class CustomNPCStorage
 		returned.add(new Raul());
 		returned.add(new Jah());
 		returned.add(new Chum());
+		returned.add(new ChefGusteau());
 		
 		return returned;
 	}

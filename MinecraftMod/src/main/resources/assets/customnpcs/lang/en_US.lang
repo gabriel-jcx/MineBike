@@ -855,8 +855,12 @@ item.npcMoney.name=Money
 item.npcNecklace.name=Necklace
 item.npcUsbStick.name=USB-Stick
 
-item.JahCoin.name =Jah Coin
 item.OlReliable.name=Ol' Reliable
+item.lettuce.name=Lettuce
+item.hamburger.name=Hamburger
+item.hamburgerbun.name=Hamburger Bun
+item.sandwich.name=Sandwich
+item.sandwichbread.name=Sandwich Bread
 
 item.ItemFish.blue_jellyfish.name=Jellyfish
 item.ItemFish.magma_jellyfish.name=Magma Jellyfish
