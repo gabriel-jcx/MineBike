@@ -44,8 +44,9 @@ public class SoccerQuest extends CustomQuestAbstract
 	private SoccerBall ball;
 	
 	public static final int SOCCERDIMENSIONID = 106;
+
 	public static final double SOCCER_Y_LEVEL = 10.0;
-	
+
 	private int ticksInsideGoal;
 	
 	//the red box is the enemies score

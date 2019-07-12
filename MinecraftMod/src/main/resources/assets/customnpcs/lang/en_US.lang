@@ -855,6 +855,13 @@ item.npcMoney.name=Money
 item.npcNecklace.name=Necklace
 item.npcUsbStick.name=USB-Stick
 
+item.OlReliable.name=Ol' Reliable
+item.lettuce.name=Lettuce
+item.hamburger.name=Hamburger
+item.hamburgerbun.name=Hamburger Bun
+item.sandwich.name=Sandwich
+item.sandwichbread.name=Sandwich Bread
+
 enchantment.damage=Damage
 enchantment.confusion=Confusion
 enchantment.infinite=Infinite
