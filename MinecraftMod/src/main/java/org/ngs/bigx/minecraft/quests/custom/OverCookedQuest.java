@@ -33,6 +33,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 {
 	public static final int OVERCOOKEDDIMENSIONID  = WorldProviderOvercooked.overcookedDimID;
 		
+	//TODO: change name of ingredients to mention locations
 	private ArrayList<ChunkCoordinates> ingredients; //holds ingredient plate chunkcoordinates
 	private ArrayList<Recipe> recipes; //holds all different recipes (10)
 	private ArrayList<Recipe> orderList; //holds the orders being displayed to the gui, removes orders when completed
@@ -93,6 +94,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 		super.start();
 	}
 	
+	//TODO: change naming to mention locations
 	private void setIngredientsList()
 	{
 		ingredients.add(new ChunkCoordinates(-2,10,70)); // 0=bowl
