@@ -23,9 +23,7 @@ import net.minecraftforge.event.world.WorldEvent;
 
 public class MinerQuest extends CustomQuestAbstract
 {
-	
-	
-	
+	//TODO: comment these members
 	public static final int MINERUNDIMENSIONID = 220;
 	private boolean pleaseStop;
 	private ChunkCoordinates playerLoc;
