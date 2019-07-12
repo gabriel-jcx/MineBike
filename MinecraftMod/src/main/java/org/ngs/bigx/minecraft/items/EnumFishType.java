@@ -61,28 +61,6 @@ public enum EnumFishType {
 	        this.saturationModifier = saturationModifier;
 	    }
 
-//	    EnumFishType()
-//	    {
-//	    	this.item = new ItemFish(0, 0, false);
-////	    	this.item.setUnlocalizedName("ItemFish." + getName());
-////			this.item.setTextureName("customnpcs:" + getName()).setCreativeTab(CreativeTabs.tabFood);
-//	    }
-//	    
-//	    EnumFishType(String name, int healAmount) {
-//	        this(name, healAmount, 0.1F);
-//	        this.item = new ItemFish(healAmount, .6F, false);
-////	        this.item.setUnlocalizedName("ItemFish." + getName());
-////			this.item.setTextureName("customnpcs:" + getName()).setCreativeTab(CreativeTabs.tabFood);
-//	    }
-//
-//	    EnumFishType(String name, int healAmount, float saturationModifier) {
-//	        this.name = name;
-//	        this.healAmount = healAmount;
-//	        this.saturationModifier = saturationModifier;
-//	        this.item = new ItemFish(healAmount, saturationModifier, false);
-////	        this.item.setUnlocalizedName("ItemFish." + getName());
-////			this.item.setTextureName("customnpcs:magikarp");
-//	    }
 
 	    public String getName() {
 	        return this.name;
