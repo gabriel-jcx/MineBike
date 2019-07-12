@@ -11,6 +11,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class CustomQuestEventHandler 
 {	
@@ -87,6 +88,15 @@ public class CustomQuestEventHandler
 		}
 	}
 	
+	@SubscribeEvent
+	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
+	{
+		for(int i = 0; i < quests.size(); i++)
+		{
+			quests.get(i).onWorldTickEvent(event);
+		}
+	}
+	
 	public void onAttackEntityEvent(AttackEntityEvent event)
 	{
 		for(int i = 0; i < quests.size(); i++)
@@ -101,6 +111,15 @@ public class CustomQuestEventHandler
 		for(int i = 0; i < quests.size(); i++)
 		{
 			quests.get(i).entityInteractEvent(event);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onWorldLoadEvent(WorldEvent.Load event)
+	{
+		for(int i = 0; i < quests.size(); i++)
+		{
+			quests.get(i).onWorldLoadEvent(event);
 		}
 	}
 	

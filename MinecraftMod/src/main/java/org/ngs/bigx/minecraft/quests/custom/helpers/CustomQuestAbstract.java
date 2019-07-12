@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public abstract class CustomQuestAbstract 
 {	
@@ -36,6 +37,7 @@ public abstract class CustomQuestAbstract
 		started = json.getStarted();
 	}
 	
+	//this must be called in constructor or your quest will not work
 	public void register()
 	{
 		GameSaveManager.registerQuest(this);
@@ -86,6 +88,11 @@ public abstract class CustomQuestAbstract
 
 	}
 	
+	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
+	{
+		
+	}
+	
 	public void onItemUse(PlayerUseItemEvent.Start event)
 	{
 		
@@ -102,6 +109,11 @@ public abstract class CustomQuestAbstract
 	}
 	
 	public void entityInteractEvent(EntityInteractEvent event)
+	{
+		
+	}
+	
+	public void onWorldLoadEvent(WorldEvent.Load event)
 	{
 		
 	}
