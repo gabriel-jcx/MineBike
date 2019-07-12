@@ -49,20 +49,21 @@ public class HudManager extends GuiScreen
 	 */
 	public static void drawRect(int x1, int y1, int x2, int y2, int color)
 	{
-	    int j1;
-
+	    int temp;
+	    
+	    //swaps if it's in the wrong orientation
 	    if (x1 < x2)
 	    {
-	        j1 = x1;
+	        temp = x1;
 	        x1 = x2;
-	        x2 = j1;
+	        x2 = temp;
 	    }
 
 	    if (y1 < y2)
 	    {
-	        j1 = y1;
+	        temp = y1;
 	        y1 = y2;
-	        y2 = j1;
+	        y2 = temp;
 	    }
 
 	    //rgba masks
@@ -71,15 +72,17 @@ public class HudManager extends GuiScreen
 	    float b = (float)(color >> 8  & 255) / 255.0F;
 	    float a = (float)(color >> 0  & 255) / 255.0F;
 	    
+	    //gl stuff
 	    Tessellator tessellator = Tessellator.instance;
 	    GL11.glPushMatrix();
 		    GL11.glEnable(GL11.GL_BLEND);
 		    GL11.glDisable(GL11.GL_TEXTURE_2D);
 			    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			    
+			    //store the color so we can restore it back
 			    FloatBuffer currentColor = BufferUtils.createFloatBuffer(16);
 			    GL11.glGetFloat(GL11.GL_CURRENT_COLOR, currentColor);
 			    GL11.glColor4f(r, g, b, a);
+			    //this is where it becomes drawn
 				    tessellator.startDrawingQuads();
 				    tessellator.addVertex((double)x1, (double)y2, 0.0D);
 				    tessellator.addVertex((double)x2, (double)y2, 0.0D);
@@ -93,30 +96,46 @@ public class HudManager extends GuiScreen
 	}
 	
 	public void drawString(HudString hudString)
-	{
-		this.fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		fontRendererObj.drawStringWithShadow(
-				hudString.text, 
-				hudString.x + (hudString.centerX ? 
-						mcWidth/2-fontRendererObj.getStringWidth(hudString.text)/2
-						: 0), 
-				hudString.y + (hudString.centerY ? mcHeight/2 : 0), 
-				0xFFFFFF);
+	{	
+		GL11.glPushMatrix();
+			this.fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+			//translate to where it is going to be displayed, then scale it
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glTranslatef(
+						(int) (hudString.x + (hudString.centerX ? 
+						mcWidth/2-fontRendererObj.getStringWidth(hudString.text)/2 * hudString.scale
+						: 0)),
+						hudString.y + (hudString.centerY ? mcHeight/2 : 0), 
+						0.0f);
+			
+				GL11.glScalef(hudString.scale, hudString.scale, hudString.scale);
+				fontRendererObj.drawStringWithShadow(
+						hudString.text, 
+						0, 
+						0, 
+						hudString.color >> 8);
+				GL11.glScalef(1.0f, 1.0f, 1.0f);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPopMatrix();
 	}
 	
 	public void drawTexture(HudTexture hudTexture)
 	{
+		//draw the hudTexture
 		GL11.glPushMatrix();
-		GL11.glScalef(.5f, .5f, .5f);
-		
-			this.mc.renderEngine.bindTexture(hudTexture.resourceLocation);
-//			drawTexturedModalRect(mcWidth -64 - 10, 50 + 30, 64*(3-1), 0,  64 , 64);
-			drawTexturedModalRect(
-					hudTexture.x + (hudTexture.centerX ? mcWidth/2 : 0),
-					hudTexture.y + (hudTexture.centerY ? mcHeight/2 : 0),
-					0, 0, 
-					hudTexture.w, 
-					hudTexture.h);
+			this.mc.renderEngine.bindTexture(hudTexture.resourceLocation);			
+			Tessellator tessellator = Tessellator.instance;
+		    GL11.glPushMatrix();
+			    GL11.glEnable(GL11.GL_TEXTURE_2D);
+				    //this is where it becomes drawn
+					    tessellator.startDrawingQuads();
+					    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y, 0.0D, 0.0d, 0.0d);
+					    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y + hudTexture.h, 0.0D, 0.0d, 1.0d);
+					    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y + hudTexture.h, 0.0D, 1.0d, 1.0d);
+					    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y, 0.0D, 1.0d, 0.0d);
+					    tessellator.draw();
+			    GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glPopMatrix();
 
 		GL11.glPopMatrix();
 	}
@@ -158,7 +177,7 @@ public class HudManager extends GuiScreen
     public void eventHandler(RenderGameOverlayEvent event) 
 	{
 	    if(event.isCancelable() || event.type != event.type.TEXT)
-	    {      
+	    {
 	      return;
 	    }
 	    
@@ -167,20 +186,20 @@ public class HudManager extends GuiScreen
     	mcHeight = sr.getScaledHeight();
     	
 		
-		for(HudRectangle rect : rectangles)
-		{
-			drawRect(rect);
-		}
-		
-		for(HudString string : strings)
-		{
-			drawString(string);
-		}
-		
-		for(HudTexture texture : textures)
-		{
-			drawTexture(texture);
-		}
-//		drawRect(0,0, 20, 20, 0xffffffff);
+    	for(int i = 0; i < rectangles.size(); i++)
+    	{
+    		drawRect(rectangles.get(i));
+    	}
+    	
+    	for(int i = 0; i < textures.size(); i++)
+    	{
+    		drawTexture(textures.get(i));
+    	}
+    	
+    	for(int i = 0; i < strings.size(); i++)
+    	{
+    		drawString(strings.get(i));
+    	}
+    	
 	}
 }

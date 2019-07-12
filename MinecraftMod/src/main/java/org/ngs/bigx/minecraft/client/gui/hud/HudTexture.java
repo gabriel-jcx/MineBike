@@ -26,7 +26,7 @@ public class HudTexture
 	 * top left x, y, <br>
 	 * width, height, <br>
 	 * location - should be located in assets.minebike.textures.gui
-	 * , and put in constructor like this: textures/GUI/*.png
+	 * , and put in constructor like this: "textures/GUI/*.png"
 	 */
 	public HudTexture(int x, int y, int w, int h, String location)
 	{
