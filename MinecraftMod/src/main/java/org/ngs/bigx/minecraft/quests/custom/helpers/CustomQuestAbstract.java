@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
@@ -22,6 +23,13 @@ public abstract class CustomQuestAbstract
 	protected String name;
 	protected boolean completed;
 	protected boolean started;
+	
+	public enum Difficulty
+	{
+		EASY,
+		MEDIUM,
+		HARD;
+	}
 	
 	//
 	public CustomQuestAbstract()
@@ -77,6 +85,8 @@ public abstract class CustomQuestAbstract
 		completed = true;
 		CustomQuestEventHandler.unregisterQuest(this);
 	}
+	
+	public abstract void setDifficulty(Difficulty difficultyIn);
 	
 	
 	//methods below are meant to be overridden
