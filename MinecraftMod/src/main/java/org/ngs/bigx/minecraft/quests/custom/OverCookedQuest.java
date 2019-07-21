@@ -480,4 +480,10 @@ public class OverCookedQuest extends CustomQuestAbstract
 		ChunkCoordinates coord = event.player.getPlayerCoordinates();
 		return (coord.posX >= -48 && coord.posX <= -43) && (coord.posZ >= 13 && coord.posZ <= 16);
 	}
+
+	@Override
+	public void setDifficulty(Difficulty difficultyIn) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -94,7 +94,7 @@ public class MinerQuest extends CustomQuestAbstract
 		if (event.world.provider.worldObj.isRemote)
 			return;
 		
-		if(worldLoaded && event.world.provider.dimensionId == WorldProviderMineRun.MINERUNDIMENSIONID && !pleaseStop)
+		if(worldLoaded && event.world.provider.dimensionId == WorldProviderMineRun.mineRunDimension && !pleaseStop)
 		{
 			System.out.println(posXofPlayer+"  "+posZofPlayer);
 			
@@ -422,6 +422,12 @@ private void generateWestWall(double startx, double startz, World world)
 			}
 		}
 	}
+
+@Override
+public void setDifficulty(Difficulty difficultyIn) {
+	// TODO Auto-generated method stub
+	
+}
 	
 }//end class
 

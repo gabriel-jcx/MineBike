@@ -2,13 +2,9 @@ package org.ngs.bigx.minecraft.npcs.custom;
 
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 
-import org.ngs.bigx.minecraft.quests.custom.CustomQuest;
-import org.ngs.bigx.minecraft.quests.custom.JillQuest;
 import org.ngs.bigx.minecraft.quests.custom.MinerQuest;
-import org.ngs.bigx.minecraft.quests.custom.SoccerQuest;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;

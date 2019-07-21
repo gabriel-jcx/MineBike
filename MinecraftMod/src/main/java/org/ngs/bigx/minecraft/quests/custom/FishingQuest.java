@@ -39,4 +39,10 @@ public class FishingQuest extends CustomQuestAbstract
 		
 		super.start();
 	}
+
+	@Override
+	public void setDifficulty(Difficulty difficultyIn) {
+		// TODO Auto-generated method stub
+		
+	}
 }

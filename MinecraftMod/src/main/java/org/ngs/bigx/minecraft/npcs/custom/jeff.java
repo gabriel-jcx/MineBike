@@ -1,7 +1,6 @@
 package org.ngs.bigx.minecraft.npcs.custom;
 
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.client.gui.quest.custom.jeffGui;
 import org.ngs.bigx.minecraft.quests.custom.CustomQuest;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
@@ -37,8 +36,6 @@ public class jeff extends CustomNPCAbstract
 			GuiMessageWindow.showMessage("My name is jeff!");
 			quest.start();
 		}
-		
-		Minecraft.getMinecraft().displayGuiScreen(new jeffGui((CustomQuest)quest));
 			
 		//this is what happens when the player interacts with this NPC
 		

@@ -249,7 +249,6 @@ public class SoccerQuest extends CustomQuestAbstract
 					
 					//teleport raul and player back to the start
 					QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, (int)SoccerQuest.SOCCER_Y_LEVEL, -15);
-					player.rotationYaw = 0.0f;
 					npc.setPosition(1.0, SoccerQuest.SOCCER_Y_LEVEL*1.0d, 15);
 				}//finish resetting game
 			}
@@ -309,8 +308,13 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 //		teleport them to the soccer arena
 		QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, 14, -15);
-		player.rotationYaw = 0.0f;
 		
 		super.start();
+	}
+
+	@Override
+	public void setDifficulty(Difficulty difficultyIn) {
+		// TODO Auto-generated method stub
+		
 	}
 }
