@@ -1,40 +1,37 @@
-	package org.ngs.bigx.minecraft.quests.custom;
+package org.ngs.bigx.minecraft.quests.custom;
 	
-	import java.time.Clock;
+import java.time.Clock;
 import java.util.Random;
 
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
 import org.ngs.bigx.minecraft.npcs.custom.MinerNPC;
-	import org.ngs.bigx.minecraft.npcs.custom.Raul;
-	import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
-	import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-	import org.ngs.bigx.minecraft.quests.worlds.WorldProviderMineRun;
-	
-	import cpw.mods.fml.common.gameevent.TickEvent;
-	import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-	import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import org.ngs.bigx.minecraft.npcs.custom.Raul;
+import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderMineRun;
+
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-	import net.minecraft.util.ChunkCoordinates;
-	import net.minecraft.util.Vec3;
-	import net.minecraft.world.World;
-	import net.minecraft.world.WorldServer;
-	import net.minecraft.world.WorldSettings;
-	import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-	import net.minecraftforge.event.world.WorldEvent;
-	
-	public class MinerQuest extends CustomQuestAbstract
-	{
-		
-		
-		
-		public static final int MINERUNDIMENSIONID = 220;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldSettings;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.world.WorldEvent;
+
+public class MinerQuest extends CustomQuestAbstract
+{
+ public static final int MINERUNDIMENSIONID = 220;
 		private boolean pleaseStop;
 		//private ChunkCoordinates playerLoc;
 		//private TickEvent.WorldTickEvent worldEvent;
@@ -52,7 +49,7 @@ import net.minecraft.server.MinecraftServer;
 		private int seconds;
 		private static Clock clock;
 		private String secondsString;
-		private int startTime;
+		private in==============t startTime;
 		private double posYofPlayer;
 		private long TIME;
 		public MinerQuest()
@@ -693,7 +690,6 @@ import net.minecraft.server.MinecraftServer;
 		}//end function
 		//master function for generation of single walls
 		private void generateWall(double startx, double startz, World world, direction dir) 
-		
 		{
 			switch(dir)
 			{
@@ -708,7 +704,6 @@ import net.minecraft.server.MinecraftServer;
 		}
 		//sub function for generation of north walls
 		private void generateNorthWall(double startx, double startz, World world) 
-		
 		{
 			for(int x = 0; x < 10 ; x++)
 			{
@@ -719,26 +714,23 @@ import net.minecraft.server.MinecraftServer;
 			}
 		}
 		//generation of a single right traveling wall
-	private void generateWestWall(double startx, double startz, World world) 
-		
-		{
-			for(int x = 0; x < 10 ; x++)
-			{
-				for(int y = 20; y < 25; y++)
-				{
-					world.setBlock((int) startx, y, (int) (startz+x), Blocks.obsidian);
-				}
-			}
-		}
+    private void generateWestWall(double startx, double startz, World world) 		
+    {
+      for(int x = 0; x < 10 ; x++)
+      {
+        for(int y = 20; y < 25; y++)
+        {
+          world.setBlock((int) startx, y, (int) (startz+x), Blocks.obsidian);
+        }
+      }
+    }
 
-	@Override
-	public void setDifficulty(Difficulty difficultyIn) {
-		// TODO Auto-generated method stub
-		
-	}
-		
-	}//end class
-	
+    @Override
+    public void setDifficulty(Difficulty difficultyIn) {
+      // TODO Auto-generated method stub
+
+    }	
+}//end class
 				
 		
 	

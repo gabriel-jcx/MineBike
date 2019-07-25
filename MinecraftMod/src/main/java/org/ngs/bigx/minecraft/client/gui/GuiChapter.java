@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javafx.collections.SetChangeListener;
-
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
