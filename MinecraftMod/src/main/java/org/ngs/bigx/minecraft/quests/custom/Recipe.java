@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 
 public class Recipe {
 
-	private Item orderType;
-	private Item[] insideBread;
+	private Item orderType; //type of bread
+	private Item[] insideBread; //array of ingredients
 	
 	public Recipe(Item type, Item[] items)
 	{
@@ -16,19 +16,23 @@ public class Recipe {
 		insideBread = items;
 	}
 	
+	//return type of bread
 	public Item getType()
 	{
 		return orderType;
 	}
 	
+	//return ingredients array
 	public Item[] getInsides()
 	{
 		return insideBread;
 	}
 	
-	public boolean canMake(TickEvent.PlayerTickEvent event)
+	//returns true if recipe can be made with player's inventory
+	public boolean canMake(TickEvent.PlayerTickEvent event) //~~works i think
 	{
-		int checks = insideBread.length + 4;
+		int checks = insideBread.length;
+		boolean type = false;
 		InventoryPlayer inventory = event.player.inventory;
 		
 		for(int i = 0; i < inventory.getSizeInventory(); i++)
@@ -38,20 +42,19 @@ public class Recipe {
 			{
 				for(int j = 0; j < insideBread.length; j++)
 				{
-					if(stack.getItem().getUnlocalizedName().equals(insideBread[j].getUnlocalizedName()) || 
-							stack.getItem().getUnlocalizedName().equals(orderType.getUnlocalizedName()))
-					{
+					if(stack.getItem().getUnlocalizedName().equals(orderType.getUnlocalizedName()))
+						type = true;
+					else if(stack.getItem().getUnlocalizedName().equals(insideBread[j].getUnlocalizedName()))
 						checks--;
-					}
+					
+//					System.out.println(stack.getItem().getUnlocalizedName() + " realbread " + orderType.getUnlocalizedName());
+//					System.out.println(stack.getItem().getUnlocalizedName() + " ingredient " + insideBread[j].getUnlocalizedName());
 				}
 			}
 		}
-		if(checks==0)
-		{
-			System.out.println("TRUE BITCHES");
+		if(checks==0 && type)
 			return true;
-		}
-		System.out.println("this is returning false");
+		System.out.println(checks);
 		return false;
 	}
 }
