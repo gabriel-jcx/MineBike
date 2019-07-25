@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft.items;
 
 import io.netty.buffer.ByteBuf;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -39,6 +41,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 import org.ngs.bigx.minecraft.BiGX;
+import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
@@ -48,9 +51,6 @@ import org.ngs.bigx.minecraft.items.EnumFishType;
 public class CustomFishHook extends EntityFishHook
 {
 
-	public static final List<WeightedRandomFishable> JUNK = Arrays.asList(new WeightedRandomFishable[] {(new WeightedRandomFishable(new ItemStack(Items.leather_boots), 10)).func_150709_a(0.9F), new WeightedRandomFishable(new ItemStack(Items.leather), 10), new WeightedRandomFishable(new ItemStack(Items.bone), 10), new WeightedRandomFishable(new ItemStack(Items.potionitem), 10), new WeightedRandomFishable(new ItemStack(Items.string), 5), (new WeightedRandomFishable(new ItemStack(Items.fishing_rod), 2)).func_150709_a(0.9F), new WeightedRandomFishable(new ItemStack(Items.bowl), 10), new WeightedRandomFishable(new ItemStack(Items.stick), 5), new WeightedRandomFishable(new ItemStack(Items.dye, 10, 0), 1), new WeightedRandomFishable(new ItemStack(Blocks.tripwire_hook), 10), new WeightedRandomFishable(new ItemStack(Items.rotten_flesh), 10)});
-    public static final List<WeightedRandomFishable> TREASURE = Arrays.asList(new WeightedRandomFishable[] {new WeightedRandomFishable(new ItemStack(Blocks.waterlily), 1), new WeightedRandomFishable(new ItemStack(Items.name_tag), 1), new WeightedRandomFishable(new ItemStack(Items.saddle), 1), (new WeightedRandomFishable(new ItemStack(Items.bow), 1)).func_150709_a(0.25F).func_150707_a(), (new WeightedRandomFishable(new ItemStack(Items.fishing_rod), 1)).func_150709_a(0.25F).func_150707_a(), (new WeightedRandomFishable(new ItemStack(Items.book), 1)).func_150707_a()});
-    public static final List<WeightedRandomFishable> FISH = Arrays.asList(new WeightedRandomFishable[] {new WeightedRandomFishable(new ItemStack(Items.fish, 1, ItemFishFood.FishType.COD.func_150976_a()), 60), new WeightedRandomFishable(new ItemStack(Items.fish, 1, ItemFishFood.FishType.SALMON.func_150976_a()), 25), new WeightedRandomFishable(new ItemStack(Items.fish, 1, ItemFishFood.FishType.CLOWNFISH.func_150976_a()), 2), new WeightedRandomFishable(new ItemStack(Items.fish, 1, ItemFishFood.FishType.PUFFERFISH.func_150976_a()), 13), new WeightedRandomFishable(new ItemStack(Items.fish, 0), 10)});
     private int xTile;
     private int yTile;
     private int zTile;
@@ -93,19 +93,61 @@ public class CustomFishHook extends EntityFishHook
     //Activated when the required power level is achieved and counts how long they maintain the required power
     private int tickSuccess = 0;
     
+    //Activated when the required power level is under half of the required power for too long
+    private int tickFail = 0;
+    
     //The number of times they click, used to increase the power level
 	private double clickRate = 0;
 	
 	//Checks to see if the Power Level GUI has reached maximum height
 	private int checkHeight = 0;
 	
+	//Holds the time in seconds needed to hold the power level
+	private static int time = 5;
+	
+	//Holds the time in seconds needed to fail
+		private static int timeF = 5;
+	
+	//Checks to see if the holdTimer GUI is initialized
+	private boolean checkTime = false;
+	
+	//Checks to see if the failTime GUI is initialized
+	private boolean checkFail = false;
+	
+	public static int fishingLocation = 0;
+	
+	//Checks the rarity of the fish in order to adjust the difficulty
+	public static int difficulty; // 4 7 6 3
+	
+	//Sets the required power level they need to reach in order to catch the fish, based on difficulty
+	public static int requiredPower;
+	
+	//The Number of fish the player had caught
+	public static int numFish = 0;
+	
+	//Determines how much clickRate is decreased by, Used to make catching faster if power above certain limit
+	public static int addPower;
+	
+	//Used to make catching go twice as fast when bonus is active
+	public static int doubleTime = 1;
+	
+	CustomEntityItem entityitem;
+	
+	/*
+	 * 
+	 */
+	private List<ArrayList<WeightedRandomFishable>> fishingSpots = new ArrayList<ArrayList<WeightedRandomFishable>>();
+	
+	
 	//The Gui for the Power Level Display
- 	HudString powerString = new HudString(-125, 20, "POWER LEVEL", true, false);
-	HudRectangle powerLvl = new HudRectangle(-145, 60, 40, 0, 0xe4344aff, true, true); // -145 60 40 -210
-	HudRectangle boxLeft = new HudRectangle(-148, 63, 3, -215, 0x000000ff, true, true);
-	HudRectangle boxRight = new HudRectangle(-105, 63, 3, -215, 0x000000ff, true, true);
-	HudRectangle boxBottom = new HudRectangle(-148, 63, 46, -3, 0x000000ff, true, true);
-	HudRectangle boxTop = new HudRectangle(-148, -152, 46, 3, 0x000000ff, true, true);
+ 	public static HudString powerString = new HudString(-125, 20, "POWER LEVEL", true, false);
+ 	public static HudRectangle powerLvl = new HudRectangle(-145, 60, 40, 0, 0xe4344aff, true, true); // -145 60 40 -210
+ 	public static HudRectangle boxLeft = new HudRectangle(-148, 63, 3, -215, 0x000000ff, true, true);
+ 	public static HudRectangle boxRight = new HudRectangle(-105, 63, 3, -215, 0x000000ff, true, true);
+ 	public static HudRectangle boxBottom = new HudRectangle(-148, 63, 46, -3, 0x000000ff, true, true);
+ 	public static HudRectangle boxTop = new HudRectangle(-148, -152, 46, 3, 0x000000ff, true, true);
+ 	public static HudString holdTime = new HudString(0, 0, "Hold for " + time + " Seconds", 5, true, true);
+ 	public static HudString failTime = new HudString(0, 0, "Failure in " + 5 + " Seconds", 5, true, true);
 	
 	//List that stores the catchable custom fish
 	public static List<WeightedRandomFishable> temp2;
@@ -140,29 +182,35 @@ public class CustomFishHook extends EntityFishHook
         this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.handleHookCasting(this.motionX, this.motionY, this.motionZ, 1.5F, 1.0F);
-	
-        temp2 = new ArrayList<WeightedRandomFishable>();
-        ArrayList<Item> item = BiGX.customItems;
-        for(Item temp: item)
+
+        //adds all the common fish to every fish location
+        for(int i = 0; i < 7; i++)
         {
+            fishingSpots.add(new ArrayList<WeightedRandomFishable>());
+            for (EnumFishType fish: EnumFishType.values())
+            {
+              Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
+              if(fish.getType() == 0)
+                fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+            }
+         }
+            
+        
+        //Adds all spot specific fish to the correct fishing location
         	for (EnumFishType fish: EnumFishType.values())
 			{
-        		if(temp.getUnlocalizedName().equals("item.ItemFish." + fish.getName()))
+        		Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
+        		if(fish.getType() != 0)
         		{
-//        			System.out.println(Item.getIdFromItem(temp));
-        			temp2.add(new WeightedRandomFishable(new ItemStack(temp, 1), 1));
+        		fishingSpots.get(fish.getType() - 1).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
         		}
 			}
-        }
-
         
-//        for(WeightedRandomFishable temp: FISH)
-//        {
-//        	System.out.println(temp);
-//        }
+        this.isImmuneToFire = true;
     }
 	
 
+    //Handles what happens when the hook is cast
     public void handleHookCasting(double p_146035_1_, double p_146035_3_, double p_146035_5_, float p_146035_7_, float p_146035_8_)
     {
         float f2 = MathHelper.sqrt_double(p_146035_1_ * p_146035_1_ + p_146035_3_ * p_146035_3_ + p_146035_5_ * p_146035_5_);
@@ -194,9 +242,17 @@ public class CustomFishHook extends EntityFishHook
     public void onUpdate()
     {
     	this.onEntityUpdate();
+    	this.extinguish();
     	
     	
     	//New Fishing Mechanic Code
+    	
+    	//Causes the fishing mechanic to instantly trigger when the hook bobs bellow the water
+    	if (beginPull == false && this.ticksCatchable > 0)
+        {
+        	beginPulling();
+        	entityitem = new CustomEntityItem(this.worldObj, this.posX, this.posY, this.posZ, this.getFishingResult());
+        }
     	
     	//Stops the players movement
     	angler.addPotionEffect(new PotionEffect(2, 100, 100));
@@ -207,20 +263,69 @@ public class CustomFishHook extends EntityFishHook
     	{
     		tickCount++;
     		clickRate -= .6;
+//    		clickRate += .4;
     		clickRate = Math.max(0, clickRate);
-    		checkHeight = (int)-(clickRate * 7);
+    		checkHeight = getHeight();
     		
-    		//Makes sure Power Level GUI is below the max height
+    		/*
+    		 * Checks to see if the player failed to catch the fish
+    		 * Waits 3 seconds for player to start fishing then if they are under half the power level
+    		 * the failTime will start
+    		 */
+    		if(tickCount >= 80)
+    		{
+    			if(powerLvl.h >= -105)
+    			{
+    				tickFail++;
+    				
+        			if(checkFail == false)
+        			{
+        				failTime.text = "Failure in " + 5 + " Seconds";
+        				HudManager.registerString(failTime);
+        				checkFail = true;
+        			}
+        			
+        			if(tickFail % 20 == 0)
+        			{
+        				timeF -= 1;
+        				failTime.text = "Failure in " + timeF + " Seconds";
+        			}
+    				
+    				if(tickFail >= 100)
+    				{
+            			HudManager.unregisterRectangle(powerLvl);
+            			HudManager.unregisterRectangle(boxLeft);
+            			HudManager.unregisterRectangle(boxRight);
+            			HudManager.unregisterRectangle(boxBottom);
+            			HudManager.unregisterRectangle(boxTop);
+            			HudManager.unregisterString(powerString);
+            			HudManager.unregisterString(failTime);
+            			angler.fishEntity.func_146034_e();
+            			checkFail = false;
+            			timeF = 5;
+            			beginPull = false;
+    				}
+    			}
+    			else
+    			{
+    				timeF = 5;
+        			checkFail = false;
+        			tickFail = 0;
+        			HudManager.unregisterString(failTime);
+    			}
+    		}
+    		
+    		//Changes the power bar's color and adjusts its height
     		if(checkHeight > -210)
     		{
-        		System.out.println(powerLvl.h);
-    			powerLvl.h = (int)-(clickRate * 7);
-    			powerLvl.color = 0xe4344aff;
+    			powerLvl.h = getHeight();
+    			powerLvl.color = color(powerLvl.h);
     		}
+    		//If the max height is reacher, make sure the height and color remains the same
     		else
     		{
     			powerLvl.h = -210;
-    			powerLvl.color = 0x84E501ff;
+    			powerLvl.color = 0x65f040ff;
     		}
 
 
@@ -229,15 +334,48 @@ public class CustomFishHook extends EntityFishHook
     		{
     			mc.thePlayer.sendChatMessage("Power Level: " + clickRate);
     			mc.thePlayer.sendChatMessage("Height: " + powerLvl.h);
+    			mc.thePlayer.sendChatMessage("CHANGE: " + BiGXPacketHandler.change);
     		}
     		
     		/*Once player has achieved required power level for specified tickSuccess, GUI gets unregistered
     		 * and hook is retracted
     		 */
-    		if(clickRate >= 30) //30
+    		if(clickRate >= getRequiredPower()) //30 52.5
     		{
+    			if(clickRate >= getBonus())
+    				doubleTime = 2;
+    			else
+    				doubleTime = 1;
+    			
+    			if(checkTime == false)
+    			{
+    				holdTime.text = "Hold for " + 5 + " Seconds";
+    				HudManager.registerString(holdTime);
+    				checkTime = true;
+    			}
+    			
     			tickSuccess++;
-    			if(tickSuccess>= 100) //100
+    			
+    			//If the player is going a specified speed above required power, catching takes half the time
+    			if(tickSuccess % ((int)(5) / doubleTime) == 0)
+    			{
+    				if(powerLvl.color == 0x65f040ff)
+    					powerLvl.color = 0x40bd24ff;
+    				else
+    					powerLvl.color = 0x65f040ff;
+    					
+    			}
+    			
+    			//If the player is going a specified speed above required power, catching takes half the time
+    			if(tickSuccess % (20 / doubleTime) == 0)
+    			{
+    				time -= 1;
+    				holdTime.text = "Hold for " + time + " Seconds";
+    			}
+    			
+    			//When time = 0 that means they have caught the fish so it unregisters everything and ends
+    			//the mechanic
+    			if(time == 0)
         		{
         			retractHook();
         			angler.fishEntity.func_146034_e();
@@ -248,11 +386,19 @@ public class CustomFishHook extends EntityFishHook
         			HudManager.unregisterRectangle(boxBottom);
         			HudManager.unregisterRectangle(boxTop);
         			HudManager.unregisterString(powerString);
+        			HudManager.unregisterString(holdTime);
+        			checkTime = false;
+        			doubleTime = 1;
+        			clickRate = 0;
         		}
     		}
     		else
     		{
+    			time = 5;
     			tickSuccess = 0;
+    			HudManager.unregisterString(holdTime);
+    			doubleTime = 1;
+    			checkTime = false;
     		}
     	}
 
@@ -260,6 +406,7 @@ public class CustomFishHook extends EntityFishHook
     	
     	
     	//Normal OnUpdate Method
+    	//DONT WORRY ABOUT THE REST IN ONUPDATE, IT SERVES TO FUNCTION AS A VANILLA FISHING ROD
         if (this.fishPosRotationIncrements > 0)
         {
             double d7 = this.posX + (this.fishX - this.posX) / (double)this.fishPosRotationIncrements;
@@ -278,8 +425,10 @@ public class CustomFishHook extends EntityFishHook
             {  
             	ItemStack itemstack = this.angler.getCurrentEquippedItem();
 
-                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || this.getDistanceSqToEntity(this.angler) > 1024.0D)
+                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || itemstack.getItem() != MineBikeCustomItems.itemMap.get("item.OlReliable") || this.getDistanceSqToEntity(this.angler) > 1024.0D)
                 {
+                	unRegister();
+                	beginPull = false;
                     this.setDead();
                     this.angler.fishEntity = null;
                     return;
@@ -313,7 +462,6 @@ public class CustomFishHook extends EntityFishHook
 
                     if (this.ticksInGround == 1200)
                     {
-                    	System.out.println("inground?");
                         this.setDead();
                     }
 
@@ -443,6 +591,10 @@ public class CustomFishHook extends EntityFishHook
                     {
                         d10 += 1.0D / (double)b0;
                     }
+                    if (this.worldObj.isAABBInMaterial(axisalignedbb2, Material.lava))
+                    {
+                        d10 += 1.0D / (double)b0;
+                    }
                 }
 
                 if (!this.worldObj.isRemote && d10 > 0.0D)
@@ -543,13 +695,12 @@ public class CustomFishHook extends EntityFishHook
                             if (this.ticksCaughtDelay <= 0)
                             {
                                 this.fishApproachAngle = MathHelper.randomFloatClamp(this.rand, 0.0F, 360.0F);
-                                this.ticksCatchableDelay = MathHelper.getRandomIntegerInRange(this.rand, 20, 80);
+                                this.ticksCatchableDelay = 20;//MathHelper.getRandomIntegerInRange(this.rand, 20, 80);
                             }
                         }
                         else
                         {
-                            this.ticksCaughtDelay = MathHelper.getRandomIntegerInRange(this.rand, 100, 900);
-                            this.ticksCaughtDelay -= EnchantmentHelper.func_151387_h(this.angler) * 20 * 5;
+                            this.ticksCaughtDelay = 20;//MathHelper.getRandomIntegerInRange(this.rand, 20, 20);
                         }
                     }
 
@@ -575,7 +726,7 @@ public class CustomFishHook extends EntityFishHook
             }
         }
     }
-
+    
 
     /*Checks to see what type of event is happening when player retracts hook
      * b0 = 0 inAir
@@ -591,7 +742,8 @@ public class CustomFishHook extends EntityFishHook
     	if(beginPull == true)
     	{
     		b0 = 1;
-    		clickRate++;
+//    		clickRate -= 20;
+    		clickRate += 2;
     	}
     	else
     	{
@@ -614,11 +766,6 @@ public class CustomFishHook extends EntityFishHook
                     this.caughtEntity.motionZ += d4 * d8;
                     b0 = 3;
                 }
-                else if (this.ticksCatchable > 0)
-                {
-                	beginPulling();
-                    b0 = 1;
-                }
 
                 if (this.inGround)
                 {
@@ -632,7 +779,6 @@ public class CustomFishHook extends EntityFishHook
     //Starts fishing mechanic and registers the Power Level GUI
     public void beginPulling()
     {
-    	
     	beginPull = true;
         HudManager.registerRectangle(powerLvl);
         HudManager.registerRectangle(boxLeft);
@@ -642,11 +788,35 @@ public class CustomFishHook extends EntityFishHook
         HudManager.registerString(powerString);
     }
     
+    //Used to blend the color of the power bar depending on its height
+    public int color(int height)
+    {
+    	int temp = Math.abs(height);
+    	int redHeight = temp - 117;
+    	int greenValue = 0x00400000;
+    	int redValue = 0xf0000000;
+    	int alpha = 0x000040ff;
+    	int addGreen = 0;
+    	int subRed = 0;
+    	if(temp <= 117 && temp >= 0)
+    	{
+    		addGreen += (int)(temp * 1.5);
+    		greenValue = greenValue + (0x00010000 * addGreen);
+    	}
+    	else if(temp > 117 && temp <= 210)
+    	{
+    		greenValue = 0x00f00000;
+    		subRed = (int)(redHeight * 1.5);
+    		redValue = redValue - (0x01000000 * subRed);
+    	}
+    	return redValue + greenValue + alpha;
+    }
+    
     //Gives player a fishable and deletes the hook entity from the world
+    //Also keeps track of how many fish the player has caught which is used in FishingQuest
+    //to keep track of their minigame progress
     public void retractHook()
     {
-        EntityItem entityitem = new EntityItem(this.worldObj, this.posX, this.posY, this.posZ, this.getFishingResult());
-//        System.out.println(entityitem);
         double d1 = this.angler.posX - this.posX;
         double d3 = this.angler.posY - this.posY;
         double d5 = this.angler.posZ - this.posZ;
@@ -656,49 +826,151 @@ public class CustomFishHook extends EntityFishHook
         entityitem.motionY = d3 * d9 + (double)MathHelper.sqrt_double(d7) * 0.08D;
         entityitem.motionZ = d5 * d9;
         this.worldObj.spawnEntityInWorld(entityitem);
+        switch(difficulty)
+        {
+	    	case 4:
+	    		 System.out.println("Easy");
+	    		 numFish++;
+	    		 break;
+			case 7:
+				 System.out.println("Uncommon");
+				 numFish += 2;
+				 break;
+			case 6:
+				 System.out.println("Rare");
+				 numFish += 3;
+				 break;
+			case 3:
+				 System.out.println("Legendary");
+				 numFish += 4;
+				 break;
+        }
+
         this.angler.worldObj.spawnEntityInWorld(new EntityXPOrb(this.angler.worldObj, this.angler.posX, this.angler.posY + 0.5D, this.angler.posZ + 0.5D, this.rand.nextInt(6) + 1));
     }
+    
+    //Unregisters all the GUI related to the fishing mechanic
+    public static void unRegister()
+    {
+		HudManager.unregisterRectangle(powerLvl);
+		HudManager.unregisterRectangle(boxLeft);
+		HudManager.unregisterRectangle(boxRight);
+		HudManager.unregisterRectangle(boxBottom);
+		HudManager.unregisterRectangle(boxTop);
+		HudManager.unregisterString(powerString);
+		HudManager.unregisterString(holdTime);
+		HudManager.unregisterString(failTime);
+    }
+    
+    //Gets the speed the player must achieve in order to catch the specified tier of fish
+    /*
+     * TIERS OF FISH
+     * 4 = COMMON
+     * 7 = UNCOMMON
+     * 6 = RARE
+     * 3 = LEGENDARY
+     */
+    private double getRequiredPower()
+    {
+    	//4 7 6 3
+    	switch(difficulty)
+    	{
+    		case 4:
+    			return 15; //15
+    		case 7:
+    			return 21; //21
+    		case 6:
+    			return 30; //30
+    		case 3:
+    			return 35; //35
+    		default:
+    			return 21; //21
+    	}
+    }
+    
+    //Returns the how much the height of the power bar is incrementing based on the tier of fish
+    private int getHeight()
+    {
+    	//4 7 6 3
+    	switch(difficulty)
+    	{
+    		case 4:
+    			return (int)-(clickRate * 14);
+    		case 7:
+    			return (int)-(clickRate * 10);
+    		case 6:
+    			return (int)-(clickRate * 7);
+    		case 3:
+    			return (int)-(clickRate * 5);
+    		default:
+    			return (int)-(clickRate * 10); 
+    	}
+    }
+    
+    //Returns how much extra speed the player must achieve before catching goes twice as fast
+    private int getBonus()
+    {
+    	//4 7 6 3
+    	switch(difficulty)
+    	{
+	    	case 4:
+				return 25;
+			case 7:
+				return 30;
+			case 6:
+				return 35;
+			case 3:
+				return 40;
+			default:
+				return 30;
+    	}
+    }
+    
     
     //Gets the types of items and custom fish the player can catch
     private ItemStack getFishingResult()
     {
-        float f = this.worldObj.rand.nextFloat();
-        int i = EnchantmentHelper.func_151386_g(this.angler);
-        int j = EnchantmentHelper.func_151387_h(this.angler);
-        
-        if (true)
-        {
-        	this.angler.addStat(net.minecraftforge.common.FishingHooks.getFishableCategory(f, i, j).stat, 1);
-//        	return net.minecraftforge.common.FishingHooks.getRandomFishable(this.rand, f, i, j);
-        	return ((WeightedRandomFishable)WeightedRandom.getRandomItem(rand, temp2)).func_150708_a(rand);
-        }
-
-        float f1 = 0.1F - (float)i * 0.025F - (float)j * 0.01F;
-        float f2 = 0.05F + (float)i * 0.01F - (float)j * 0.01F;
-        f1 = MathHelper.clamp_float(f1, 0.0F, 1.0F);
-        f2 = MathHelper.clamp_float(f2, 0.0F, 1.0F);
-
-        if (f < f1)
-        {
-        	this.angler.addStat(StatList.field_151183_A, 1);
-            return ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, JUNK)).func_150708_a(this.rand);
-        }
-        else
-        {
-            f -= f1;
-
-            if (f < f2)
-            {
-            	System.out.println("Here");
-            	this.angler.addStat(StatList.field_151184_B, 1);
-                return ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, TREASURE)).func_150708_a(this.rand);
-            }
-            else
-            {
-                float f3 = f - f2;
-                this.angler.triggerAchievement(StatList.fishCaughtStat);
-                return ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, temp2)).func_150708_a(this.rand);
-            }
-        }
+    	ItemStack itemstack;
+    	this.angler.triggerAchievement(StatList.fishCaughtStat);
+    	switch(fishingLocation) 
+    	{
+    		case 1:
+    			System.out.println("Lake Worked");
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(0))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    		case 2:
+    			System.out.println("Spooky Worked");
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(1))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    		case 3:
+    			System.out.println("Glacial Worked");
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(2))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    		case 4:
+    			System.out.println("Koi Pond Worked");
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(3))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    		case 5:
+    			System.out.println("Deep Sea Worked");
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(4))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    		case 6:
+    			System.out.println("Nether Worked");
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(5))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    		default:
+    			System.out.println("defualt Worked");
+    			int rand = (int)(Math.random() * 6) + 1;
+                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(rand))).func_150708_a(this.rand);
+                difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
+                break;
+    	}
+    	return itemstack;
     }
 }
