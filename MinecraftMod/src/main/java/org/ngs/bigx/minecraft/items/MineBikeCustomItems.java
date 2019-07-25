@@ -3,14 +3,10 @@ package org.ngs.bigx.minecraft.items;
 
 import java.util.ArrayList;
 
-import org.ngs.bigx.minecraft.entity.item.JahCoin;
-import org.ngs.bigx.minecraft.items.EnumFishType;
-
 import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import scala.collection.parallel.mutable.ParHashSetCombiner.AddingFlatHashTable;
+import net.minecraft.util.RegistryNamespaced;
 
 public class MineBikeCustomItems
 {
