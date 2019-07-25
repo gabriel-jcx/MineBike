@@ -26,8 +26,7 @@ public class MinerNPC extends CustomNPCAbstract
 		//quest = new JillQuest();
 	}
 	public void onInteraction(EntityPlayer player, EntityInteractEvent event) {
-		// TODO Auto-generated method stub
-		GuiMessageWindow.showMessage("My name is Tobuscus!\nI need ores to build a house!\nWanna help me?");
+		GuiMessageWindow.showMessage("My name is Tobuscus!\n   Lets play MineRun! ");
 		quest.start();
 	}
 }
