@@ -7,11 +7,13 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
 public abstract class CustomQuestAbstract 
 {	
@@ -21,6 +23,13 @@ public abstract class CustomQuestAbstract
 	protected String name;
 	protected boolean completed;
 	protected boolean started;
+	
+	public enum Difficulty
+	{
+		EASY,
+		MEDIUM,
+		HARD;
+	}
 	
 	//
 	public CustomQuestAbstract()
@@ -36,6 +45,7 @@ public abstract class CustomQuestAbstract
 		started = json.getStarted();
 	}
 	
+	//this must be called in constructor or your quest will not work
 	public void register()
 	{
 		GameSaveManager.registerQuest(this);
@@ -76,6 +86,8 @@ public abstract class CustomQuestAbstract
 		CustomQuestEventHandler.unregisterQuest(this);
 	}
 	
+	public abstract void setDifficulty(Difficulty difficultyIn);
+	
 	
 	//methods below are meant to be overridden
 	
@@ -84,6 +96,11 @@ public abstract class CustomQuestAbstract
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) 
 	{
 
+	}
+	
+	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
+	{
+		
 	}
 	
 	public void onItemUse(PlayerUseItemEvent.Start event)
@@ -102,6 +119,11 @@ public abstract class CustomQuestAbstract
 	}
 	
 	public void entityInteractEvent(EntityInteractEvent event)
+	{
+		
+	}
+	
+	public void onWorldLoadEvent(WorldEvent.Load event)
 	{
 		
 	}

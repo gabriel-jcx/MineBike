@@ -88,7 +88,7 @@ public class FishingQuest extends CustomQuestAbstract
 		
 		super.start();
 	}
-	
+  
 	//Ends the Minigame and unregisters all timers and counters, Teleports player back to the hub of the dimensiom
 	//Param: event is used to get the player
 	public void endGame(TickEvent.PlayerTickEvent event)
@@ -249,4 +249,9 @@ public class FishingQuest extends CustomQuestAbstract
 		worldLoaded = true;
 	}
 	
+	@Override
+	public void setDifficulty(Difficulty difficultyIn) {
+		// TODO Auto-generated method stub
+		
+	}
 }

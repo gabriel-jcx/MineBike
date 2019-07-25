@@ -60,4 +60,11 @@ public class CustomQuest extends CustomQuestAbstract
 		
 		pickedUpItem = true;
 	}
+
+
+	@Override
+	public void setDifficulty(Difficulty difficultyIn) {
+		// TODO Auto-generated method stub
+		
+	}
 }

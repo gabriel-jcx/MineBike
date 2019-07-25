@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft;
 	
+import java.util.ArrayList;
+
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
@@ -17,6 +19,7 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
+import org.ngs.bigx.minecraft.items.MineBikeCustomItems;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestManager;
@@ -43,6 +46,7 @@ import net.minecraft.util.MouseHelper;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import noppes.npcs.CustomItems;
 
 @Mod (modid = BiGX.MODID, name = BiGX.MODNAME, version = BiGX.VERSION)
 
@@ -76,6 +80,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 	    public static Item MysteriousKey;
 	    
+	    public static ArrayList<Item> customItems = MineBikeCustomItems.createItems();
+	    
 	    /*
 	     * Instead of using magic numbers, an enum will differentiate our GUIs when
 	     * calling EntityPlayer.openGui().
@@ -94,6 +100,10 @@ import net.minecraftforge.common.MinecraftForge;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
+	    	for(Item item : customItems)
+	    	{
+	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
+	    	}
 	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
 	    	
 	    	instance = this;

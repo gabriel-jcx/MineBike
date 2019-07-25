@@ -161,6 +161,7 @@ public class CustomFishHook extends EntityFishHook
     public CustomFishHook(World worldIn, EntityPlayer fishingPlayer)
     {
     	super(worldIn, fishingPlayer);
+	//TODO: andrew - describe these variables or remove then
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;
@@ -169,6 +170,7 @@ public class CustomFishHook extends EntityFishHook
         
         if(worldIn.isRemote) System.out.println(this.angler.getCommandSenderName() + "<client");
        
+       	//TODO: describe fish hook override stuff
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(fishingPlayer.posX, fishingPlayer.posY + (double)fishingPlayer.getEyeHeight(), fishingPlayer.posZ, fishingPlayer.rotationYaw, fishingPlayer.rotationPitch);
         this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
@@ -181,18 +183,17 @@ public class CustomFishHook extends EntityFishHook
         this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.handleHookCasting(this.motionX, this.motionY, this.motionZ, 1.5F, 1.0F);
 
-        
         //adds all the common fish to every fish location
         for(int i = 0; i < 7; i++)
         {
-        	fishingSpots.add(new ArrayList<WeightedRandomFishable>());
-        	for (EnumFishType fish: EnumFishType.values())
-			{
-        		Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
-        		if(fish.getType() == 0)
-        			fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
-			}
-        }
+            fishingSpots.add(new ArrayList<WeightedRandomFishable>());
+            for (EnumFishType fish: EnumFishType.values())
+            {
+              Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
+              if(fish.getType() == 0)
+                fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+            }
+         }
             
         
         //Adds all spot specific fish to the correct fishing location
@@ -207,6 +208,7 @@ public class CustomFishHook extends EntityFishHook
         
         this.isImmuneToFire = true;
     }
+	
 
     //Handles what happens when the hook is cast
     public void handleHookCasting(double p_146035_1_, double p_146035_3_, double p_146035_5_, float p_146035_7_, float p_146035_8_)
@@ -542,7 +544,8 @@ public class CustomFishHook extends EntityFishHook
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 float f5 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
                 this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-
+	
+		//TODO: ??
                 for (this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f5) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
                 {
                     ;
