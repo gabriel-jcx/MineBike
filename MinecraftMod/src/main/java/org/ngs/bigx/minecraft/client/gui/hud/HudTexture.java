@@ -17,6 +17,7 @@ public class HudTexture
 	public int y;
 	public int w;
 	public int h;
+	public int alpha;
 	public boolean centerX;
 	public boolean centerY;
 	public ResourceLocation resourceLocation;
@@ -41,6 +42,7 @@ public class HudTexture
 		
 		this.resourceLocation = new ResourceLocation(BiGX.TEXTURE_PREFIX, location);
 		
+		this.alpha = 255;
 	}
 	
 	/**
@@ -68,5 +70,6 @@ public class HudTexture
 		
 		this.resourceLocation = new ResourceLocation(BiGX.TEXTURE_PREFIX, location);
 		
+		this.alpha = 255;
 	}
 }

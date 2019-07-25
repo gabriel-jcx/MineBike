@@ -14,6 +14,7 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.npcs.custom.Raul;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
+import org.ngs.bigx.minecraft.quests.custom.helpers.Utils;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -25,7 +26,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldSettings;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -44,9 +48,8 @@ public class SoccerQuest extends CustomQuestAbstract
 	private SoccerBall ball;
 	
 	public static final int SOCCERDIMENSIONID = 106;
-
 	public static final double SOCCER_Y_LEVEL = 10.0;
-
+	
 	private int ticksInsideGoal;
 	
 	//the red box is the enemies score
@@ -55,6 +58,8 @@ public class SoccerQuest extends CustomQuestAbstract
 	
 	private HudString redScoreBoard;
 	private HudString blueScoreBoard;
+	
+	private int npcSpeed;
 	
 	private HudString youScoredMessage;
 	
@@ -78,14 +83,16 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		ballInit = false;
 		
+		npcSpeed = 10;
+		
 		//hud stuff
 		//location of the red and blue boxes that surround the text boxes
 		redBox = new HudRectangle(-100, 30, 40, 40, 0xff0000ff, true, false);
 		blueBox = new HudRectangle(60, 30, 40, 40, 0x0000ffff, true, false);
 		
 		//this is the position of the red and blue score text boxes
-		redScoreBoard = new HudString( 70, 42, "0", 2.0f, true, false);
-		blueScoreBoard = new HudString(-85, 42, "0", 2.0f, true, false);
+		redScoreBoard = new HudString(-85, 42, "0", 2.0f, true, false);
+		blueScoreBoard = new HudString(70, 42, "0", 2.0f, true, false);
 		
 		//message that displays when you get the ball in the goal
 		
@@ -100,7 +107,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		HudManager.unregisterRectangle(redBox);
 		
 		HudManager.unregisterString(blueScoreBoard);
-		HudManager.unregisterString(redScoreBoard);
+		HudManager.unregisterString( redScoreBoard);
 		
 		QuestTeleporter.teleport(player, 0, (int) Raul.LOCATION.xCoord, (int) Raul.LOCATION.yCoord, (int) Raul.LOCATION.zCoord);
 		started = false;
@@ -128,6 +135,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	
 	static EntityCustomNpc npc;
 	static NpcCommand command;
+	static ForgeDirection runDirection;
 	
 	public static int[] npcPath = new int[3];
 	public static List<int[]> npcPathList = new ArrayList<int[]>();
@@ -144,7 +152,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		//init the ball and npc
 		if (!ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
 		{	
-			NpcCommand.removeNpc(Raul.NAME, SoccerQuest.SOCCERDIMENSIONID);
+			NpcCommand.removeNpc(Raul.NAME + " ", SoccerQuest.SOCCERDIMENSIONID);
 			
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(SoccerQuest.SOCCERDIMENSIONID);
 			synchronized (ws.loadedEntityList) {
@@ -157,34 +165,34 @@ public class SoccerQuest extends CustomQuestAbstract
 			}
 			
 			//spawns the npc
-			npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world.provider.worldObj, Raul.NAME, Raul.TEXTURE);
+			npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world.provider.worldObj, Raul.NAME + " ", Raul.TEXTURE);
 			command = new NpcCommand(BigxClientContext.getInstance(), npc);
+			command.setSpeed(npcSpeed);
 			
 			npcPathList.add(npcPath);
+			npcPathList.add(npcPath);
 			
-			command.setPath(npcPathList);
-			command.setSpeed(30);
+			npc.ai = new DataAI(npc) {
+				public int[] path = SoccerQuest.npcPath;
+				@Override
+				public int[] getCurrentMovingPath()
+				{
+					return path;
+				}
+				
+				@Override
+				public List getMovingPath()
+				{
+					return npcPathList;
+				}
+			};
+			npc.ai.movingPause = false;
+			npc.ai.movingPos = 0;
+			npc.ai.startPos = npcPath;
+			npc.ai.walkingRange = 100;
+			npc.ai.movingPattern = 0;
+			npc.ai.movingType = EnumMovingType.MovingPath;
 			
-//			npc.ai = new DataAI(npc) {
-//				public int[] path = SoccerQuest.npcPath;
-//				@Override
-//				public int[] getCurrentMovingPath()
-//				{
-//					return path;
-//				}
-//				
-//				@Override
-//				public List getMovingPath()
-//				{
-//					return npcPathList;
-//				}
-//			};
-//			npc.ai.movingPause = false;
-//			npc.ai.movingPos = 0;
-//			npc.ai.startPos = npcPath;
-//			npc.ai.walkingRange = 100;
-//			npc.ai.movingPattern = 0;
-//			npc.ai.movingType = EnumMovingType.MovingPath;
 			
 			
 			//spawns the ball
@@ -195,33 +203,13 @@ public class SoccerQuest extends CustomQuestAbstract
 			event.world.provider.worldObj.spawnEntityInWorld(ball);
 			
 			ballInit = true;
-		}
+		}//end init
 		
 		//pathfinding for the npc
 		if (npc != null)
 		{		
-			//make him follow the ball
-//			((int[])movingPath.get(0))[0] = (int)ball.getPosition(1.0f).xCoord;
-//			((int[])movingPath.get(0))[1] = (int)ball.getPosition(1.0f).yCoord;
-//			((int[])movingPath.get(0))[2] = (int)ball.getPosition(1.0f).zCoord;
-//			
-//			((int[])movingPath.get(1))[0] = (int)ball.getPosition(1.0f).xCoord;
-//			((int[])movingPath.get(1))[1] = (int)ball.getPosition(1.0f).yCoord;
-//			((int[])movingPath.get(1))[2] = (int)ball.getPosition(1.0f).zCoord;
-//			
-//			npc.ai.startPos = (int[])movingPath.get(0);
-//			
-//			npc.ai.setMovingPath(movingPath);
-//			
-//			npc.ai.movingPos = 0;
-			
-			npcPath[0] = (int)ball.getPosition(1.0f).xCoord;
-			npcPath[1] = (int)ball.getPosition(1.0f).yCoord;
-			npcPath[2] = (int)ball.getPosition(1.0f).zCoord;
-			
-			npcPathList.set(0, npcPath);
-			
-			command.enableMoving(true);
+			npc.setAIMoveSpeed(25.0f);
+			updateNpcPath();
 		}
 		
 		//this is responsible for handling the ball entering the goal and updating score
@@ -248,26 +236,117 @@ public class SoccerQuest extends CustomQuestAbstract
 					ticksInsideGoal = 0;
 					
 					//teleport raul and player back to the start
-					QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, (int)SoccerQuest.SOCCER_Y_LEVEL, -15);
+					QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, (int)SoccerQuest.SOCCER_Y_LEVEL, -25);
 					npc.setPosition(1.0, SoccerQuest.SOCCER_Y_LEVEL*1.0d, 15);
+//					updateNpcPath();
+					resetNpc(event);
+					
 				}//finish resetting game
 			}
 		}
 	}
 	
+	private void resetNpc(TickEvent.WorldTickEvent event) 
+	{
+		npc.isDead = true;
+		
+		//spawns the npc
+		npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world.provider.worldObj, Raul.NAME + " ", Raul.TEXTURE);
+		command = new NpcCommand(BigxClientContext.getInstance(), npc);
+		
+		npcPathList.add(npcPath);
+		npcPathList.add(npcPath);
+		
+		npc.ai = new DataAI(npc) {
+			public int[] path = SoccerQuest.npcPath;
+			@Override
+			public int[] getCurrentMovingPath()
+			{
+				return path;
+			}
+			
+			@Override
+			public List getMovingPath()
+			{
+				return npcPathList;
+			}
+		};
+		
+		npc.ai.movingPause = false;
+		npc.ai.movingPos = 0;
+		npc.ai.startPos = npcPath;
+		npc.ai.walkingRange = 100;
+		npc.ai.movingPattern = 0;
+		npc.ai.movingType = EnumMovingType.MovingPath;
+		
+		double d = npc.getPosition(1.0f).distanceTo(Vec3.createVectorHelper(0.0d, SOCCER_Y_LEVEL, 0.0d));
+		double t = 1.0d/d;
+		t *= 3;
+		double[] newPoint = Utils.lerp(
+				new double[] {npc.posX, npc.posY, npc.posZ}, 
+				new double[] {0.0d, 0.0d, 0.0d}, 
+				t);
+		
+		int[] intPoint = new int[] {(int) newPoint[0], (int) newPoint[1], (int) newPoint[2]};
+		npcPath[0] = (int) newPoint[0];
+		npcPath[1] = (int) newPoint[1];
+		npcPath[2] = (int) newPoint[2];
+		
+		npcPathList.set(0, npcPath);
+		npcPathList.set(1, npcPath);
+		
+		npc.ai.setMovingPath(npcPathList);
+		
+//		command.addPathPoint(intPoint);
+		
+		npc.ai.getMovingPath().add(intPoint);
+		
+		command.enableMoving(true);
+		command.setSpeed(npcSpeed);
+		
+	}
+	
+	private void updateNpcPath() 
+	{
+		double d = npc.getPosition(1.0f).distanceTo(ball.getPosition(1.0f));
+		double t = 1.0d/d;
+		t *= 3;
+		double[] newPoint = Utils.lerp(
+				new double[] {npc.posX, npc.posY, npc.posZ}, 
+				new double[] {ball.posX, ball.posY, ball.posZ}, 
+				t);
+		
+		int[] intPoint = new int[] {(int) newPoint[0], (int) newPoint[1], (int) newPoint[2]};
+		npcPath[0] = (int) newPoint[0];
+		npcPath[1] = (int) newPoint[1];
+		npcPath[2] = (int) newPoint[2];
+		
+		npcPathList.set(0, npcPath);
+		npcPathList.set(1, npcPath);
+		
+		npc.ai.setMovingPath(npcPathList);
+		
+//		command.addPathPoint(intPoint);
+		
+		npc.ai.getMovingPath().add(intPoint);
+		
+		command.enableMoving(true);
+		
+	}
+
 	public static boolean entityInsideBlueGoal(EntityLiving e)
 	{
 		double x = e.getPosition(1.0f).xCoord;
 		double z = e.getPosition(1.0f).zCoord;
 		
-		return (x < 3.0 && x  > -2.0) && z < -24.8;
+		return (x < 3.0 && x  > -2.0) && z < -48.8;
 	}
 	
 	public static boolean entityInsideRedGoal(EntityLiving e)
 	{
 		double x = e.getPosition(1.0f).xCoord;
 		double z = e.getPosition(1.0f).zCoord;
-		return (x < 3.0 && x  > -2.0) && z > 25.8;
+		return (x < 3.0 && x  > -2.0) && z > 49.8;
 	}
 		
 	@Override
@@ -276,6 +355,22 @@ public class SoccerQuest extends CustomQuestAbstract
 		if (!worldLoaded)
 		{
 			return;
+		}
+		
+		if(event.player.capabilities.allowEdit)	
+            event.player.setGameType(WorldSettings.getGameTypeById(2));
+		
+		if (ball == null)
+			return;
+		
+		double HIT_SPEED = 3.0d;
+		if (event.player.getPosition(1.0f).distanceTo(ball.getPosition(1.0f)) < 2)
+		{
+			ball.getHitFrom(event.player.posX, event.player.posY, event.player.posZ);
+		}
+		if (npc.getPosition(1.0f).distanceTo(ball.getPosition(1.0f)) < 2)
+		{
+			ball.getHitTowards(0, SOCCER_Y_LEVEL, -50);
 		}
 	}
 	
@@ -306,14 +401,18 @@ public class SoccerQuest extends CustomQuestAbstract
 		HudManager.registerString(blueScoreBoard);
 		//end hud stuff
 		
+		redScoreBoard.text = "0";
+		blueScoreBoard.text = "0";
+		
 //		teleport them to the soccer arena
-		QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, 14, -15);
+		QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, 14, -25);
 		
 		super.start();
 	}
 
 	@Override
-	public void setDifficulty(Difficulty difficultyIn) {
+	public void setDifficulty(Difficulty difficultyIn) 
+	{
 		// TODO Auto-generated method stub
 		
 	}

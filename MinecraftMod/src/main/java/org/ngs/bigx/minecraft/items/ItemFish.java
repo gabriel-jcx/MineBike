@@ -1,8 +1,6 @@
 package org.ngs.bigx.minecraft.items;
 import java.util.List;
 
-import org.ngs.bigx.minecraft.entity.item.JahCoin;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

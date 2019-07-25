@@ -15,6 +15,7 @@ public class HudString
 {
 	public int x;
 	public int y;
+	public boolean shadow;
 	public boolean centerX;
 	public boolean centerY;
 	public float scale;
@@ -40,6 +41,7 @@ public class HudString
 		this.color = 0xffffffff;
 		
 		this.text = text;
+		this.shadow = true;
 	}
 	
 	/**
@@ -66,6 +68,7 @@ public class HudString
 		this.text = text;
 		
 		this.color = 0xffffffff;
+		this.shadow = true;
 	}
 	
 	/**
@@ -93,6 +96,7 @@ public class HudString
 		this.text = text;
 		
 		this.color = 0xffffffff;
+		this.shadow = true;
 	}
 	
 	/**
@@ -121,5 +125,6 @@ public class HudString
 		this.text = text;
 		
 		this.color = color;
+		this.shadow = true;
 	}
 }

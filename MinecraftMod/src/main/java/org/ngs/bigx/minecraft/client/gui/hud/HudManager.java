@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft.client.gui.hud;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -74,13 +75,14 @@ public class HudManager extends GuiScreen
 	    
 	    //gl stuff
 	    Tessellator tessellator = Tessellator.instance;
+	    GL11.glPushAttrib(GL11.GL_COLOR);
 	    GL11.glPushMatrix();
 		    GL11.glEnable(GL11.GL_BLEND);
 		    GL11.glDisable(GL11.GL_TEXTURE_2D);
 			    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			    //store the color so we can restore it back
-			    FloatBuffer currentColor = BufferUtils.createFloatBuffer(16);
-			    GL11.glGetFloat(GL11.GL_CURRENT_COLOR, currentColor);
+//			    FloatBuffer currentColor = BufferUtils.createFloatBuffer(16);
+//			    GL11.glGetFloat(GL11.GL_CURRENT_COLOR, currentColor);
 			    GL11.glColor4f(r, g, b, a);
 			    //this is where it becomes drawn
 				    tessellator.startDrawingQuads();
@@ -89,54 +91,79 @@ public class HudManager extends GuiScreen
 				    tessellator.addVertex((double)x2, (double)y1, 0.0D);
 				    tessellator.addVertex((double)x1, (double)y1, 0.0D);
 				    tessellator.draw();
-			    GL11.glColor4f(currentColor.get(0), currentColor.get(1), currentColor.get(2), currentColor.get(3));
+//			    GL11.glColor4f(currentColor.get(0), currentColor.get(1), currentColor.get(2), currentColor.get(3));
 		    GL11.glEnable(GL11.GL_TEXTURE_2D);
 		    GL11.glDisable(GL11.GL_BLEND);
+		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
 	
 	public void drawString(HudString hudString)
 	{	
-		GL11.glPushMatrix();
-			this.fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-			//translate to where it is going to be displayed, then scale it
+		
+		//get current texture and then set it back at the end of this function
+		this.fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		//translate to where it is going to be displayed, then scale it
+		GL11.glPushAttrib(GL11.GL_TEXTURE_BIT);
+		GL11.glPushAttrib(GL11.GL_COLOR);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GL11.glTranslatef(
-						(int) (hudString.x + (hudString.centerX ? 
-						mcWidth/2-fontRendererObj.getStringWidth(hudString.text)/2 * hudString.scale
-						: 0)),
-						hudString.y + (hudString.centerY ? mcHeight/2 : 0), 
-						0.0f);
-			
-				GL11.glScalef(hudString.scale, hudString.scale, hudString.scale);
-				fontRendererObj.drawStringWithShadow(
-						hudString.text, 
-						0, 
-						0, 
-						hudString.color >> 8);
-				GL11.glScalef(1.0f, 1.0f, 1.0f);
+				GL11.glPushMatrix();
+					GL11.glTranslatef(
+							(int) (hudString.x + (hudString.centerX ? 
+							mcWidth/2-fontRendererObj.getStringWidth(hudString.text)/2 * hudString.scale
+							: 0)),
+							hudString.y + (hudString.centerY ? mcHeight/2 : 0), 
+							0.0f);
+				
+					GL11.glScalef(hudString.scale, hudString.scale, hudString.scale);
+					//this breaks the other textures
+					if (hudString.shadow)
+					{
+						fontRendererObj.drawStringWithShadow(	
+								hudString.text, 
+								0, 
+								0, 
+								hudString.color >> 8);
+					}
+					else
+					{
+						fontRendererObj.drawString(	
+								hudString.text, 
+								0, 
+								0, 
+								hudString.color >> 8);
+					}
+					GL11.glScalef(1.0f, 1.0f, 1.0f);
+				GL11.glPopMatrix();
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glPopMatrix();
+		GL11.glPopAttrib();
+		GL11.glPopAttrib();
 	}
 	
 	public void drawTexture(HudTexture hudTexture)
 	{
 		//draw the hudTexture
-		GL11.glPushMatrix();
-			this.mc.renderEngine.bindTexture(hudTexture.resourceLocation);			
-			Tessellator tessellator = Tessellator.instance;
-		    GL11.glPushMatrix();
+		GL11.glPushMatrix();	
+		GL11.glPushAttrib(GL11.GL_TEXTURE_BIT);
+		GL11.glPushAttrib(GL11.GL_COLOR);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+			GL11.glColor4f(1.0f, 1.0f, 1.0f, (hudTexture.alpha * 1.0f / 255.0f));
+				Tessellator tessellator = Tessellator.instance;
 			    GL11.glEnable(GL11.GL_TEXTURE_2D);
+					this.mc.renderEngine.bindTexture(hudTexture.resourceLocation);	
 				    //this is where it becomes drawn
-					    tessellator.startDrawingQuads();
-					    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y, 0.0D, 0.0d, 0.0d);
-					    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y + hudTexture.h, 0.0D, 0.0d, 1.0d);
-					    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y + hudTexture.h, 0.0D, 1.0d, 1.0d);
-					    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y, 0.0D, 1.0d, 0.0d);
-					    tessellator.draw();
+				    tessellator.startDrawingQuads();
+				    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y, 0.0D, 0.0d, 0.0d);
+				    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y + hudTexture.h, 0.0D, 0.0d, 1.0d);
+				    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y + hudTexture.h, 0.0D, 1.0d, 1.0d);
+				    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y, 0.0D, 1.0d, 0.0d);
+				    tessellator.draw();
 			    GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glPopMatrix();
-
+			GL11.glDisable(GL11.GL_BLEND);
+		GL11.glPopAttrib();
+		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 	}
 	
@@ -148,7 +175,10 @@ public class HudManager extends GuiScreen
 	
 	public static void registerRectangle(HudRectangle rectangle)
 	{
-		rectangles.add(rectangle);
+		if (!rectangles.contains(rectangle))
+			rectangles.add(rectangle);
+		else
+			System.out.println("Rectangle already registered!");
 	}
 	
 	//STRINGS
@@ -159,7 +189,10 @@ public class HudManager extends GuiScreen
 	
 	public static void registerString(HudString string)
 	{
-		strings.add(string);
+		if (!strings.contains(string))
+			strings.add(string);
+		else
+			System.out.println("String already registered!");
 	}
 	
 	//TEXTURES
@@ -170,7 +203,17 @@ public class HudManager extends GuiScreen
 	
 	public static void registerTexture(HudTexture texture)
 	{
-		textures.add(texture);
+		if (!textures.contains(texture))
+			textures.add(texture);
+		else
+			System.out.println("Texture already registered!");
+	}
+	
+	private void updateResolution()
+	{
+	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+    	mcWidth = sr.getScaledWidth();
+    	mcHeight = sr.getScaledHeight();
 	}
 	
 	@SubscribeEvent
@@ -181,11 +224,8 @@ public class HudManager extends GuiScreen
 	      return;
 	    }
 	    
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
-    	mcWidth = sr.getScaledWidth();
-    	mcHeight = sr.getScaledHeight();
-    	
-		
+	    updateResolution();
+
     	for(int i = 0; i < rectangles.size(); i++)
     	{
     		drawRect(rectangles.get(i));
@@ -198,8 +238,8 @@ public class HudManager extends GuiScreen
     	
     	for(int i = 0; i < strings.size(); i++)
     	{
+
     		drawString(strings.get(i));
     	}
-    	
 	}
 }
