@@ -1,10 +1,12 @@
 package org.ngs.bigx.minecraft;
 
 import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
+import org.ngs.bigx.minecraft.quests.custom.FishingQuest;
 import org.ngs.bigx.minecraft.quests.custom.SoccerQuest;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFishing;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderSoccer;
 
@@ -41,6 +43,9 @@ public class CommonProxy {
 		//soccer dimension
 		DimensionManager.registerProviderType(SoccerQuest.SOCCERDIMENSIONID, WorldProviderSoccer.class, true);
 		DimensionManager.registerDimension(SoccerQuest.SOCCERDIMENSIONID, SoccerQuest.SOCCERDIMENSIONID);
+		
+		DimensionManager.registerProviderType(FishingQuest.FISHINGDIMENSIONID, WorldProviderFishing.class, true);
+		DimensionManager.registerDimension(FishingQuest.FISHINGDIMENSIONID, FishingQuest.FISHINGDIMENSIONID);
 		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);

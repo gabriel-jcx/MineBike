@@ -18,6 +18,7 @@ public class OlReliable extends ItemFishingRod
 	private IIcon theIcon;
 	private static final String __OBFID = "CL_00000034";
 	
+	//Registers what the icon of the fishing rod looks like
 	@SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister Icon)
     {
@@ -32,7 +33,8 @@ public class OlReliable extends ItemFishingRod
 		 System.out.println(player.getCurrentEquippedItem());
 		 if (player.fishEntity != null)
 	        {
-//			 	System.out.println("Retracted");
+			 
+			 //Stops the player from accidently right clicking and ending the fishing mechanic
 				if(fishHook.handleHookRetraction() != 1)
 				{
 					//retracts hook
@@ -48,7 +50,6 @@ public class OlReliable extends ItemFishingRod
 	        	 
 	        	 if (!world.isRemote)
 	             {
-//	        		System.out.println("Spawned");
 	        		fishHook = new CustomFishHook(world, player);
 	        		world.spawnEntityInWorld(fishHook);
 	             }
