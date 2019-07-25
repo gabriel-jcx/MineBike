@@ -1,7 +1,5 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
-import org.ngs.bigx.minecraft.quests.custom.TRONQuest;
-
 import net.minecraft.world.WorldType;
 
 public class WorldProviderTRON extends WorldProviderFlats 
