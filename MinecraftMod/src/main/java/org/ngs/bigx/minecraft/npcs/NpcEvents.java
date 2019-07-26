@@ -5,40 +5,26 @@ import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.gui.GuiChapter;
-import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
-import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 import org.ngs.bigx.minecraft.npcs.custom.CustomNPCAbstract;
-import org.ngs.bigx.minecraft.npcs.custom.CustomNPCStorage;
 import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
-import org.ngs.bigx.minecraft.quests.QuestTaskTalk;
-import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NpcMiscInventory;
-import noppes.npcs.client.ClientEventHandler;
 import noppes.npcs.entity.EntityCustomNpc;
-import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
 
 
@@ -96,7 +82,7 @@ public class NpcEvents {
 			InteractWithVillagers(villagerEnum.thiefInCage);
 		
 		//checking the custom NPCs for proximity and then interacting with them
-		for(CustomNPCAbstract npc : CustomNPCStorage.customNPCs)
+		for(CustomNPCAbstract npc : NpcDatabase.customNPCs)
 		{
 			if (BiGXEventTriggers.checkEntityInArea(event.target, npc.getLocation().addVector(-5, -5, -5), npc.getLocation().addVector(5, 5, 5)))
 				npc.onInteraction(player, event);

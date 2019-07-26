@@ -110,6 +110,7 @@ public class CustomQuestEventHandler
 	{
 		for(int i = 0; i < quests.size(); i++)
 		{
+			System.out.println(quests + " " + quests.get(i));
 			quests.get(i).entityInteractEvent(event);
 		}
 	}
