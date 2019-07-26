@@ -231,13 +231,13 @@ public class OverCookedQuest extends CustomQuestAbstract
 			ticks++;
 		
 		//keeps player in adventure mode (can't break blocks)
-		if(event.player.capabilities.allowEdit)
-	           event.player.setGameType(WorldSettings.getGameTypeById(2));
+//		if(event.player.capabilities.allowEdit)
+//	           event.player.setGameType(WorldSettings.getGameTypeById(2));
 		
 		//creative mode
 		//System.out.println("ticking");		
-//		if(!event.player.capabilities.isCreativeMode)
-//			event.player.setGameType(WorldSettings.getGameTypeById(1));
+		if(!event.player.capabilities.isCreativeMode)
+			event.player.setGameType(WorldSettings.getGameTypeById(1));
 		if(!teleported)
 			teleport(event);
 		
@@ -300,7 +300,8 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//saves player inventory and clears their inventory before game start
 	private void saveInventory(TickEvent.PlayerTickEvent event)
 	{
-		for(int i = 0; i < event.player.inventory.getSizeInventory(); i ++)
+		//36 is the size of player's inventory
+		for(int i = 0; i < 36; i ++)
 		{
 			ItemStack item = event.player.inventory.getStackInSlot(i);
 			if(item!=null) {
@@ -581,7 +582,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 	
 	//if on turn in plates, find the correct order on the order list
 	//removes the order from inven
-  tory and order list, award points
+  //tory and order list, award points
 	public void turnIn(TickEvent.PlayerTickEvent event) //CAN WE DO IDS HERE
 	{
 		//ADD TIPS BASED ON TIME
@@ -655,7 +656,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//unregisters all HUD elements 
 	private void endQuest(TickEvent.WorldTickEvent event)
 	{
-		QuestTeleporter.teleport(player, OVERCOOKEDDIMENSIONID, 365, 15, 185);
+		QuestTeleporter.teleport(player, OVERCOOKEDDIMENSIONID, 365, 13, 185);
 		
 		if(score >= goal)
 		{

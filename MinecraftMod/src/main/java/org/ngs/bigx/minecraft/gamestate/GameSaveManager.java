@@ -356,43 +356,43 @@ public class GameSaveManager {
 	
 	public static void loadCustomQuests(String caseid) throws IOException
 	{
-		for(CustomQuestAbstract quest : quests)
-		{
-			File folderCheck = new File(gameSaveRootFolderName);
-			
-			if(!folderCheck.exists())
-			{
-				// make the folder
-				folderCheck.mkdir();
-			}
-			
-			folderCheck = new File(gameSaveFolderName);
-			
-			if(!folderCheck.exists())
-			{
-				// make the folder
-				folderCheck.mkdir();
-			}
-			
-			File filedesc = new File(gameSaveFolderName + "\\gamesave_" + caseid + "_" + quest.getName() + ".sav");
-			
-			if(!filedesc.exists())
-			{
-				throw(new IOException("Quest data for user: " + caseid + " and quest: " + quest.getName() + " does not exist yet"));
-			}
-			
-			InputStream in = new FileInputStream(filedesc);
-			byte[] buffer = new byte[1024];
-			in.read(buffer);
-			in.close();
-			
-			String questData = (new String(buffer)).trim();
-			
-			CustomQuestJson questJson = (new Gson()).fromJson(questData, CustomQuestJson.class);
-			
-			
-			quest.loadFromJson(questJson);
-		}
+//		for(CustomQuestAbstract quest : quests)
+//		{
+//			File folderCheck = new File(gameSaveRootFolderName);
+//			
+//			if(!folderCheck.exists())
+//			{
+//				// make the folder
+//				folderCheck.mkdir();
+//			}
+//			
+//			folderCheck = new File(gameSaveFolderName);
+//			
+//			if(!folderCheck.exists())
+//			{
+//				// make the folder
+//				folderCheck.mkdir();
+//			}
+//			
+//			File filedesc = new File(gameSaveFolderName + "\\gamesave_" + caseid + "_" + quest.getName() + ".sav");
+//			
+//			if(!filedesc.exists())
+//			{
+//				throw(new IOException("Quest data for user: " + caseid + " and quest: " + quest.getName() + " does not exist yet"));
+//			}
+//			
+//			InputStream in = new FileInputStream(filedesc);
+//			byte[] buffer = new byte[1024];
+//			in.read(buffer);
+//			in.close();
+//			
+//			String questData = (new String(buffer)).trim();
+//			
+//			CustomQuestJson questJson = (new Gson()).fromJson(questData, CustomQuestJson.class);
+//			
+//			
+//			quest.loadFromJson(questJson);
+//		}
 	}
 	
 	public static void saveCustomQuests(String caseid) throws IOException

@@ -237,12 +237,6 @@ public class FishingQuest extends CustomQuestAbstract
 		HudManager.unregisterString(fishCount);
 	}
 
-	//
-	public void setDifficulty(Difficulty difficultyIn)
-	{
-		
-	}
-	
 	//Checks to see if the player has loaded up the dimension
 	public void onWorldLoadEvent(WorldEvent.Load event)
 	{

@@ -49,7 +49,7 @@ public class MinerQuest extends CustomQuestAbstract
 		private int seconds;
 		private static Clock clock;
 		private String secondsString;
-		private in==============t startTime;
+		private int startTime;
 		private double posYofPlayer;
 		private long TIME;
 		public MinerQuest()

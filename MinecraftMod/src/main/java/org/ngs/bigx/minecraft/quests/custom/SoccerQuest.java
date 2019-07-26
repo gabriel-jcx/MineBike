@@ -143,6 +143,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	@Override
 	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
 	{	
+		System.out.println(BiGXPacketHandler.change);
 		//if the world is not loaded or the event happened on the client, skip
 		if (!worldLoaded)
 			return;

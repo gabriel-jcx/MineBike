@@ -556,7 +556,15 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		this.speed = speed;
 	}
 	
+	private static boolean locked;
+	public static void lock(boolean lock)
+	{
+		locked = lock;
+	}
+	
 	public float getSpeed() {
+		if (locked)
+			return 0.0f;
 		return speed;
 	}
 		

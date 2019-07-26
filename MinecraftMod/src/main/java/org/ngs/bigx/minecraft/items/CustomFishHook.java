@@ -45,6 +45,7 @@ import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
+import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.items.EnumFishType;
 
 
@@ -79,6 +80,7 @@ public class CustomFishHook extends EntityFishHook
     @SideOnly(Side.CLIENT)
     private double clientMotionZ;
     private static final String __OBFID = "CL_00001663";
+    private boolean justSpawned;
     
     
     //Pulling Mechanic Variables
@@ -97,6 +99,7 @@ public class CustomFishHook extends EntityFishHook
     private int tickFail = 0;
     
     //The number of times they click, used to increase the power level
+    //HERE FOR DEBUGGING
 	private double clickRate = 0;
 	
 	//Checks to see if the Power Level GUI has reached maximum height
@@ -161,7 +164,7 @@ public class CustomFishHook extends EntityFishHook
     public CustomFishHook(World worldIn, EntityPlayer fishingPlayer)
     {
     	super(worldIn, fishingPlayer);
-	//TODO: andrew - describe these variables or remove then
+    	justSpawned = true;
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;
@@ -170,7 +173,6 @@ public class CustomFishHook extends EntityFishHook
         
         if(worldIn.isRemote) System.out.println(this.angler.getCommandSenderName() + "<client");
        
-       	//TODO: describe fish hook override stuff
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(fishingPlayer.posX, fishingPlayer.posY + (double)fishingPlayer.getEyeHeight(), fishingPlayer.posZ, fishingPlayer.rotationYaw, fishingPlayer.rotationPitch);
         this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
@@ -183,17 +185,18 @@ public class CustomFishHook extends EntityFishHook
         this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f);
         this.handleHookCasting(this.motionX, this.motionY, this.motionZ, 1.5F, 1.0F);
 
+        
         //adds all the common fish to every fish location
         for(int i = 0; i < 7; i++)
         {
-            fishingSpots.add(new ArrayList<WeightedRandomFishable>());
-            for (EnumFishType fish: EnumFishType.values())
-            {
-              Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
-              if(fish.getType() == 0)
-                fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
-            }
-         }
+        	fishingSpots.add(new ArrayList<WeightedRandomFishable>());
+        	for (EnumFishType fish: EnumFishType.values())
+			{
+        		Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
+        		if(fish.getType() == 0)
+        			fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+			}
+        }
             
         
         //Adds all spot specific fish to the correct fishing location
@@ -208,7 +211,6 @@ public class CustomFishHook extends EntityFishHook
         
         this.isImmuneToFire = true;
     }
-	
 
     //Handles what happens when the hook is cast
     public void handleHookCasting(double p_146035_1_, double p_146035_3_, double p_146035_5_, float p_146035_7_, float p_146035_8_)
@@ -244,6 +246,12 @@ public class CustomFishHook extends EntityFishHook
     	this.onEntityUpdate();
     	this.extinguish();
     	
+    	if (justSpawned)
+    	{
+        	BiGX.instance().clientContext.lock(true);
+        	justSpawned = false;
+    	}
+    	
     	
     	//New Fishing Mechanic Code
     	
@@ -255,13 +263,14 @@ public class CustomFishHook extends EntityFishHook
         }
     	
     	//Stops the players movement
-    	angler.addPotionEffect(new PotionEffect(2, 100, 100));
+//    	angler.addPotionEffect(new PotionEffect(2, 100, 1000000000));
     	Minecraft mc = Minecraft.getMinecraft();
     	 
     	//Start of the pull mechanic
     	if(beginPull == true)
     	{
     		tickCount++;
+    		//ClickRate here for debugging
     		clickRate -= .6;
 //    		clickRate += .4;
     		clickRate = Math.max(0, clickRate);
@@ -318,7 +327,7 @@ public class CustomFishHook extends EntityFishHook
     		//Changes the power bar's color and adjusts its height
     		if(checkHeight > -210)
     		{
-    			powerLvl.h = getHeight();
+    			powerLvl.h = checkHeight;
     			powerLvl.color = color(powerLvl.h);
     		}
     		//If the max height is reacher, make sure the height and color remains the same
@@ -340,9 +349,9 @@ public class CustomFishHook extends EntityFishHook
     		/*Once player has achieved required power level for specified tickSuccess, GUI gets unregistered
     		 * and hook is retracted
     		 */
-    		if(clickRate >= getRequiredPower()) //30 52.5
+    		if(getPower() >= getRequiredPower()) //30 52.5
     		{
-    			if(clickRate >= getBonus())
+    			if(getPower() >= getBonus())
     				doubleTime = 2;
     			else
     				doubleTime = 1;
@@ -544,8 +553,7 @@ public class CustomFishHook extends EntityFishHook
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 float f5 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
                 this.rotationYaw = (float)(Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
-	
-		//TODO: ??
+
                 for (this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f5) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
                 {
                     ;
@@ -817,6 +825,7 @@ public class CustomFishHook extends EntityFishHook
     //to keep track of their minigame progress
     public void retractHook()
     {
+    	BiGX.instance().clientContext.lock(false);
         double d1 = this.angler.posX - this.posX;
         double d3 = this.angler.posY - this.posY;
         double d5 = this.angler.posZ - this.posZ;
@@ -876,35 +885,27 @@ public class CustomFishHook extends EntityFishHook
     	switch(difficulty)
     	{
     		case 4:
-    			return 15; //15
+    			return 50; //15
     		case 7:
-    			return 21; //21
+    			return 60; //21
     		case 6:
-    			return 30; //30
+    			return 70; //30
     		case 3:
-    			return 35; //35
+    			return 80; //35
     		default:
-    			return 21; //21
+    			return 60; //21
     	}
+    }
+    
+    private int getPower()
+    {
+    	return (BiGXPacketHandler.change * 4);
     }
     
     //Returns the how much the height of the power bar is incrementing based on the tier of fish
     private int getHeight()
     {
-    	//4 7 6 3
-    	switch(difficulty)
-    	{
-    		case 4:
-    			return (int)-(clickRate * 14);
-    		case 7:
-    			return (int)-(clickRate * 10);
-    		case 6:
-    			return (int)-(clickRate * 7);
-    		case 3:
-    			return (int)-(clickRate * 5);
-    		default:
-    			return (int)-(clickRate * 10); 
-    	}
+    	return (int) (-210 * ((double)(getPower()) / (double) getRequiredPower()));
     }
     
     //Returns how much extra speed the player must achieve before catching goes twice as fast
@@ -914,18 +915,24 @@ public class CustomFishHook extends EntityFishHook
     	switch(difficulty)
     	{
 	    	case 4:
-				return 25;
+				return 60;
 			case 7:
-				return 30;
+				return 70;
 			case 6:
-				return 35;
+				return 80;
 			case 3:
-				return 40;
+				return 90;
 			default:
-				return 30;
+				return 70;
     	}
     }
     
+    @Override
+    public void setDead()
+    {
+    	super.setDead();
+    	BiGX.instance().clientContext.lock(false);
+    }
     
     //Gets the types of items and custom fish the player can catch
     private ItemStack getFishingResult()

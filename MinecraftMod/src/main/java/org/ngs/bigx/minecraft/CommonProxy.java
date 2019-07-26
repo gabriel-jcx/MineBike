@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft;
 
 import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
 import org.ngs.bigx.minecraft.quests.custom.FishingQuest;
+import org.ngs.bigx.minecraft.quests.custom.MinerQuest;
 import org.ngs.bigx.minecraft.quests.custom.OverCookedQuest;
 import org.ngs.bigx.minecraft.quests.custom.SoccerQuest;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
@@ -52,6 +53,10 @@ public class CommonProxy {
 		//overcooked dimension
 		DimensionManager.registerProviderType(OverCookedQuest.OVERCOOKEDDIMENSIONID, WorldProviderOvercooked.class, true);
 		DimensionManager.registerDimension(OverCookedQuest.OVERCOOKEDDIMENSIONID, OverCookedQuest.OVERCOOKEDDIMENSIONID);
+		
+		//mineRun dimension
+		DimensionManager.registerProviderType(MinerQuest.MINERUNDIMENSIONID, WorldProviderOvercooked.class, true);
+		DimensionManager.registerDimension(MinerQuest.MINERUNDIMENSIONID, MinerQuest.MINERUNDIMENSIONID);
 		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);
