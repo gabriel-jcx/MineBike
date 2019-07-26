@@ -21,3 +21,4 @@ public class WorldProviderTRON extends WorldProviderFlats
 		this.terrainType = WorldType.FLAT;
 	}
 }
+	
