@@ -20,19 +20,18 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class NpcDatabase {
 	
-	private static ArrayList<CustomNPCAbstract> customNPCs = CustomNPCStorage.customNPCs;
-	
 	private static Map<String, Vec3> npcs = populateMap();
 	private static Map<String, Vec3> npcsTutorial = populateMapTutorial();
 	private static Map<String, Vec3> npcsDungeon = populateDungeon();
 	
+	public static ArrayList<CustomNPCAbstract> customNPCs = CustomNPCStorage.genCustomNPCs();
 	private static boolean customNPCSInitialized = registerCustomNPCs();
 	
 	public static void registerNPC(String name, Vec3 location)
 	{
 		if (npcs == null)
 		{
-			System.out.println("I AM NULL THIS IS THE CAUSE OF THE ERROR!!!!!");
+			System.out.println("CUSTOM NPC ARRAY LIST IS NULL THIS MAY BE THE CAUSE OF YOUR ERROR!!!!!");
 		}
 		else
 		{

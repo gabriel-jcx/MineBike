@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 public class CustomNPCStorage 
 {
-	public static ArrayList<CustomNPCAbstract> customNPCs = genCustomNPCs();
-	
 	public static ArrayList<CustomNPCAbstract> genCustomNPCs()
 	{
-		ArrayList<CustomNPCAbstract> returned = new ArrayList<CustomNPCAbstract>();
-		returned.add(new Raul());
-		returned.add(new ChefGusteau());
-		return returned;
+		ArrayList<CustomNPCAbstract> customNpcs = new ArrayList<CustomNPCAbstract>();
+		customNpcs.add(new Raul());
+		customNpcs.add(new MinerNPC());
+		customNpcs.add(new Flynn());
+		return customNpcs;
 	}
 }

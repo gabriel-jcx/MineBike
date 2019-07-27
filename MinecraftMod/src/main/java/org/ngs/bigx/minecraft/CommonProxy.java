@@ -10,8 +10,10 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFishing;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderMineRun;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderOvercooked;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderSoccer;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderTRON;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -55,8 +57,11 @@ public class CommonProxy {
 		DimensionManager.registerDimension(OverCookedQuest.OVERCOOKEDDIMENSIONID, OverCookedQuest.OVERCOOKEDDIMENSIONID);
 		
 		//mineRun dimension
-		DimensionManager.registerProviderType(MinerQuest.MINERUNDIMENSIONID, WorldProviderOvercooked.class, true);
+		DimensionManager.registerProviderType(MinerQuest.MINERUNDIMENSIONID, WorldProviderMineRun.class, true);
 		DimensionManager.registerDimension(MinerQuest.MINERUNDIMENSIONID, MinerQuest.MINERUNDIMENSIONID);
+		
+		DimensionManager.registerProviderType(WorldProviderTRON.TRONDIMENSIONID, WorldProviderTRON.class, true);
+		DimensionManager.registerDimension(WorldProviderTRON.TRONDIMENSIONID, WorldProviderTRON.TRONDIMENSIONID);
 		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);
