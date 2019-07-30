@@ -11,6 +11,7 @@ import org.ngs.bigx.minecraft.npcs.custom.Raul;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderMineRun;
+import org.ngs.bigx.minecraft.quests.worlds.WorldProviderTRON;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
@@ -52,6 +53,9 @@ public class MinerQuest extends CustomQuestAbstract
 		private int startTime;
 		private double posYofPlayer;
 		private long TIME;
+		private Clock fireClock;
+		private long fireTIME;
+		
 		public MinerQuest()
 		{
 			super();
@@ -72,6 +76,7 @@ public class MinerQuest extends CustomQuestAbstract
 			currentTick = 0;
 			timerRectangle = new HudRectangle(-25, 5, 50, 30, 0xff0000ff, true, false);
 			clock = Clock.systemDefaultZone();
+			fireClock = Clock.systemDefaultZone();
 			seconds = 60;
 			secondsString += seconds;
 			timerString = new HudString(0, 10, secondsString, 2.0f ,true,false);
@@ -118,6 +123,7 @@ public class MinerQuest extends CustomQuestAbstract
 				worldLoaded = true;
 			initialize = false;
 			posXofLava = -40;
+			currentTick = 0;
 			HudManager.registerRectangle(timerRectangle);
 			HudManager.registerString(timerString);
 		}
@@ -214,6 +220,7 @@ public class MinerQuest extends CustomQuestAbstract
 							super.complete();
 							HudManager.unregisterRectangle(timerRectangle);
 							HudManager.unregisterString(timerString);
+							currentTick = 0;
 							QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.xCoord, (int) MinerNPC.LOCATION.yCoord, (int) MinerNPC.LOCATION.zCoord);
 							initialize = false;
 						}
@@ -229,17 +236,45 @@ public class MinerQuest extends CustomQuestAbstract
 						resetToAirCont(posXofPlayer+50,0,world);
 						clearPotHoles((int) (posXofPlayer+50),0,world);
 						clearPotHoles((int) (posXofPlayer+50),0,world);
-
-					if(currentTick==4)
+						if(posXofPlayer - posXofLava >=40)
 						{
-							generateLavaWall(posXofLava, 0, world);
-							currentTick = 0;
-							posXofLava++;
+							if (clock.millis() - fireTIME >= 20)
+							{
+								generateLavaWall(posXofLava, 0, world);
+								fireTIME = clock.millis();
+								posXofLava++;
+							}
+//							if(currentTick==2)
+//							{
+//								generateLavaWall(posXofLava, 0, world);
+//								currentTick = 0;
+//								posXofLava++;
+//							}
+//							else
+//							{
+//								currentTick++;
+//							}
 						}
 						else
 						{
-							currentTick++;
+							if (clock.millis() - fireTIME >= 20)
+							{
+								generateLavaWall(posXofLava, 0, world);
+								fireTIME = clock.millis();
+								posXofLava++;
+							}
+//							if(currentTick==3)
+//							{
+//								generateLavaWall(posXofLava, 0, world);
+//								currentTick = 0;
+//								posXofLava++;
+//							}
+//							else
+//							{
+//								currentTick++;
+//							}
 						}
+						
 						generateFloorAndCeiling(posXofPlayer-1,0,world);
 						generateWalls((int) (posXofPlayer)-1,posZofPlayer,world);
 						Random rand = new Random();
@@ -388,6 +423,7 @@ public class MinerQuest extends CustomQuestAbstract
 				super.complete();
 				HudManager.unregisterRectangle(timerRectangle);
 				HudManager.unregisterString(timerString);
+				currentTick = 0;
 				QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.xCoord, (int) MinerNPC.LOCATION.yCoord, (int) MinerNPC.LOCATION.zCoord);
 				seconds = 60;
 				initialize = false;
