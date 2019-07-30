@@ -81,6 +81,7 @@ public class OlReliable extends ItemFishingRod
 	 public static void delayMove()
 	 {
 		 timeElapsed = (int)(clock.millis() - lastTime) / 1000;
+
 		 if(timeElapsed >= 5)
 		 {
 		 BiGX.instance().clientContext.lock(false);
