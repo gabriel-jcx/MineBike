@@ -19,6 +19,9 @@ public class MineBikeCustomItems
 		ArrayList<Item> returned = new ArrayList<Item>();
 		try {
 			returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod"));
+			Item painting = new ItemCustomPainting(CustomPainting.class);
+			painting.setTextureName("customnpcs:painting").setUnlocalizedName("CustomPainting");
+			returned.add(painting);
 	    	for (EnumFishType fish: EnumFishType.values())
 			  {
           Item item = new ItemFish(fish.getHealAmount(), fish.getSaturationModifier(), false, fish.getWeight());

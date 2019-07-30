@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.items;
 import io.netty.buffer.ByteBuf;
 
 import java.awt.Color;
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -246,6 +247,8 @@ public class CustomFishHook extends EntityFishHook
     	this.onEntityUpdate();
     	this.extinguish();
     	
+    	BiGX.instance().clientContext.lock(true);
+    	
     	if (justSpawned)
     	{
         	BiGX.instance().clientContext.lock(true);
@@ -329,6 +332,10 @@ public class CustomFishHook extends EntityFishHook
     		{
     			powerLvl.h = checkHeight;
     			powerLvl.color = color(powerLvl.h);
+    		}
+    		else if(checkHeight >= 0)
+    		{
+    			powerLvl.h = 0;
     		}
     		//If the max height is reacher, make sure the height and color remains the same
     		else
@@ -825,7 +832,10 @@ public class CustomFishHook extends EntityFishHook
     //to keep track of their minigame progress
     public void retractHook()
     {
-    	BiGX.instance().clientContext.lock(false);
+    	OlReliable.clock = Clock.systemDefaultZone();
+    	OlReliable.lastTime = OlReliable.clock.millis();
+	    OlReliable.clockTimer = true;
+	    OlReliable.delayMove();
         double d1 = this.angler.posX - this.posX;
         double d3 = this.angler.posY - this.posY;
         double d5 = this.angler.posZ - this.posZ;
@@ -930,8 +940,11 @@ public class CustomFishHook extends EntityFishHook
     @Override
     public void setDead()
     {
+    	OlReliable.clock = Clock.systemDefaultZone();
+    	OlReliable.lastTime = OlReliable.clock.millis();
+	    OlReliable.clockTimer = true;
+	    OlReliable.delayMove();
     	super.setDead();
-    	BiGX.instance().clientContext.lock(false);
     }
     
     //Gets the types of items and custom fish the player can catch
