@@ -104,19 +104,18 @@ public class HudManager extends GuiScreen
 		//get current texture and then set it back at the end of this function
 		this.fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		//translate to where it is going to be displayed, then scale it
+		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_TEXTURE_BIT);
 		GL11.glPushAttrib(GL11.GL_COLOR);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-				GL11.glPushMatrix();
 					GL11.glTranslatef(
-							(int) (hudString.x + (hudString.centerX ? 
+						 (int) (hudString.x + (hudString.centerX ? 
 							mcWidth/2-fontRendererObj.getStringWidth(hudString.text)/2 * hudString.scale
 							: 0)),
 							hudString.y + (hudString.centerY ? mcHeight/2 : 0), 
 							0.0f);
 				
 					GL11.glScalef(hudString.scale, hudString.scale, hudString.scale);
-					//this breaks the other textures
+//					this breaks the other textures
 					if (hudString.shadow)
 					{
 						fontRendererObj.drawStringWithShadow(	
@@ -134,10 +133,9 @@ public class HudManager extends GuiScreen
 								hudString.color >> 8);
 					}
 					GL11.glScalef(1.0f, 1.0f, 1.0f);
-				GL11.glPopMatrix();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glPopAttrib();
 		GL11.glPopAttrib();
+		GL11.glPopMatrix();
 	}
 	
 	public void drawTexture(HudTexture hudTexture)

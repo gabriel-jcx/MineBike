@@ -24,7 +24,7 @@ public class MineBikeCustomItems
 			returned.add(painting);
 	    	for (EnumFishType fish: EnumFishType.values())
 			  {
-          Item item = new ItemFish(fish.getHealAmount(), fish.getSaturationModifier(), false, fish.getWeight());
+          Item item = new ItemFish(fish.getHealAmount(), fish.getSaturationModifier(), false, fish.getWeight(), fish.getName());
           item.setUnlocalizedName("ItemFish." + fish.getName());
           item.setTextureName("customnpcs:" + fish.getName());
           returned.add(item);

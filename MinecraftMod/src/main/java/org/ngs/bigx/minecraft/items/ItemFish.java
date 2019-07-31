@@ -24,10 +24,12 @@ public class ItemFish extends ItemFood
 {
 	//Stores what tier the fish is
 public int rarity;
+public String name;
 	
-public ItemFish(int p_i45339_1_, float p_i45339_2_, boolean p_i45339_3_, int rarity) {
+public ItemFish(int p_i45339_1_, float p_i45339_2_, boolean p_i45339_3_, int rarity, String name) {
 		super(p_i45339_1_, p_i45339_2_, p_i45339_3_);
 		this.rarity = rarity;
+		this.name = name;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -35,6 +37,11 @@ public ItemFish(int p_i45339_1_, float p_i45339_2_, boolean p_i45339_3_, int rar
 public int getRarity()
 {
 	return rarity;
+}
+
+public String getName()
+{
+	return name;
 }
 
 @Override

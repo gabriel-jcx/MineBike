@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
@@ -35,6 +36,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedRandomFishable;
@@ -43,12 +45,12 @@ import net.minecraft.world.WorldServer;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
+import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.items.EnumFishType;
-
 
 public class CustomFishHook extends EntityFishHook
 {
@@ -331,6 +333,10 @@ public class CustomFishHook extends EntityFishHook
     			powerLvl.h = checkHeight;
     			powerLvl.color = color(powerLvl.h);
     		}
+    		else if(checkHeight <= 0)
+    		{
+    			powerLvl.h = 0;
+    		}
     		//If the max height is reacher, make sure the height and color remains the same
     		else
     		{
@@ -352,6 +358,7 @@ public class CustomFishHook extends EntityFishHook
     		 */
     		if(getPower() >= getRequiredPower()) //30 52.5
     		{
+    			HudManager.unregisterString(failTime);
     			if(getPower() >= getBonus())
     				doubleTime = 2;
     			else
@@ -396,6 +403,7 @@ public class CustomFishHook extends EntityFishHook
         			HudManager.unregisterRectangle(boxBottom);
         			HudManager.unregisterRectangle(boxTop);
         			HudManager.unregisterString(powerString);
+        			HudManager.unregisterString(failTime);
         			HudManager.unregisterString(holdTime);
         			checkTime = false;
         			doubleTime = 1;
@@ -752,7 +760,7 @@ public class CustomFishHook extends EntityFishHook
     	{
     		b0 = 1;
 //    		clickRate -= 20;
-    		clickRate += 2;
+    		clickRate += 10;
     	}
     	else
     	{
@@ -838,6 +846,11 @@ public class CustomFishHook extends EntityFishHook
         entityitem.motionX = d1 * d9;
         entityitem.motionY = d3 * d9 + (double)MathHelper.sqrt_double(d7) * 0.08D;
         entityitem.motionZ = d5 * d9;
+        ItemStack fish = entityitem.getEntityItem();
+        ResourceLocation fishLocation = new ResourceLocation("customnpcs", "textures/items/" + ((ItemFish)fish.getItem()).getName() + ".png");
+        GuiMessageWindow.showMessageAndImage("You Caught a " + fish.getDisplayName() + "!", fishLocation, false);
+        System.out.println("You Caught a " + fish.getDisplayName() + "!");
+        System.out.println("You Caught a " + fish.getDisplayName() + "!");
         this.worldObj.spawnEntityInWorld(entityitem);
         switch(difficulty)
         {
