@@ -142,6 +142,11 @@ public class FishingQuest extends CustomQuestAbstract
 				clockStart = false;
 			}
 			
+			if(CustomFishHook.numFish >= requiredFish)
+			{
+				endGame(event);
+				clockStart = false;
+			}
 		}
 		
 		//Used To check if the player has entered one of the portals and started the Minigame

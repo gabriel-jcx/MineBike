@@ -249,6 +249,8 @@ public class CustomFishHook extends EntityFishHook
     	this.onEntityUpdate();
     	this.extinguish();
     	
+    	BiGX.instance().clientContext.lock(true);
+    	
     	if (justSpawned)
     	{
         	BiGX.instance().clientContext.lock(true);
@@ -333,7 +335,8 @@ public class CustomFishHook extends EntityFishHook
     			powerLvl.h = checkHeight;
     			powerLvl.color = color(powerLvl.h);
     		}
-    		else if(checkHeight <= 0)
+        
+    		else if(checkHeight >= 0)
     		{
     			powerLvl.h = 0;
     		}
