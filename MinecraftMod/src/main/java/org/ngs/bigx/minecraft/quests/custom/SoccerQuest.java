@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
@@ -26,6 +27,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
@@ -38,6 +40,7 @@ import noppes.npcs.DataAI;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import scala.actors.threadpool.Arrays;
 
 public class SoccerQuest extends CustomQuestAbstract
 {
@@ -59,11 +62,45 @@ public class SoccerQuest extends CustomQuestAbstract
 	private HudString redScoreBoard;
 	private HudString blueScoreBoard;
 	
+	//used for displaying Messages when either player scores
+	private HudString scoreMessageString;
+	private static final String WIN_MESSAGE = "YOU SCORED!";
+	private static final String LOSE_MESSAGE = "Your opponent scored...";
+	
+	private HudTexture instructionTexture;
+	private HudString instructionString;
+	private static ResourceLocation[] instructionTextureLocations = new ResourceLocation[]  
+			{	
+			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction1.png"),
+			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction2.png"),
+			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction3.png"),
+			};
+	private static String[] instructionStringContents = new String[]
+			{
+					"Kick the Creeper by running into it",
+					"Hit it into the red goal to score a point",
+					"Score more than Raul to win",
+			};
+	
+	private HudRectangle clockRectangle;
+	private HudString clockString;
+	
+	//timekeeping
+	private long lastTime;
+	private long startTime;
+	private Clock gameClock;
+	private int secondsElapsed;
+	public static final int GAME_TIME_IN_SECONDS = 300;
+	
+	private boolean instructionsStarted;
+	
+	//npc/pathfinding stuff
+	static EntityCustomNpc npc;
+	static NpcCommand command;
 	private int npcSpeed;
-	
-	private HudString youScoredMessage;
-	
-	long lastTime;
+	static ForgeDirection runDirection;
+	public static int[] npcPath = new int[3];
+	public static List<int[]> npcPathList = new ArrayList<int[]>();
 	
 	//indicates whether the soccer dimension is loaded
 	static boolean worldLoaded = false;
@@ -83,7 +120,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		ballInit = false;
 		
-		npcSpeed = 10;
+		npcSpeed = 7;
 		
 		//hud stuff
 		//location of the red and blue boxes that surround the text boxes
@@ -94,14 +131,28 @@ public class SoccerQuest extends CustomQuestAbstract
 		redScoreBoard = new HudString(-85, 42, "0", 2.0f, true, false);
 		blueScoreBoard = new HudString(70, 42, "0", 2.0f, true, false);
 		
+		//clock hud elements
+		clockRectangle = new HudRectangle(-30, 30, 60, 30, 0x000000ff, true, false);
+		clockString = new HudString(
+			0, 35,
+			Integer.toString(GAME_TIME_IN_SECONDS/ 60) +
+				" : " + 
+				((GAME_TIME_IN_SECONDS % 60 < 10) ? "0" : "") +
+				Integer.toString(GAME_TIME_IN_SECONDS % 60),
+			2.0f,
+			true, false
+		);
+		
+		instructionsStarted = false;
+		
 		//message that displays when you get the ball in the goal
+		
+		gameClock = Clock.systemDefaultZone();
 		
 		this.register();
 	}
 	
-	//this is the stuff that ends the game
-	@Override
-	public void onItemPickUp(EntityItemPickupEvent event)
+	public void endGame()
 	{
 		HudManager.unregisterRectangle(blueBox);
 		HudManager.unregisterRectangle(redBox);
@@ -109,14 +160,28 @@ public class SoccerQuest extends CustomQuestAbstract
 		HudManager.unregisterString(blueScoreBoard);
 		HudManager.unregisterString( redScoreBoard);
 		
+		HudManager.unregisterRectangle(clockRectangle);
+		HudManager.unregisterString(clockString);
+		
 		QuestTeleporter.teleport(player, 0, (int) Raul.LOCATION.xCoord, (int) Raul.LOCATION.yCoord, (int) Raul.LOCATION.zCoord);
 		started = false;
 		ballInit = false;
 		worldLoaded = false;
-		ball.isDead = true;
-		npc.isDead = true;
+		instructionsStarted = false;
+		
+		if (ball != null)
+			ball.isDead = true;
+		if(npc != null)
+			npc.isDead = true;
 		super.complete();
 		completed = false;
+	}
+	
+	//this is the stuff that ends the game
+	@Override
+	public void onItemPickUp(EntityItemPickupEvent event)
+	{
+		endGame();
 	}
 	
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -133,26 +198,50 @@ public class SoccerQuest extends CustomQuestAbstract
 		}
 	}
 	
-	static EntityCustomNpc npc;
-	static NpcCommand command;
-	static ForgeDirection runDirection;
-	
-	public static int[] npcPath = new int[3];
-	public static List<int[]> npcPathList = new ArrayList<int[]>();
-	
 	@Override
 	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
 	{	
-		System.out.println(BiGXPacketHandler.change);
+		lastTime = gameClock.millis();
 		//if the world is not loaded or the event happened on the client, skip
 		if (!worldLoaded)
 			return;
 		if (event.world.provider.worldObj.isRemote)
 			return;
 		
-		//init the ball and npc
+		//show the instructions for the game, then init the ball and npc
 		if (!ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
 		{	
+			if (!instructionsStarted)
+			{
+				startTime = gameClock.millis();
+				instructionsStarted = true;
+				return;
+			}
+			
+			int currentInstruction = (int) ((gameClock.millis() - startTime )/ 3000);
+			
+			System.out.println("Current instruction" + currentInstruction);
+			if (currentInstruction >= instructionTextureLocations.length)
+			{
+				//the game starts here
+				HudManager.unregisterTexture(instructionTexture);
+				HudManager.unregisterString(instructionString);
+				QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, (int)SoccerQuest.SOCCER_Y_LEVEL, -25);
+			}
+			else
+			{
+				System.out.println("\t" + instructionTextureLocations[currentInstruction].getResourcePath());
+				instructionString.text = instructionStringContents[currentInstruction];
+				instructionTexture.resourceLocation = instructionTextureLocations[currentInstruction];
+				return;
+			}
+			
+			//anything below here executes after the instructions
+			
+			startTime = gameClock.millis();
+			
+			
+			
 			NpcCommand.removeNpc(Raul.NAME + " ", SoccerQuest.SOCCERDIMENSIONID);
 			
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(SoccerQuest.SOCCERDIMENSIONID);
@@ -213,7 +302,7 @@ public class SoccerQuest extends CustomQuestAbstract
 			updateNpcPath();
 		}
 		
-		//this is responsible for handling the ball entering the goal and updating score
+		//this is responsible for handling the ball entering the goal and updating score and clock
 		if (ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
 		{
 			//if the ball is in the goal
@@ -244,6 +333,21 @@ public class SoccerQuest extends CustomQuestAbstract
 					
 				}//finish resetting game
 			}
+			
+			//handle clock stuff
+			secondsElapsed = (int) (gameClock.millis() - startTime) / 1000;
+			int timeLeft = GAME_TIME_IN_SECONDS - secondsElapsed;
+			clockString.text = 
+					Integer.toString(timeLeft/ 60) +
+					" : " + 
+					((timeLeft % 60 < 10) ? "0" : "") +
+					Integer.toString(timeLeft % 60);
+			
+			if (timeLeft == 0)
+			{
+				endGame();
+			}
+		
 		}
 	}
 	
@@ -395,18 +499,28 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		playerScore = 0;
 		enemyScore = 0;
+	
 		
 		HudManager.registerRectangle(redBox);
 		HudManager.registerRectangle(blueBox);
 		HudManager.registerString(redScoreBoard);
 		HudManager.registerString(blueScoreBoard);
+		HudManager.registerRectangle(clockRectangle);
+		HudManager.registerString(clockString);
+		
+		//create this here so that mcWidth and height are known
+		instructionTexture = new HudTexture(0, 0, HudManager.mcWidth, HudManager.mcHeight, "textures/GUI/instructions/SoccerQuestInstruction1.png");
+		instructionString = new HudString(0, HudManager.mcHeight - 200, instructionStringContents[0], true, false);
+		instructionString.scale = 2.5f;
+		HudManager.registerTexture(instructionTexture);
+		HudManager.registerString(instructionString);
 		//end hud stuff
 		
 		redScoreBoard.text = "0";
 		blueScoreBoard.text = "0";
 		
 //		teleport them to the soccer arena
-		QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, 14, -25);
+		QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, 14, -25);	
 		
 		super.start();
 	}
@@ -415,6 +529,18 @@ public class SoccerQuest extends CustomQuestAbstract
 	public void setDifficulty(Difficulty difficultyIn) 
 	{
 		// TODO Auto-generated method stub
+		if (npc != null)
+		{
+			switch(difficultyIn)
+			{
+			case EASY:
+				command.setSpeed(5);
+			case MEDIUM:
+				command.setSpeed(7);
+			case HARD:
+				command.setSpeed(10);
+			}
+		}
 		
 	}
 }
