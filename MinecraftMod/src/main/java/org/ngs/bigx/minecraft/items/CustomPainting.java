@@ -145,6 +145,14 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
     public static enum EnumArt
     {
         Kebab("Kebab", 16, 16, 0, 0),
+        Hamburger("HamBurger", 64, 64, 64, 64),
+        HamburgerBun("HamBurgerBun", 64, 64, 128, 64),
+        Lettuce("Lettuce", 64, 64, 256, 0),
+        Sandwich("Sandwich", 64, 64, 320, 0),
+        SandwichBread("SandwichBread", 64, 64, 384, 0),
+        Potato("Potato", 64, 64, 448, 0),
+        Bowl("Bowl", 64, 64, 256, 64),
+        RawChicken("RawChicken", 64, 64, 256, 128),
 //        Aztec("Aztec", 16, 16, 16, 0),
 //        Alban("Alban", 16, 16, 32, 0),
 //        Aztec2("Aztec2", 16, 16, 48, 0),
