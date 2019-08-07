@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.npcs.custom;
 
+import org.ngs.bigx.minecraft.gamestate.CustomQuestJson;
 import org.ngs.bigx.minecraft.quests.custom.TRONQuest;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
@@ -12,7 +13,7 @@ public class Flynn extends CustomNPCAbstract
 {
 	public static final String NAME = "Flynn";
 	public static final Vec3 LOCATION = Vec3.createVectorHelper(109, 71, 231);
-	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/MercenarySteve.png";
+	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/MinecraftTRONSkin.png";
 	//MincraftTRONSkin
 	
 	private CustomQuestAbstract quest;
@@ -30,6 +31,9 @@ public class Flynn extends CustomNPCAbstract
 	@Override
 	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
 	{
+		CustomQuestJson json = new CustomQuestJson(quest);
+		quest = new TRONQuest();
+		quest.loadFromJson(json);
 		quest.start();
 	}
 
