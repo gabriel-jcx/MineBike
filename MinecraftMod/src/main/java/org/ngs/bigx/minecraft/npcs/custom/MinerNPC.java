@@ -13,7 +13,7 @@ public class MinerNPC extends CustomNPCAbstract
 {
 	
 	public static final String NAME = "Tobuscus";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(82, 70, 230);
+	public static final Vec3 LOCATION = Vec3.createVectorHelper(124, 150, -130);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/OfficialTobuscusMinecraftSkin.png";
 	private CustomQuestAbstract quest;
 

@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 public class Raul extends CustomNPCAbstract 
 {
 	public static final String NAME = "Raul";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(121, 70, 239);
+	public static final Vec3 LOCATION = Vec3.createVectorHelper(98, 71, 128);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/SoccerSteve.png";
 	
 	private CustomQuestAbstract quest;

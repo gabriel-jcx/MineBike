@@ -12,12 +12,12 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 public class Flynn extends CustomNPCAbstract 
 {
 	public static final String NAME = "Flynn";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(109, 71, 231);
+	public static final Vec3 LOCATION = Vec3.createVectorHelper(127, 164, -139);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/MinecraftTRONSkin.png";
 	//MincraftTRONSkin
 	
 	private CustomQuestAbstract quest;
-	
+		
 	public Flynn()
 	{
 		name = NAME;
@@ -32,6 +32,8 @@ public class Flynn extends CustomNPCAbstract
 	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
 	{
 		CustomQuestJson json = new CustomQuestJson(quest);
+		//the quest breaks if you don't reset it like this. 
+		//Do not change unless you have fixed the problem.
 		quest = new TRONQuest();
 		quest.loadFromJson(json);
 		quest.start();

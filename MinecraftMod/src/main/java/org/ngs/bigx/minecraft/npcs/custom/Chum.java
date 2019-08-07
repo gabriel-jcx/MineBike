@@ -13,7 +13,7 @@ public class Chum extends CustomNPCAbstract
 {
 
 	public static final String NAME = "Chum";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(80, 70, 230);
+	public static final Vec3 LOCATION = Vec3.createVectorHelper(96, 86, -51);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/Fisherman.png";
 	
 	private CustomQuestAbstract quest;
