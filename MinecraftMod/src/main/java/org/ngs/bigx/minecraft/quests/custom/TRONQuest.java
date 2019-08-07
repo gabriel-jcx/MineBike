@@ -122,7 +122,7 @@ public class TRONQuest extends CustomQuestAbstract
     public void returnToMainMenu() // call to return player to previous dimension
     {
         QuestTeleporter.teleport(player, 0, (int) Flynn.LOCATION.xCoord, (int) Flynn.LOCATION.yCoord,
-                (int) Raul.LOCATION.zCoord);
+                (int) Flynn.LOCATION.zCoord);
         HudManager.unregisterString(warnin);
         HudManager.unregisterString(warningNumber);
         setBlock = false;
