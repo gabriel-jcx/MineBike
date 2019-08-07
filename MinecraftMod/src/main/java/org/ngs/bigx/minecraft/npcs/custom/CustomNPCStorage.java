@@ -8,8 +8,10 @@ public class CustomNPCStorage
 	{
 		ArrayList<CustomNPCAbstract> customNpcs = new ArrayList<CustomNPCAbstract>();
 		customNpcs.add(new Raul());
-		customNpcs.add(new MinerNPC());
+		customNpcs.add(new ChefGusteau());
+		customNpcs.add(new Chum());
 		customNpcs.add(new Flynn());
+		customNpcs.add(new MinerNPC());
 		return customNpcs;
 	}
 }

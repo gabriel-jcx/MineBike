@@ -13,7 +13,7 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 public class ChefGusteau extends CustomNPCAbstract
 {
 	public static final String NAME = "ChefGusteau";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(89, 70, 225);
+	public static final Vec3 LOCATION = Vec3.createVectorHelper(107, 91, -36);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/Chef_Gusteau.png";
 	
 	private OverCookedQuest quest;

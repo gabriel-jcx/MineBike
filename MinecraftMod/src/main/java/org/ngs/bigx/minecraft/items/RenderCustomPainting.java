@@ -66,10 +66,10 @@ public class RenderCustomPainting  extends Render
                 float f17 = f1 + (float)((j1 + 1) * 16);
                 float f18 = f1 + (float)(j1 * 16);
                 this.func_77008_a(p_77010_1_, (f15 + f16) / 2.0F, (f17 + f18) / 2.0F);
-                float f19 = (float)(p_77010_4_ + p_77010_2_ - i1 * 16) / 256.0F;
-                float f20 = (float)(p_77010_4_ + p_77010_2_ - (i1 + 1) * 16) / 256.0F;
-                float f21 = (float)(p_77010_5_ + p_77010_3_ - j1 * 16) / 256.0F;
-                float f22 = (float)(p_77010_5_ + p_77010_3_ - (j1 + 1) * 16) / 256.0F;
+                float f19 = (float)(p_77010_4_ + p_77010_2_ - i1 * 16) / 512.0F;
+                float f20 = (float)(p_77010_4_ + p_77010_2_ - (i1 + 1) * 16) / 512.0F;
+                float f21 = (float)(p_77010_5_ + p_77010_3_ - j1 * 16) / 512.0F;
+                float f22 = (float)(p_77010_5_ + p_77010_3_ - (j1 + 1) * 16) / 512.0F;
                 Tessellator tessellator = Tessellator.instance;
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 0.0F, -1.0F);
