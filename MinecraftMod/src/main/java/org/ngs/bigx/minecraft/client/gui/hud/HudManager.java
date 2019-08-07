@@ -24,8 +24,8 @@ public class HudManager extends GuiScreen
 	public static ArrayList<HudTexture> textures = new ArrayList<HudTexture>();
 	
 	private static Minecraft staticMC;
-	private static int mcWidth;
-	private static int mcHeight;
+	public static int mcWidth;
+	public static int mcHeight;
 	
 	public HudManager(Minecraft mc) {
 		super();
