@@ -298,7 +298,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		//pathfinding for the npc
 		if (npc != null)
 		{		
-			npc.setAIMoveSpeed(25.0f);
+			npc.setAIMoveSpeed(100.0f);
 			updateNpcPath();
 		}
 		
