@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.quests.custom;
 import java.time.Clock;
 import java.util.Random;
 
+import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
@@ -12,6 +13,8 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderMineRun;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderTRON;
+
+import com.mojang.realmsclient.gui.EditOnlineWorldScreen;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
@@ -23,6 +26,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -45,6 +49,7 @@ public class MinerQuest extends CustomQuestAbstract
 		private int posXofLava;
 		private int currentTick;
 		private boolean initialize;
+		
 		private HudRectangle timerRectangle;
 		private HudString timerString;
 		private int seconds;
@@ -55,6 +60,8 @@ public class MinerQuest extends CustomQuestAbstract
 		private long TIME;
 		private Clock fireClock;
 		private long fireTIME;
+		
+		private int numMsForFireToSpawn;
 		
 		public MinerQuest()
 		{
@@ -81,6 +88,21 @@ public class MinerQuest extends CustomQuestAbstract
 			secondsString += seconds;
 			timerString = new HudString(0, 10, secondsString, 2.0f ,true,false);
 			register();
+			
+			numMsForFireToSpawn = 180;
+			
+			instructionTextureLocations = new ResourceLocation[]  
+				{	
+				new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/MinerQuestInstruction1.png"),
+				new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/MinerQuestInstruction2.png"),
+				new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/MinerQuestInstruction3.png"),
+				};
+			instructionStringContents = new String[]
+				{
+				"Run from the fire",
+				"Collect Gold",
+				"Stay alive until time runs out",
+				};
 		}
 		
 		@Override
@@ -127,16 +149,7 @@ public class MinerQuest extends CustomQuestAbstract
 			HudManager.registerRectangle(timerRectangle);
 			HudManager.registerString(timerString);
 		}
-//		public void randGen()
-//		{
-//			boolean isDone = false;
-//			while(!isDone)
-//			{
-//				Random rand = new Random();
-//				int randomInt = rand.nextInt(6);
-//			}
-//					
-//		}
+
 		private void clearStartPotHoles(int startx, int startz, World world) 
 		{
 				for(int x = startx; x < startx+200; x++)
@@ -166,6 +179,8 @@ public class MinerQuest extends CustomQuestAbstract
 							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.stone);
 						break;
 						}
+						//set it to air above
+						world.setBlock((int) startx + x, 21, (int) (startz + z), Blocks.air);
 					}
 				}
 		}
@@ -196,8 +211,7 @@ public class MinerQuest extends CustomQuestAbstract
 					default:
 						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.stone);
 					break;
-					}
-				
+				}
 			}
 		}
 		@Override
@@ -207,10 +221,23 @@ public class MinerQuest extends CustomQuestAbstract
 			if (event.world.provider.worldObj.isRemote)
 				return;
 			
-			
 			if(worldLoaded && event.world.provider.dimensionId == WorldProviderMineRun.MINERUNDIMENSIONID && !pleaseStop)
 			{
-						
+				
+				
+				if (super.showingInstructions())
+				{
+					resetToAirStart(posXofPlayer - 1,0,world);
+					resetToAirStart(posXofPlayer - 1,0,world);
+					BiGX.instance().clientContext.lock(true);
+					return;
+				}
+				else
+				{
+					TIME = clock.millis();
+					BiGX.instance().clientContext.lock(false);
+				}
+				
 						
 					//if(posXofPlayer-35>lastPosNum)
 						//{
@@ -238,41 +265,21 @@ public class MinerQuest extends CustomQuestAbstract
 						clearPotHoles((int) (posXofPlayer+50),0,world);
 						if(posXofPlayer - posXofLava >=40)
 						{
-							if (clock.millis() - fireTIME >= 20)
+							if (clock.millis() - fireTIME >= numMsForFireToSpawn)
 							{
 								generateLavaWall(posXofLava, 0, world);
 								fireTIME = clock.millis();
 								posXofLava++;
 							}
-//							if(currentTick==2)
-//							{
-//								generateLavaWall(posXofLava, 0, world);
-//								currentTick = 0;
-//								posXofLava++;
-//							}
-//							else
-//							{
-//								currentTick++;
-//							}
 						}
 						else
 						{
-							if (clock.millis() - fireTIME >= 20)
+							if (clock.millis() - fireTIME >= numMsForFireToSpawn)
 							{
 								generateLavaWall(posXofLava, 0, world);
 								fireTIME = clock.millis();
 								posXofLava++;
 							}
-//							if(currentTick==3)
-//							{
-//								generateLavaWall(posXofLava, 0, world);
-//								currentTick = 0;
-//								posXofLava++;
-//							}
-//							else
-//							{
-//								currentTick++;
-//							}
 						}
 						
 						generateFloorAndCeiling(posXofPlayer-1,0,world);
@@ -328,37 +335,7 @@ public class MinerQuest extends CustomQuestAbstract
 								
 							}
 						}
-						
-						
-							//lastPosNum += 20;
-						//}
-						//generateWallsWest((int) (posXofPlayer),posZofPlayer,world);
-						//pleaseStop=true;
-						//generateWall(20,0,world,direction.NORTH);
-						//generateWall(0,20,world,direction.WEST);
-//						Random rand = new Random();
-//						int randomInt = rand.nextInt(6);
-//						switch(randomInt)
-//						{
-//							case 1: 
-//							generateFloorAndCeiling(posXofPlayer,0,world);
-//							generateWalls((int) (posXofPlayer)+1,posZofPlayer,world);
-//							break;
-//							case 2:
-//							generateFloorAndCeilingWest(0,posZofPlayer,world);
-//							generateWallsWest((int) (posXofPlayer),posZofPlayer,world);
-//							break;
-//							
-//						}
-				//setting blocks in the world
-	
-			//	for(int c = 0; c < 5; c++)
-			//	{
-			//		generateFloorAndCeiling(0+(c*5),0,event);
-			//		generateWalls(0+(c*5),0,event);	
-			//	}
-	//				pleaseStop = true;
-			}
+			} // end init
 				
 		}
 		
@@ -431,8 +408,8 @@ public class MinerQuest extends CustomQuestAbstract
 	//		playerLoc = event.player.getPlayerCoordinates();
 	//        playerLocation[1] = playerLoc;
 			//System.out.println("ticking");        
-	        if(!event.player.capabilities.isCreativeMode)
-	            event.player.setGameType(WorldSettings.getGameTypeById(1));
+	        if(event.player.capabilities.allowEdit)
+	            event.player.setGameType(WorldSettings.getGameTypeById(2));
 	        //playerEvent = event;
 	       
 	       
