@@ -81,6 +81,7 @@ public class NpcCommand {
 	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name, String texture) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
 		npc.display.name = name;
+		npc.setPosition(x, y, z);
 		npc.display.texture = texture;
 	
 		npc.ai.startPos = new int[]{
@@ -91,7 +92,6 @@ public class NpcCommand {
 		npc.attackEntityAsMob(Minecraft.getMinecraft().thePlayer);
 		
 		w.spawnEntityInWorld(npc);
-		npc.setPosition(x, y, z);
 	    npc.setHealth(10000f);
 	
 	    return npc;
