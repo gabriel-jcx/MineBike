@@ -67,21 +67,6 @@ public class SoccerQuest extends CustomQuestAbstract
 	private static final String WIN_MESSAGE = "YOU SCORED!";
 	private static final String LOSE_MESSAGE = "Your opponent scored...";
 	
-	private HudTexture instructionTexture;
-	private HudString instructionString;
-	private static ResourceLocation[] instructionTextureLocations = new ResourceLocation[]  
-			{	
-			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction1.png"),
-			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction2.png"),
-			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction3.png"),
-			};
-	private static String[] instructionStringContents = new String[]
-			{
-					"Kick the Creeper by running into it",
-					"Hit it into the red goal to score a point",
-					"Score more than Raul to win",
-			};
-	
 	private HudRectangle clockRectangle;
 	private HudString clockString;
 	
@@ -91,8 +76,6 @@ public class SoccerQuest extends CustomQuestAbstract
 	private Clock gameClock;
 	private int secondsElapsed;
 	public static final int GAME_TIME_IN_SECONDS = 300;
-	
-	private boolean instructionsStarted;
 	
 	//npc/pathfinding stuff
 	static EntityCustomNpc npc;
@@ -143,7 +126,22 @@ public class SoccerQuest extends CustomQuestAbstract
 			true, false
 		);
 		
-		instructionsStarted = false;
+		
+		instructionTextureLocations = new ResourceLocation[]  
+			{	
+			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction1.png"),
+			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction2.png"),
+			new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/instructions/SoccerQuestInstruction3.png"),
+			};
+		instructionStringContents = new String[]
+			{
+			"Kick the Creeper by running into it",
+			"Hit it into the red goal to score a point",
+			"Score more than Raul to win",
+			};
+		
+		
+//		instructionsStarted = false;
 		
 		//message that displays when you get the ball in the goal
 		
@@ -167,7 +165,6 @@ public class SoccerQuest extends CustomQuestAbstract
 		started = false;
 		ballInit = false;
 		worldLoaded = false;
-		instructionsStarted = false;
 		
 		if (ball != null)
 			ball.isDead = true;
@@ -211,29 +208,15 @@ public class SoccerQuest extends CustomQuestAbstract
 		//show the instructions for the game, then init the ball and npc
 		if (!ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
 		{	
-			if (!instructionsStarted)
+			if (super.showingInstructions())
 			{
-				startTime = gameClock.millis();
-				instructionsStarted = true;
+				BiGX.instance().clientContext.lock(true);
 				return;
-			}
-			
-			int currentInstruction = (int) ((gameClock.millis() - startTime )/ 3000);
-			
-			System.out.println("Current instruction" + currentInstruction);
-			if (currentInstruction >= instructionTextureLocations.length)
-			{
-				//the game starts here
-				HudManager.unregisterTexture(instructionTexture);
-				HudManager.unregisterString(instructionString);
-				QuestTeleporter.teleport(player, SOCCERDIMENSIONID, 1, (int)SoccerQuest.SOCCER_Y_LEVEL, -25);
 			}
 			else
 			{
-				System.out.println("\t" + instructionTextureLocations[currentInstruction].getResourcePath());
-				instructionString.text = instructionStringContents[currentInstruction];
-				instructionTexture.resourceLocation = instructionTextureLocations[currentInstruction];
-				return;
+				BiGX.instance().clientContext.lock(false);
+				QuestTeleporter.teleport(player, SoccerQuest.SOCCERDIMENSIONID, 1, 10, -25);
 			}
 			
 			//anything below here executes after the instructions
@@ -509,11 +492,11 @@ public class SoccerQuest extends CustomQuestAbstract
 		HudManager.registerString(clockString);
 		
 		//create this here so that mcWidth and height are known
-		instructionTexture = new HudTexture(0, 0, HudManager.mcWidth, HudManager.mcHeight, "textures/GUI/instructions/SoccerQuestInstruction1.png");
-		instructionString = new HudString(0, HudManager.mcHeight - 200, instructionStringContents[0], true, false);
-		instructionString.scale = 2.5f;
-		HudManager.registerTexture(instructionTexture);
-		HudManager.registerString(instructionString);
+//		instructionTexture = new HudTexture(0, 0, HudManager.mcWidth, HudManager.mcHeight, "textures/GUI/instructions/SoccerQuestInstruction1.png");
+//		instructionString = new HudString(0, HudManager.mcHeight - 200, instructionStringContents[0], true, false);
+//		instructionString.scale = 2.5f;
+//		HudManager.registerTexture(instructionTexture);
+//		HudManager.registerString(instructionString);
 		//end hud stuff
 		
 		redScoreBoard.text = "0";

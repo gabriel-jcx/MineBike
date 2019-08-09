@@ -1,12 +1,20 @@
 package org.ngs.bigx.minecraft.quests.custom.helpers;
 
+import java.time.Clock;
+
+import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
+import org.ngs.bigx.minecraft.client.gui.hud.HudString;
+import org.ngs.bigx.minecraft.client.gui.hud.HudTexture;
 import org.ngs.bigx.minecraft.gamestate.CustomQuestJson;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
+import org.ngs.bigx.minecraft.quests.custom.SoccerQuest;
+import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -24,6 +32,21 @@ public abstract class CustomQuestAbstract
 	protected boolean completed;
 	protected boolean started;
 	
+	//used for displaying instructions at the start of the game
+	protected ResourceLocation[] instructionTextureLocations;
+	protected String[] instructionStringContents;
+	private HudTexture instructionTexture;
+	private HudString instructionString;
+	//flags for instructions
+	private boolean instructionsStarted;
+	private boolean instructionsDone;
+	
+	
+	//timekeeping, also used in the instructions method.
+	private long  instructionStartTime;
+	private Clock instructionClock;
+	
+	
 	public enum Difficulty
 	{
 		EASY,
@@ -34,7 +57,7 @@ public abstract class CustomQuestAbstract
 	//
 	public CustomQuestAbstract()
 	{
-		
+		instructionClock = Clock.systemDefaultZone();
 	}
 	
 	public void loadFromJson(CustomQuestJson json)
@@ -52,6 +75,52 @@ public abstract class CustomQuestAbstract
 	}
 	
 	//methods below are meant to be called with super
+	
+	//will show the instructions when called.
+	//returns true if they are still showing, false otherwise
+	//should be continuously called until it returns false
+	public boolean showingInstructions()
+	{
+		if (instructionsDone)
+			return false;
+		
+		//executed once
+		if (!instructionsStarted)
+		{
+			instructionStartTime = instructionClock.millis();
+			instructionsStarted = true;
+			
+			instructionTexture = new HudTexture(0, 0, HudManager.mcWidth, HudManager.mcHeight, "");
+			instructionTexture.resourceLocation = instructionTextureLocations[0];
+			instructionString = new HudString(0, HudManager.mcHeight - 200, instructionStringContents[0], true, false);
+			instructionString.scale = 2.5f;
+			
+			HudManager.registerTexture(instructionTexture);
+			HudManager.registerString(instructionString);
+			
+			return true;
+		}
+		
+		int currentInstruction = (int) ((instructionClock.millis() - instructionStartTime )/ 3000);
+		
+		System.out.println("Current instruction" + currentInstruction);
+		//this if statement should be executed once
+		if (currentInstruction >= instructionTextureLocations.length)
+		{
+			//the game starts here
+			HudManager.unregisterTexture(instructionTexture);
+			HudManager.unregisterString(instructionString);
+			instructionsDone = true;
+			return false;
+		}
+		else
+		{
+			System.out.println("\t" + instructionTextureLocations[currentInstruction].getResourcePath());
+			instructionString.text = instructionStringContents[currentInstruction];
+			instructionTexture.resourceLocation = instructionTextureLocations[currentInstruction];
+			return true;
+		}
+	}
 	
 	//the quest is registered upon starting
 	public void start()
@@ -115,7 +184,7 @@ public abstract class CustomQuestAbstract
 	
 	public void onAttackEntityEvent(AttackEntityEvent event)
 	{
-	
+		
 	}
 	
 	public void entityInteractEvent(EntityInteractEvent event)
