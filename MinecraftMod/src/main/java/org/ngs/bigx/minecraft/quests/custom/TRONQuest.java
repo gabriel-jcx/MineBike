@@ -139,9 +139,6 @@ public class TRONQuest extends CustomQuestAbstract
 	/* POSSIBLE BUGS IN NEXT METHOD */
 	public void returnToMainMenu() // returns player back to bike dimension
 	{
-		QuestTeleporter.teleport(player, 0, (int) Flynn.LOCATION.xCoord + 1, (int) Flynn.LOCATION.yCoord,
-				(int) Flynn.LOCATION.zCoord + 1);
-		super.complete();
 		HudManager.unregisterString(warningString);
 		HudManager.unregisterString(warningNumber);
 		setPanePlayer = false;
@@ -153,6 +150,9 @@ public class TRONQuest extends CustomQuestAbstract
 		if (npc != null)
 			npc.isDead = true;
 		npc = null;
+		super.complete();
+		QuestTeleporter.teleport(player, 0, (int) Flynn.LOCATION.xCoord + 1, (int) Flynn.LOCATION.yCoord,
+				(int) Flynn.LOCATION.zCoord + 1);
 	}
 
 	@Override

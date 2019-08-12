@@ -152,7 +152,7 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
         SandwichBread("SandwichBread", 64, 64, 384, 0),
         Potato("Potato", 64, 64, 448, 0),
         Bowl("Bowl", 64, 64, 256, 64),
-        RawChicken("RawChicken", 64, 64, 256, 128),
+        RawChicken("RawChicken", 64, 64, 320, 64),
 //        Aztec("Aztec", 16, 16, 16, 0),
 //        Alban("Alban", 16, 16, 32, 0),
 //        Aztec2("Aztec2", 16, 16, 48, 0),

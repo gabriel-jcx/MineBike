@@ -335,7 +335,6 @@ public class OverCookedQuest extends CustomQuestAbstract
 	public void onItemPickUp(EntityItemPickupEvent event)
 	{
 		teleported = true;
-		QuestTeleporter.teleport(player, 0, (int) ChefGusteau.LOCATION.xCoord, (int) ChefGusteau.LOCATION.yCoord, (int) ChefGusteau.LOCATION.zCoord);
 		super.complete();
 		started = false;
 		display.unregisterAll();
@@ -344,6 +343,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 		HudManager.unregisterString(num);
 		HudManager.unregisterRectangle(rectangletimer);
 		HudManager.unregisterString(TIMER);
+		QuestTeleporter.teleport(player, 0, (int) ChefGusteau.LOCATION.xCoord - 3, (int) ChefGusteau.LOCATION.yCoord, (int) ChefGusteau.LOCATION.zCoord);
 	}
 	
 	//teleports the player from the instruction room to the kitchen to start the game

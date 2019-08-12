@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.npcs.custom;
 
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
+import org.ngs.bigx.minecraft.gamestate.CustomQuestJson;
 import org.ngs.bigx.minecraft.quests.custom.OverCookedQuest;
 import org.ngs.bigx.minecraft.quests.custom.SoccerQuest;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
@@ -30,7 +31,10 @@ public class ChefGusteau extends CustomNPCAbstract
 	@Override
 	public void onInteraction(EntityPlayer player, EntityInteractEvent event)
 	{
-		GuiMessageWindow.showMessage("     Anyone can cook— \n       So can you.");
+		GuiMessageWindow.showMessage("     Anyone can cookï¿½ \n       So can you.");
+		CustomQuestJson json = new CustomQuestJson(quest);
+		quest = new OverCookedQuest();
+		quest.loadFromJson(json);
 		quest.start();
 	}
 	
