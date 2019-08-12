@@ -232,7 +232,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 		
 		//keeps player in adventure mode (can't break blocks)
 //		if(event.player.capabilities.allowEdit)
-//	           event.player.setGameType(WorldSettings.getGameTypeById(2));
+//	           event.player.setls(WorldSettings.getGameTypeById(2));
 		
 		//creative mode
 		//System.out.println("ticking");		
@@ -353,7 +353,6 @@ public class OverCookedQuest extends CustomQuestAbstract
 		ChunkCoordinates coord = event.player.getPlayerCoordinates();		
 		if((coord.posX >= 126 && coord.posX <= 128) && (coord.posZ >= 54 && coord.posZ <= 56))
 		{
-			QuestTeleporter.teleport(player, OVERCOOKEDDIMENSIONID, -21, 10, 46);
 			countTicks = true;
 			gotInv = true;
 			generateOrder();
@@ -365,6 +364,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 			HudManager.registerString(TIMER);
 			
 			TIME = clock.millis();			
+			QuestTeleporter.teleport(player, OVERCOOKEDDIMENSIONID, -21, 10, 46);
 		}
 	}
 	
@@ -656,7 +656,6 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//unregisters all HUD elements 
 	private void endQuest(TickEvent.WorldTickEvent event)
 	{
-		QuestTeleporter.teleport(player, OVERCOOKEDDIMENSIONID, 365, 13, 185);
 		
 		if(score >= goal)
 		{
@@ -670,7 +669,12 @@ public class OverCookedQuest extends CustomQuestAbstract
 		}
 		HudManager.unregisterRectangle(rectangletimer);
 		HudManager.unregisterString(TIMER);
+		HudManager.unregisterRectangle(rectangle);
+		HudManager.unregisterString(num);
+		HudManager.unregisterString(scores);
 		display.unregisterAll();
+		
+		QuestTeleporter.teleport(player, OVERCOOKEDDIMENSIONID, 365, 13, 185);
 	}
 }
 

@@ -1,0 +1,5 @@
+Todo list:
+
+Add method that executes every 10 seconds so that gabriel can implement the query for heartrate sensor.
+Fix render distance of custom paintings in overcooked quest.
+Add different levels to the minigames.
