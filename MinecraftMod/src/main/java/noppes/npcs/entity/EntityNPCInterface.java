@@ -2,6 +2,7 @@ package noppes.npcs.entity;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;

@@ -1,6 +1,7 @@
 package noppes.npcs.client;
 
 import net.minecraft.init.Items;
+import net.minecraft.stats.StatBase;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;

@@ -1,6 +1,7 @@
 package noppes.npcs.blocks;
 
 import java.util.Iterator;
+import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -10,7 +11,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TileChair;

@@ -1,6 +1,6 @@
 package noppes.npcs.blocks.tiles;
 
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import noppes.npcs.blocks.tiles.TileColorable;
 
 public class TileTallLamp extends TileColorable {

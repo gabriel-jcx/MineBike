@@ -2,7 +2,7 @@ package noppes.npcs.blocks.tiles;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import noppes.npcs.blocks.tiles.TileColorable;
 
 public class TileBanner extends TileColorable {

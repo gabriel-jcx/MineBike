@@ -217,11 +217,11 @@ public class DataStats {
 
     public void setAttackStrength(int strength) {
         this.attackStrength = strength;
-        this.npc.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double) this.attackStrength);
+        this.npc.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE ).setBaseValue((double) this.attackStrength);
     }
 
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
-        this.npc.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double) maxHealth);
+        this.npc.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH ).setBaseValue((double) maxHealth);
     }
 }

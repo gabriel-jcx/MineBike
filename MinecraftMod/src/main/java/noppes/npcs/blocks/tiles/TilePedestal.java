@@ -3,7 +3,7 @@ package noppes.npcs.blocks.tiles;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import noppes.npcs.blocks.tiles.TileNpcContainer;
 
 public class TilePedestal extends TileNpcContainer {
