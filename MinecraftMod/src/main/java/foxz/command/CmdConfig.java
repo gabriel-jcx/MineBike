@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockIce;
-import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockVine;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.controllers.ChunkController;
@@ -42,7 +42,7 @@ public class CmdConfig extends ChMcLogger {
          while(var3.hasNext()) {
             String name = (String)var3.next();
             Block block = (Block)Block.blockRegistry.getObject(name);
-            if(block instanceof BlockLeavesBase) {
+            if(block instanceof BlockLeaves) {
                block.setTickRandomly(CustomNpcs.LeavesDecayEnabled);
             }
          }

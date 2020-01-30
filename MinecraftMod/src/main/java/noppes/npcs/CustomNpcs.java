@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockIce;
-import net.minecraft.block.BlockLeavesBase;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockVine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -244,7 +244,7 @@ public class CustomNpcs {
       while(var3.hasNext()) {
          String name = (String)var3.next();
          Block block = (Block)Block.blockRegistry.getObject(name);
-         if(block instanceof BlockLeavesBase) {
+         if(block instanceof BlockLeaves) {
             block.setTickRandomly(LeavesDecayEnabled);
          }
 
