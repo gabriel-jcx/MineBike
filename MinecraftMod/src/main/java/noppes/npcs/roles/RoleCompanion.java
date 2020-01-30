@@ -491,7 +491,7 @@ public class RoleCompanion extends RoleInterface {
             }
 
             entry = (Entry)iterator.next();
-         } while(!entry.getKey().equals(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName()));
+         } while(!entry.getKey().equals(SharedMonsterAttributes.ATTACK_DAMAGE.getAttributeUnlocalizedName()));
 
          AttributeModifier mod = (AttributeModifier)entry.getValue();
          return mod.getAmount();

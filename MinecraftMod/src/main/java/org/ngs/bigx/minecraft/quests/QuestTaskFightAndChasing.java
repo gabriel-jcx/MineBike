@@ -1025,7 +1025,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					npc.ai.stopAndInteract = false;
 					setNpc(npc);
 					
-					npc.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1);
+					npc.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1);
 					
 					command = new NpcCommand(serverContext, npc);
 

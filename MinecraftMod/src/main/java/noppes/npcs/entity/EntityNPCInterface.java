@@ -122,11 +122,11 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
         this.inventory = new DataInventory(this);
         this.transform = new TransformData(this);
         this.script = new DataScript(this);
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue((double) this.stats.maxHealth);
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue((double) CustomNpcs.NpcNavRange);
         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue((double) this.getSpeed());
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue((double) this.stats.getAttackStrength());
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue((double) this.stats.getAttackStrength());
     }
 
     protected void entityInit() {
@@ -165,7 +165,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
     }
 
     public boolean attackEntityAsMob(Entity par1Entity) {
-        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         if (this.stats.attackSpeed < 10) {
             par1Entity.hurtResistantTime = 0;
         }
