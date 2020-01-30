@@ -59,10 +59,7 @@ public class ModelMPM extends ModelNPCMale {
       super(par1);
       this.isArmor = par1 > 0.0F;
       float par2 = 0.0F;
-      super.bipedCloak = new ModelRenderer(this, 0, 0);
-      super.bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, par1);
-      super.bipedEars = new ModelRenderer(this, 24, 0);
-      super.bipedEars.addBox(-3.0F, -6.0F, -1.0F, 6, 6, 1, par1);
+      
       super.bipedHead = new ModelScaleRenderer(this, 0, 0);
       super.bipedHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, par1);
       super.bipedHead.setRotationPoint(0.0F, 0.0F + par2, 0.0F);

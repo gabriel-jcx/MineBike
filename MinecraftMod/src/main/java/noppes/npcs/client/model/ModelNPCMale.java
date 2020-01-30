@@ -33,11 +33,7 @@ public class ModelNPCMale extends ModelBiped {
       super.heldItemRight = 0;
       super.isSneak = false;
       super.aimedBow = false;
-      super.bipedCloak = new ModelRenderer(this, 0, 0);
-      super.bipedCloak.textureHeight = 32.0F;
-      super.bipedCloak.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, f);
-      super.bipedEars = new ModelRenderer(this, 24, 0);
-      super.bipedEars.addBox(-3.0F, -6.0F, -1.0F, 6, 6, 1, f);
+      
       super.bipedHead = new ModelRenderer(this, 0, 0);
       super.bipedHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, f);
       super.bipedHead.setRotationPoint(0.0F, 0.0F + f1, 0.0F);
@@ -246,13 +242,7 @@ public class ModelNPCMale extends ModelBiped {
 
    }
 
-   public void renderEars(float f) {
-      super.bipedEars.rotateAngleY = super.bipedHead.rotateAngleY;
-      super.bipedEars.rotateAngleX = super.bipedHead.rotateAngleX;
-      super.bipedEars.rotationPointX = 0.0F;
-      super.bipedEars.rotationPointY = 0.0F;
-      super.bipedEars.render(f);
-   }
+  
 
    public void setRotation(ModelRenderer model, float x, float y, float z) {
       model.rotateAngleX = x;
@@ -260,9 +250,7 @@ public class ModelNPCMale extends ModelBiped {
       model.rotateAngleZ = z;
    }
 
-   public void renderCloak(float f) {
-      super.bipedCloak.render(f);
-   }
+  
 
    public boolean isSleeping(Entity entity) {
       return entity instanceof EntityPlayer && ((EntityPlayer)entity).isPlayerSleeping()?true:((EntityNPCInterface)entity).currentAnimation == EnumAnimation.LYING;
