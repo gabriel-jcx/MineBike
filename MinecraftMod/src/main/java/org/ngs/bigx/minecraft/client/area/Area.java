@@ -1,6 +1,8 @@
 package org.ngs.bigx.minecraft.client.area;
 
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.ResourceLocation;
+
 
 public class Area
 {
@@ -8,8 +10,8 @@ public class Area
 	{
 		EVENT, ROOM, BUILDING, PLACE, WORLD, NOTASSIGNED
 	}
-	
-	public Area(Vec3 pointA, Vec3 pointB, String name, AreaTypeEnum type, int dimension, int id)
+
+	public Area(Vec3d pointA, Vec3d pointB, String name, AreaTypeEnum type, int dimension, int id)
 	{
 		this.pointA = pointA;
 		this.pointB = pointB;
@@ -20,8 +22,8 @@ public class Area
 	}
 	
 	private int id = 0;
-	public Vec3 pointA;
-	public Vec3 pointB;
+	public Vec3d pointA;
+	public Vec3d pointB;
 	public String name = "";
 	public AreaTypeEnum type = AreaTypeEnum.NOTASSIGNED;
 	public int dimension = 0;

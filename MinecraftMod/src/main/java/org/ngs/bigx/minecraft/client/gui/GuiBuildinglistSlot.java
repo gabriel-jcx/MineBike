@@ -6,8 +6,12 @@ import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import cpw.mods.fml.client.GuiScrollingList;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+
+import net.minecraftforge.fml.client.GuiScrollingList;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;  //TODO: figure out this deprecaded lib
+//import net.minecraftforge.fml.relauncher.ReflectionHelper
+//import cpw.mods.fml.client.GuiScrollingList;
+//import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class GuiBuildinglistSlot extends GuiScrollingList {
 	GuiBuildinglistManager parent;

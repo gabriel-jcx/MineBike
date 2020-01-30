@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft;
 	
 import java.util.ArrayList;
 
+import net.minecraftforge.event.GameRuleChangeEvent;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
@@ -26,23 +27,25 @@ import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
+//import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
+//import net.minecraftforge.client
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -66,8 +69,13 @@ import noppes.npcs.CustomItems;
 	    public static final String TEXTURE_PREFIX = "minebike";
 	    
 	    private static BiGX instance;
-	    
-	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(538)).setBlockName("QuestRFMLucky");
+
+	    // TODO: need to figure out which function to set the Name of the QuestFRMCheck
+		// 1. setRegistryName("QuestRFMLucky);
+		// 2. setUnlocalizedName("QuestFRMLucky");
+	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(538)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
+
+
 	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
 	    
 	    public static CharacterProperty characterProperty;
@@ -103,6 +111,9 @@ import noppes.npcs.CustomItems;
 	    	for(Item item : customItems)
 	    	{
 	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
+	    		//GameRegistry.registerTileEntity(item, item.getUnlocalizedName().substring(5));
+				//GameRegistry.registerEntitySelector(item, item.getUnlocalizedName().substring(5));
+				;
 	    	}
 	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
 	    	

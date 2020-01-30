@@ -8,8 +8,8 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.Quest;
 
 import com.ibm.icu.impl.ICUService.Key;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -49,6 +49,8 @@ public class GuiBuildinglistManager extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
+		//guiBuildinglistSlot.drawBackground(mx,my, partialTicks);
+		//guiBuildinglistSlot.
 		guiBuildinglistSlot.drawScreen(mx, my, partialTicks);
 		drawRect(0, 0, width, getTopMargin(), 0xCC663300); // The Box on top
 		drawRect(197, getTopMargin(), 200, height, 0xFF000000); // The Seperator
@@ -78,7 +80,8 @@ public class GuiBuildinglistManager extends GuiScreen {
     	if( (c == 'N') || (c=='n') )
     	{
             if(mc.currentScreen != null) {
-            	Minecraft.getMinecraft().thePlayer.closeScreen();
+            	Minecraft.getMinecraft().player.closeScreen();
+            	//Minecraft.getMinecraft().thePlayer.closeScreen();
             }
     	}
     }
