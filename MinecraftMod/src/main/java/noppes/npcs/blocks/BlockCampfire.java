@@ -22,7 +22,7 @@ import org.lwjgl.opengl.GL11;
 public class BlockCampfire extends BlockLightable {
 
    public BlockCampfire(boolean lit) {
-      super(Blocks.cobblestone, lit);
+      super(Blocks.COBBLESTONE, lit);
       this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
    }
 
@@ -50,7 +50,7 @@ public class BlockCampfire extends BlockLightable {
 
             return true;
          } else {
-            if(item.getItem() == Item.getItemFromBlock(Blocks.sand) && this.litBlock() == this) {
+            if(item.getItem() == Item.getItemFromBlock(Blocks.SAND) && this.litBlock() == this) {
                super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
             }
 

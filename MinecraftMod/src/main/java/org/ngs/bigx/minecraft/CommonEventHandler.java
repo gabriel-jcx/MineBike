@@ -252,7 +252,7 @@ public class CommonEventHandler {
 //						{
 //							for(int k=-1; k<2; k++) // x
 //							{
-//								if(event.player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.air)
+//								if(event.player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.AIR)
 //								{
 //									origX = origX + k;
 //									origY = origY + j;

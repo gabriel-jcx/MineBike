@@ -33,35 +33,35 @@ public class ObstacleBiome {
 		//0 - Dirt Wall
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,2,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.dirt);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.dirt);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,2,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.DIRT);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.DIRT);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 
 		//1 - Trap
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,-1,3,2), Blocks.air);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,-1,3,2), Blocks.air);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,-1,3,2), Blocks.air);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,-1,3,2), Blocks.air);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,3,2), Blocks.air);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,2), Blocks.air);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,3,2), Blocks.air);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,-1,3,2), Blocks.AIR);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,-1,3,2), Blocks.AIR);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,-1,3,2), Blocks.AIR);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,-1,3,2), Blocks.AIR);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,3,2), Blocks.AIR);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,2), Blocks.AIR);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,3,2), Blocks.AIR);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.WATER);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//2 - Bush
@@ -78,41 +78,41 @@ public class ObstacleBiome {
 		//3 - Water
 		biomeArea = new TerrainBiomeArea();
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.WATER);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//4 - Trap
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.CACTUS);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//5 - Spring
 		biomeArea = new TerrainBiomeArea();
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,2,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,2,3,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,2,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,2,3,2), Blocks.WATER);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//6 - Sudden Walls
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,1,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,1,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.COBBLESTONE);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//7 - Fire
@@ -125,47 +125,47 @@ public class ObstacleBiome {
 		//8 - Sudden Water Basin
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,6,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,6,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,6,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,6,2), Blocks.WATER);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,5,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,5,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,5,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,5,2), Blocks.WATER);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//9 - Sudden Walls 2
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,2), Blocks.cobblestone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,3,2), Blocks.cobblestone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-3,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,2), Blocks.COBBLESTONE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,3,2), Blocks.COBBLESTONE);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-4,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-2,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.WATER);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 	}
 }

@@ -61,7 +61,7 @@ public class BlockBlood extends Block {
 
    public boolean shouldSideBeRendered(IBlockAccess world, int par2, int par3, int par4, int par5) {
       Block block = world.getBlock(par2, par3, par4);
-      return block != Blocks.air && block.renderAsNormalBlock();
+      return block != Blocks.AIR && block.renderAsNormalBlock();
    }
 
    public boolean isOpaqueCube() {

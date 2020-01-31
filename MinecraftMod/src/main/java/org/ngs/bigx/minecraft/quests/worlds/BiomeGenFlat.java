@@ -13,8 +13,8 @@ public class BiomeGenFlat extends BiomeGenBase {
 		this.setBiomeName("Flat");
 		this.spawnableCreatureList.clear();
 		this.spawnableMonsterList.clear();
-		this.topBlock = Blocks.grass;
-		this.fillerBlock = Blocks.dirt;
+		this.topBlock = Blocks.GRASS;
+		this.fillerBlock = Blocks.DIRT;
 		this.setHeight(height_LowPlains);
 		this.theBiomeDecorator.treesPerChunk = -999;
 		this.theBiomeDecorator.grassPerChunk = 1;

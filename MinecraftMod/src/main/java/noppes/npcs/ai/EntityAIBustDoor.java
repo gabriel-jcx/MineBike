@@ -49,7 +49,7 @@ public class EntityAIBustDoor extends EntityAIDoorInteract {
       }
 
       if(this.breakingTime == 240) {
-         super.theEntity.worldObj.setBlock(super.entityPosX, super.entityPosY, super.entityPosZ, Blocks.air);
+         super.theEntity.worldObj.setBlock(super.entityPosX, super.entityPosY, super.entityPosZ, Blocks.AIR);
          super.theEntity.worldObj.playAuxSFX(1012, super.entityPosX, super.entityPosY, super.entityPosZ, 0);
          super.theEntity.worldObj.playAuxSFX(2001, super.entityPosX, super.entityPosY, super.entityPosZ, Block.getIdFromBlock(super.field_151504_e));
       }

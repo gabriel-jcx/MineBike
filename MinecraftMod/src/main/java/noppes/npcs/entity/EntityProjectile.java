@@ -688,7 +688,7 @@ public class EntityProjectile extends EntityThrowable {
       case Nausea:
          return 32732;
       case Blindness:
-         return Potion.blindness.id;
+         return Potion.BLINDNESS.id;
       case Wither:
          return 32732;
       default:

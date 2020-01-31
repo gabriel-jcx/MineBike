@@ -54,7 +54,7 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
    public void drawButton(Minecraft minecraft, int i, int j) {
       if(this.getVisible()) {
          if(this.item.getItem() == null) {
-            this.item = new ItemStack(Blocks.dirt);
+            this.item = new ItemStack(Blocks.DIRT);
          }
 
          super.hover = i >= super.xPosition && j >= super.yPosition && i < super.xPosition + this.getWidth() && j < super.yPosition + super.field_146121_g;

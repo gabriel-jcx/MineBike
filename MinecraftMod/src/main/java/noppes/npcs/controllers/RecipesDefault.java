@@ -35,15 +35,15 @@ public class RecipesDefault {
          addRecipe("Carpentry Bench", CustomItems.carpentyBench, true, new Object[]{"XYX", "Z Z", "Z Z", Character.valueOf('X'), Blocks.planks, Character.valueOf('Z'), Items.stick, Character.valueOf('Y'), Blocks.crafting_table});
          if(!CustomNpcs.DisableExtraItems) {
             addRecipe("Mana", CustomItems.mana, true, new Object[]{"XY", Character.valueOf('X'), Items.redstone, Character.valueOf('Y'), Items.glowstone_dust});
-            addRecipe("Gun Wooden", CustomItems.gunWood, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), Blocks.planks});
-            addRecipe("Gun Stone", CustomItems.gunStone, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), Blocks.cobblestone});
-            addRecipe("Gun Iron", CustomItems.gunIron, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), Items.iron_ingot});
-            addRecipe("Gun Gold", CustomItems.gunGold, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), Items.gold_ingot});
-            addRecipe("Gun Diamond", CustomItems.gunDiamond, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), Items.diamond});
-            addRecipe("Gun Emerald", CustomItems.gunEmerald, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), Items.emerald});
-            addRecipe("Gun Bronze", CustomItems.gunBronze, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.stone_button, Character.valueOf('X'), CustomItems.bronze_ingot});
+            addRecipe("Gun Wooden", CustomItems.gunWood, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), Blocks.planks});
+            addRecipe("Gun Stone", CustomItems.gunStone, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), Blocks.COBBLESTONE});
+            addRecipe("Gun Iron", CustomItems.gunIron, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), Items.iron_ingot});
+            addRecipe("Gun Gold", CustomItems.gunGold, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), Items.gold_ingot});
+            addRecipe("Gun Diamond", CustomItems.gunDiamond, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), Items.diamond});
+            addRecipe("Gun Emerald", CustomItems.gunEmerald, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), Items.emerald});
+            addRecipe("Gun Bronze", CustomItems.gunBronze, false, new Object[]{"XXXY", " ZM ", "  M ", Character.valueOf('Y'), Blocks.lever, Character.valueOf('M'), Items.stick, Character.valueOf('Z'), Blocks.STONE_button, Character.valueOf('X'), CustomItems.bronze_ingot});
             addRecipe("Bullet Wooden", CustomItems.bulletWood, true, new Object[]{"X", Character.valueOf('X'), Blocks.planks});
-            addRecipe("Bullet Stone", CustomItems.bulletStone, true, new Object[]{"X", Character.valueOf('X'), Blocks.cobblestone});
+            addRecipe("Bullet Stone", CustomItems.bulletStone, true, new Object[]{"X", Character.valueOf('X'), Blocks.COBBLESTONE});
             addRecipe("Bullet Iron", CustomItems.bulletIron, true, new Object[]{"X", Character.valueOf('X'), Items.iron_ingot});
             addRecipe("Bullet Gold", CustomItems.bulletGold, true, new Object[]{"X", Character.valueOf('X'), Items.gold_ingot});
             addRecipe("Bullet Diamond", CustomItems.bulletDiamond, true, new Object[]{"X", Character.valueOf('X'), Items.diamond});
@@ -55,17 +55,17 @@ public class RecipesDefault {
       if(i < 1) {
          if(!CustomNpcs.DisableExtraBlock) {
             addRecipe("WallBanner Wooden", new ItemStack(CustomItems.wallBanner, 1, 0), false, new Object[]{"XXX", "ZZZ", "ZZZ", "Z Z", Character.valueOf('Z'), Blocks.wool, Character.valueOf('X'), Blocks.planks});
-            addRecipe("WallBanner Stone", new ItemStack(CustomItems.wallBanner, 1, 1), false, new Object[]{"XXX", "ZZZ", "ZZZ", "Z Z", Character.valueOf('Z'), Blocks.wool, Character.valueOf('X'), Blocks.cobblestone});
+            addRecipe("WallBanner Stone", new ItemStack(CustomItems.wallBanner, 1, 1), false, new Object[]{"XXX", "ZZZ", "ZZZ", "Z Z", Character.valueOf('Z'), Blocks.wool, Character.valueOf('X'), Blocks.COBBLESTONE});
             addRecipe("WallBanner Iron", new ItemStack(CustomItems.wallBanner, 1, 2), false, new Object[]{"XXX", "ZZZ", "ZZZ", "Z Z", Character.valueOf('Z'), Blocks.wool, Character.valueOf('X'), Items.iron_ingot});
             addRecipe("WallBanner Gold", new ItemStack(CustomItems.wallBanner, 1, 3), false, new Object[]{"XXX", "ZZZ", "ZZZ", "Z Z", Character.valueOf('Z'), Blocks.wool, Character.valueOf('X'), Items.gold_ingot});
             addRecipe("WallBanner Diamond", new ItemStack(CustomItems.wallBanner, 1, 4), false, new Object[]{"XXX", "ZZZ", "ZZZ", "Z Z", Character.valueOf('Z'), Blocks.wool, Character.valueOf('X'), Items.diamond});
             addRecipe("Banner Wooden", new ItemStack(CustomItems.banner, 1, 0), false, new Object[]{" X ", " Z ", " Z ", "ZZZ", Character.valueOf('X'), new ItemStack(CustomItems.wallBanner, 1, 0), Character.valueOf('Z'), Blocks.planks});
-            addRecipe("Banner Stone", new ItemStack(CustomItems.banner, 1, 1), false, new Object[]{" X ", " Z ", " Z ", "ZZZ", Character.valueOf('X'), new ItemStack(CustomItems.wallBanner, 1, 1), Character.valueOf('Z'), Blocks.cobblestone});
+            addRecipe("Banner Stone", new ItemStack(CustomItems.banner, 1, 1), false, new Object[]{" X ", " Z ", " Z ", "ZZZ", Character.valueOf('X'), new ItemStack(CustomItems.wallBanner, 1, 1), Character.valueOf('Z'), Blocks.COBBLESTONE});
             addRecipe("Banner Iron", new ItemStack(CustomItems.banner, 1, 2), false, new Object[]{" X ", " Z ", " Z ", "ZZZ", Character.valueOf('X'), new ItemStack(CustomItems.wallBanner, 1, 2), Character.valueOf('Z'), Items.iron_ingot});
             addRecipe("Banner Gold", new ItemStack(CustomItems.banner, 1, 3), false, new Object[]{" X ", " Z ", " Z ", "ZZZ", Character.valueOf('X'), new ItemStack(CustomItems.wallBanner, 1, 3), Character.valueOf('Z'), Items.gold_ingot});
             addRecipe("Banner Diamond", new ItemStack(CustomItems.banner, 1, 4), false, new Object[]{" X ", " Z ", " Z ", "ZZZ", Character.valueOf('X'), new ItemStack(CustomItems.wallBanner, 1, 4), Character.valueOf('Z'), Items.diamond});
             addRecipe("Lamp Wooden", new ItemStack(CustomItems.tallLamp, 1, 0), false, new Object[]{"YXY", " Z ", " Z ", "ZZZ", Character.valueOf('X'), Blocks.torch, Character.valueOf('Y'), Blocks.wool, Character.valueOf('Z'), Blocks.planks});
-            addRecipe("Lamp Stone", new ItemStack(CustomItems.tallLamp, 1, 1), false, new Object[]{"YXY", " Z ", " Z ", "ZZZ", Character.valueOf('X'), Blocks.torch, Character.valueOf('Y'), Blocks.wool, Character.valueOf('Z'), Blocks.cobblestone});
+            addRecipe("Lamp Stone", new ItemStack(CustomItems.tallLamp, 1, 1), false, new Object[]{"YXY", " Z ", " Z ", "ZZZ", Character.valueOf('X'), Blocks.torch, Character.valueOf('Y'), Blocks.wool, Character.valueOf('Z'), Blocks.COBBLESTONE});
             addRecipe("Lamp Iron", new ItemStack(CustomItems.tallLamp, 1, 2), false, new Object[]{"YXY", " Z ", " Z ", "ZZZ", Character.valueOf('X'), Blocks.torch, Character.valueOf('Y'), Blocks.wool, Character.valueOf('Z'), Items.iron_ingot});
             addRecipe("Lamp Gold", new ItemStack(CustomItems.tallLamp, 1, 3), false, new Object[]{"YXY", " Z ", " Z ", "ZZZ", Character.valueOf('X'), Blocks.torch, Character.valueOf('Y'), Blocks.wool, Character.valueOf('Z'), Items.gold_ingot});
             addRecipe("Lamp Diamond", new ItemStack(CustomItems.tallLamp, 1, 4), false, new Object[]{"YXY", " Z ", " Z ", "ZZZ", Character.valueOf('X'), Blocks.torch, Character.valueOf('Y'), Blocks.wool, Character.valueOf('Z'), Items.diamond});
@@ -142,28 +142,28 @@ public class RecipesDefault {
 
          if(!CustomNpcs.DisableExtraItems) {
             addRecipe("Battle Axe1", CustomItems.battleAxeWood, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.planks});
-            addRecipe("Battle Axe2", CustomItems.battleAxeStone, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.cobblestone});
+            addRecipe("Battle Axe2", CustomItems.battleAxeStone, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.COBBLESTONE});
             addRecipe("Battle Axe3", CustomItems.battleAxeIron, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.iron_ingot});
             addRecipe("Battle Axe4", CustomItems.battleAxeGold, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.gold_ingot});
             addRecipe("Battle Axe5", CustomItems.battleAxeDiamond, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.diamond});
             addRecipe("Battle Axe6", CustomItems.battleAxeBronze, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), CustomItems.bronze_ingot});
             addRecipe("Battle Axe7", CustomItems.battleAxeEmerald, false, new Object[]{"XX", "XY", " Y", " Y", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.emerald});
             addRecipe("Halberd1", CustomItems.halberdWood, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.planks});
-            addRecipe("Halberd2", CustomItems.halberdStone, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.cobblestone});
+            addRecipe("Halberd2", CustomItems.halberdStone, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.COBBLESTONE});
             addRecipe("Halberd3", CustomItems.halberdIron, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.iron_ingot});
             addRecipe("Halberd4", CustomItems.halberdGold, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.gold_ingot});
             addRecipe("Halberd5", CustomItems.halberdDiamond, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.diamond});
             addRecipe("Halberd6", CustomItems.halberdBronze, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), CustomItems.bronze_ingot});
             addRecipe("Halberd7", CustomItems.halberdEmerald, false, new Object[]{" X ", "XYX", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.emerald});
             addRecipe("Glaive1", CustomItems.glaiveWood, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.planks});
-            addRecipe("Glaive2", CustomItems.glaiveStone, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.cobblestone});
+            addRecipe("Glaive2", CustomItems.glaiveStone, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.COBBLESTONE});
             addRecipe("Glaive3", CustomItems.glaiveIron, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.iron_ingot});
             addRecipe("Glaive4", CustomItems.glaiveGold, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.gold_ingot});
             addRecipe("Glaive5", CustomItems.glaiveDiamond, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.diamond});
             addRecipe("Glaive6", CustomItems.glaiveBronze, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), CustomItems.bronze_ingot});
             addRecipe("Glaive7", CustomItems.glaiveEmerald, false, new Object[]{"X   ", " Y  ", "  Y ", "   X", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.emerald});
             addRecipe("Trident1", CustomItems.tridentWood, false, new Object[]{"X X", " X ", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.planks});
-            addRecipe("Trident2", CustomItems.tridentStone, false, new Object[]{"X X", " X ", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.cobblestone});
+            addRecipe("Trident2", CustomItems.tridentStone, false, new Object[]{"X X", " X ", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Blocks.COBBLESTONE});
             addRecipe("Trident3", CustomItems.tridentIron, false, new Object[]{"X X", " X ", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.iron_ingot});
             addRecipe("Trident4", CustomItems.tridentGold, false, new Object[]{"X X", " X ", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.gold_ingot});
             addRecipe("Trident5", CustomItems.tridentDiamond, false, new Object[]{"X X", " X ", " Y ", " Y ", Character.valueOf('Y'), Items.stick, Character.valueOf('X'), Items.diamond});

@@ -87,7 +87,7 @@ public class ItemTeleporter extends Item {
                   int var31 = movingobjectposition.blockY;
 
                   int var32;
-                  for(var32 = movingobjectposition.blockZ; par3EntityPlayer.worldObj.getBlock(i, var31, var32) != Blocks.air; ++var31) {
+                  for(var32 = movingobjectposition.blockZ; par3EntityPlayer.worldObj.getBlock(i, var31, var32) != Blocks.AIR; ++var31) {
                      ;
                   }
 

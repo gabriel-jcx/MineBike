@@ -308,8 +308,8 @@ public class TRONQuest extends CustomQuestAbstract
 					{
 						glassPanes[i + 100][j + 100] = false;
 					}
-					event.world.setBlock(i, 45, j, Blocks.air);
-					event.world.setBlock(i, 46, j, Blocks.air);
+					event.world.setBlock(i, 45, j, Blocks.AIR);
+					event.world.setBlock(i, 46, j, Blocks.AIR);
 				}
 			}
 			// reset variables

@@ -92,7 +92,7 @@ public class ScriptItemStack {
 
    public boolean isBlock() {
       Block block = Block.getBlockFromItem(this.item.getItem());
-      return block != null && block != Blocks.air;
+      return block != null && block != Blocks.AIR;
    }
 
    public ItemStack getMCItemStack() {

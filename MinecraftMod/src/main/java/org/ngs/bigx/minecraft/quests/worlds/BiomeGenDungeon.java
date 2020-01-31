@@ -10,8 +10,8 @@ public class BiomeGenDungeon extends BiomeGenBase {
 		this.setBiomeName("Dungeon");
 //		this.spawnableCreatureList.clear();
 		this.spawnableMonsterList.clear();
-		this.topBlock = Blocks.stone;
-		this.fillerBlock = Blocks.stone;
+		this.topBlock = Blocks.STONE;
+		this.fillerBlock = Blocks.STONE;
 		this.setHeight(height_LowPlains);
 		this.theBiomeDecorator.treesPerChunk = -999;
 		this.theBiomeDecorator.grassPerChunk = -999;

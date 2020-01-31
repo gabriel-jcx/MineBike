@@ -116,7 +116,7 @@ public class BlockTombstone extends BlockContainer {
 
    @SideOnly(Side.CLIENT)
    public IIcon getIcon(int p_149691_1_, int meta) {
-      return Blocks.stone.getIcon(p_149691_1_, meta);
+      return Blocks.STONE.getIcon(p_149691_1_, meta);
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {

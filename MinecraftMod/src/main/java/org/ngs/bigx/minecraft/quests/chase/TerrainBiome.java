@@ -42,14 +42,14 @@ public class TerrainBiome {
 		
 		// Grass 1
 		biomeArea = new TerrainBiomeArea();
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,4,3), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,2), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,4,3), Blocks.sandstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,4,3), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,2), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,4,3), Blocks.SANDstone_stairs);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.sandstone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,2,2), Blocks.sandstone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,2), Blocks.sandstone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.SANDstone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,2,2), Blocks.SANDstone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,2), Blocks.SANDstone);
 
 		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,1,3), Blocks.leaves);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,2,3), Blocks.leaves);
@@ -100,21 +100,21 @@ public class TerrainBiome {
 		// Grass 3
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,1,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,1,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,1,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,1,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,1,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,1,2), Blocks.WATER);
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,2,2), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,2,3), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,2,2), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,2,3), Blocks.WATER);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,3,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,3,2), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,3,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,3,2), Blocks.WATER);
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,4,2), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,4,3), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,4,2), Blocks.sandstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,4,2), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,4,3), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,4,2), Blocks.SANDstone_stairs);
 		
 		this.grassBiome.areas.add(biomeArea);
 		
@@ -307,35 +307,35 @@ public class TerrainBiome {
 		// Desert 1
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,1,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,1,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,2,1,3), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,1,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,1,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,2,1,3), Blocks.CACTUS);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,4,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,4,3), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,4,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,1,4,3), Blocks.CACTUS);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,1,2,3), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,1,2,3), Blocks.CACTUS);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,3,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,2,3,3), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,3,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,2,3,3), Blocks.CACTUS);
 		
 		this.desertBiome.areas.add(biomeArea);
 		
 		// Desert 2
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,3,3), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,3,3), Blocks.WATER);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(1,-1,4,2), Blocks.oak_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,3), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,2,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,3,3), Blocks.WATER);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(2,-1,4,2), Blocks.oak_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,1,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,2,3), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,1,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,2,3), Blocks.WATER);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(3,-1,3,2), Blocks.oak_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,1,3), Blocks.water);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,2,3), Blocks.water);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,1,3), Blocks.WATER);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,2,3), Blocks.WATER);
 		biomeArea.map.put(new TerrainBiomeAreaIndex(4,-1,3,2), Blocks.oak_stairs);
 		
 		this.desertBiome.areas.add(biomeArea);
@@ -343,27 +343,27 @@ public class TerrainBiome {
 		// Desert 3
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,2,3,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,3,3,3), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,1,3,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,2,3,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,3,3,3), Blocks.CACTUS);
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,1,3), Blocks.cactus);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,1,3), Blocks.cactus);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,1,3), Blocks.CACTUS);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,1,3), Blocks.CACTUS);
 		
 		this.desertBiome.areas.add(biomeArea);
 		
 		// Desert 4
 		biomeArea = new TerrainBiomeArea();
 
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,0), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,1,2), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,2,3), Blocks.sandstone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,0), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,2), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,3), Blocks.sandstone);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,4,3), Blocks.sandstone_stairs);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,3,1), Blocks.sandstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,0), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,1,2), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,2,3), Blocks.SANDstone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(2,0,3,0), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,2,2), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,3,3), Blocks.SANDstone);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(3,0,4,3), Blocks.SANDstone_stairs);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(4,0,3,1), Blocks.SANDstone_stairs);
 		
 		this.desertBiome.areas.add(biomeArea);
 	}

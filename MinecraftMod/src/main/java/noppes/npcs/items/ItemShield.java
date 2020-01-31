@@ -28,7 +28,7 @@ public class ItemShield extends ItemNpcInterface {
    }
 
    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
-      return EnumAction.block;
+      return EnumAction.BLOCK;
    }
 
    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {

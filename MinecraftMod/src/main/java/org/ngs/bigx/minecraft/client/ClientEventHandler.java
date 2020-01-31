@@ -783,7 +783,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			// Obtain the block under the main character and set the resistance
 			Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
-			if (b==Blocks.air) {
+			if (b==Blocks.AIR) {
 				b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
 			}
 	

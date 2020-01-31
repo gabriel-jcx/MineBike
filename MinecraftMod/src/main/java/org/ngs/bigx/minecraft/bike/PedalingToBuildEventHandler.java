@@ -48,9 +48,9 @@ public class PedalingToBuildEventHandler {
 							{
 								for(int z=0; z<5; z++)
 								{
-									if(!event.player.worldObj.getBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz()).equals(Blocks.air))
+									if(!event.player.worldObj.getBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz()).equals(Blocks.AIR))
 									{
-										event.player.worldObj.setBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz(), Blocks.air);
+										event.player.worldObj.setBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz(), Blocks.AIR);
 									}
 								}
 							}

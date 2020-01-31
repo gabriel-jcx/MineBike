@@ -452,11 +452,11 @@ public class RoleCompanion extends RoleInterface {
    }
 
    private boolean isWeapon(ItemStack item) {
-      return item != null && item.getItem() != null?item.getItem() instanceof ItemSword || item.getItem() instanceof ItemBow || item.getItem() == Item.getItemFromBlock(Blocks.cobblestone):false;
+      return item != null && item.getItem() != null?item.getItem() instanceof ItemSword || item.getItem() instanceof ItemBow || item.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE):false;
    }
 
    public boolean canWearWeapon(ItemStack item) {
-      return item != null && item.getItem() != null?(item.getItem() instanceof ItemSword?this.canWearSword(item):(item.getItem() instanceof ItemBow?this.getTalentLevel(EnumCompanionTalent.RANGED) > 2:(item.getItem() == Item.getItemFromBlock(Blocks.cobblestone)?this.getTalentLevel(EnumCompanionTalent.RANGED) > 1:false))):false;
+      return item != null && item.getItem() != null?(item.getItem() instanceof ItemSword?this.canWearSword(item):(item.getItem() instanceof ItemBow?this.getTalentLevel(EnumCompanionTalent.RANGED) > 2:(item.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE)?this.getTalentLevel(EnumCompanionTalent.RANGED) > 1:false))):false;
    }
 
    public boolean canWearArmor(ItemStack item) {
@@ -507,7 +507,7 @@ public class RoleCompanion extends RoleInterface {
       super.npc.stats.combatRegen = 0;
       int ranged = this.getTalentLevel(EnumCompanionTalent.RANGED);
       if(ranged > 0 && weapon != null) {
-         if(ranged > 0 && weapon.getItem() == Item.getItemFromBlock(Blocks.cobblestone)) {
+         if(ranged > 0 && weapon.getItem() == Item.getItemFromBlock(Blocks.COBBLESTONE)) {
             super.npc.inventory.setProjectile(weapon);
          }
 

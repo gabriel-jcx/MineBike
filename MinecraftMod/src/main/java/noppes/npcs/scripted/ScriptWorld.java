@@ -54,14 +54,14 @@ public class ScriptWorld {
          this.removeBlock(x, y, z);
       } else {
          Block block = Block.getBlockFromItem(item.item.getItem());
-         if(block != null && block != Blocks.air) {
+         if(block != null && block != Blocks.AIR) {
             this.world.setBlock(x, y, z, block);
          }
       }
    }
 
    public void removeBlock(int x, int y, int z) {
-      this.world.setBlock(x, y, z, Blocks.air);
+      this.world.setBlock(x, y, z, Blocks.AIR);
    }
 
    public ScriptPlayer getPlayer(String name) {

@@ -45,6 +45,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import com.google.gson.Gson;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -143,10 +144,10 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		
 		ClientAreaEvent.initArea();
 				
-//		resistances.put(Blocks.air, Resistance.NONE);
-//		resistances.put(Blocks.brick_block, Resistance.LOW);
-//		resistances.put(Blocks.stone, Resistance.MLOW);
-//		resistances.put(Blocks.cobblestone, Resistance.MLOW);
+//		resistances.put(Blocks.AIR, Resistance.NONE);
+//		resistances.put(Blocks.BRICK_BLOCK, Resistance.LOW);
+//		resistances.put(Blocks.STONE, Resistance.MLOW);
+//		resistances.put(Blocks.COBBLESTONE, Resistance.MLOW);
 //		resistances.put(Blocks.grass, Resistance.MID);
 //		resistances.put(Blocks.dirt, Resistance.MID);
 //		resistances.put(Blocks.gravel, Resistance.MHIGH);
@@ -154,10 +155,10 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 //		resistances.put(Blocks.obsidian, Resistance.HIGH);
 //		resistances.put(Blocks.sand, Resistance.HIGH);
 		
-		resistances.put(Blocks.air, Resistance.NONE);
-		resistances.put(Blocks.brick_block, Resistance.NONE);
-		resistances.put(Blocks.stone, Resistance.NONE);
-		resistances.put(Blocks.cobblestone, Resistance.NONE);
+		resistances.put(Blocks.AIR, Resistance.NONE);
+		resistances.put(Blocks.BRICK_BLOCK, Resistance.NONE);
+		resistances.put(Blocks.STONE, Resistance.NONE);
+		resistances.put(Blocks.COBBLESTONE, Resistance.NONE);
 		resistances.put(Blocks.grass, Resistance.LOW);
 		resistances.put(Blocks.dirt, Resistance.LOW);
 		resistances.put(Blocks.gravel, Resistance.LOW);

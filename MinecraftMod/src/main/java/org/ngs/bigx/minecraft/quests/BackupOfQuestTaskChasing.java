@@ -244,15 +244,15 @@
 //		switch(category)
 //		{
 //		case 0:
-//			return Blocks.brick_block;
+//			return Blocks.BRICK_BLOCK;
 //		case 1:
-//			return Blocks.stone;
+//			return Blocks.STONE;
 //		case 2:
-//			return Blocks.grass;
+//			return Blocks.GRASS;
 //		case 3:
-//			return Blocks.gravel;
+//			return Blocks.GRAVEL;
 //		case 4:
-//			return Blocks.sand;
+//			return Blocks.SAND;
 //		default:
 //			return null;
 //		}
@@ -312,15 +312,15 @@
 //		{
 //			for(int dx=chasingQuestInitialPosX-32; dx<chasingQuestInitialPosX+32; dx++)
 //			{
-//				cleanBlock(world, dx, initY-1, dz, Blocks.grass);
+//				cleanBlock(world, dx, initY-1, dz, Blocks.GRASS);
 //				for(int dy= initY; dy<initY+16; dy++)
 //				{
-//					if(!(world.getBlock(dx, dy, dz) == Blocks.air))
-//						setBlock(world, dx, dy, dz, Blocks.air);
+//					if(!(world.getBlock(dx, dy, dz) == Blocks.AIR))
+//						setBlock(world, dx, dy, dz, Blocks.AIR);
 //				}
 //			}
-//			cleanBlock(world, chasingQuestInitialPosX-16, initY, dz, Blocks.air);
-//			cleanBlock(world, chasingQuestInitialPosX+16, initY, dz, Blocks.air);
+//			cleanBlock(world, chasingQuestInitialPosX-16, initY, dz, Blocks.AIR);
+//			cleanBlock(world, chasingQuestInitialPosX+16, initY, dz, Blocks.AIR);
 //		}
 //	}
 //	
@@ -612,9 +612,9 @@
 //			int currentQuestDifficulty = questSettings.get(currentRelativeTime);
 //			Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
 //
-//			if( (blockByDifficulty == Blocks.brick_block) || 
-//					(blockByDifficulty == Blocks.stone) || 
-//					(blockByDifficulty == Blocks.gravel) )
+//			if( (blockByDifficulty == Blocks.BRICK_BLOCK) || 
+//					(blockByDifficulty == Blocks.STONE) || 
+//					(blockByDifficulty == Blocks.GRAVEL) )
 //			{
 //				for(int idx = 0; idx<4; idx++)
 //				{
@@ -635,7 +635,7 @@
 //					}
 //				}
 //			}
-//			else if(blockByDifficulty == Blocks.grass)
+//			else if(blockByDifficulty == Blocks.GRASS)
 //			{
 //				for(int idx = 0; idx<4; idx++)
 //				{
@@ -656,7 +656,7 @@
 //					}
 //				}
 //			}
-//			else if(blockByDifficulty == Blocks.sand)
+//			else if(blockByDifficulty == Blocks.SAND)
 //			{
 //				for(int idx = 0; idx<4; idx++)
 //				{
@@ -679,7 +679,7 @@
 //			}
 //			else {
 //				System.out.println("DIFFICULTY IS OUT OF OUR HAND...");
-//				blockByDifficulty = Blocks.stone;
+//				blockByDifficulty = Blocks.STONE;
 //			}
 //			
 //			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
@@ -716,7 +716,7 @@
 //					
 //					for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 //					{
-//						if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+//						if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.WATER)
 //							setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
 //						else
 //							setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);
@@ -734,9 +734,9 @@
 //			if (ratio > 0.4) {
 //				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 //					for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
-//						setBlock(ws, x, chasingQuestInitialPosY-1, z, Blocks.gravel);
+//						setBlock(ws, x, chasingQuestInitialPosY-1, z, Blocks.GRAVEL);
 //						blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
-//						setBlock(ws, x, chasingQuestInitialPosY-1, z-64, Blocks.grass);
+//						setBlock(ws, x, chasingQuestInitialPosY-1, z-64, Blocks.GRASS);
 //					}
 //				}
 //			}
@@ -800,7 +800,7 @@
 //			
 //			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 //			{
-//				if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.water)
+//				if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.WATER)
 //					setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex));
 //				else
 //					setBlock(ws, terrainBiomeAreaIndex.x + x, terrainBiomeAreaIndex.y + y, terrainBiomeAreaIndex.z + z, terrainBiomeArea.map.get(terrainBiomeAreaIndex), terrainBiomeAreaIndex.direction, 3);

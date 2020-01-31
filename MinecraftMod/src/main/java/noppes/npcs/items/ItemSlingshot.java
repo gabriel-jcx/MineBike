@@ -25,9 +25,9 @@ public class ItemSlingshot extends ItemNpcInterface {
       if(!worldObj.isRemote) {
          int ticks = this.getMaxItemUseDuration(par1ItemStack) - par4;
          if(ticks >= 6) {
-            if(player.capabilities.isCreativeMode || this.consumeItem(player, Item.getItemFromBlock(Blocks.cobblestone))) {
+            if(player.capabilities.isCreativeMode || this.consumeItem(player, Item.getItemFromBlock(Blocks.COBBLESTONE))) {
                par1ItemStack.damageItem(1, player);
-               EntityProjectile projectile = new EntityProjectile(worldObj, player, new ItemStack(Blocks.cobblestone), false);
+               EntityProjectile projectile = new EntityProjectile(worldObj, player, new ItemStack(Blocks.COBBLESTONE), false);
                projectile.damage = 4.0F;
                projectile.punch = 1;
                projectile.setRotating(true);

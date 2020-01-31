@@ -176,11 +176,11 @@ public class MinerQuest extends CustomQuestAbstract
 							world.setBlock((int) (startx)+x, 20,(int) (startz+z), Blocks.glowstone);
 						break;
 						default:
-							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.stone);
+							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.STONE);
 						break;
 						}
 						//set it to air above
-						world.setBlock((int) startx + x, 21, (int) (startz + z), Blocks.air);
+						world.setBlock((int) startx + x, 21, (int) (startz + z), Blocks.AIR);
 					}
 				}
 		}
@@ -209,7 +209,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock((int) (startx), 20,(int) (startz+z), Blocks.glowstone);
 					break;
 					default:
-						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.stone);
+						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.STONE);
 					break;
 				}
 			}
@@ -345,7 +345,7 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int y = 21; y < 24; y++)
 				{
-					 if(world.getBlock((int) startx, y, z).equals(Blocks.cobblestone))
+					 if(world.getBlock((int) startx, y, z).equals(Blocks.COBBLESTONE))
 					 {
 						 return true;
 					 }
@@ -362,7 +362,7 @@ public class MinerQuest extends CustomQuestAbstract
 				{
 					for(int y = 21; y < 24; y++)
 					{
-						 world.setBlock((int) startx, y, z, Blocks.air);
+						 world.setBlock((int) startx, y, z, Blocks.AIR);
 					}
 				}
 		}
@@ -374,7 +374,7 @@ public class MinerQuest extends CustomQuestAbstract
 				{
 					for(int y = 21; y < 24; y++)
 					{
-						 world.setBlock(x, y, z, Blocks.air);
+						 world.setBlock(x, y, z, Blocks.AIR);
 					}
 				}
 			}
@@ -433,7 +433,7 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int y = 21; y < 24; y++)
 				{
-					 world.setBlock((int) startx, y, z, Blocks.cobblestone);
+					 world.setBlock((int) startx, y, z, Blocks.COBBLESTONE);
 				}
 			}
 		}
@@ -478,7 +478,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock((int) (startx+x), 20,(int) (startz+z), Blocks.glowstone);
 					break;
 					default:
-						world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.stone);
+						world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.STONE);
 					break;
 					}
 					}
@@ -504,10 +504,10 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.glowstone);
 					break;
 					//case 5:
-					//world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.air);
+					//world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.AIR);
 					//break;
 					default:
-						world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.stone);
+						world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.STONE);
 					break;
 					}
 					}
@@ -546,7 +546,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock(startx+x, y, 0, Blocks.glowstone);
 					break;
 					default:
-						world.setBlock(startx+x, y, 0, Blocks.stone);
+						world.setBlock(startx+x, y, 0, Blocks.STONE);
 					break;
 					}
 					switch(randomInt)
@@ -566,7 +566,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock(startx+x, y, 10, Blocks.glowstone);
 					break;
 					default:
-						world.setBlock(startx+x, y, 10, Blocks.stone);
+						world.setBlock(startx+x, y, 10, Blocks.STONE);
 					break;
 					}
 					}
@@ -612,7 +612,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock(0, y, (int) (startz+x), Blocks.glowstone);
 					break;
 					default:
-						world.setBlock(0, y, (int) (startz+x), Blocks.stone);
+						world.setBlock(0, y, (int) (startz+x), Blocks.STONE);
 					break;
 					}
 					switch(randomInt)
@@ -632,7 +632,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock(10, y, (int) (startz+x), Blocks.glowstone);
 					break;
 					default:
-						world.setBlock(10, y, (int) (startz+x), Blocks.stone);
+						world.setBlock(10, y, (int) (startz+x), Blocks.STONE);
 					break;
 					}
 					}
@@ -669,7 +669,7 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock((int) (startx+x), 20,(int) (startz+z), Blocks.glowstone);
 					break;
 					default:
-						world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.stone);
+						world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.STONE);
 					break;
 					}
 					randomInt = rand.nextInt(10);
@@ -691,10 +691,10 @@ public class MinerQuest extends CustomQuestAbstract
 						world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.glowstone);
 					break;
 	//				case 5:
-	//					world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.air);
+	//					world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.AIR);
 	//				break;
 					default:
-						world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.stone);
+						world.setBlock((int) (startx+x), 25, (int) (startz+z), Blocks.STONE);
 					break;
 					}
 					}
@@ -722,7 +722,7 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int y = 20; y < 25; y++)
 				{
-					world.setBlock((int) (startx+x), y, 10, Blocks.stone);
+					world.setBlock((int) (startx+x), y, 10, Blocks.STONE);
 				}
 			}
 		}
@@ -733,7 +733,7 @@ public class MinerQuest extends CustomQuestAbstract
       {
         for(int y = 20; y < 25; y++)
         {
-          world.setBlock((int) startx, y, (int) (startz+x), Blocks.obsidian);
+          world.setBlock((int) startx, y, (int) (startz+x), Blocks.OBSIDIAN);
         }
       }
     }

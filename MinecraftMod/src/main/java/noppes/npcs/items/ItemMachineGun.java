@@ -104,6 +104,6 @@ public class ItemMachineGun extends ItemNpcInterface {
    }
 
    public EnumAction getItemUseAction(ItemStack stack) {
-      return stack.stackTagCompound != null && stack.stackTagCompound.getBoolean("Reloading2")?EnumAction.block:EnumAction.BOW;
+      return stack.stackTagCompound != null && stack.stackTagCompound.getBoolean("Reloading2")?EnumAction.BLOCK:EnumAction.BOW;
    }
 }

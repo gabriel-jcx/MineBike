@@ -73,7 +73,7 @@ public class NPCSpawning {
                   int z = l1 + (world.rand.nextInt(b1) - world.rand.nextInt(b1));
                   Block block = world.getBlock(var23, y, z);
                   String name = world.getBiomeGenForCoords(var23, z).biomeName;
-                  SpawnData data = SpawnController.instance.getRandomSpawnData(name, block.getMaterial() == Material.air);
+                  SpawnData data = SpawnController.instance.getRandomSpawnData(name, block.getMaterial() == Material.AIR);
                   if(data != null && canCreatureTypeSpawnAtLocation(data, world, var23, y, z) && world.getClosestPlayer((double)var23, (double)y, (double)z, 24.0D) == null) {
                      spawnData(data, world, var23, y, z);
                   }

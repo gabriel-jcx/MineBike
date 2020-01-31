@@ -117,7 +117,7 @@ public class BlockTallLamp extends BlockContainer {
    @SideOnly(Side.CLIENT)
    public IIcon getIcon(int p_149691_1_, int meta) {
       meta %= 7;
-      return meta == 1?Blocks.stone.getIcon(p_149691_1_, 0):(meta == 2?Blocks.iron_block.getIcon(p_149691_1_, 0):(meta == 3?Blocks.gold_block.getIcon(p_149691_1_, 0):(meta == 4?Blocks.diamond_block.getIcon(p_149691_1_, 0):Blocks.planks.getIcon(p_149691_1_, 0))));
+      return meta == 1?Blocks.STONE.getIcon(p_149691_1_, 0):(meta == 2?Blocks.iron_block.getIcon(p_149691_1_, 0):(meta == 3?Blocks.gold_block.getIcon(p_149691_1_, 0):(meta == 4?Blocks.diamond_block.getIcon(p_149691_1_, 0):Blocks.planks.getIcon(p_149691_1_, 0))));
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {

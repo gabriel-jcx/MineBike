@@ -175,7 +175,7 @@ public class GuiNpcCompanionTalents extends GuiNPCInterface {
          mc.getTextureManager().bindTexture(resource);
          ItemStack item = this.talent.item;
          if(item.getItem() == null) {
-            item = new ItemStack(Blocks.dirt);
+            item = new ItemStack(Blocks.DIRT);
          }
 
          GL11.glPushMatrix();
