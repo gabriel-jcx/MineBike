@@ -17,7 +17,7 @@ public class ItemMusicViolin extends ItemMusic {
    }
 
    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
-      return EnumAction.bow;
+      return EnumAction.BOW;
    }
 
    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {

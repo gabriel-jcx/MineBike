@@ -1176,8 +1176,8 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
     }
 
     public IIcon getItemIcon(ItemStack par1ItemStack, int par2) {
-        if (par1ItemStack.getItem() == Items.bow) {
-            return Items.bow.getIcon(par1ItemStack, par2);
+        if (par1ItemStack.getItem() == Items.BOW) {
+            return Items.BOW.getIcon(par1ItemStack, par2);
         } else {
             EntityPlayer player = CustomNpcs.proxy.getPlayer();
             return player == null ? super.getItemIcon(par1ItemStack, par2) : player.getItemIcon(par1ItemStack, par2);

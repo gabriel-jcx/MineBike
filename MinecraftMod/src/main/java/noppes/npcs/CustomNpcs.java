@@ -238,12 +238,12 @@ public class CustomNpcs {
       new LinkedNpcController();
       ScriptController.Instance.loadStoredData();
       ScriptController.HasStart = false;
-      Set names = Block.blockRegistry.getKeys();
+      Set names = Block.REGISTRY.getKeys();
       Iterator var3 = names.iterator();
 
       while(var3.hasNext()) {
          String name = (String)var3.next();
-         Block block = (Block)Block.blockRegistry.getObject(name);
+         Block block = (Block)Block.REGISTRY.getObject(name);
          if(block instanceof BlockLeaves) {
             block.setTickRandomly(LeavesDecayEnabled);
          }

@@ -36,12 +36,12 @@ public class CmdConfig extends ChMcLogger {
       } else {
          CustomNpcs.LeavesDecayEnabled = Boolean.parseBoolean(args[0]);
          CustomNpcs.Config.updateConfig();
-         Set names = Block.blockRegistry.getKeys();
+         Set names = Block.REGISTRY.getKeys();
          Iterator var3 = names.iterator();
 
          while(var3.hasNext()) {
             String name = (String)var3.next();
-            Block block = (Block)Block.blockRegistry.getObject(name);
+            Block block = (Block)Block.REGISTRY.getObject(name);
             if(block instanceof BlockLeaves) {
                block.setTickRandomly(CustomNpcs.LeavesDecayEnabled);
             }
@@ -65,12 +65,12 @@ public class CmdConfig extends ChMcLogger {
       } else {
          CustomNpcs.VineGrowthEnabled = Boolean.parseBoolean(args[0]);
          CustomNpcs.Config.updateConfig();
-         Set names = Block.blockRegistry.getKeys();
+         Set names = Block.REGISTRY.getKeys();
          Iterator var3 = names.iterator();
 
          while(var3.hasNext()) {
             String name = (String)var3.next();
-            Block block = (Block)Block.blockRegistry.getObject(name);
+            Block block = (Block)Block.REGISTRY.getObject(name);
             if(block instanceof BlockVine) {
                block.setTickRandomly(CustomNpcs.VineGrowthEnabled);
             }
@@ -94,12 +94,12 @@ public class CmdConfig extends ChMcLogger {
       } else {
          CustomNpcs.IceMeltsEnabled = Boolean.parseBoolean(args[0]);
          CustomNpcs.Config.updateConfig();
-         Set names = Block.blockRegistry.getKeys();
+         Set names = Block.REGISTRY.getKeys();
          Iterator var3 = names.iterator();
 
          while(var3.hasNext()) {
             String name = (String)var3.next();
-            Block block = (Block)Block.blockRegistry.getObject(name);
+            Block block = (Block)Block.REGISTRY.getObject(name);
             if(block instanceof BlockIce) {
                block.setTickRandomly(CustomNpcs.IceMeltsEnabled);
             }

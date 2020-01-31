@@ -84,6 +84,6 @@ public class ItemCrossbow extends ItemNpcInterface {
    }
 
    public EnumAction getItemUseAction(ItemStack stack) {
-      return stack.stackTagCompound != null && stack.stackTagCompound.getInteger("Reloading") != 0?EnumAction.block:EnumAction.bow;
+      return stack.stackTagCompound != null && stack.stackTagCompound.getInteger("Reloading") != 0?EnumAction.block:EnumAction.BOW;
    }
 }

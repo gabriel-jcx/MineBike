@@ -10,7 +10,7 @@ public enum EnumCompanionTalent {
    INVENTORY("INVENTORY", 0, CustomItems.satchel),
    ARMOR("ARMOR", 1, Items.iron_chestplate),
    SWORD("SWORD", 2, Items.diamond_sword),
-   RANGED("RANGED", 3, Items.bow),
+   RANGED("RANGED", 3, Items.BOW),
    ACROBATS("ACROBATS", 4, Items.leather_boots),
    INTEL("INTEL", 5, CustomItems.letter);
    public ItemStack item;

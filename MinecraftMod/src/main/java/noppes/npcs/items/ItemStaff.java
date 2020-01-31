@@ -117,7 +117,7 @@ public class ItemStaff extends ItemNpcInterface implements IProjectileCallback {
    }
 
    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
-      return EnumAction.bow;
+      return EnumAction.BOW;
    }
 
    public ItemStack getProjectile(ItemStack stack) {

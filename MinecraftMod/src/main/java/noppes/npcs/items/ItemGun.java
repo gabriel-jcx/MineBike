@@ -115,7 +115,7 @@ public class ItemGun extends ItemNpcInterface implements IProjectileCallback {
    }
 
    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
-      return EnumAction.bow;
+      return EnumAction.BOW;
    }
 
    public boolean onImpact(EntityProjectile entityProjectile, EntityLivingBase entity, ItemStack itemstack) {

@@ -30,8 +30,8 @@ public class RecipesDefault {
 
    public static void loadDefaultRecipes(int i) {
       if(i < 0) {
-         addRecipe("Npc Wand", CustomItems.wand, true, new Object[]{"XX", " Y", " Y", Character.valueOf('X'), Items.bread, Character.valueOf('Y'), Items.stick});
-         addRecipe("Mob Cloner", CustomItems.wand, true, new Object[]{"XX", "XY", " Y", Character.valueOf('X'), Items.bread, Character.valueOf('Y'), Items.stick});
+         addRecipe("Npc Wand", CustomItems.wand, true, new Object[]{"XX", " Y", " Y", Character.valueOf('X'), Items.BREAD, Character.valueOf('Y'), Items.stick});
+         addRecipe("Mob Cloner", CustomItems.wand, true, new Object[]{"XX", "XY", " Y", Character.valueOf('X'), Items.BREAD, Character.valueOf('Y'), Items.stick});
          addRecipe("Carpentry Bench", CustomItems.carpentyBench, true, new Object[]{"XYX", "Z Z", "Z Z", Character.valueOf('X'), Blocks.planks, Character.valueOf('Z'), Items.stick, Character.valueOf('Y'), Blocks.crafting_table});
          if(!CustomNpcs.DisableExtraItems) {
             addRecipe("Mana", CustomItems.mana, true, new Object[]{"XY", Character.valueOf('X'), Items.redstone, Character.valueOf('Y'), Items.glowstone_dust});

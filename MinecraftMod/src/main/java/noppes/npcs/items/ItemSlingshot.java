@@ -62,6 +62,6 @@ public class ItemSlingshot extends ItemNpcInterface {
    }
 
    public EnumAction getItemUseAction(ItemStack par1ItemStack) {
-      return EnumAction.bow;
+      return EnumAction.BOW;
    }
 }

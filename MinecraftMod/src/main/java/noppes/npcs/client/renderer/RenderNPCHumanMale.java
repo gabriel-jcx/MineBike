@@ -218,7 +218,7 @@ public class RenderNPCHumanMale extends RenderNPCInterface {
             GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
             GL11.glScalef(-var251, -var251, var251);
-         } else if(var23.getItem() == Items.bow) {
+         } else if(var23.getItem() == Items.BOW) {
             var251 = 0.625F;
             GL11.glTranslatef(0.0F, 0.125F, 0.3125F);
             GL11.glRotatef(-20.0F, 0.0F, 1.0F, 0.0F);
@@ -296,7 +296,7 @@ public class RenderNPCHumanMale extends RenderNPCInterface {
             GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
             GL11.glScalef(var261, -var261, var261);
-         } else if(var23.getItem() == Items.bow) {
+         } else if(var23.getItem() == Items.BOW) {
             var261 = 0.625F;
             GL11.glTranslatef(0.0F, 0.125F, 0.3125F);
             GL11.glRotatef(-20.0F, 0.0F, 1.0F, 0.0F);

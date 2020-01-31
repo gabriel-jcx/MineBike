@@ -12,7 +12,7 @@ public class CreativeTabNpcs extends CreativeTabs {
 
    public CreativeTabNpcs(String label) {
       super(label);
-      this.item = Items.bowl;
+      this.item = Items.BOW;
       this.meta = 0;
    }
 

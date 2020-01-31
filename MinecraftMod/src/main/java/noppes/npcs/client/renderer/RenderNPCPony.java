@@ -174,7 +174,7 @@ public class RenderNPCPony extends RenderNPCInterface {
             GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
             j = 0.375F * f;
             GL11.glScalef(j, -j, j);
-         } else if(itemstack.getItem() == Items.bow) {
+         } else if(itemstack.getItem() == Items.BOW) {
             GL11.glTranslatef(0.0F, 0.125F, 0.3125F);
             GL11.glRotatef(-20.0F, 0.0F, 1.0F, 0.0F);
             j = 0.625F * f;

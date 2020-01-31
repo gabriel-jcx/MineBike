@@ -382,7 +382,7 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
 		inventoryCurrency.setInventorySlotContents(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
 		inventoryCurrency.setInventorySlotContents(8,  new ItemStack(Items.feather,6)); //Feather
-		inventoryCurrency.setInventorySlotContents(9,  new ItemStack(Items.blaze_powder,6)); //Burn Element thing
+		inventoryCurrency.setInventorySlotContents(9,  new ItemStack(Items.BLAZE_POWDER,6)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(10, new ItemStack(Blocks.cactus,12)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Item.getItemById(37),12));
 		inventoryCurrency.setInventorySlotContents(12, new ItemStack(Item.getItemById(295),12));
