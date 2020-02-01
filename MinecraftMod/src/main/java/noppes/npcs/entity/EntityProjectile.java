@@ -27,7 +27,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -688,7 +688,7 @@ public class EntityProjectile extends EntityThrowable {
       case Nausea:
          return 32732;
       case Blindness:
-         return Potion.BLINDNESS.id;
+         return Potion.blindness.id;
       case Wither:
          return 32732;
       default:

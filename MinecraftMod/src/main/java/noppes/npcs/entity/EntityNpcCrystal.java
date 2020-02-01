@@ -2,7 +2,7 @@ package noppes.npcs.entity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
 import noppes.npcs.entity.EntityCustomNpc;

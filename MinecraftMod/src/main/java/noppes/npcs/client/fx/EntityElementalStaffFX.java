@@ -3,7 +3,7 @@ package noppes.npcs.client.fx;
 import net.minecraft.client.particle.EntityPortalFX;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class EntityElementalStaffFX extends EntityPortalFX {
 
