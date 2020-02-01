@@ -12,7 +12,7 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.controllers.DialogOption;
@@ -20,14 +20,14 @@ import noppes.npcs.entity.EntityCustomNpc;
 
 public class NpcDatabase {
 	
-	private static Map<String, Vec3> npcs = populateMap();
-	private static Map<String, Vec3> npcsTutorial = populateMapTutorial();
-	private static Map<String, Vec3> npcsDungeon = populateDungeon();
+	private static Map<String, Vec3d> npcs = populateMap();
+	private static Map<String, Vec3d> npcsTutorial = populateMapTutorial();
+	private static Map<String, Vec3d> npcsDungeon = populateDungeon();
 	
 	public static ArrayList<CustomNPCAbstract> customNPCs = CustomNPCStorage.genCustomNPCs();
 	private static boolean customNPCSInitialized = registerCustomNPCs();
 	
-	public static void registerNPC(String name, Vec3 location)
+	public static void registerNPC(String name, Vec3d location)
 	{
 		if (npcs == null)
 		{
@@ -39,8 +39,8 @@ public class NpcDatabase {
 		}
 	}
 	
-	private static Map<String, Vec3> populateMap() {
-		Map<String, Vec3> map = new HashMap<String, Vec3>();
+	private static Map<String, Vec3d> populateMap() {
+		Map<String, Vec3d> map = new HashMap<String, Vec3d>();
 		map.put("Dad", NpcLocations.dad);
 		map.put("Weapons Merchant", NpcLocations.weaponsMerchant);
 		map.put("Blacksmith", NpcLocations.blacksmith);
@@ -77,16 +77,16 @@ public class NpcDatabase {
 		return true;
 	}
 	
-	private static Map<String, Vec3> populateMapTutorial() {
-		Map<String, Vec3> map = new HashMap<String, Vec3>();
+	private static Map<String, Vec3d> populateMapTutorial() {
+		Map<String, Vec3d> map = new HashMap<String, Vec3d>();
 //		map.put("Scientist", NpcLocations.scientists);
 		map.put("Training Bot", NpcLocations.trainingBot);
 		map.put("Telly Port", NpcLocations.tutorialExit);
 		return map;
 	}
 	
-	private static Map<String, Vec3> populateDungeon() {
-		HashMap<String, Vec3> map = new HashMap<String, Vec3>();
+	private static Map<String, Vec3d> populateDungeon() {
+		HashMap<String, Vec3d> map = new HashMap<String, Vec3d>();
 		map.put("Ifrit", NpcLocations.baddestGuy);
 		return map;
 	}
@@ -95,13 +95,13 @@ public class NpcDatabase {
 		List<String> toReturn = new ArrayList<String>();
 		//dimID is dimension ID - 0: the home world, 102: the tutorial dimension, else: ?
 		if (dimID == 0)
-			for (Map.Entry<String, Vec3> item : npcs.entrySet())
+			for (Map.Entry<String, Vec3d> item : npcs.entrySet())
 				toReturn.add(item.getKey());
 		else if (dimID == 102)
-			for (Map.Entry<String, Vec3> item : npcsTutorial.entrySet())
+			for (Map.Entry<String, Vec3d> item : npcsTutorial.entrySet())
 				toReturn.add(item.getKey());
 		else if (dimID == WorldProviderDungeon.dimID)
-			for (Map.Entry<String, Vec3> item : npcsDungeon.entrySet())
+			for (Map.Entry<String, Vec3d> item : npcsDungeon.entrySet())
 				toReturn.add(item.getKey());
 		return toReturn;
 	}
@@ -132,7 +132,7 @@ public class NpcDatabase {
 		}
 	}
 	
-	public static Vec3 getSpawn(String name) {
+	public static Vec3d getSpawn(String name) {
 		return npcs.get(name);
 	}
 	
