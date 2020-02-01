@@ -148,23 +148,23 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 //		resistances.put(Blocks.BRICK_BLOCK, Resistance.LOW);
 //		resistances.put(Blocks.STONE, Resistance.MLOW);
 //		resistances.put(Blocks.COBBLESTONE, Resistance.MLOW);
-//		resistances.put(Blocks.grass, Resistance.MID);
-//		resistances.put(Blocks.dirt, Resistance.MID);
-//		resistances.put(Blocks.gravel, Resistance.MHIGH);
-//		resistances.put(Blocks.water, Resistance.HIGH);
-//		resistances.put(Blocks.obsidian, Resistance.HIGH);
-//		resistances.put(Blocks.sand, Resistance.HIGH);
+//		resistances.put(Blocks.GRASS, Resistance.MID);
+//		resistances.put(Blocks.DIRT, Resistance.MID);
+//		resistances.put(Blocks.GRAVEL, Resistance.MHIGH);
+//		resistances.put(Blocks.WATER, Resistance.HIGH);
+//		resistances.put(Blocks.OBSIDIAN, Resistance.HIGH);
+//		resistances.put(Blocks.SAND, Resistance.HIGH);
 		
 		resistances.put(Blocks.AIR, Resistance.NONE);
 		resistances.put(Blocks.BRICK_BLOCK, Resistance.NONE);
 		resistances.put(Blocks.STONE, Resistance.NONE);
 		resistances.put(Blocks.COBBLESTONE, Resistance.NONE);
-		resistances.put(Blocks.grass, Resistance.LOW);
-		resistances.put(Blocks.dirt, Resistance.LOW);
-		resistances.put(Blocks.gravel, Resistance.LOW);
-		resistances.put(Blocks.water, Resistance.MLOW);
-		resistances.put(Blocks.obsidian, Resistance.MLOW);
-		resistances.put(Blocks.sand, Resistance.MID);
+		resistances.put(Blocks.GRASS, Resistance.LOW);
+		resistances.put(Blocks.DIRT, Resistance.LOW);
+		resistances.put(Blocks.GRAVEL, Resistance.LOW);
+		resistances.put(Blocks.WATER, Resistance.MLOW);
+		resistances.put(Blocks.OBSIDIAN, Resistance.MLOW);
+		resistances.put(Blocks.SAND, Resistance.MID);
 		
 //		this.pedalingComboSoundEffect = new PedalingComboSoundEffect();
 		

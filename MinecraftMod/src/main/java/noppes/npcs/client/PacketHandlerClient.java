@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.util.HashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.achievement.GuiAchievement;
 import net.minecraft.entity.Entity;
