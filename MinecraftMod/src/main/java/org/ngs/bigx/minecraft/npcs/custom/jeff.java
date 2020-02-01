@@ -6,13 +6,13 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class jeff extends CustomNPCAbstract
 {
 	public static final String NAME = "jeff";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(116, 70, 238);
+	public static final Vec3d LOCATION = new Vec3d(116, 70, 238);//Vec3.createVectorHelper
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/TuxedoSteve.png";
 	
 	private CustomQuestAbstract quest;
