@@ -45,7 +45,7 @@ public class RandomPositionGeneratorAlt {
       float f = -99999.0F;
       boolean flag1;
       if(par0EntityCreature.hasHome()) {
-         double l1 = (double)(par0EntityCreature.getHomePosition().getDistanceSquared(MathHelper.floor_double(par0EntityCreature.posX), MathHelper.floor_double(par0EntityCreature.posY), MathHelper.floor_double(par0EntityCreature.posZ)) + 4.0F);
+         double l1 = (double)(par0EntityCreature.getHomePosition().getDistanceSquared(MathHelper.floor(par0EntityCreature.posX), MathHelper.floor(par0EntityCreature.posY), MathHelper.floor(par0EntityCreature.posZ)) + 4.0F);
          double i2 = (double)(par0EntityCreature.func_110174_bM() + (float)par1);
          flag1 = l1 < i2 * i2;
       } else {
@@ -58,9 +58,9 @@ public class RandomPositionGeneratorAlt {
          int k1 = random.nextInt(2 * par1) - par1;
          if(par3Vec3 == null || (double)j1 * par3Vec3.xCoord + (double)k1 * par3Vec3.zCoord >= 0.0D) {
             if(random.nextBoolean()) {
-               j1 += MathHelper.floor_double(par0EntityCreature.posX);
-               var17 += MathHelper.floor_double(par0EntityCreature.posY);
-               k1 += MathHelper.floor_double(par0EntityCreature.posZ);
+               j1 += MathHelper.floor(par0EntityCreature.posX);
+               var17 += MathHelper.floor(par0EntityCreature.posY);
+               k1 += MathHelper.floor(par0EntityCreature.posZ);
             } else {
                j1 += MathHelper.ceiling_double_int(par0EntityCreature.posX);
                var17 += MathHelper.ceiling_double_int(par0EntityCreature.posY);

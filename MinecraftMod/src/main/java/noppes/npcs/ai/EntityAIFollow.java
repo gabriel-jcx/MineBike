@@ -58,9 +58,9 @@ public class EntityAIFollow extends EntityAIBase {
          }
 
          if(!this.npc.getNavigator().tryMoveToEntityLiving(this.owner, speed) && this.distance >= 225.0D) {
-            int i = MathHelper.floor_double(this.owner.posX) - 2;
-            int j = MathHelper.floor_double(this.owner.posZ) - 2;
-            int k = MathHelper.floor_double(this.owner.boundingBox.minY);
+            int i = MathHelper.floor(this.owner.posX) - 2;
+            int j = MathHelper.floor(this.owner.posZ) - 2;
+            int k = MathHelper.floor(this.owner.boundingBox.minY);
 
             for(int l = 0; l <= 4; ++l) {
                for(int i1 = 0; i1 <= 4; ++i1) {

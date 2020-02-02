@@ -36,9 +36,9 @@ public class EntityAIWander extends EntityAIBase {
          }
 
          if(this.nearbyNPC != null) {
-            this.xPosition = (double)MathHelper.floor_double(this.nearbyNPC.posX);
-            this.yPosition = (double)MathHelper.floor_double(this.nearbyNPC.posY);
-            this.zPosition = (double)MathHelper.floor_double(this.nearbyNPC.posZ);
+            this.xPosition = (double)MathHelper.floor(this.nearbyNPC.posX);
+            this.yPosition = (double)MathHelper.floor(this.nearbyNPC.posY);
+            this.zPosition = (double)MathHelper.floor(this.nearbyNPC.posZ);
             this.nearbyNPC.addInteract(this.entity);
          } else {
             Vec3 vec = this.getVec();

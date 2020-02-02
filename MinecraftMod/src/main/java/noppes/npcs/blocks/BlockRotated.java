@@ -27,7 +27,7 @@ public abstract class BlockRotated extends BlockContainer {
    }
 
    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * (float)this.maxRotation() / 360.0F) + 0.5D) & this.maxRotation() - 1;
+      int l = MathHelper.floor((double)(par5EntityLivingBase.rotationYaw * (float)this.maxRotation() / 360.0F) + 0.5D) & this.maxRotation() - 1;
       l %= this.maxRotation();
       TileColorable tile = (TileColorable)par1World.getTileEntity(par2, par3, par4);
       tile.rotation = l;

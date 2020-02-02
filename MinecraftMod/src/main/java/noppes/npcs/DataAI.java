@@ -107,7 +107,7 @@ public class DataAI {
       this.movingPattern = compound.getInteger("MovingPatern");
       this.startPos = compound.getIntArray("StartPosNew");
       if(this.startPos == null || this.startPos.length != 3) {
-         this.startPos = new int[]{MathHelper.floor_double(this.npc.posX), MathHelper.floor_double(this.npc.posY), MathHelper.floor_double(this.npc.posZ)};
+         this.startPos = new int[]{MathHelper.floor(this.npc.posX), MathHelper.floor(this.npc.posY), MathHelper.floor(this.npc.posZ)};
       }
 
    }

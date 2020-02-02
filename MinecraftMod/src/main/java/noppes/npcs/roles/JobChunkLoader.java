@@ -56,10 +56,10 @@ public class JobChunkLoader extends JobInterface {
                double x = super.npc.posX / 16.0D;
                double z = super.npc.posZ / 16.0D;
                ArrayList list = new ArrayList();
-               list.add(new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
+               list.add(new ChunkCoordIntPair(MathHelper.floor(x), MathHelper.floor(z)));
                list.add(new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.ceiling_double_int(z)));
-               list.add(new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.ceiling_double_int(z)));
-               list.add(new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.floor_double(z)));
+               list.add(new ChunkCoordIntPair(MathHelper.floor(x), MathHelper.ceiling_double_int(z)));
+               list.add(new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.floor(z)));
                Iterator var8 = list.iterator();
 
                ChunkCoordIntPair chunk;

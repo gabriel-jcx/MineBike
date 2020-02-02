@@ -424,7 +424,7 @@ public class EntityProjectile extends EntityThrowable {
          }
       } else if(!this.isArrow() && !this.sticksToWalls()) {
          if(this.isBlock()) {
-            super.worldObj.playAuxSFX(2001, MathHelper.floor_double(super.posX), MathHelper.floor_double(super.posY), MathHelper.floor_double(super.posZ), Item.getIdFromItem(this.getItem()));
+            super.worldObj.playAuxSFX(2001, MathHelper.floor(super.posX), MathHelper.floor(super.posY), MathHelper.floor(super.posZ), Item.getIdFromItem(this.getItem()));
          } else {
             for(var12 = 0; var12 < 8; ++var12) {
                super.worldObj.spawnParticle("iconcrack_" + Item.getIdFromItem(this.getItem()), super.posX, super.posY, super.posZ, super.rand.nextGaussian() * 0.15D, super.rand.nextGaussian() * 0.2D, super.rand.nextGaussian() * 0.15D);

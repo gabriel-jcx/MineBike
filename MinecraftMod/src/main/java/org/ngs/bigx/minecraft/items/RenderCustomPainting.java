@@ -109,28 +109,28 @@ public class RenderCustomPainting  extends Render
 
     private void func_77008_a(CustomPainting p_77008_1_, float p_77008_2_, float p_77008_3_)
     {
-        int i = MathHelper.floor_double(p_77008_1_.posX);
-        int j = MathHelper.floor_double(p_77008_1_.posY + (double)(p_77008_3_ / 16.0F));
-        int k = MathHelper.floor_double(p_77008_1_.posZ);
+        int i = MathHelper.floor(p_77008_1_.posX);
+        int j = MathHelper.floor(p_77008_1_.posY + (double)(p_77008_3_ / 16.0F));
+        int k = MathHelper.floor(p_77008_1_.posZ);
 
         if (p_77008_1_.hangingDirection == 2)
         {
-            i = MathHelper.floor_double(p_77008_1_.posX + (double)(p_77008_2_ / 16.0F));
+            i = MathHelper.floor(p_77008_1_.posX + (double)(p_77008_2_ / 16.0F));
         }
 
         if (p_77008_1_.hangingDirection == 1)
         {
-            k = MathHelper.floor_double(p_77008_1_.posZ - (double)(p_77008_2_ / 16.0F));
+            k = MathHelper.floor(p_77008_1_.posZ - (double)(p_77008_2_ / 16.0F));
         }
 
         if (p_77008_1_.hangingDirection == 0)
         {
-            i = MathHelper.floor_double(p_77008_1_.posX - (double)(p_77008_2_ / 16.0F));
+            i = MathHelper.floor(p_77008_1_.posX - (double)(p_77008_2_ / 16.0F));
         }
 
         if (p_77008_1_.hangingDirection == 3)
         {
-            k = MathHelper.floor_double(p_77008_1_.posZ + (double)(p_77008_2_ / 16.0F));
+            k = MathHelper.floor(p_77008_1_.posZ + (double)(p_77008_2_ / 16.0F));
         }
 
         int l = this.renderManager.worldObj.getLightBrightnessForSkyBlocks(i, j, k, 0);

@@ -44,7 +44,7 @@ public class BlockBorder extends BlockContainer {
    }
 
    public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+      int l = MathHelper.floor((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
       l %= 4;
       TileBorder tile = (TileBorder)par1World.getTileEntity(x, y, z);
       TileBorder adjacent = this.getTile(par1World, x - 1, y, z);

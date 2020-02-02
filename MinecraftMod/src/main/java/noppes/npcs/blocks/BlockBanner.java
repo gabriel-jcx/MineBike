@@ -87,7 +87,7 @@ public class BlockBanner extends BlockContainer {
       if(!par1World.isAirBlock(par2, par3 + 1, par4)) {
          par1World.setBlockToAir(par2, par3, par4);
       } else {
-         int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+         int l = MathHelper.floor((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
          l %= 4;
          TileBanner tile = (TileBanner)par1World.getTileEntity(par2, par3, par4);
          tile.rotation = l;

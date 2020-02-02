@@ -40,7 +40,7 @@ public class EntityAIZigZagTarget extends EntityAIBase {
       } else {
          PathEntity pathentity = this.theEntity.getNavigator().getPathToEntityLiving(this.targetEntity);
          if(pathentity != null && (float)pathentity.getCurrentPathLength() >= this.field_75426_g) {
-            PathPoint pathpoint = pathentity.getPathPointFromIndex(MathHelper.floor_double((double)this.field_75426_g / 2.0D));
+            PathPoint pathpoint = pathentity.getPathPointFromIndex(MathHelper.floor((double)this.field_75426_g / 2.0D));
             this.entityPosX = pathpoint.xCoord;
             this.entityPosY = pathpoint.yCoord;
             this.entityPosZ = pathpoint.zCoord;

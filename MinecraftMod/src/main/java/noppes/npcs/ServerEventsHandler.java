@@ -114,7 +114,7 @@ public class ServerEventsHandler {
                event.setCanceled(true);
                mounted = event.target;
                if(isRemote) {
-                  CustomNpcs.proxy.openGui(MathHelper.floor_double(mounted.posX), MathHelper.floor_double(mounted.posY), MathHelper.floor_double(mounted.posZ), EnumGuiType.MobSpawnerMounter, event.entityPlayer);
+                  CustomNpcs.proxy.openGui(MathHelper.floor(mounted.posX), MathHelper.floor(mounted.posY), MathHelper.floor(mounted.posZ), EnumGuiType.MobSpawnerMounter, event.entityPlayer);
                }
             } else if(item.getItem() == CustomItems.wand && event.target instanceof EntityVillager) {
                var10000 = CustomNpcsPermissions.Instance;

@@ -538,7 +538,7 @@ public class RoleCompanion extends RoleInterface {
       if(sit) {
          super.npc.ai.animationType = EnumAnimation.SITTING;
          super.npc.ai.onAttack = 3;
-         super.npc.ai.startPos = new int[]{MathHelper.floor_double(super.npc.posX), MathHelper.floor_double(super.npc.posY), MathHelper.floor_double(super.npc.posZ)};
+         super.npc.ai.startPos = new int[]{MathHelper.floor(super.npc.posX), MathHelper.floor(super.npc.posY), MathHelper.floor(super.npc.posZ)};
          super.npc.getNavigator().clearPathEntity();
          super.npc.setPositionAndUpdate((double)super.npc.ai.startPos[0] + 0.5D, super.npc.posY, (double)super.npc.ai.startPos[2] + 0.5D);
       } else {

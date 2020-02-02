@@ -39,9 +39,9 @@ public class CmdNpc extends ChMcLogger {
    )
    public boolean home(String[] args) {
       EntityPlayer player = (EntityPlayer)super.pcParam;
-      int posX = MathHelper.floor_double(player.posX);
-      int posY = MathHelper.floor_double(player.posY);
-      int posZ = MathHelper.floor_double(player.posZ);
+      int posX = MathHelper.floor(player.posX);
+      int posY = MathHelper.floor(player.posY);
+      int posZ = MathHelper.floor(player.posZ);
       this.selectedNpc.ai.startPos = new int[]{posX, posY, posZ};
       return true;
    }
@@ -60,7 +60,7 @@ public class CmdNpc extends ChMcLogger {
       }
 
       npc.setPositionAndRotation(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
-      npc.ai.startPos = new int[]{MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ)};
+      npc.ai.startPos = new int[]{MathHelper.floor(player.posX), MathHelper.floor(player.posY), MathHelper.floor(player.posZ)};
       pw.spawnEntityInWorld(npc);
       npc.setHealth(npc.getMaxHealth());
       NoppesUtilServer.sendOpenGui(player, EnumGuiType.MainMenuDisplay, npc);

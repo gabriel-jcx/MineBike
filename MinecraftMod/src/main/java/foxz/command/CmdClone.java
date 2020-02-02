@@ -201,7 +201,7 @@ public class CmdClone extends ChMcLogger {
             entity1.setPosition(posX + 0.5D, posY + 1.0D, posZ + 0.5D);
             if(entity1 instanceof EntityNPCInterface) {
                EntityNPCInterface npc1 = (EntityNPCInterface)entity1;
-               npc1.ai.startPos = new int[]{MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)};
+               npc1.ai.startPos = new int[]{MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)};
                if(newname != null && !newname.isEmpty()) {
                   npc1.display.name = newname.replaceAll("%", " ");
                }

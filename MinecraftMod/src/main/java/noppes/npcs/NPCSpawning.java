@@ -36,8 +36,8 @@ public class NPCSpawning {
       int l1;
       for(int tmp = 0; tmp < world.playerEntities.size(); ++tmp) {
          EntityPlayer iterator = (EntityPlayer)world.playerEntities.get(tmp);
-         int chunkcoordintpair1 = MathHelper.floor_double(iterator.posX / 16.0D);
-         int chunkposition = MathHelper.floor_double(iterator.posZ / 16.0D);
+         int chunkcoordintpair1 = MathHelper.floor(iterator.posX / 16.0D);
+         int chunkposition = MathHelper.floor(iterator.posZ / 16.0D);
          byte j1 = 8;
 
          for(k1 = -j1; k1 <= j1; ++k1) {

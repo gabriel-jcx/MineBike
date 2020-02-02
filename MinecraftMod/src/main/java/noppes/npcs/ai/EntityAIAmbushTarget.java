@@ -92,9 +92,9 @@ public class EntityAIAmbushTarget extends EntityAIBase {
          for(int y = -2; y <= 2; ++y) {
             for(int x = -i; x <= i; ++x) {
                for(int z = -i; z <= i; ++z) {
-                  double j = (double)MathHelper.floor_double(this.theEntity.posX + (double)x) + 0.5D;
-                  double k = (double)MathHelper.floor_double(this.theEntity.boundingBox.minY + (double)y);
-                  double l = (double)MathHelper.floor_double(this.theEntity.posZ + (double)z) + 0.5D;
+                  double j = (double)MathHelper.floor(this.theEntity.posX + (double)x) + 0.5D;
+                  double k = (double)MathHelper.floor(this.theEntity.boundingBox.minY + (double)y);
+                  double l = (double)MathHelper.floor(this.theEntity.posZ + (double)z) + 0.5D;
                   if(this.theWorld.getBlock((int)j, (int)k, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 1, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 2, (int)l).isOpaqueCube()) {
                      Vec3 vec1 = Vec3.createVectorHelper(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
                      Vec3 vec2 = Vec3.createVectorHelper(j, k + (double)this.theEntity.getEyeHeight(), l);

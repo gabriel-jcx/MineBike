@@ -123,7 +123,7 @@ public class BlockQuestChest extends BlockContainer {
     public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityLiving, ItemStack itemStack)
     {
     	byte chestFacing = 0;
-    	int facing = MathHelper.floor_double((double) ((entityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+    	int facing = MathHelper.floor((double) ((entityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
     	
     	switch(facing)
     	{

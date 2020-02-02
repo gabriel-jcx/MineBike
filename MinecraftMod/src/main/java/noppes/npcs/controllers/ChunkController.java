@@ -64,10 +64,10 @@ public class ChunkController implements LoadingCallback {
                this.tickets.put(npc, ticket);
                double x = npc.posX / 16.0D;
                double z = npc.posZ / 16.0D;
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
+               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.floor(x), MathHelper.floor(z)));
                ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.ceiling_double_int(z)));
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.ceiling_double_int(z)));
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.floor_double(z)));
+               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.floor(x), MathHelper.ceiling_double_int(z)));
+               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.floor(z)));
             }
          }
       }

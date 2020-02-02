@@ -11,13 +11,13 @@ public class ContainerNpcInterface extends Container {
 
 
    public ContainerNpcInterface(EntityPlayer player) {
-      this.posX = MathHelper.floor_double(player.posX);
-      this.posZ = MathHelper.floor_double(player.posZ);
+      this.posX = MathHelper.floor(player.posX);
+      this.posZ = MathHelper.floor(player.posZ);
       player.motionX = 0.0D;
       player.motionZ = 0.0D;
    }
 
    public boolean canInteractWith(EntityPlayer player) {
-      return !player.isDead && this.posX == MathHelper.floor_double(player.posX) && this.posZ == MathHelper.floor_double(player.posZ);
+      return !player.isDead && this.posX == MathHelper.floor(player.posX) && this.posZ == MathHelper.floor(player.posZ);
    }
 }

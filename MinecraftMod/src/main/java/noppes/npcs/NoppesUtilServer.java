@@ -167,9 +167,9 @@ public class NoppesUtilServer {
 
       TileEntityCommandBlock tile = new TileEntityCommandBlock();
       tile.setWorldObj(executer.worldObj);
-      tile.xCoord = MathHelper.floor_double(executer.posX);
-      tile.yCoord = MathHelper.floor_double(executer.posY);
-      tile.zCoord = MathHelper.floor_double(executer.posZ);
+      tile.xCoord = MathHelper.floor(executer.posX);
+      tile.yCoord = MathHelper.floor(executer.posY);
+      tile.zCoord = MathHelper.floor(executer.posZ);
       CommandBlockLogic logic = tile.func_145993_a();
       logic.func_145752_a(command);
       logic.func_145754_b("@" + name);
@@ -648,7 +648,7 @@ public class NoppesUtilServer {
       } else {
          if(entity instanceof EntityNPCInterface) {
             EntityNPCInterface npc = (EntityNPCInterface)entity;
-            npc.ai.startPos = new int[]{MathHelper.floor_double(npc.posX), MathHelper.floor_double(npc.posY), MathHelper.floor_double(npc.posZ)};
+            npc.ai.startPos = new int[]{MathHelper.floor(npc.posX), MathHelper.floor(npc.posY), MathHelper.floor(npc.posZ)};
          }
 
          worldObj.spawnEntityInWorld(entity);

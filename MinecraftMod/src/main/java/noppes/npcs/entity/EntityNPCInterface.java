@@ -266,7 +266,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
             this.wasKilled = this.isKilled();
             if (super.worldObj.isDaytime() && !super.worldObj.isRemote && this.stats.burnInSun) {
                 float f1 = this.getBrightness(1.0F);
-                if (f1 > 0.5F && super.rand.nextFloat() * 30.0F < (f1 - 0.4F) * 2.0F && super.worldObj.canBlockSeeTheSky(MathHelper.floor_double(super.posX), MathHelper.floor_double(super.posY), MathHelper.floor_double(super.posZ))) {
+                if (f1 > 0.5F && super.rand.nextFloat() * 30.0F < (f1 - 0.4F) * 2.0F && super.worldObj.canBlockSeeTheSky(MathHelper.floor(super.posX), MathHelper.floor(super.posY), MathHelper.floor(super.posZ))) {
                     this.setFire(8);
                 }
             }
@@ -1163,7 +1163,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
 
     public int[] getStartPos() {
         if (this.ai.startPos == null || this.ai.startPos.length != 3) {
-            this.ai.startPos = new int[]{MathHelper.floor_double(super.posX), MathHelper.floor_double(super.posY), MathHelper.floor_double(super.posZ)};
+            this.ai.startPos = new int[]{MathHelper.floor(super.posX), MathHelper.floor(super.posY), MathHelper.floor(super.posZ)};
         }
 
         return this.ai.startPos;
@@ -1425,7 +1425,7 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
     }
 
     public ChunkCoordinates getCommandSenderPosition() {
-        return new ChunkCoordinates(MathHelper.floor_double(super.posX), MathHelper.floor_double(super.posY), MathHelper.floor_double(super.posZ));
+        return new ChunkCoordinates(MathHelper.floor(super.posX), MathHelper.floor(super.posY), MathHelper.floor(super.posZ));
     }
 
     public boolean canAttackClass(Class par1Class) {
@@ -1545,6 +1545,6 @@ public abstract class EntityNPCInterface extends EntityCreature implements IEnti
     }
     
 	public ChunkCoordinates getPlayerCoordinates() {
-		return new ChunkCoordinates(MathHelper.floor_double(this.posX + 0.5D), MathHelper.floor_double(this.posY + 0.5D), MathHelper.floor_double(this.posZ + 0.5D));
+		return new ChunkCoordinates(MathHelper.floor(this.posX + 0.5D), MathHelper.floor(this.posY + 0.5D), MathHelper.floor(this.posZ + 0.5D));
 	}
 }

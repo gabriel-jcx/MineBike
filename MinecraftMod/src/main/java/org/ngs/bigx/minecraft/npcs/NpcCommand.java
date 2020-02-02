@@ -85,13 +85,13 @@ public class NpcCommand {
 		npc.display.texture = texture;
 	
 		npc.ai.startPos = new int[]{
-	    		MathHelper.floor_double(x),
-	    		MathHelper.floor_double(y),
-	    		MathHelper.floor_double(z)};
+	    		MathHelper.floor(x),
+	    		MathHelper.floor(y),
+	    		MathHelper.floor(z)};
 
 		npc.attackEntityAsMob(Minecraft.getMinecraft().thePlayer);
 		
-		w.spawnEntityInWorld(npc);
+		w.spawnEntity(npc);
 	    npc.setHealth(10000f);
 	
 	    return npc;
@@ -103,11 +103,11 @@ public class NpcCommand {
 		npc.setPosition(x, y, z);
 	
 		npc.ai.startPos = new int[]{
-	    		MathHelper.floor_double(x),
-	    		MathHelper.floor_double(y),
-	    		MathHelper.floor_double(z)};
+	    		MathHelper.floor(x),
+	    		MathHelper.floor(y),
+	    		MathHelper.floor(z)};
 	
-		w.spawnEntityInWorld(npc);
+		w.spawnEntity(npc);
 	    npc.setHealth(10000f);
 	
 	    return npc;

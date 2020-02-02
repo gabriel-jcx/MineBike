@@ -48,7 +48,7 @@ public class EntityAIAttackTarget extends EntityAIBase {
 
    public boolean continueExecuting() {
       this.entityTarget = this.attacker.getAttackTarget();
-      return this.entityTarget != null && this.entityTarget.isEntityAlive()?(this.attacker.getDistanceToEntity(this.entityTarget) > (float)this.attacker.stats.aggroRange?false:(this.attacker.ai.useRangeMelee == 1 && this.attacker.getDistanceSqToEntity(this.entityTarget) > (double)(this.attacker.ai.distanceToMelee * this.attacker.ai.distanceToMelee)?false:this.attacker.isWithinHomeDistance(MathHelper.floor_double(this.entityTarget.posX), MathHelper.floor_double(this.entityTarget.posY), MathHelper.floor_double(this.entityTarget.posZ)))):false;
+      return this.entityTarget != null && this.entityTarget.isEntityAlive()?(this.attacker.getDistanceToEntity(this.entityTarget) > (float)this.attacker.stats.aggroRange?false:(this.attacker.ai.useRangeMelee == 1 && this.attacker.getDistanceSqToEntity(this.entityTarget) > (double)(this.attacker.ai.distanceToMelee * this.attacker.ai.distanceToMelee)?false:this.attacker.isWithinHomeDistance(MathHelper.floor(this.entityTarget.posX), MathHelper.floor(this.entityTarget.posY), MathHelper.floor(this.entityTarget.posZ)))):false;
    }
 
    public void startExecuting() {

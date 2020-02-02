@@ -73,7 +73,7 @@ public class BlockBlood extends Block {
    }
 
    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLiving, ItemStack item) {
-      int var6 = MathHelper.floor_double((double)(par5EntityLiving.rotationYaw / 90.0F) + 0.5D) & 3;
+      int var6 = MathHelper.floor((double)(par5EntityLiving.rotationYaw / 90.0F) + 0.5D) & 3;
       par1World.setBlockMetadataWithNotify(par2, par3, par4, var6, 2);
    }
 

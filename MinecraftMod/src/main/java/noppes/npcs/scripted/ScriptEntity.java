@@ -58,15 +58,15 @@ public class ScriptEntity {
    }
 
    public int getBlockX() {
-      return MathHelper.floor_double(this.entity.posX);
+      return MathHelper.floor(this.entity.posX);
    }
 
    public int getBlockY() {
-      return MathHelper.floor_double(this.entity.posY);
+      return MathHelper.floor(this.entity.posY);
    }
 
    public int getBlockZ() {
-      return MathHelper.floor_double(this.entity.posZ);
+      return MathHelper.floor(this.entity.posZ);
    }
 
    public void setPosition(double x, double y, double z) {

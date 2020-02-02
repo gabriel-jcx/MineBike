@@ -622,12 +622,12 @@ public class CustomFishHook extends EntityFishHook
                     WorldServer worldserver = (WorldServer)this.worldObj;
                     int k = 1;
 
-                    if (this.rand.nextFloat() < 0.25F && this.worldObj.canLightningStrikeAt(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) + 1, MathHelper.floor_double(this.posZ)))
+                    if (this.rand.nextFloat() < 0.25F && this.worldObj.canLightningStrikeAt(MathHelper.floor(this.posX), MathHelper.floor(this.posY) + 1, MathHelper.floor(this.posZ)))
                     {
                         k = 2;
                     }
 
-                    if (this.rand.nextFloat() < 0.5F && !this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY) + 1, MathHelper.floor_double(this.posZ)))
+                    if (this.rand.nextFloat() < 0.5F && !this.worldObj.canBlockSeeTheSky(MathHelper.floor(this.posX), MathHelper.floor(this.posY) + 1, MathHelper.floor(this.posZ)))
                     {
                         --k;
                     }
@@ -658,7 +658,7 @@ public class CustomFishHook extends EntityFishHook
                             {
                                 this.motionY -= 0.20000000298023224D;
                                 this.playSound("random.splash", 0.25F, 1.0F + (this.rand.nextFloat() - this.rand.nextFloat()) * 0.4F);
-                                f1 = (float)MathHelper.floor_double(this.boundingBox.minY);
+                                f1 = (float)MathHelper.floor(this.boundingBox.minY);
                                 worldserver.func_147487_a("bubble", this.posX, (double)(f1 + 1.0F), this.posZ, (int)(1.0F + this.width * 20.0F), (double)this.width, 0.0D, (double)this.width, 0.20000000298023224D);
                                 worldserver.func_147487_a("wake", this.posX, (double)(f1 + 1.0F), this.posZ, (int)(1.0F + this.width * 20.0F), (double)this.width, 0.0D, (double)this.width, 0.20000000298023224D);
                                 this.ticksCatchable = MathHelper.getRandomIntegerInRange(this.rand, 10, 30);
@@ -670,7 +670,7 @@ public class CustomFishHook extends EntityFishHook
                                 f7 = MathHelper.sin(f1);
                                 f2 = MathHelper.cos(f1);
                                 d5 = this.posX + (double)(f7 * (float)this.ticksCatchableDelay * 0.1F);
-                                d11 = (double)((float)MathHelper.floor_double(this.boundingBox.minY) + 1.0F);
+                                d11 = (double)((float)MathHelper.floor(this.boundingBox.minY) + 1.0F);
                                 d6 = this.posZ + (double)(f2 * (float)this.ticksCatchableDelay * 0.1F);
 
                                 if (this.rand.nextFloat() < 0.15F)
@@ -707,7 +707,7 @@ public class CustomFishHook extends EntityFishHook
                                 f7 = MathHelper.randomFloatClamp(this.rand, 0.0F, 360.0F) * 0.017453292F;
                                 f2 = MathHelper.randomFloatClamp(this.rand, 25.0F, 60.0F);
                                 d5 = this.posX + (double)(MathHelper.sin(f7) * f2 * 0.1F);
-                                d11 = (double)((float)MathHelper.floor_double(this.boundingBox.minY) + 1.0F);
+                                d11 = (double)((float)MathHelper.floor(this.boundingBox.minY) + 1.0F);
                                 d6 = this.posZ + (double)(MathHelper.cos(f7) * f2 * 0.1F);
                                 worldserver.func_147487_a("splash", d11, d5, d6, 2 + this.rand.nextInt(2), 0.10000000149011612D, 0.0D, 0.10000000149011612D, 0.0D);
                             }
