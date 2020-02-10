@@ -62,7 +62,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -1466,7 +1466,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 							if(thiefSpeedUpEffectTickCount > 0)
 								tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 							command.setSpeed(tempThiefSpeed);
-							command.runInDirection(ForgeDirection.SOUTH);
+							command.runInDirection(EnumFacing.SOUTH);
 
 							// OPEN Monster Stunned GUI
 							Minecraft mc = Minecraft.getMinecraft();
@@ -1492,7 +1492,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						
 						if( (npc.motionZ == 0) && (!npc.isDead) )
 						{
-							command.correctRunningDirection(ForgeDirection.SOUTH);
+							command.correctRunningDirection(EnumFacing.SOUTH);
 						}
 					}
 					else if(getThiefHealthCurrent() > 0)
@@ -1897,7 +1897,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				{
 					if( (npc.motionZ == 0) && (!npc.isDead) )
 					{
-						command.correctRunningDirection(ForgeDirection.SOUTH);
+						command.correctRunningDirection(EnumFacing.SOUTH);
 					}
 				}
 			}

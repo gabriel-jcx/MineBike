@@ -80,7 +80,7 @@
 //import net.minecraft.world.World;
 //import net.minecraft.world.WorldServer;
 ////import net.minecraft.world.WorldSettings.GameType;
-//import net.minecraftforge.common.util.ForgeDirection;
+//import net.minecraftforge.common.util.EnumFacing;
 //import net.minecraftforge.event.entity.player.AttackEntityEvent;
 //import net.minecraftforge.event.entity.player.EntityInteractEvent;
 //import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -1124,7 +1124,7 @@
 //					command = new NpcCommand(serverContext, npc);
 ////					command.setSpeed(10);
 ////					command.enableMoving(false);
-////					command.runInDirection(ForgeDirection.SOUTH);
+////					command.runInDirection(EnumFacing.SOUTH);
 //					
 //
 //					npc.faction.neutralPoints = 2000;
@@ -1136,7 +1136,7 @@
 //					
 ////					command.setSpeed(10);
 //					command.enableMoving(false);
-////					command.runInDirection(ForgeDirection.SOUTH);
+////					command.runInDirection(EnumFacing.SOUTH);
 //					
 //					setNpcCommand(command);
 //				}
@@ -1152,7 +1152,7 @@
 //
 //				command.setSpeed(10);
 ////				command.enableMoving(true);
-//				command.runInDirection(ForgeDirection.SOUTH);
+//				command.runInDirection(EnumFacing.SOUTH);
 ////				try {
 ////					context.bigxclient.sendGameEvent(GameTagType.GAMETAG_NUMBER_QUESTSTART, System.currentTimeMillis());
 ////				} catch (SocketException e) {

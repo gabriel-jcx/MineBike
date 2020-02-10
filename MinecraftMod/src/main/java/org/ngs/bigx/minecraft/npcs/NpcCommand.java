@@ -20,7 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 import noppes.npcs.constants.EnumAnimation;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -89,7 +89,7 @@ public class NpcCommand {
 	    		MathHelper.floor(y),
 	    		MathHelper.floor(z)};
 
-		npc.attackEntityAsMob(Minecraft.getMinecraft().thePlayer);
+		npc.attackEntityAsMob(Minecraft.getMinecraft().player);
 		
 		w.spawnEntity(npc);
 	    npc.setHealth(10000f);
@@ -123,7 +123,8 @@ public class NpcCommand {
 	
 	public static void spawnTheifOnRegularChaseQuest(BigxContext context) {	
 		if(theifOnRegularChaseQuestSpawnFlag) {
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderDark.dimID);
+			WorldServer ws = MinecraftServer.getWorld(WorldProviderDark.dimID);
+			//Todo:World provider Dark
 			QuestTaskChasing questTaskChasing = (QuestTaskChasing)bigxContext.getQuestManager().getActiveQuestTask();
 			EntityCustomNpc npc;
 			NpcCommand command;
@@ -142,7 +143,7 @@ public class NpcCommand {
 			command = new NpcCommand(context, npc);
 			command.setSpeed(10);
 			command.enableMoving(false);
-			command.runInDirection(ForgeDirection.SOUTH);
+			command.runInDirection(EnumFacing.SOUTH);
 	
 			questTaskChasing.setNpcCommand(command);
 		}
@@ -248,7 +249,7 @@ public class NpcCommand {
 		*/
 	}
 	
-	public void correctRunningDirection(final ForgeDirection direction)
+	public void correctRunningDirection(final EnumFacing direction)
 	{
 		synchronized (NPCCOMMANDLOCK)
 		{
@@ -292,7 +293,7 @@ public class NpcCommand {
 		}
 	}
 	
-	public void runInDirection(final ForgeDirection direction) {
+	public void runInDirection(final EnumFacing direction) {
 		final Timer timer = new Timer();
 
 //		runStartX = npc.posX;
@@ -332,7 +333,7 @@ public class NpcCommand {
 	
 	public static List getAllCustomNpcs() {
 		List list = new ArrayList();
-		WorldServer[] ws = MinecraftServer.getServer().worldServers;
+		WorldServer[] ws = MinecraftServer.getServer().worlds;
 		for (int i = 0; i < ws.length; i++) {
 			Iterator iter = ws[i].loadedEntityList.iterator();
 			while (iter.hasNext()) {

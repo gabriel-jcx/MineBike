@@ -109,17 +109,17 @@ public class NpcDatabase {
 	public static void spawn(WorldServer world, String name, int dimID) {
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
-			npc = NpcCommand.spawnNpc((int)npcs.get(name).xCoord, (int)npcs.get(name).yCoord, (int)npcs.get(name).zCoord, 
+			npc = NpcCommand.spawnNpc((int)npcs.get(name).x, (int)npcs.get(name).y, (int)npcs.get(name).z, 
 					MinecraftServer.getServer().worldServerForDimension(0), name, getTexture(name));
 			npc.ai.movingType = getMovement(name);
 //			int dialogId = getDialog(name);
 		}
 		else if (dimID == 102){
-			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).xCoord, (int)npcsTutorial.get(name).yCoord, 
-					(int)npcsTutorial.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(102), name, getTexture(name));
+			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).x, (int)npcsTutorial.get(name).y, 
+					(int)npcsTutorial.get(name).z, MinecraftServer.getServer().worldServerForDimension(102), name, getTexture(name));
 		} else if (dimID == WorldProviderDungeon.dimID) {
-			npc = NpcCommand.spawnNpc((int)npcsDungeon.get(name).xCoord, (int)npcsDungeon.get(name).yCoord,
-					(int)npcsDungeon.get(name).zCoord, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), name, getTexture(name));
+			npc = NpcCommand.spawnNpc((int)npcsDungeon.get(name).x, (int)npcsDungeon.get(name).y,
+					(int)npcsDungeon.get(name).z, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), name, getTexture(name));
 		}
 		if (npc != null){
 //			npc.display.texture = getTexture(name);

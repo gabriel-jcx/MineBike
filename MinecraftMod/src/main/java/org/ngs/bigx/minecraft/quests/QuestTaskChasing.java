@@ -88,7 +88,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -1118,7 +1118,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					command = new NpcCommand(serverContext, npc);
 					command.setSpeed(0);
 					command.enableMoving(false);
-					command.runInDirection(ForgeDirection.SOUTH);
+					command.runInDirection(EnumFacing.SOUTH);
 					
 					setNpcCommand(command);
 				}

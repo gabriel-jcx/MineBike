@@ -12,7 +12,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.EnumFacing;
 import noppes.npcs.blocks.tiles.TileColorable;
 
 public abstract class BlockRotated extends BlockContainer {
@@ -54,7 +54,7 @@ public abstract class BlockRotated extends BlockContainer {
       return this.renderId;
    }
 
-   public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+   public boolean isSideSolid(IBlockAccess world, int x, int y, int z, EnumFacing side) {
       return true;
    }
 

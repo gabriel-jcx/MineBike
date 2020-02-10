@@ -31,7 +31,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -81,7 +81,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	static EntityCustomNpc npc;
 	static NpcCommand command;
 	private int npcSpeed;
-	static ForgeDirection runDirection;
+	static EnumFacing runDirection;
 	public static int[] npcPath = new int[3];
 	public static List<int[]> npcPathList = new ArrayList<int[]>();
 	

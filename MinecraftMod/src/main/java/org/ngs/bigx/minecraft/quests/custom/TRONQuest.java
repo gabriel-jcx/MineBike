@@ -29,7 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.DataAI;
@@ -50,7 +50,7 @@ public class TRONQuest extends CustomQuestAbstract
 	private HudString warningNumber; // Counts down when player stops moving
 
 	public static final String NPC_NAME = "Rinzler"; // Name of npc
-	private ForgeDirection npcRunDirection; // which direction npc is currently going
+	private EnumFacing npcRunDirection; // which direction npc is currently going
 	static EntityCustomNpc npc;
 	static NpcCommand command;
 
@@ -108,7 +108,7 @@ public class TRONQuest extends CustomQuestAbstract
 
 		npcPath = new int[3];
 		npcPathList = new ArrayList<int[]>();
-		npcRunDirection = ForgeDirection.EAST;
+		npcRunDirection = EnumFacing.EAST;
 		npcSpeed = 9;
 		// 0x tells it's a hex number, ff at the end is for transparency
 
@@ -323,7 +323,7 @@ public class TRONQuest extends CustomQuestAbstract
 			NPCMotionChecker2[1] = 15;
 			npcPath = new int[3];
 			npcPathList = new ArrayList<int[]>();
-			npcRunDirection = ForgeDirection.EAST;
+			npcRunDirection = EnumFacing.EAST;
 
 			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderTRON.TRONDIMENSIONID);
 			synchronized (ws.loadedEntityList)
@@ -533,17 +533,17 @@ public class TRONQuest extends CustomQuestAbstract
 
 	}
 
-	private ForgeDirection turn(ForgeDirection direction) // randomly changes the direction of npc
+	private EnumFacing turn(EnumFacing direction) // randomly changes the direction of npc
 	{
-		if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH) // return 1 or 2
+		if (direction == EnumFacing.NORTH || direction == EnumFacing.SOUTH) // return 1 or 2
 		{
-			ForgeDirection[] temp = { ForgeDirection.EAST, ForgeDirection.WEST };
+			EnumFacing[] temp = { EnumFacing.EAST, EnumFacing.WEST };
 			int index = (int) (Math.random() * 2);
 			return temp[index];
 
 		} else
 		{
-			ForgeDirection[] temp = { ForgeDirection.NORTH, ForgeDirection.SOUTH };
+			EnumFacing[] temp = { EnumFacing.NORTH, EnumFacing.SOUTH };
 			int index = (int) (Math.random() * 2);
 			return temp[index];
 		}
