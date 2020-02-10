@@ -6,14 +6,14 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class Chum extends CustomNPCAbstract
 {
 
 	public static final String NAME = "Chum";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(96, 86, -51);
+	public static final Vec3d LOCATION = new Vec3d(96, 86, -51);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/Fisherman.png";
 	
 	private CustomQuestAbstract quest;

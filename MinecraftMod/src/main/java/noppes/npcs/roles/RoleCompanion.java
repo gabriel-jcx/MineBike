@@ -26,7 +26,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.constants.EnumAnimation;
@@ -172,10 +172,10 @@ public class RoleCompanion extends RoleInterface {
          rand = super.npc.getRNG();
 
          for(int j = 0; j < 2; ++j) {
-            Vec3 vec3 = Vec3.createVectorHelper(((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            Vec3d vec3 = new Vec3d(((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vec3.rotateAroundX(-super.npc.rotationPitch * 3.1415927F / 180.0F);
             vec3.rotateAroundY(-super.npc.renderYawOffset * 3.1415927F / 180.0F);
-            Vec3 vec31 = Vec3.createVectorHelper(((double)rand.nextFloat() - 0.5D) * 0.3D, (double)(-rand.nextFloat()) * 0.6D - 0.3D, (double)(super.npc.width / 2.0F) + 0.1D);
+            Vec3d vec31 = new Vec3d(((double)rand.nextFloat() - 0.5D) * 0.3D, (double)(-rand.nextFloat()) * 0.6D - 0.3D, (double)(super.npc.width / 2.0F) + 0.1D);
             vec31.rotateAroundX(-super.npc.rotationPitch * 3.1415927F / 180.0F);
             vec31.rotateAroundY(-super.npc.renderYawOffset * 3.1415927F / 180.0F);
             vec31 = vec31.addVector(super.npc.posX, super.npc.posY + (double)super.npc.height + 0.1D, super.npc.posZ);

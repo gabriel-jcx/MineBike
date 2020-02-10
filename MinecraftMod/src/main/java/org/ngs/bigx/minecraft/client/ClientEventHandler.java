@@ -68,7 +68,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MouseHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -455,7 +455,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
 						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
 						p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-						// TODO (99, 45, 179), Vec3.createVectorHelper(120, 100, 192)
+						// TODO (99, 45, 179), new Vec3d(120, 100, 192)
 						if(!( (p.posX >= 99) && (p.posX <=120) &&
 								(p.posY >= 45) && (p.posY <= 100) &&
 								(p.posZ >= 179) && (p.posZ <=192)))

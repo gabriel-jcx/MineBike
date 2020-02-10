@@ -7,7 +7,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import noppes.npcs.ai.RandomPositionGeneratorAlt;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.constants.EnumNavType;
@@ -55,7 +55,7 @@ public class EntityAIAvoidTarget extends EntityAIBase {
          if(!this.theEntity.getEntitySenses().canSee(this.closestLivingEntity) && this.theEntity.ai.directLOS) {
             return false;
          } else {
-            Vec3 var21 = RandomPositionGeneratorAlt.findRandomTargetBlockAwayFrom(this.theEntity, 16, 7, Vec3.createVectorHelper(this.closestLivingEntity.posX, this.closestLivingEntity.posY, this.closestLivingEntity.posZ));
+            Vec3d var21 = RandomPositionGeneratorAlt.findRandomTargetBlockAwayFrom(this.theEntity, 16, 7, new Vec3d(this.closestLivingEntity.posX, this.closestLivingEntity.posY, this.closestLivingEntity.posZ));
             boolean var3 = this.theEntity.inventory.getProjectile() == null || this.theEntity.ai.useRangeMelee == 2;
             boolean var4 = var3?this.health == this.theEntity.getHealth():this.theEntity.getRangedTask() != null && !this.theEntity.getRangedTask().hasFired();
             if(var21 == null) {

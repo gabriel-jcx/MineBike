@@ -3,32 +3,32 @@ package noppes.npcs.ai;
 import java.util.Random;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class RandomPositionGeneratorAlt {
 
-   private static Vec3 staticVector = Vec3.createVectorHelper(0.0D, 0.0D, 0.0D);
+   private static Vec3d staticVector = new Vec3d(0.0D, 0.0D, 0.0D);
 
 
-   public static Vec3 findRandomTarget(EntityCreature par0EntityCreature, int par1, int par2) {
-      return findRandomTargetBlock(par0EntityCreature, par1, par2, (Vec3)null);
+   public static Vec3d findRandomTarget(EntityCreature par0EntityCreature, int par1, int par2) {
+      return findRandomTargetBlock(par0EntityCreature, par1, par2, (Vec3d)null);
    }
 
-   public static Vec3 findRandomTargetBlockTowards(EntityCreature par0EntityCreature, int par1, int par2, Vec3 par3Vec3) {
+   public static Vec3d findRandomTargetBlockTowards(EntityCreature par0EntityCreature, int par1, int par2, Vec3d par3Vec3) {
       staticVector.xCoord = par3Vec3.xCoord - par0EntityCreature.posX;
       staticVector.yCoord = par3Vec3.yCoord - par0EntityCreature.posY;
       staticVector.zCoord = par3Vec3.zCoord - par0EntityCreature.posZ;
       return findRandomTargetBlock(par0EntityCreature, par1, par2, staticVector);
    }
 
-   public static Vec3 findRandomTargetBlockAwayFrom(EntityCreature par0EntityCreature, int par1, int par2, Vec3 par3Vec3) {
+   public static Vec3d findRandomTargetBlockAwayFrom(EntityCreature par0EntityCreature, int par1, int par2, Vec3d par3Vec3) {
       staticVector.xCoord = par0EntityCreature.posX - par3Vec3.xCoord;
       staticVector.yCoord = par0EntityCreature.posY - par3Vec3.yCoord;
       staticVector.zCoord = par0EntityCreature.posZ - par3Vec3.zCoord;
       return findRandomTargetBlock(par0EntityCreature, par1, par2, staticVector);
    }
 
-   private static Vec3 findRandomTargetBlock(EntityCreature par0EntityCreature, int par1, int par2, Vec3 par3Vec3) {
+   private static Vec3d findRandomTargetBlock(EntityCreature par0EntityCreature, int par1, int par2, Vec3d par3Vec3) {
       if(par1 <= 0) {
          par1 = 1;
       }
@@ -81,7 +81,7 @@ public class RandomPositionGeneratorAlt {
       }
 
       if(flag) {
-         return Vec3.createVectorHelper((double)k, (double)l, (double)i1);
+         return new Vec3d((double)k, (double)l, (double)i1);
       } else {
          return null;
       }

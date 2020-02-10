@@ -17,7 +17,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class ClientAreaEvent {
 	private static boolean areaChangedFlag = true;
@@ -44,7 +44,7 @@ public class ClientAreaEvent {
 	{
 		if(previousArea == null)
 		{
-			previousArea = new Area(Vec3.createVectorHelper(0, 0, 1.0), Vec3.createVectorHelper(0, 0, 0), 
+			previousArea = new Area(new Vec3d(0, 0, 1.0), new Vec3d(0, 0, 0), 
 					"Nowhere", AreaTypeEnum.NOTASSIGNED, 0, 0);
 		}
 		
@@ -52,7 +52,7 @@ public class ClientAreaEvent {
 		
 		if(currentArea == null)
 		{
-			currentArea = new Area(Vec3.createVectorHelper(-100000, 0, -100000), Vec3.createVectorHelper(100000, 0, 100000), 
+			currentArea = new Area(new Vec3d(-100000, 0, -100000), new Vec3d(100000, 0, 100000), 
 					"Nowhere", AreaTypeEnum.NOTASSIGNED, player.dimension, 0);
 		}
 		
@@ -100,64 +100,64 @@ public class ClientAreaEvent {
 
 	public static void initArea()
 	{
-		addArea(new Area(Vec3.createVectorHelper(93, 54, -55), Vec3.createVectorHelper(99, 74, -49), 
+		addArea(new Area(new Vec3d(93, 54, -55), new Vec3d(99, 74, -49), 
 				BiGXTextBoxDialogue.placeQuestRoom, AreaTypeEnum.ROOM, 0, 1), AreaTypeEnum.ROOM);
 		
-		addArea(new Area(Vec3.createVectorHelper(88, 74, 241), Vec3.createVectorHelper(91, 80, 244), 
+		addArea(new Area(new Vec3d(88, 74, 241), new Vec3d(91, 80, 244), 
 				BiGXTextBoxDialogue.wakeUpMsg, AreaTypeEnum.EVENT, 0, 2), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(93, 65, 230), Vec3.createVectorHelper(97, 75, 235), 
+		addArea(new Area(new Vec3d(93, 65, 230), new Vec3d(97, 75, 235), 
 				BiGXTextBoxDialogue.policeDirection, AreaTypeEnum.EVENT, 0, 3), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(93, 65, -9), Vec3.createVectorHelper(100, 75, 0), 
+		addArea(new Area(new Vec3d(93, 65, -9), new Vec3d(100, 75, 0), 
 				BiGXTextBoxDialogue.readSignReminder, AreaTypeEnum.EVENT, 0, 4), AreaTypeEnum.EVENT);
 		
-		addArea(new Area(Vec3.createVectorHelper(86, 45, 235), Vec3.createVectorHelper(103, 100, 250), 
+		addArea(new Area(new Vec3d(86, 45, 235), new Vec3d(103, 100, 250), 
 				BiGXTextBoxDialogue.placeHome, AreaTypeEnum.BUILDING, 0, 5), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(100, 45, 199), Vec3.createVectorHelper(118, 100, 215), 
+		addArea(new Area(new Vec3d(100, 45, 199), new Vec3d(118, 100, 215), 
 				BiGXTextBoxDialogue.placeMarket, AreaTypeEnum.BUILDING, 0, 6), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(99, 45, 179), Vec3.createVectorHelper(120, 100, 192), 
+		addArea(new Area(new Vec3d(99, 45, 179), new Vec3d(120, 100, 192), 
 				BiGXTextBoxDialogue.placePoliceDepartment, AreaTypeEnum.BUILDING, 0, 7), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(99, 45, 176), Vec3.createVectorHelper(132, 69, 192), 
+		addArea(new Area(new Vec3d(99, 45, 176), new Vec3d(132, 69, 192), 
 				BiGXTextBoxDialogue.placeJail, AreaTypeEnum.BUILDING, 0, 8), AreaTypeEnum.BUILDING);
 		
-		addArea(new Area(Vec3.createVectorHelper(70, 45, 140), Vec3.createVectorHelper(132, 100, 256), 
+		addArea(new Area(new Vec3d(70, 45, 140), new Vec3d(132, 100, 256), 
 				BiGXTextBoxDialogue.placeVillage, AreaTypeEnum.PLACE, 0, 9), AreaTypeEnum.PLACE);
 		
-		addArea(new Area(Vec3.createVectorHelper(93, 54, -55), Vec3.createVectorHelper(99, 74, -8), 
+		addArea(new Area(new Vec3d(93, 54, -55), new Vec3d(99, 74, -8), 
 				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 0, 10), AreaTypeEnum.PLACE);
 		
-		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
+		addArea(new Area(new Vec3d(-1000, 40, -1000), new Vec3d(1000, 100, 1000), 
 				BiGXTextBoxDialogue.placeContinentPangea, AreaTypeEnum.WORLD, 0, 11), AreaTypeEnum.WORLD);
 		
 		//Fire Cave Areas
-		addArea(new Area(Vec3.createVectorHelper(-5, 60, -5), Vec3.createVectorHelper(5, 70, 11), 
+		addArea(new Area(new Vec3d(-5, 60, -5), new Vec3d(5, 70, 11), 
 				BiGXTextBoxDialogue.readSignReminder, AreaTypeEnum.ROOM, 105, 12), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(-1000, 40, -1000), Vec3.createVectorHelper(1000, 100, 1000), 
+		addArea(new Area(new Vec3d(-1000, 40, -1000), new Vec3d(1000, 100, 1000), 
 				BiGXTextBoxDialogue.placeCave, AreaTypeEnum.PLACE, 105, 13), AreaTypeEnum.PLACE);
 		
 		// Tutorial Areas 
 		// TODO: CHANGE VECTOR LOCATIONS
-		addArea(new Area(Vec3.createVectorHelper(510, 54, -4), Vec3.createVectorHelper(518, 100, 4), 
+		addArea(new Area(new Vec3d(510, 54, -4), new Vec3d(518, 100, 4), 
 				BiGXTextBoxDialogue.instructionsPedalForward, AreaTypeEnum.ROOM, 102, 14), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(518, 54, -4), Vec3.createVectorHelper(530, 100, 4), 
+		addArea(new Area(new Vec3d(518, 54, -4), new Vec3d(530, 100, 4), 
 				BiGXTextBoxDialogue.instructionsPedalBackward, AreaTypeEnum.ROOM, 102, 15), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(530, 54, -4), Vec3.createVectorHelper(541, 100, 4), 
+		addArea(new Area(new Vec3d(530, 54, -4), new Vec3d(541, 100, 4), 
 				BiGXTextBoxDialogue.instructionsJump, AreaTypeEnum.ROOM, 102, 16), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(541, 54, -4), Vec3.createVectorHelper(552, 100, 4), 
+		addArea(new Area(new Vec3d(541, 54, -4), new Vec3d(552, 100, 4), 
 				BiGXTextBoxDialogue.instructionsMine, AreaTypeEnum.ROOM, 102, 17), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(552, 54, -4), Vec3.createVectorHelper(563, 100, 4), 
+		addArea(new Area(new Vec3d(552, 54, -4), new Vec3d(563, 100, 4), 
 				BiGXTextBoxDialogue.instructionsBuild, AreaTypeEnum.ROOM, 102, 18), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(563, 54, -4), Vec3.createVectorHelper(574, 100, 4), 
+		addArea(new Area(new Vec3d(563, 54, -4), new Vec3d(574, 100, 4), 
 				BiGXTextBoxDialogue.instructionsChestOpen, AreaTypeEnum.ROOM, 102, 19), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(574, 54, -4), Vec3.createVectorHelper(585, 100, 4), 
+		addArea(new Area(new Vec3d(574, 54, -4), new Vec3d(585, 100, 4), 
 				BiGXTextBoxDialogue.instructionsAttackNPC, AreaTypeEnum.ROOM, 102, 20), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(585, 54, -4), Vec3.createVectorHelper(596, 100, 4), 
+		addArea(new Area(new Vec3d(585, 54, -4), new Vec3d(596, 100, 4), 
 				BiGXTextBoxDialogue.instructionsDashJump, AreaTypeEnum.ROOM, 102, 21), AreaTypeEnum.ROOM);
-		addArea(new Area(Vec3.createVectorHelper(596, 54, -4), Vec3.createVectorHelper(610, 100, 4), 
+		addArea(new Area(new Vec3d(596, 54, -4), new Vec3d(610, 100, 4), 
 				BiGXTextBoxDialogue.instructionsExitTutorial, AreaTypeEnum.ROOM, 102, 22), AreaTypeEnum.ROOM);
 	}
 	

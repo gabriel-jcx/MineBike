@@ -29,7 +29,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
@@ -203,7 +203,7 @@ public class EntityProjectile extends EntityThrowable {
       if((this.isArrow() || this.sticksToWalls()) && var17 != null) {
          var17.setBlockBoundsBasedOnState(super.worldObj, this.xTile, this.yTile, this.zTile);
          AxisAlignedBB vec3 = var17.getCollisionBoundingBoxFromPool(super.worldObj, this.xTile, this.yTile, this.zTile);
-         if(vec3 != null && vec3.isVecInside(Vec3.createVectorHelper(super.posX, super.posY, super.posZ))) {
+         if(vec3 != null && vec3.isVecInside(new Vec3d(super.posX, super.posY, super.posZ))) {
             this.field_70193_a = true;
          }
       }
@@ -233,13 +233,13 @@ public class EntityProjectile extends EntityThrowable {
             this.setDead();
          }
 
-         Vec3 var19 = Vec3.createVectorHelper(super.posX, super.posY, super.posZ);
-         Vec3 vec31 = Vec3.createVectorHelper(super.posX + super.motionX, super.posY + super.motionY, super.posZ + super.motionZ);
+         Vec3d var19 = new Vec3d(super.posX, super.posY, super.posZ);
+         Vec3d vec31 = new Vec3d(super.posX + super.motionX, super.posY + super.motionY, super.posZ + super.motionZ);
          MovingObjectPosition movingobjectposition = super.worldObj.func_147447_a(var19, vec31, false, true, false);
-         var19 = Vec3.createVectorHelper(super.posX, super.posY, super.posZ);
-         vec31 = Vec3.createVectorHelper(super.posX + super.motionX, super.posY + super.motionY, super.posZ + super.motionZ);
+         var19 = new Vec3d(super.posX, super.posY, super.posZ);
+         vec31 = new Vec3d(super.posX + super.motionX, super.posY + super.motionY, super.posZ + super.motionZ);
          if(movingobjectposition != null) {
-            vec31 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
+            vec31 = new Vec3d(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
          }
 
          if(!super.worldObj.isRemote) {
@@ -536,7 +536,7 @@ public class EntityProjectile extends EntityThrowable {
                while(iterator.hasNext()) {
                   EntityPlayer entitylivingbase = (EntityPlayer)iterator.next();
                   if(entitylivingbase.getDistanceSq(super.posX, super.posY, super.posZ) < 4096.0D) {
-                     ((EntityPlayerMP)entitylivingbase).playerNetServerHandler.sendPacket(new S27PacketExplosion(super.posX, super.posY, super.posZ, (float)this.explosiveRadius, var17.affectedBlockPositions, (Vec3)var17.func_77277_b().get(entitylivingbase)));
+                     ((EntityPlayerMP)entitylivingbase).playerNetServerHandler.sendPacket(new S27PacketExplosion(super.posX, super.posY, super.posZ, (float)this.explosiveRadius, var17.affectedBlockPositions, (Vec3d)var17.func_77277_b().get(entitylivingbase)));
                   }
                }
             }

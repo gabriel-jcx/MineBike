@@ -17,7 +17,7 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 public class john extends CustomNPCAbstract 
 {
 	public static final String NAME = "john";
-	public static final Vec3d LOCATION = new Vec3d(116, 70, 230);//Vec3.createVectorHelper
+	public static final Vec3d LOCATION = new Vec3d(116, 70, 230);//new Vec3d
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/GansterSteve.png";
 	
 	private boolean swordGiven;

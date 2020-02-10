@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -43,7 +43,7 @@ public class EntityAIAmbushTarget extends EntityAIBase {
             --this.delay;
             return false;
          } else {
-            Vec3 vec3 = this.findHidingSpot();
+            Vec3d vec3 = this.findHidingSpot();
             if(vec3 == null) {
                return false;
             } else {
@@ -84,9 +84,9 @@ public class EntityAIAmbushTarget extends EntityAIBase {
       this.theEntity.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
    }
 
-   private Vec3 findHidingSpot() {
+   private Vec3d findHidingSpot() {
       Random random = this.theEntity.getRNG();
-      Vec3 idealPos = null;
+      Vec3d idealPos = null;
 
       for(int i = 1; i <= 8; ++i) {
          for(int y = -2; y <= 2; ++y) {
@@ -96,11 +96,11 @@ public class EntityAIAmbushTarget extends EntityAIBase {
                   double k = (double)MathHelper.floor(this.theEntity.boundingBox.minY + (double)y);
                   double l = (double)MathHelper.floor(this.theEntity.posZ + (double)z) + 0.5D;
                   if(this.theWorld.getBlock((int)j, (int)k, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 1, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 2, (int)l).isOpaqueCube()) {
-                     Vec3 vec1 = Vec3.createVectorHelper(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
-                     Vec3 vec2 = Vec3.createVectorHelper(j, k + (double)this.theEntity.getEyeHeight(), l);
+                     Vec3d vec1 = new Vec3d(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
+                     Vec3d vec2 = new Vec3d(j, k + (double)this.theEntity.getEyeHeight(), l);
                      MovingObjectPosition movingobjectposition = this.theWorld.rayTraceBlocks(vec1, vec2);
                      if(movingobjectposition != null && this.shelterX != j && this.shelterY != k && this.shelterZ != l) {
-                        idealPos = Vec3.createVectorHelper(j, k, l);
+                        idealPos = new Vec3d(j, k, l);
                      }
                   }
                }

@@ -43,7 +43,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -103,11 +103,11 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-		if (inBounds(event.player, Vec3.createVectorHelper(118, 152, -148), Vec3.createVectorHelper(125, 146, -151)) &&
+		if (inBounds(event.player, new Vec3d(118, 152, -148), new Vec3d(125, 146, -151)) &&
 				event.player.dimension == 0) {
 			QuestTeleporter.teleport(event.player, WorldProviderDungeon.dimID, 0, 64, 0);
 		}
-		else if (inBounds(event.player, Vec3.createVectorHelper(3, 63, 10), Vec3.createVectorHelper(-3, 68, 20)) &&
+		else if (inBounds(event.player, new Vec3d(3, 63, 10), new Vec3d(-3, 68, 20)) &&
 				event.player.dimension == WorldProviderDungeon.dimID) {
 			QuestTeleporter.teleport(event.player, 0, 121, 163, -145);
 		}
@@ -314,7 +314,7 @@ public class CommonEventHandler {
 		}
 	}
 	
-	private boolean inBounds(EntityPlayer player, Vec3 edge1, Vec3 edge2) {
+	private boolean inBounds(EntityPlayer player, Vec3d edge1, Vec3d edge2) {
 		return (player.posX >= edge1.xCoord && player.posX <= edge2.xCoord || player.posX <= edge1.xCoord && player.posX >= edge2.xCoord) &&
 				(player.posY >= edge1.yCoord && player.posY <= edge2.yCoord || player.posY <= edge1.yCoord && player.posY >= edge2.yCoord) &&
 				(player.posZ >= edge1.zCoord && player.posZ <= edge2.zCoord || player.posZ <= edge1.zCoord && player.posZ >= edge2.zCoord);

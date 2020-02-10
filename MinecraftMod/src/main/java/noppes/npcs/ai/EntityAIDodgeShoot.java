@@ -2,7 +2,7 @@ package noppes.npcs.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import noppes.npcs.ai.RandomPositionGeneratorAlt;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -28,7 +28,7 @@ public class EntityAIDodgeShoot extends EntityAIBase {
          } else if(this.entity.getRangedTask() == null) {
             return false;
          } else {
-            Vec3 vec = this.entity.getRangedTask().hasFired()?RandomPositionGeneratorAlt.findRandomTarget(this.entity, 4, 1):null;
+            Vec3d vec = this.entity.getRangedTask().hasFired()?RandomPositionGeneratorAlt.findRandomTarget(this.entity, 4, 1):null;
             if(vec == null) {
                return false;
             } else {

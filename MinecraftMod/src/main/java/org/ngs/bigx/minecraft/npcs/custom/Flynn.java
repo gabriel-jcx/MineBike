@@ -6,13 +6,13 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class Flynn extends CustomNPCAbstract 
 {
 	public static final String NAME = "Flynn";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(127, 164, -139);
+	public static final Vec3d LOCATION = new Vec3d(127, 164, -139);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/MinecraftTRONSkin.png";
 	//MincraftTRONSkin
 	

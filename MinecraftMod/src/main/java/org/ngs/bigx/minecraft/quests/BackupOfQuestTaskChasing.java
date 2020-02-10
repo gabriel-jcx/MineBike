@@ -76,7 +76,7 @@
 //import net.minecraft.util.math.AxisAlignedBB;
 //import net.minecraft.util.MovingObjectPosition;
 //import net.minecraft.util.ResourceLocation;
-//import net.minecraft.util.Vec3;
+//import net.minecraft.util.math.Vec3d;
 //import net.minecraft.world.World;
 //import net.minecraft.world.WorldServer;
 ////import net.minecraft.world.WorldSettings.GameType;
@@ -137,7 +137,7 @@
 //	protected int startingZ, endingZ;
 //	private boolean doMakeBlocks;
 //	float ratio;
-//	private Vec3 returnLocation;
+//	private Vec3d returnLocation;
 //	
 //	private CharacterProperty characterProperty = BiGX.instance().characterProperty;
 //	private EntityCustomNpc npc;
@@ -175,7 +175,7 @@
 //	private static LevelSystem levelSys;
 //	
 //	public EntityPlayer player;
-//	private List<Vec3> blocks = new ArrayList<Vec3>();
+//	private List<Vec3d> blocks = new ArrayList<Vec3d>();
 //	
 //	private boolean menuOpen = false;
 //	private static GuiChasingQuest guiChasingQuest;
@@ -289,13 +289,13 @@
 ////		switch(this.questChaseType)
 ////		{
 ////		case REGULAR:
-////			returnLocation = Vec3.createVectorHelper(96, 58, -52);
+////			returnLocation = new Vec3d(96, 58, -52);
 ////			break;
 ////		case FIRE:
-////			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+////			returnLocation = new Vec3d(96, 73, -8);
 ////			break;
 ////		default:
-////			returnLocation = Vec3.createVectorHelper(96, 73, -8);
+////			returnLocation = new Vec3d(96, 73, -8);
 ////			break;	
 ////		};
 //
@@ -493,7 +493,7 @@
 //			time = 0;
 //		}
 //
-//		returnLocation = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
+//		returnLocation = new Vec3d(player.posX, player.posY, player.posZ);
 //		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 //		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
 //
@@ -501,24 +501,24 @@
 //		chasingQuestInitialPosY = 10;
 //		chasingQuestInitialPosZ = 0;
 //		
-//		blocks = new ArrayList<Vec3>();
+//		blocks = new ArrayList<Vec3d>();
 //		
 //		for (int z = -16; z < (int)player.posZ+64; ++z) {
 //			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+//			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
 //			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+//			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 //		}
 //		for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 //			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+//			blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 //		}
 //		
 //		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
 //			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+//			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
 //			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+//			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 //		}
 //		
 //		chasingQuestOnGoing = true;
@@ -529,7 +529,7 @@
 //			reactivateTask();
 //	}
 //	
-//	private void generateFakeHouse(World w, List<Vec3> blocks, int origX, int origY, int origZ) {
+//	private void generateFakeHouse(World w, List<Vec3d> blocks, int origX, int origY, int origZ) {
 //		for (int x = origX; x < origX + 7; ++x) {
 //			if (x == origX || x == origX + 6) {
 //				for (int y = origY; y < origY + 5; ++y) {
@@ -538,7 +538,7 @@
 //							setBlock(w, x, y, z, Blocks.log);
 //						else
 //							setBlock(w, x, y, z, Blocks.planks);
-//						blocks.add(Vec3.createVectorHelper(x, y, z));
+//						blocks.add(new Vec3d(x, y, z));
 //					}
 //				}
 //				setBlock(w, x, origY+1, origZ+5, Blocks.glass);
@@ -548,15 +548,15 @@
 //					for (int z = origZ; z < origZ + 11; ++z) {
 //						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
 //							setBlock(w, x, y, z, Blocks.planks);
-//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//							blocks.add(new Vec3d(x, y, z));
 //						}
 //						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
 //							setBlock(w, x, y, z, Blocks.planks);
-//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//							blocks.add(new Vec3d(x, y, z));
 //						}
 //						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
 //							setBlock(w, x, y, z, Blocks.planks);
-//							blocks.add(Vec3.createVectorHelper(x, y, z));
+//							blocks.add(new Vec3d(x, y, z));
 //						}
 //					}
 //				}
@@ -575,9 +575,9 @@
 //		 */
 //		for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
 //			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+//			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
 //			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-//			blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+//			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 //		}
 //		
 //		Random rand = new Random();
@@ -685,7 +685,7 @@
 //			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 //				for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
 //					setBlock(ws, x, chasingQuestInitialPosY-1, z, blockByDifficulty);
-//					blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+//					blocks.add(new Vec3d(x, chasingQuestInitialPosY-1, z));
 //				}
 //			}
 //			
@@ -735,7 +735,7 @@
 //				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 //					for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
 //						setBlock(ws, x, chasingQuestInitialPosY-1, z, Blocks.GRAVEL);
-//						blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY-1, z));
+//						blocks.add(new Vec3d(x, chasingQuestInitialPosY-1, z));
 //						setBlock(ws, x, chasingQuestInitialPosY-1, z-64, Blocks.GRASS);
 //					}
 //				}
@@ -1630,24 +1630,24 @@
 //			chasingQuestInitialPosY = 10;
 //			chasingQuestInitialPosZ = 0;
 //			
-//			blocks = new ArrayList<Vec3>();
+//			blocks = new ArrayList<Vec3d>();
 //			
 //			for (int z = -16; z < (int)player.posZ+64; ++z) {
 //				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
-//				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY, z));
+//				blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
 //				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
-//				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY, z));
+//				blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 //			}
 //			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 //				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
-//				blocks.add(Vec3.createVectorHelper(x, chasingQuestInitialPosY, -16));
+//				blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 //			}
 //			
 //			for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
 //				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
-//				blocks.add(Vec3.createVectorHelper((int)player.posX-16, chasingQuestInitialPosY-2, z));
+//				blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
 //				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
-//				blocks.add(Vec3.createVectorHelper((int)player.posX+16, chasingQuestInitialPosY-2, z));
+//				blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 //			}
 //			
 //			chasingQuestOnGoing = true;

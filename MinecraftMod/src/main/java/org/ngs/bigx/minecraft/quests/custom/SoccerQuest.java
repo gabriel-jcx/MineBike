@@ -28,7 +28,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.common.util.EnumFacing;
@@ -367,7 +367,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		npc.ai.movingPattern = 0;
 		npc.ai.movingType = EnumMovingType.MovingPath;
 		
-		double d = npc.getPosition(1.0f).distanceTo(Vec3.createVectorHelper(0.0d, SOCCER_Y_LEVEL, 0.0d));
+		double d = npc.getPosition(1.0f).distanceTo(new Vec3d(0.0d, SOCCER_Y_LEVEL, 0.0d));
 		double t = 1.0d/d;
 		t *= 3;
 		double[] newPoint = Utils.lerp(

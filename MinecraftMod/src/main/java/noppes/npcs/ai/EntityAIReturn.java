@@ -1,7 +1,7 @@
 package noppes.npcs.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.ai.RandomPositionGeneratorAlt;
 import noppes.npcs.constants.EnumMovingType;
@@ -119,8 +119,8 @@ public class EntityAIReturn extends EntityAIBase {
          }
 
          if(distance > 2) {
-            Vec3 start = Vec3.createVectorHelper(posX, posY, posZ);
-            Vec3 pos = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.npc, distance, distance / 2 > 7?7:distance / 2, start);
+            Vec3d start = new Vec3d(posX, posY, posZ);
+            Vec3d pos = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.npc, distance, distance / 2 > 7?7:distance / 2, start);
             if(pos != null) {
                posX = pos.xCoord;
                posY = pos.yCoord;

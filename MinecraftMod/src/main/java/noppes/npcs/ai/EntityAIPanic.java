@@ -2,7 +2,7 @@ package noppes.npcs.ai;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import noppes.npcs.ai.RandomPositionGeneratorAlt;
 import noppes.npcs.constants.AiMutex;
 
@@ -25,7 +25,7 @@ public class EntityAIPanic extends EntityAIBase {
       if(this.theEntityCreature.getAttackTarget() == null && !this.theEntityCreature.isBurning()) {
          return false;
       } else {
-         Vec3 var1 = RandomPositionGeneratorAlt.findRandomTarget(this.theEntityCreature, 5, 4);
+         Vec3d var1 = RandomPositionGeneratorAlt.findRandomTarget(this.theEntityCreature, 5, 4);
          if(var1 == null) {
             return false;
          } else {

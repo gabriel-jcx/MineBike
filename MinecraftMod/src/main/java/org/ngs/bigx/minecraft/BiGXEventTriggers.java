@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -124,7 +124,7 @@ public class BiGXEventTriggers {
 		return false;
 	}
 	
-	public static boolean checkEntityInArea(Entity entity, Vec3 xyz1, Vec3 xyz2){
+	public static boolean checkEntityInArea(Entity entity, Vec3d xyz1, Vec3d xyz2){
 		return checkEntityInArea(entity, xyz1.xCoord, xyz1.yCoord, xyz1.zCoord, xyz2.xCoord, xyz2.yCoord, xyz2.zCoord);
 	}
 	

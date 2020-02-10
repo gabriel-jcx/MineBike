@@ -6,7 +6,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import noppes.npcs.ai.RandomPositionGeneratorAlt;
 import noppes.npcs.constants.AiMutex;
 
@@ -44,7 +44,7 @@ public class EntityAIZigZagTarget extends EntityAIBase {
             this.entityPosX = pathpoint.xCoord;
             this.entityPosY = pathpoint.yCoord;
             this.entityPosZ = pathpoint.zCoord;
-            Vec3 vec3 = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.theEntity, (int)this.field_75426_g, 3, Vec3.createVectorHelper((double)this.entityPosX, (double)this.entityPosY, (double)this.entityPosZ));
+            Vec3d vec3 = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.theEntity, (int)this.field_75426_g, 3, new Vec3d((double)this.entityPosX, (double)this.entityPosY, (double)this.entityPosZ));
             if(vec3 != null && this.targetEntity.getDistanceSq(vec3.xCoord, vec3.yCoord, vec3.zCoord) < this.targetEntity.getDistanceSq((double)this.entityPosX, (double)this.entityPosY, (double)this.entityPosZ)) {
                this.movePosX = vec3.xCoord;
                this.movePosY = vec3.yCoord;

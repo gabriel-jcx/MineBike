@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -13,7 +13,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
 
    private EntityNPCInterface theEntity;
    private EntityLivingBase targetEntity;
-   private Vec3 movePosition;
+   private Vec3d movePosition;
    private double distance;
    private boolean overRide;
    private World theWorld;
@@ -94,9 +94,9 @@ public class EntityAIStalkTarget extends EntityAIBase {
 
    }
 
-   private Vec3 hideFromTarget() {
+   private Vec3d hideFromTarget() {
       for(int i = 1; i <= 8; ++i) {
-         Vec3 vec = this.findSecludedXYZ(i, false);
+         Vec3d vec = this.findSecludedXYZ(i, false);
          if(vec != null) {
             return vec;
          }
@@ -105,9 +105,9 @@ public class EntityAIStalkTarget extends EntityAIBase {
       return null;
    }
 
-   private Vec3 stalkTarget() {
+   private Vec3d stalkTarget() {
       for(int i = 8; i >= 1; --i) {
-         Vec3 vec = this.findSecludedXYZ(i, true);
+         Vec3d vec = this.findSecludedXYZ(i, true);
          if(vec != null) {
             return vec;
          }
@@ -116,8 +116,8 @@ public class EntityAIStalkTarget extends EntityAIBase {
       return null;
    }
 
-   private Vec3 findSecludedXYZ(int radius, boolean nearest) {
-      Vec3 idealPos = null;
+   private Vec3d findSecludedXYZ(int radius, boolean nearest) {
+      Vec3d idealPos = null;
       double dist = this.targetEntity.getDistanceSqToEntity(this.theEntity);
       double u = 0.0D;
       double v = 0.0D;
@@ -135,13 +135,13 @@ public class EntityAIStalkTarget extends EntityAIBase {
                double k = (double)MathHelper.floor(this.theEntity.boundingBox.minY + (double)y);
                double l = (double)MathHelper.floor(this.theEntity.posZ + (double)z) + 0.5D;
                if(this.theWorld.getBlock((int)j, (int)k, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 1, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 2, (int)l).isOpaqueCube()) {
-                  Vec3 vec1 = Vec3.createVectorHelper(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
-                  Vec3 vec2 = Vec3.createVectorHelper(j, k + (double)this.theEntity.getEyeHeight(), l);
+                  Vec3d vec1 = new Vec3d(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
+                  Vec3d vec2 = new Vec3d(j, k + (double)this.theEntity.getEyeHeight(), l);
                   MovingObjectPosition movingobjectposition = this.theWorld.rayTraceBlocks(vec1, vec2);
                   if(movingobjectposition != null) {
                      boolean weight = nearest?this.targetEntity.getDistanceSq(j, k, l) <= dist:true;
                      if(weight && (j != u || k != v || l != w)) {
-                        idealPos = Vec3.createVectorHelper(j, k, l);
+                        idealPos = new Vec3d(j, k, l);
                         if(nearest) {
                            dist = this.targetEntity.getDistanceSq(j, k, l);
                         }
@@ -156,8 +156,8 @@ public class EntityAIStalkTarget extends EntityAIBase {
    }
 
    private boolean isLookingAway() {
-      Vec3 vec3 = this.targetEntity.getLook(1.0F).normalize();
-      Vec3 vec31 = Vec3.createVectorHelper(this.theEntity.posX - this.targetEntity.posX, this.theEntity.boundingBox.minY + (double)(this.theEntity.height / 2.0F) - (this.targetEntity.posY + (double)this.targetEntity.getEyeHeight()), this.theEntity.posZ - this.targetEntity.posZ);
+      Vec3d vec3 = this.targetEntity.getLook(1.0F).normalize();
+      Vec3d vec31 = new Vec3d(this.theEntity.posX - this.targetEntity.posX, this.theEntity.boundingBox.minY + (double)(this.theEntity.height / 2.0F) - (this.targetEntity.posY + (double)this.targetEntity.getEyeHeight()), this.theEntity.posZ - this.targetEntity.posZ);
       double d0 = vec31.lengthVector();
       vec31 = vec31.normalize();
       double d1 = vec3.dotProduct(vec31);

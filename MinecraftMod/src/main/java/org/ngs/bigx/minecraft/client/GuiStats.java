@@ -29,7 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class GuiStats extends GuiScreen {
@@ -209,7 +209,7 @@ public class GuiStats extends GuiScreen {
 	    	
 	    	/**
 	    	 * Draw the fist instruction screen
-	    	 * 88, 74, 241), Vec3.createVectorHelper(91, 80, 244
+	    	 * 88, 74, 241), new Vec3d(91, 80, 244
 	    	 */
 	    	if( (mc.thePlayer.dimension == 0) && (GuiChapter.getChapterNumber() == 1) )
 	    	{
@@ -853,12 +853,12 @@ public class GuiStats extends GuiScreen {
     	}
     }
 	
-	private float calculateLocationIconPositions(Vec3 vLook, ChunkCoordinates playerLocation, ChunkCoordinates questLocation)
+	private float calculateLocationIconPositions(Vec3d vLook, ChunkCoordinates playerLocation, ChunkCoordinates questLocation)
 	{
 		float scaleFactorLookVector;
 		float scaleFactorQuestVector;
 		
-		Vec3 perpVector = Vec3.createVectorHelper(vLook.yCoord, vLook.xCoord * -1f, vLook.zCoord);
+		Vec3d perpVector = new Vec3d(vLook.yCoord, vLook.xCoord * -1f, vLook.zCoord);
 		
 		
 		

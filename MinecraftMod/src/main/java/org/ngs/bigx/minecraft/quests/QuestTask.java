@@ -19,7 +19,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public abstract class QuestTask implements IQuestTask, IQuestEventCheckComplete, Runnable {
 	protected boolean completed;

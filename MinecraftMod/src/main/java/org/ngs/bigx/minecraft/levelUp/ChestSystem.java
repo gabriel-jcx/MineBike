@@ -13,7 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
@@ -25,29 +25,29 @@ public class ChestSystem {
 	
 	private static Map<String, String> populateNormalChests(){
 		Map<String, String> map = new HashMap<String, String>();
-//		map.put(Vec3.createVectorHelper(0, 72, 117).toString(), "TutorialChestWater");
-//		map.put(Vec3.createVectorHelper(1, 72, 117).toString(), "TutorialChestWater");
-//		map.put(Vec3.createVectorHelper(95, 79, 0).toString(), "TutorialChestAir"); 
-//		map.put(Vec3.createVectorHelper(96, 79, 0).toString(), "TutorialChestAir");
-//		map.put(Vec3.createVectorHelper(10, 63, -111).toString(), "TutorialChestEarth");
-//		map.put(Vec3.createVectorHelper(-155, 71, 359).toString(), "level123Chest");
-		map.put(Vec3.createVectorHelper(568, 65, -4).toString(), "TutorialChest");
-		map.put(Vec3.createVectorHelper(96, 55, -54).toString(), "CaveChest");
+//		map.put(new Vec3d(0, 72, 117).toString(), "TutorialChestWater");
+//		map.put(new Vec3d(1, 72, 117).toString(), "TutorialChestWater");
+//		map.put(new Vec3d(95, 79, 0).toString(), "TutorialChestAir"); 
+//		map.put(new Vec3d(96, 79, 0).toString(), "TutorialChestAir");
+//		map.put(new Vec3d(10, 63, -111).toString(), "TutorialChestEarth");
+//		map.put(new Vec3d(-155, 71, 359).toString(), "level123Chest");
+		map.put(new Vec3d(568, 65, -4).toString(), "TutorialChest");
+		map.put(new Vec3d(96, 55, -54).toString(), "CaveChest");
 		return map;
 	}
 	
 	private static Map<String, String> populateLockedChests(){
 		Map<String, String> map = new HashMap<String, String>();
-		map.put(Vec3.createVectorHelper(20, 77, -88).toString(), "Burnt Key");
-		map.put(Vec3.createVectorHelper(154, 63, 245).toString(), "Damp Key");
-		map.put(Vec3.createVectorHelper(95, 55, -55).toString(), "Dusty Key"); //TODO: change coords
-		map.put(Vec3.createVectorHelper(125, 160, -140).toString(), "Light Key"); //TODO: change coords
+		map.put(new Vec3d(20, 77, -88).toString(), "Burnt Key");
+		map.put(new Vec3d(154, 63, 245).toString(), "Damp Key");
+		map.put(new Vec3d(95, 55, -55).toString(), "Dusty Key"); //TODO: change coords
+		map.put(new Vec3d(125, 160, -140).toString(), "Light Key"); //TODO: change coords
 		return map;
 	}
 	
 	public static void interactWithChests(PlayerInteractEvent e, LevelSystem levelSys){
 		System.out.println("Interacting with Chest");
-		String chestCoords = Vec3.createVectorHelper(e.x, e.y, e.z).toString();
+		String chestCoords = new Vec3d(e.x, e.y, e.z).toString();
 		System.out.println(chestCoords);
 		
 		// If we need to know this chest location, then player can't break it!

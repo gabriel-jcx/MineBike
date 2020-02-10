@@ -3,15 +3,15 @@ package org.ngs.bigx.minecraft.quests;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class QuestTaskGoto extends QuestTask {
 
-	public Vec3 edge1, edge2;
+	public Vec3d edge1, edge2;
 	
 	private int questTypeId = 2;
 	
-	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3 e1, Vec3 e2, boolean required) {
+	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3d e1, Vec3d e2, boolean required) {
 		super(questManager, true);
 		player = p;
 		edge1 = e1;
@@ -19,7 +19,7 @@ public class QuestTaskGoto extends QuestTask {
 		isRequired = required;
 	}
 	
-	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3 e1, Vec3 e2) {
+	public QuestTaskGoto(QuestManager questManager, EntityPlayer p, Vec3d e1, Vec3d e2) {
 		this(questManager, p,e1,e2,false);
 	}
 

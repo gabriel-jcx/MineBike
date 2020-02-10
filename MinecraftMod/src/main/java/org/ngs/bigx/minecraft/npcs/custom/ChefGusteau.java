@@ -8,13 +8,13 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class ChefGusteau extends CustomNPCAbstract
 {
 	public static final String NAME = "ChefGusteau";
-	public static final Vec3 LOCATION = Vec3.createVectorHelper(107, 91, -36);
+	public static final Vec3d LOCATION = new Vec3d(107, 91, -36);
 	public static final String TEXTURE = "customnpcs:textures/entity/humanmale/Chef_Gusteau.png";
 	
 	private OverCookedQuest quest;

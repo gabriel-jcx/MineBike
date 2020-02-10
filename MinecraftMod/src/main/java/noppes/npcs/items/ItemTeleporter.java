@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
@@ -49,7 +49,7 @@ public class ItemTeleporter extends Item {
          double d0 = par3EntityPlayer.prevPosX + (par3EntityPlayer.posX - par3EntityPlayer.prevPosX) * (double)f;
          double d1 = par3EntityPlayer.prevPosY + (par3EntityPlayer.posY - par3EntityPlayer.prevPosY) * (double)f + 1.62D - (double)par3EntityPlayer.yOffset;
          double d2 = par3EntityPlayer.prevPosZ + (par3EntityPlayer.posZ - par3EntityPlayer.prevPosZ) * (double)f;
-         Vec3 vec3 = Vec3.createVectorHelper(d0, d1, d2);
+         Vec3d vec3 = new Vec3d(d0, d1, d2);
          float f3 = MathHelper.cos(-f2 * 0.017453292F - 3.1415927F);
          float f4 = MathHelper.sin(-f2 * 0.017453292F - 3.1415927F);
          float f5 = -MathHelper.cos(-f1 * 0.017453292F);
@@ -57,12 +57,12 @@ public class ItemTeleporter extends Item {
          float f7 = f4 * f5;
          float f8 = f3 * f5;
          double d3 = 80.0D;
-         Vec3 vec31 = vec3.addVector((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
+         Vec3d vec31 = vec3.addVector((double)f7 * d3, (double)f6 * d3, (double)f8 * d3);
          MovingObjectPosition movingobjectposition = par3EntityPlayer.worldObj.rayTraceBlocks(vec3, vec31, true);
          if(movingobjectposition == null) {
             return false;
          } else {
-            Vec3 vec32 = par3EntityPlayer.getLook(f);
+            Vec3d vec32 = par3EntityPlayer.getLook(f);
             boolean flag = false;
             float f9 = 1.0F;
             List list = par3EntityPlayer.worldObj.getEntitiesWithinAABBExcludingEntity(par3EntityPlayer, par3EntityPlayer.boundingBox.addCoord(vec32.xCoord * d3, vec32.yCoord * d3, vec32.zCoord * d3).expand((double)f9, (double)f9, (double)f9));
