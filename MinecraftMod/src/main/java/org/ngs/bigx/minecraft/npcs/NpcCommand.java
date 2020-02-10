@@ -165,7 +165,7 @@ public class NpcCommand {
 		for(int dimensionId : npcSpawnDimensionId) {
 			npcSpawnFlag = false;
 	
-			WorldServer worldServer = MinecraftServer.getServer().worldServerForDimension(dimensionId);
+			WorldServer worldserver = net.minecraftforge.common.DimensionManager.getWorld(WorldProviderDark.dimID);
 	
 			// NPC CHECKING
 			List listOfNpc = NpcCommand.getCustomNpcsInDimension(dimensionId);
