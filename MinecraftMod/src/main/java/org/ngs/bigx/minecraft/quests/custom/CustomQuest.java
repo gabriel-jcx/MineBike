@@ -1,11 +1,13 @@
 package org.ngs.bigx.minecraft.quests.custom;
 
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.npcs.custom.jeff;
 import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.custom.helpers.Utils;
 
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+//import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
 public class CustomQuest extends CustomQuestAbstract 
@@ -31,13 +33,14 @@ public class CustomQuest extends CustomQuestAbstract
 		super.start();
 	}
 	
-	@Override
-	public void entityInteractEvent(EntityInteractEvent event)
+	//@Override
+	public void entityInteractEvent(PlayerInteractEvent.EntityInteract event)
+	//public void Event(PlayerInteractEvent event)
 	{
 //		System.out.println("sub class entity interact!");
 //		completed = true;
 //		complete();
-		
+		//PlayerInteractEvent.EntityInteract event1 = event.EntityInteract;
 		if (Utils.checkInArea(event, jeff.LOCATION))
 		{
 			if (pickedUpItem)
@@ -52,7 +55,7 @@ public class CustomQuest extends CustomQuestAbstract
 	public void onItemPickUp(EntityItemPickupEvent event)
 	{
 		progress = 1;
-		System.out.println(event.item.toString());
+		System.out.println(event.getItem().toString());
 		System.out.println("sub class item pickup event!!!");
 		System.out.println("Talk to jeff to turn the quest in now...");
 		

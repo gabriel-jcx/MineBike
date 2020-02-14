@@ -2,15 +2,19 @@ package org.ngs.bigx.minecraft.quests.custom.helpers;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+//import cpw.mods.fml.common.gameevent.TickEvent;
+//import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+//import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class CustomQuestEventHandler 
@@ -62,7 +66,7 @@ public class CustomQuestEventHandler
 	//if we use an enhanced for loop and we are unregistering quests.
 	
 	@SubscribeEvent
-	public void onItemUse(PlayerUseItemEvent.Start event)
+	public void onItemUse(LivingEntityUseItemEvent.Start event)
 	{
 		for(int i = 0; i < quests.size(); i++)
 		{
@@ -106,7 +110,7 @@ public class CustomQuestEventHandler
 	}
 	
 	@SubscribeEvent
-	public void entityInteractEvent(EntityInteractEvent event)
+	public void entityInteractEvent(PlayerInteractEvent.EntityInteract event)
 	{
 		for(int i = 0; i < quests.size(); i++)
 		{

@@ -9,24 +9,29 @@ import org.ngs.bigx.minecraft.gamestate.CustomQuestJson;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.quests.custom.SoccerQuest;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
+//import cpw.mods.fml.common.gameevent.TickEvent;
+//import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+//import net.minecraftforge.event.entity.player.
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public abstract class CustomQuestAbstract 
 {	
-	public static EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-	
+	public static EntityPlayer player = Minecraft.getMinecraft().player;
+
 	protected int progress;
 	protected String name;
 	protected boolean completed;
@@ -172,7 +177,7 @@ public abstract class CustomQuestAbstract
 		
 	}
 	
-	public void onItemUse(PlayerUseItemEvent.Start event)
+	public void onItemUse(LivingEntityUseItemEvent.Start event)
 	{
 		
 	}
@@ -187,7 +192,7 @@ public abstract class CustomQuestAbstract
 		
 	}
 	
-	public void entityInteractEvent(EntityInteractEvent event)
+	public void entityInteractEvent(PlayerInteractEvent.EntityInteract event)
 	{
 		
 	}

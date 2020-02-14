@@ -4,13 +4,13 @@ import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.npcs.NpcLocations;
 
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
-
+//import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 public class Utils 
 {
-	public static boolean checkInArea(EntityInteractEvent event, Vec3d location)
+	public static boolean checkInArea(PlayerInteractEvent.EntityInteract event, Vec3d location)
 	{
-		return BiGXEventTriggers.checkEntityInArea(event.target, location.addVector(0, -1, 0), location.addVector(1, 0, 1));
+		return BiGXEventTriggers.checkEntityInArea(event.getTarget(), location.addVector(0, -1, 0), location.addVector(1, 0, 1));
 	}
 	
 	//interpolates between pos1 and pos 2
