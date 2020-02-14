@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft;
 
+import net.minecraft.nbt.NBTBase;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
@@ -19,18 +21,28 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import java.util.logging.Logger;
 
-public class BiGXEventTriggers {	
-	
+public class BiGXEventTriggers {
+	private static Logger logger;
 	private boolean soundTriggerEntered = false;
 	private static boolean botHitClient = false, botHitServer = false;
-	
+
+	// IT seems this funciton is not used HMMMMMM...
 	public static void onRightClick(PlayerInteractEvent event, EntityPlayer player){
 		DoorLocked(event, player);
 	}
 	
 	public static void DoorLocked(PlayerInteractEvent event, EntityPlayer player){
-		if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)){
+		PlayerInteractEvent.RightClickBlock obj;
+		// TODO: need to figure out how to check if event is righclickBlock;
+		//if(event.equals()){
+		//if(event.action.equals(PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)){
+		if(true){
+			//Logger logger;
+			logger.info("Error, this should not reach here!");
 			if(checkClickedInArea(event, -156,71,344, -156,71,345) && checkEntityInArea(player, -158,71,344, -156,72,345))
 				GuiMessageWindow.showMessage(BiGXTextBoxDialogue.doorLocked);;
 		}
@@ -48,16 +60,20 @@ public class BiGXEventTriggers {
 	}
 	
 	public static void attackNPC(AttackEntityEvent event){
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
+
+		if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
 			int deduction = 1;
-			if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().getDisplayName().contains("Wooden Sword"))
+			EnumHand hand = EnumHand.MAIN_HAND;
+			if(event.getEntityPlayer().getHeldItem(hand) != null && event.getEntityPlayer().getHeldItem(hand).getDisplayName().contains(("Wooden Sword")))
+			//if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().getDisplayName().contains("Wooden Sword"))
 				deduction = 2; //System.out.println(event.entityPlayer.getHeldItem().getDisplayName());
-			if (event.target.worldObj.isRemote){
+			if (event.getTarget().world.isRemote){
+				//if(event.target.world.isRemote){
 				GuiDamage.addDamageText(deduction, 255, 10, 10);
 				NpcEvents.botHealth -= deduction;
 			}
 			if (NpcEvents.botHealth <= 0){
-				givePlayerKey(event.entityPlayer, "Shiny Key", "You got the Shiny Key!");
+				givePlayerKey(event.getEntityPlayer(), "Shiny Key", "You got the Shiny Key!");
 				if (botHitClient && botHitServer) {
 					NpcEvents.botHealth = 10;
 					botHitClient = false;
@@ -88,23 +104,26 @@ public class BiGXEventTriggers {
 	}
 	
 	public static ItemStack createMessage(String message, String author, String title){
-		ItemStack b = new ItemStack(Items.written_book);
+		ItemStack b = new ItemStack(Items.WRITTEN_BOOK);
 		NBTTagList pages = new NBTTagList();
 		pages.appendTag(new NBTTagString(message));
-		b.stackTagCompound = new NBTTagCompound();
-		b.stackTagCompound.setTag("author", new NBTTagString(author));
-		b.stackTagCompound.setTag("title", new NBTTagString(title));
-		b.stackTagCompound.setTag("pages", pages);
+
+
+		//TODO: RE-write the NBTTagCompound for create message
+		//b.stackTagCompound = new NBTTagCompound();
+		//b.stackTagCompound.setTag("author", new NBTTagString(author));
+		//b.stackTagCompound.setTag("title", new NBTTagString(title));
+		//b.stackTagCompound.setTag("pages", pages);
 		return b;
 	}
 	
 	public static boolean givePlayerKey(EntityPlayer player, String name, String message) {
-		if (message != "" && player.worldObj.isRemote) {
+		if (message != "" && player.world.isRemote) {
 			GuiMessageWindow.showMessage(message);
 			botHitClient = true;
 		}
-		System.out.println(message != "" && player.worldObj.isRemote);
-		if (!player.worldObj.isRemote) {
+		System.out.println(message != "" && player.world.isRemote);
+		if (!player.world.isRemote) {
 			ItemStack key = new ItemStack(Item.getItemById(4532));//new ItemStack(Item.getItemById(4424));
 			key.setStackDisplayName(name);
 			for (ItemStack item : player.inventory.mainInventory)
@@ -125,7 +144,7 @@ public class BiGXEventTriggers {
 	}
 	
 	public static boolean checkEntityInArea(Entity entity, Vec3d xyz1, Vec3d xyz2){
-		return checkEntityInArea(entity, xyz1.xCoord, xyz1.yCoord, xyz1.zCoord, xyz2.xCoord, xyz2.yCoord, xyz2.zCoord);
+		return checkEntityInArea(entity, xyz1.x, xyz1.y, xyz1.z, xyz2.x, xyz2.y, xyz2.z);
 	}
 	
 	public static int convertCoinsToGold(int numCoins){
@@ -145,10 +164,10 @@ public class BiGXEventTriggers {
 		}
 		
 		if (!hasPotion){
-			ItemStack p = new ItemStack(Items.potionitem);
+			ItemStack p = new ItemStack(Items.POTIONITEM);
 			p.setStackDisplayName(potionName);
 			player.inventory.addItemStackToInventory(p);
-			if (!player.worldObj.isRemote)
+			if (!player.world.isRemote)
 				GuiMessageWindow.showMessage(message);
 		}
 		return hasPotion;
@@ -156,9 +175,14 @@ public class BiGXEventTriggers {
 	
 	//Private helper methods
 	private static boolean checkClickedInArea(PlayerInteractEvent event, int x1, int y1, int z1, int x2, int y2, int z2){
-		if (event.x >= x1 && event.x <= x2)
-			if (event.y >= y1 && event.y <= y2)
-				if (event.z >= z1 && event.z <= z2)
+		//event.get
+		BlockPos position = event.getPos();
+		int x = position.getX();
+		int y = position.getY();
+		int z = position.getZ();
+		if (position.getX() >= x1 && x <= x2)
+			if (y >= y1 && y <= y2)
+				if (z >= z1 && z <= z2)
 					return true;
 		return false;
 	}
