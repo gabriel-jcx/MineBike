@@ -15,11 +15,16 @@ import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestEventRewardSession.eQuestEventRewardSessionType;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+//import cpw.mods.fml.common.gameevent.TickEvent;
+//import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundCategory;
+import net.minecraft.client.audio.SoundRegistry;
+//import net.minecraft.client.audio.SoundCategory;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -225,7 +230,7 @@ public class QuestEventHandler {
 		{
 			tickCount = 0;
 			
-			if (!event.player.worldObj.isRemote)
+			if (!event.player.world.isRemote)
 			{
 				// SERVER CODE
 				if(BiGX.instance().serverContext.getQuestManager() != null)
@@ -253,10 +258,10 @@ public class QuestEventHandler {
 	public void onAttackEntityEvent(AttackEntityEvent event) {
 		EntityCustomNpc target;
 
-		event.target.getEntityId();
-		if(event.target.getClass().getName().equals("noppes.npcs.entity.EntityCustomNpc"))
+		event.getTarget().getEntityId();
+		if(event.getTarget().getClass().getName().equals("noppes.npcs.entity.EntityCustomNpc"))
 		{
-			target = (EntityCustomNpc)event.target;
+			target = (EntityCustomNpc)event.getTarget();
 			boolean isVillain = false;
 			
 			for(String villanName : QuestTaskChasing.villainNames)

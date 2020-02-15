@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import akka.dispatch.CachingConfig;
+import net.minecraft.pathfinding.Path;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDark;
-
+import net.minecraftforge.common.DimensionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.Entity;
@@ -123,7 +126,8 @@ public class NpcCommand {
 	
 	public static void spawnTheifOnRegularChaseQuest(BigxContext context) {	
 		if(theifOnRegularChaseQuestSpawnFlag) {
-			WorldServer ws = MinecraftServer.getWorld(WorldProviderDark.dimID);
+			WorldServer ws = DimensionManager.getWorld(WorldProviderDark.dimID);
+			//WorldServer ws = MinecraftServer.getWorld(WorldProviderDark.dimID);
 			//Todo:World provider Dark
 			QuestTaskChasing questTaskChasing = (QuestTaskChasing)bigxContext.getQuestManager().getActiveQuestTask();
 			EntityCustomNpc npc;
@@ -165,7 +169,7 @@ public class NpcCommand {
 		for(int dimensionId : npcSpawnDimensionId) {
 			npcSpawnFlag = false;
 	
-			WorldServer worldserver = net.minecraftforge.common.DimensionManager.getWorld(WorldProviderDark.dimID);
+			WorldServer worldServer = net.minecraftforge.common.DimensionManager.getWorld(WorldProviderDark.dimID);
 	
 			// NPC CHECKING
 			List listOfNpc = NpcCommand.getCustomNpcsInDimension(dimensionId);
@@ -207,7 +211,8 @@ public class NpcCommand {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				PathEntity pathEntity = npc.getNavigator().getPathToXYZ(coords[0], coords[1], coords[2]);
+
+				Path pathEntity = npc.getNavigator().getPathToXYZ(coords[0], coords[1], coords[2]);
 				if (pathEntity != null) {
 					List coordList = new ArrayList();
 					int coordIndex = 0;
@@ -233,8 +238,8 @@ public class NpcCommand {
 		float dx = coords[0] - lastPos[0];
 		float dy = coords[1] - lastPos[1];
 		float dz = coords[2] - lastPos[2];
-		double dist = (double)MathHelper.sqrt_double(dx*dx + dy*dy + dz*dz);
-		//
+		double dist = (double)MathHelper.sqrt(dx*dx + dy*dy + dz*dz);
+		//double dist = (double)math.sqrt()
 		//double yaw = Math.atan2(dz, dx);
 		//double pitch = Math.atan2(Math.sqrt(dz*dz + dx*dx), dy) + Math.PI;
 		//
@@ -245,8 +250,8 @@ public class NpcCommand {
 					coords[2] + (int)(dz * i / dist)});
 		}
 		path.add(coords);
-		npc.ai.setMovingPath(path);
-		*/
+		npc.ai.setMovingPath(path);*/
+
 	}
 	
 	public void correctRunningDirection(final EnumFacing direction)
@@ -333,7 +338,8 @@ public class NpcCommand {
 	
 	public static List getAllCustomNpcs() {
 		List list = new ArrayList();
-		WorldServer[] ws = MinecraftServer.getServer().worlds;
+		WorldServer[] ws = DimensionManager.getWorlds();
+		//WorldServer[] ws = MinecraftServer.getServer().worlds;
 		for (int i = 0; i < ws.length; i++) {
 			Iterator iter = ws[i].loadedEntityList.iterator();
 			while (iter.hasNext()) {
@@ -348,7 +354,8 @@ public class NpcCommand {
 	
 	public static List getCustomNpcsInDimension(int dimID) {
 		List list = new ArrayList();
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(dimID);
+		WorldServer ws = DimensionManager.getWorld(dimID);
+		//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(dimID);
 		
 		synchronized (ws.loadedEntityList) {
 			Iterator iter = ws.loadedEntityList.iterator();

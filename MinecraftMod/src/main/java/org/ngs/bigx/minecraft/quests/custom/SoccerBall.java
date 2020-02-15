@@ -2,10 +2,12 @@ package org.ngs.bigx.minecraft.quests.custom;
 
 import org.ngs.bigx.minecraft.BiGX;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
+//import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
 
 public class SoccerBall extends EntityCreeper 
 {
@@ -14,13 +16,15 @@ public class SoccerBall extends EntityCreeper
 	private double hitMotionX;
 	private double hitMotionZ;
 	private boolean justHit;
-	
+	private static ResourceLocation regName;
 	private boolean justReset;
 	
 	public static boolean register()
 	{
-		EntityRegistry.registerModEntity(SoccerBall.class, "SoccerBall",
-				EntityRegistry.findGlobalUniqueEntityId(), BiGX.MODID, 64, 5, true);
+		//EntityRegistry.registerModEntity(SoccerBall.class, "SoccerBall",
+		//		EntityRegistry.findGlobalUniqueEntityId(), BiGX.MODID, 64, 5, true);
+		//EntityRegistry.registerModEntity(regName,SoccerBall.class,"SoccerBall",EntityRegistry.);
+		//TODO: This method is not used at the moment, if we need to register the MOD, they need to be fixed
 		return true;
 	}
 	
@@ -41,11 +45,12 @@ public class SoccerBall extends EntityCreeper
 	public void onUpdate()
 	{
 		super.onUpdate();
-		this.setPosition(this.getPosition(1.0f).xCoord, SoccerQuest.SOCCER_Y_LEVEL, this.getPosition(1.0f).zCoord);
+		this.setPosition(this.getPosition().getX(), SoccerQuest.SOCCER_Y_LEVEL, this.getPosition().getZ());
 		this.setVelocity(this.motionX, 0.0, this.motionZ);
-		double x = this.getPosition(1.0f).xCoord;
-		double y = this.getPosition(1.0f).yCoord;
-		double z = this.getPosition(1.0f).zCoord;
+		//TODO: check the value casting here for the precision.
+		double x = this.getPosition().getX();
+		double y = this.getPosition().getY();
+		double z = this.getPosition().getZ();
 		
 		if (justHit)
 		{
@@ -81,7 +86,7 @@ public class SoccerBall extends EntityCreeper
 		this.setHealth(20.0f);
 	}
 	
-	@Override
+	//@Override
 	public boolean isAIEnabled()
 	{
 		return false;

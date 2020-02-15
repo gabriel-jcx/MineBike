@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.util.EnumFacing;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
@@ -18,8 +19,10 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import org.ngs.bigx.minecraft.quests.custom.helpers.Utils;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.gameevent.TickEvent;
+//import cpw.mods.fml.common.FMLCommonHandler;
+//import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -31,7 +34,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.common.util.EnumFacing;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -81,6 +84,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	static EntityCustomNpc npc;
 	static NpcCommand command;
 	private int npcSpeed;
+	// NOTE: EnumFacing is moved to the net.minecraftforge.util
 	static EnumFacing runDirection;
 	public static int[] npcPath = new int[3];
 	public static List<int[]> npcPathList = new ArrayList<int[]>();
@@ -160,8 +164,8 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		HudManager.unregisterRectangle(clockRectangle);
 		HudManager.unregisterString(clockString);
-		
-		QuestTeleporter.teleport(player, 0, (int) Raul.LOCATION.xCoord, (int) Raul.LOCATION.yCoord, (int) Raul.LOCATION.zCoord);
+
+		QuestTeleporter.teleport(player, 0, (int) Raul.LOCATION.x, (int) Raul.LOCATION.y, (int) Raul.LOCATION.z);
 		started = false;
 		ballInit = false;
 		worldLoaded = false;
@@ -189,7 +193,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	@Override
 	public void onWorldLoadEvent(WorldEvent.Load event)
 	{
-		if (event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
+		if (event.getWorld().provider.getDimension() == SoccerQuest.SOCCERDIMENSIONID)
 		{
 			worldLoaded = true;
 		}
@@ -202,11 +206,12 @@ public class SoccerQuest extends CustomQuestAbstract
 		//if the world is not loaded or the event happened on the client, skip
 		if (!worldLoaded)
 			return;
-		if (event.world.provider.worldObj.isRemote)
-			return;
+		// TODO: figure out if the world is a Remote's logic here
+		//if (event.world.provider.worldObj.isRemote)
+		//	return;
 		
 		//show the instructions for the game, then init the ball and npc
-		if (!ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
+		if (!ballInit && event.world.provider.getDimension() == SoccerQuest.SOCCERDIMENSIONID)
 		{	
 			if (super.showingInstructions())
 			{
