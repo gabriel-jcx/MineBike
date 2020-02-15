@@ -42,8 +42,7 @@ public class john extends CustomNPCAbstract
 		//World world = Minecraft.getMinecraft().player.world;
 		
 		//world = MinecraftServer.getServer()
-		World world = Minecraft.getMinecraft().player.world;
-		world = MinecraftServer.getEntityWorld();
+		World world = Minecraft.getMinecraft().player.getEntityWorld();
 		
 		
 		if (!world.isRemote && !swordGiven)
