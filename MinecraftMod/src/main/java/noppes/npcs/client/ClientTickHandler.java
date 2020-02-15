@@ -26,7 +26,7 @@ public class ClientTickHandler {
    )
    public void onClientTick(ClientTickEvent event) {
       Minecraft mc = Minecraft.getMinecraft();
-      if(mc.thePlayer != null && mc.thePlayer.openContainer instanceof ContainerPlayer) {
+      if(mc.player != null && mc.player.openContainer instanceof ContainerPlayer) {
          if(this.otherContainer) {
             NoppesUtilPlayer.sendData(EnumPlayerPacket.CheckQuestCompletion, new Object[0]);
             this.otherContainer = false;
@@ -48,7 +48,7 @@ public class ClientTickHandler {
       if(ClientProxy.QuestLog.isPressed()) {
          Minecraft mc = Minecraft.getMinecraft();
          if(mc.currentScreen == null) {
-            NoppesUtil.openGUI(mc.thePlayer, new GuiQuestLog(mc.thePlayer));
+            NoppesUtil.openGUI(mc.player, new GuiQuestLog(mc.player));
          } else if(mc.currentScreen instanceof GuiQuestLog) {
             mc.setIngameFocus();
          }

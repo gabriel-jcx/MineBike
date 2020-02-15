@@ -56,7 +56,7 @@ public class GuiVictory extends GuiScreen {
 		isVictoryMsgTimeout = true;
 		
 		// Play Vicotry Sound
-		Minecraft.getMinecraft().thePlayer.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
+		Minecraft.getMinecraft().player.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
 	}
 	
 	public GuiVictory(BigxClientContext c, Minecraft mc, int exp, int gold, int extragold, String specialItem) {
@@ -90,7 +90,7 @@ public class GuiVictory extends GuiScreen {
 				isVictoryMsgTimeout = false;
 				// TODO
 	    		// Play Sound
-				Minecraft.getMinecraft().thePlayer.playSound("minebike:buyweaponandgetstronger", 1.0f, 1.0f);
+				Minecraft.getMinecraft().player.playSound("minebike:buyweaponandgetstronger", 1.0f, 1.0f);
 			}
 		}, 5*1000);
 		
@@ -105,7 +105,7 @@ public class GuiVictory extends GuiScreen {
 					}
 					else if(mc.currentScreen instanceof GuiVictory)
 					{
-						Minecraft.getMinecraft().thePlayer.closeScreen();
+						Minecraft.getMinecraft().player.closeScreen();
 						isKOTimeout = false;
 						isVictoryMsgTimeout = false;
 					}

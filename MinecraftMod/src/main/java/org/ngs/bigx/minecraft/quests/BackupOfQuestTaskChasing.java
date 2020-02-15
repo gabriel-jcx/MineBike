@@ -262,7 +262,7 @@
 //	{
 //		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 //
-//		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
+//		Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " stop");
 //		chosenSong = "";
 //		
 //		System.out.println("goBackToTheOriginalWorld");
@@ -278,7 +278,7 @@
 //		pausedTime = 0;
 //		thiefLevelSet = false;
 //		
-//		Minecraft.getMinecraft().thePlayer.getFoodStats().setFoodLevel(initialHunger);
+//		Minecraft.getMinecraft().player.getFoodStats().setFoodLevel(initialHunger);
 //		
 //		if(world.isRemote)
 //			((BigxClientContext)clientContext).setSpeed(0);
@@ -458,7 +458,7 @@
 ////		player.setGameType(GameType.CREATIVE);
 //		Minecraft mc = Minecraft.getMinecraft();
 //		
-//		initialHunger = mc.thePlayer.getFoodStats().getFoodLevel();
+//		initialHunger = mc.player.getFoodStats().getFoodLevel();
 //		time = 0;
 //		initThiefStat();
 //		countdown = 11;
@@ -1179,7 +1179,7 @@
 //				else
 //					chosenSong = "minebike:mus_breaks";
 //				
-//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
+//				Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " loop");
 //			}
 //			if(countdown == 8)
 //			{
@@ -1433,7 +1433,7 @@
 //		
 ////		if(mc.getMinecraft().objectMouseOver != null) {
 ////			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-////				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
+////				mc.getMinecraft().playerController.attackEntity(mc.player, mc.getMinecraft().objectMouseOver.entityHit);
 ////			}
 ////		}
 ////		player.swingItem();

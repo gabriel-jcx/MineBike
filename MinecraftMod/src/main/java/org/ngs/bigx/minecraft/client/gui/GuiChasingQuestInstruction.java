@@ -59,7 +59,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 		isStayCloseTimeout = true;
 		
 		// TODO Play bgm_chasingquest_instruction
-//		Minecraft.getMinecraft().thePlayer.playSound("minebike:bgm_chasingquest_instruction", 1.0f, 1.0f);
+//		Minecraft.getMinecraft().player.playSound("minebike:bgm_chasingquest_instruction", 1.0f, 1.0f);
 //		System.out.println("Play sound");
 		
 	}
@@ -119,7 +119,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 					}
 					else if(mc.currentScreen instanceof GuiChasingQuestInstruction)
 					{
-						Minecraft.getMinecraft().thePlayer.closeScreen();
+						Minecraft.getMinecraft().player.closeScreen();
 //						isKOTimeout = false;
 //						isVictoryMsgTimeout = false;
 						isFindThiefTimeout = false;

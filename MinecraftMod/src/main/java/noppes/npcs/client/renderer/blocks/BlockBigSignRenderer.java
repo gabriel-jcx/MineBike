@@ -34,7 +34,7 @@ public class BlockBigSignRenderer extends BlockRendererInterface {
       TileBigSign tile = (TileBigSign)var1;
       Minecraft mc = Minecraft.getMinecraft();
       if(tile.block == null || tile.hasChanged) {
-         tile.block = new TextBlockClient(tile.getText(), 112, new Object[]{mc.thePlayer});
+         tile.block = new TextBlockClient(tile.getText(), 112, new Object[]{mc.player});
          tile.hasChanged = false;
       }
 

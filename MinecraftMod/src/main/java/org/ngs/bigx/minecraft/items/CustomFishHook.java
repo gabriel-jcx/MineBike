@@ -351,9 +351,9 @@ public class CustomFishHook extends EntityFishHook
     		//Sends in game message to player for specific data values
     		if(tickCount % 20 == 0)
     		{
-    			mc.thePlayer.sendChatMessage("Power Level: " + clickRate);
-    			mc.thePlayer.sendChatMessage("Height: " + powerLvl.h);
-    			mc.thePlayer.sendChatMessage("CHANGE: " + BiGXPacketHandler.change);
+    			mc.player.sendChatMessage("Power Level: " + clickRate);
+    			mc.player.sendChatMessage("Height: " + powerLvl.h);
+    			mc.player.sendChatMessage("CHANGE: " + BiGXPacketHandler.change);
     		}
     		
     		/*Once player has achieved required power level for specified tickSuccess, GUI gets unregistered

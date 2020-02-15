@@ -59,7 +59,7 @@ public abstract class Skill {
 	
 	public void playSkillOnSoundEffect()
 	{
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 		player.playSound(soundEffectName, 1.0f, 1.0f);
 	}
 	

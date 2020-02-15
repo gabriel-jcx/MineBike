@@ -56,7 +56,7 @@ public class GuiControllerGuide extends GuiScreen {
     	
     	if( (c == 'q') || (c=='Q') )
     	{
-    		Minecraft.getMinecraft().thePlayer.closeScreen();
+    		Minecraft.getMinecraft().player.closeScreen();
     	}
     }
 	

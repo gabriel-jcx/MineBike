@@ -158,9 +158,9 @@ public class GuiMessageWindow extends GuiScreen {
 	    
     	FontRenderer fontRendererObj;
 
-    	if (mc.thePlayer != null)
+    	if (mc.player != null)
     	{
-	    	EntityPlayer p = mc.thePlayer;
+	    	EntityPlayer p = mc.player;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();

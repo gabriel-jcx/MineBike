@@ -81,7 +81,7 @@ public class GuiFinishChasingQuest extends GuiScreen {
 		}
 
         if(mc.currentScreen != null) {
-        	Minecraft.getMinecraft().thePlayer.closeScreen();
+        	Minecraft.getMinecraft().player.closeScreen();
         }
 	}
 

@@ -407,14 +407,14 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				if(isPlayerLoadedInWorld)
 				{
 					// with case id read game save
-					if(readGameSave(suggestedGameProperties.getPatientCaseId(), Minecraft.getMinecraft().thePlayer))
+					if(readGameSave(suggestedGameProperties.getPatientCaseId(), Minecraft.getMinecraft().player))
 					{
 						// if gameSave Read
 						System.out.println("[BiGX] Game Save Read");
 						
 						isGameSaveRead = true;
 						
-//						if(Minecraft.getMinecraft().thePlayer.dimension == 0)
+//						if(Minecraft.getMinecraft().player.dimension == 0)
 //							GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
 					}
 				}
@@ -422,7 +422,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				{
 					System.out.println("[BiGX] Player is not loaded.");
 					
-					if(Minecraft.getMinecraft().thePlayer != null)
+					if(Minecraft.getMinecraft().player != null)
 					{
 						isPlayerLoadedInWorld = true;
 					}
@@ -437,7 +437,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				return;
 			}
 			
-			if(Minecraft.getMinecraft().thePlayer != null)
+			if(Minecraft.getMinecraft().player != null)
 			{
 				BigxServerContext context = BiGX.instance().serverContext;
 				

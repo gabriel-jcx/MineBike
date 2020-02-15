@@ -44,8 +44,8 @@ public class TabRegistry {
    }
 
    public static void openInventoryGui() {
-      mc.thePlayer.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.thePlayer.openContainer.windowId));
-      GuiInventory inventory = new GuiInventory(mc.thePlayer);
+      mc.player.sendQueue.addToSendQueue(new C0DPacketCloseWindow(mc.player.openContainer.windowId));
+      GuiInventory inventory = new GuiInventory(mc.player);
       mc.displayGuiScreen(inventory);
    }
 

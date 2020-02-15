@@ -147,7 +147,7 @@ public class ModelMPM extends ModelNPCMale {
             this.entityModel.render(this.entity, par2, par3, par4, par5, par6, par7);
          }
       } else {
-         this.alpha = npc.isInvisible() && !npc.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)?0.15F:1.0F;
+         this.alpha = npc.isInvisible() && !npc.isInvisibleToPlayer(Minecraft.getMinecraft().player)?0.15F:1.0F;
          this.setPlayerData(npc);
          this.currentlyPlayerTexture = true;
          this.setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);

@@ -64,7 +64,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
       this.extra = new HashMap();
       this.background = null;
       this.closeOnEsc = false;
-      this.player = Minecraft.getMinecraft().thePlayer;
+      this.player = Minecraft.getMinecraft().player;
       this.npc = npc;
       this.title = "";
       this.xSize = 200;

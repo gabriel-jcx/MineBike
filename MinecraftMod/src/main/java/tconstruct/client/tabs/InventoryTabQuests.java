@@ -14,7 +14,7 @@ public class InventoryTabQuests extends AbstractTab {
 
    public void onTabClicked() {
       Minecraft mc = Minecraft.getMinecraft();
-      mc.displayGuiScreen(new GuiQuestLog(mc.thePlayer));
+      mc.displayGuiScreen(new GuiQuestLog(mc.player));
    }
 
    public boolean shouldAddToList() {

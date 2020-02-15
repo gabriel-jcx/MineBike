@@ -201,7 +201,7 @@ public class GameSaveManager {
 	
 	public static void enableFightAndChasingQuest(EntityPlayer player) throws QuestException
 	{
-		if(Minecraft.getMinecraft().thePlayer == null)
+		if(Minecraft.getMinecraft().player == null)
 		{
 			System.out.println("[BiGX] The player is not loaded yet.");
 			return;
@@ -219,7 +219,7 @@ public class GameSaveManager {
 				questManager = new QuestManager(
 						BiGX.instance().clientContext, 
 						BiGX.instance().serverContext, 
-						Minecraft.getMinecraft().thePlayer);
+						Minecraft.getMinecraft().player);
 				
 				BiGX.instance().clientContext.setQuestManager(questManager);
 			}
@@ -248,7 +248,7 @@ public class GameSaveManager {
 				questManager = new QuestManager(
 						BiGX.instance().clientContext, 
 						BiGX.instance().serverContext, 
-						Minecraft.getMinecraft().thePlayer);
+						Minecraft.getMinecraft().player);
 				
 				BiGX.instance().serverContext.setQuestManager(questManager);
 			}
@@ -276,7 +276,7 @@ public class GameSaveManager {
 	
 	public static void enableChasingQuest(EntityPlayer player) throws QuestException
 	{
-		if(Minecraft.getMinecraft().thePlayer == null)
+		if(Minecraft.getMinecraft().player == null)
 		{
 			System.out.println("[BiGX] The player is not loaded yet.");
 			return;
@@ -294,7 +294,7 @@ public class GameSaveManager {
 				questManager = new QuestManager(
 						BiGX.instance().clientContext, 
 						BiGX.instance().serverContext, 
-						Minecraft.getMinecraft().thePlayer);
+						Minecraft.getMinecraft().player);
 				
 				BiGX.instance().clientContext.setQuestManager(questManager);
 			}
@@ -323,7 +323,7 @@ public class GameSaveManager {
 				questManager = new QuestManager(
 						BiGX.instance().clientContext, 
 						BiGX.instance().serverContext, 
-						Minecraft.getMinecraft().thePlayer);
+						Minecraft.getMinecraft().player);
 				
 				BiGX.instance().serverContext.setQuestManager(questManager);
 			}

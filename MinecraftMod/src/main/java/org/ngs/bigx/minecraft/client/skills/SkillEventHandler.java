@@ -27,7 +27,7 @@ public class SkillEventHandler {
 	@SideOnly(Side.CLIENT)
 	public void onClientTick(TickEvent.ClientTickEvent event)
 	{
-		if ((Minecraft.getMinecraft().thePlayer!=null) && (event.phase==TickEvent.Phase.END)) {
+		if ((Minecraft.getMinecraft().player!=null) && (event.phase==TickEvent.Phase.END)) {
 			tickCount++;
 			
 			if(tickCount < 5)

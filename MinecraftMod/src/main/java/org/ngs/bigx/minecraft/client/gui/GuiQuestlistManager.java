@@ -86,7 +86,7 @@ public class GuiQuestlistManager extends GuiScreen {
     	
     	if( (c == 'K') || (c=='k') )
     	{
-    		Minecraft.getMinecraft().thePlayer.closeScreen();
+    		Minecraft.getMinecraft().player.closeScreen();
     	}
     }
 	

@@ -46,7 +46,7 @@ public class PacketHandlerClient extends PacketHandlerServer {
 
    @SubscribeEvent
    public void onPacketData(ClientCustomPacketEvent event) {
-      EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
+      EntityClientPlayerMP player = Minecraft.getMinecraft().player;
       ByteBuf buffer = event.packet.payload();
 
       try {

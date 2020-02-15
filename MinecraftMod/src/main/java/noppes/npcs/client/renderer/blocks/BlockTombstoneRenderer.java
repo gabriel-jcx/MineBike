@@ -61,7 +61,7 @@ public class BlockTombstoneRenderer extends BlockRendererInterface {
 
    private void renderText(TileTombstone tile, int meta) {
       if(tile.block == null || tile.hasChanged) {
-         tile.block = new TextBlockClient(tile.getText(), 94, new Object[]{Minecraft.getMinecraft().thePlayer});
+         tile.block = new TextBlockClient(tile.getText(), 94, new Object[]{Minecraft.getMinecraft().player});
          tile.hasChanged = false;
       }
 

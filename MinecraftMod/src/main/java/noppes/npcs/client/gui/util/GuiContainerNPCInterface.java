@@ -50,7 +50,7 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 
    public GuiContainerNPCInterface(EntityNPCInterface npc, Container cont) {
       super(cont);
-      this.player = Minecraft.getMinecraft().thePlayer;
+      this.player = Minecraft.getMinecraft().player;
       this.npc = npc;
       this.title = "Npc Mainmenu";
    }

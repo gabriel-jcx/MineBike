@@ -148,7 +148,7 @@ public class GuiNpcMenu implements GuiYesNoCallback {
          mc.displayGuiScreen((GuiScreen)null);
          mc.setIngameFocus();
       } else {
-         NoppesUtil.openGUI(mc.thePlayer, this.parent);
+         NoppesUtil.openGUI(mc.player, this.parent);
       }
 
    }

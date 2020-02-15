@@ -299,7 +299,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	{
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 
-		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
+		Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " stop");
 		chosenSong = "";
 		
 		System.out.println("goBackToTheOriginalWorld isRemote[" + world.isRemote + "]");
@@ -314,7 +314,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		pausedTime = 0;
 		thiefLevelSet = false;
 		
-		Minecraft.getMinecraft().thePlayer.getFoodStats().setFoodLevel(initialHunger);
+		Minecraft.getMinecraft().player.getFoodStats().setFoodLevel(initialHunger);
 		
 		if(world.isRemote)
 			((BigxClientContext)clientContext).setSpeed(0);
@@ -485,7 +485,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //		player.setGameType(GameType.CREATIVE);
 		Minecraft mc = Minecraft.getMinecraft();
 		
-		initialHunger = mc.thePlayer.getFoodStats().getFoodLevel();
+		initialHunger = mc.player.getFoodStats().getFoodLevel();
 		time = 0;
 		initThiefStat();
 		countdown = 11;
@@ -1153,7 +1153,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				else
 					chosenSong = "minebike:mus_breaks";
 
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
+				Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
 				
 				synchronized (clientContext) {
 					if(Minecraft.getMinecraft().currentScreen == null)
@@ -1568,7 +1568,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		
 //		if(mc.getMinecraft().objectMouseOver != null) {
 //			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-//				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
+//				mc.getMinecraft().playerController.attackEntity(mc.player, mc.getMinecraft().objectMouseOver.entityHit);
 //			}
 //		}
 //		player.swingItem();
@@ -1576,19 +1576,19 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 	private static void setBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block);
 	}
 	
 	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
 	{
-		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block, direction, 3);
 	}
 	
 	private static void cleanBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block);
 	}
 
@@ -1621,7 +1621,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //					}
 					if(chasingQuestOnCountDown)
 					{
-						if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+						if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 							handleCountdown();
 						else
 							countdown = 11;
@@ -2384,6 +2384,6 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 
 	private void playAudioFeedBack(String audioEffectName) {
-		Minecraft.getMinecraft().thePlayer.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
+		Minecraft.getMinecraft().player.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
 	}
 }

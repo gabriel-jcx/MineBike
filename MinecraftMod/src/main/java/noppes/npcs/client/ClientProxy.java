@@ -305,7 +305,7 @@ public class ClientProxy extends CommonProxy {
             return new GuiNpcDisplay(npc);
          }
 
-         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Unable to find npc"));
+         Minecraft.getMinecraft().player.addChatMessage(new ChatComponentText("Unable to find npc"));
       } else {
          if(gui == EnumGuiType.MainMenuStats) {
             return new GuiNpcStats(npc);
@@ -481,7 +481,7 @@ public class ClientProxy extends CommonProxy {
 
    public void openGui(int i, int j, int k, EnumGuiType gui, EntityPlayer player) {
       Minecraft minecraft = Minecraft.getMinecraft();
-      if(minecraft.thePlayer == player) {
+      if(minecraft.player == player) {
          GuiScreen guiscreen = this.getGui((EntityNPCInterface)null, gui, (Container)null, i, j, k);
          if(guiscreen != null) {
             minecraft.displayGuiScreen(guiscreen);
@@ -496,7 +496,7 @@ public class ClientProxy extends CommonProxy {
 
    public void openGui(EntityNPCInterface npc, EnumGuiType gui, int x, int y, int z) {
       Minecraft minecraft = Minecraft.getMinecraft();
-      Container container = this.getContainer(gui, minecraft.thePlayer, x, y, z, npc);
+      Container container = this.getContainer(gui, minecraft.player, x, y, z, npc);
       GuiScreen guiscreen = this.getGui(npc, gui, container, x, y, z);
       if(guiscreen != null) {
          minecraft.displayGuiScreen(guiscreen);
@@ -571,7 +571,7 @@ public class ClientProxy extends CommonProxy {
    }
 
    public EntityPlayer getPlayer() {
-      return Minecraft.getMinecraft().thePlayer;
+      return Minecraft.getMinecraft().player;
    }
 
    public void registerItem(Item item) {

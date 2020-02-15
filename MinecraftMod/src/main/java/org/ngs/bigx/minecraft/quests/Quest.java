@@ -20,7 +20,7 @@ public class Quest implements Runnable {
 	private QuestManager questManager;
 	private String name, description;
 	private List<EntityPlayer> players;
-	private EntityPlayer thePlayer;
+	private EntityPlayer player;
 	private List<QuestTask> tasks;
 	private List<ItemStack> rewardItems;
 	private int rewardXP, rewardCoins;

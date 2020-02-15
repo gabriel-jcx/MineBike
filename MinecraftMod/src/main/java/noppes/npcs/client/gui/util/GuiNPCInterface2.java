@@ -23,7 +23,7 @@ public abstract class GuiNPCInterface2 extends GuiNPCInterface {
 
    public GuiNPCInterface2(EntityNPCInterface npc, int activeMenu) {
       this.background = new ResourceLocation("customnpcs:textures/gui/menubg.png");
-      this.player = Minecraft.getMinecraft().thePlayer;
+      this.player = Minecraft.getMinecraft().player;
       this.npc = npc;
       super.xSize = 420;
       super.ySize = 200;

@@ -122,9 +122,9 @@ public class RenderProjectile extends Render {
                         var25 = (float)(var33 >> 8 & 255) / 255.0F;
                         var13 = (float)(var33 & 255) / 255.0F;
                         GL11.glColor4f(var12 * var14, var25 * var14, var13 * var14, 1.0F);
-                        super.renderManager.itemRenderer.renderItem(Minecraft.getMinecraft().thePlayer, item, 0);
+                        super.renderManager.itemRenderer.renderItem(Minecraft.getMinecraft().player, item, 0);
                      } else {
-                        super.renderManager.itemRenderer.renderItem(Minecraft.getMinecraft().thePlayer, item, 0);
+                        super.renderManager.itemRenderer.renderItem(Minecraft.getMinecraft().player, item, 0);
                      }
                   }
                } else {

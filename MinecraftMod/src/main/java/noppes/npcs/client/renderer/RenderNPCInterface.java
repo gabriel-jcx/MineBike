@@ -182,7 +182,7 @@ public class RenderNPCInterface extends RenderLiving {
    public void doRender(EntityLiving entityliving, double d, double d1, double d2, float f, float f1) {
       EntityNPCInterface npc = (EntityNPCInterface)entityliving;
       if(!npc.isKilled() || !npc.stats.hideKilledBody || npc.deathTime <= 20) {
-         if((npc.display.showBossBar == 1 || npc.display.showBossBar == 2 && npc.isAttacking()) && !npc.isKilled() && npc.deathTime <= 20 && npc.canSee(Minecraft.getMinecraft().thePlayer)) {
+         if((npc.display.showBossBar == 1 || npc.display.showBossBar == 2 && npc.isAttacking()) && !npc.isKilled() && npc.deathTime <= 20 && npc.canSee(Minecraft.getMinecraft().player)) {
             BossStatus.setBossStatus(npc, true);
          }
 

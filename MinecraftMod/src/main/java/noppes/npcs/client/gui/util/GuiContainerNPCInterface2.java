@@ -29,7 +29,7 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
       this.background = new ResourceLocation("customnpcs", "textures/gui/menubg.png");
       this.defaultBackground = new ResourceLocation("customnpcs", "textures/gui/menubg.png");
       this.menuYOffset = 0;
-      this.player = Minecraft.getMinecraft().thePlayer;
+      this.player = Minecraft.getMinecraft().player;
       this.npc = npc;
       super.xSize = 420;
       this.menu = new GuiNpcMenu(this, activeMenu, npc);

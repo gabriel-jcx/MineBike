@@ -30,7 +30,7 @@ public class RenderChatMessages implements IChatMessages {
          long time = System.currentTimeMillis();
          if(!message.equals(this.lastMessage) || this.lastMessageTime + 1000L <= time) {
             TreeMap messages = new TreeMap(this.messages);
-            messages.put(Long.valueOf(time), new TextBlockClient(message, this.boxLength * 4, new Object[]{Minecraft.getMinecraft().thePlayer, npc}));
+            messages.put(Long.valueOf(time), new TextBlockClient(message, this.boxLength * 4, new Object[]{Minecraft.getMinecraft().player, npc}));
             if(messages.size() > 3) {
                messages.remove(messages.keySet().iterator().next());
             }

@@ -88,10 +88,10 @@ public class GuiLocation extends GuiScreen {
     	FontRenderer fontRendererObj;
     	String text = "";
     	
-    	if (mc.thePlayer == null)
+    	if (mc.player == null)
     		return;
     	
-    	EntityPlayer p = mc.thePlayer;
+    	EntityPlayer p = mc.player;
 	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
     	int WIDTH = 200;
 //    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;

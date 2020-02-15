@@ -275,8 +275,8 @@ public class GuiAlchemy extends GuiScreen {
 		
 		for(int i=0; i<36; i++)
 		{
-			if(Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i) != null)
-				this.inventoryItemStack[i] = Minecraft.getMinecraft().thePlayer.inventory.getStackInSlot(i).copy();
+			if(Minecraft.getMinecraft().player.inventory.getStackInSlot(i) != null)
+				this.inventoryItemStack[i] = Minecraft.getMinecraft().player.inventory.getStackInSlot(i).copy();
 			else
 				this.inventoryItemStack[i] = null;
 		}
@@ -322,8 +322,8 @@ public class GuiAlchemy extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
-		if (mc.thePlayer != null) {
-	    	EntityPlayer p = mc.thePlayer;
+		if (mc.player != null) {
+	    	EntityPlayer p = mc.player;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();
@@ -364,7 +364,7 @@ public class GuiAlchemy extends GuiScreen {
 	    						drawRect(j*boxSize + 1, i*boxSize + 1, (j+1)*boxSize - 2, (i+1)*boxSize - 2, 	0x99FFFFFF); // The Background for the items
 	    	    		    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-//	    	    		    	EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+//	    	    		    	EntityPlayer player = Minecraft.getMinecraft().player;
 	    	    		    	ItemStack item = this.inventoryItemStack[(i*6 + j)];
     	    		            if(item != null) {
     	    	    		    	UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());

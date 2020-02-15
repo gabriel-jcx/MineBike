@@ -15,7 +15,7 @@ public class PedalingComboSoundEffect implements IPedalingComboEvent {
 
 	@Override
 	public void onLevelChange(int oldLevel, int newLevel) {
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 		
 		if(player == null)
 			return;
@@ -23,12 +23,13 @@ public class PedalingComboSoundEffect implements IPedalingComboEvent {
 		if(oldLevel > newLevel) {
 			// Level Decrease
 			System.out.println("onLevelChange[sound down]["+oldLevel+"]["+newLevel+"]");
-			player.world.playSoundAtEntity(player, "minebike:pedalingleveldown", 1.0f, 1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:pedalingleveldown", 1.0f, 1.0f);
+			//Todo:player.playSound("minebike:pedalingleveldown", 1.0f, 1.0f);
 		}
 		else if(oldLevel < newLevel) {
 			// Level Increase
 			System.out.println("onLevelChange[sound up]");
-			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			//Todo:player.world.playSound(player, "minebike:powerup", 1.0f, 1.0f);
 		}
 	}
 

@@ -154,19 +154,19 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public void onEvent(KeyInputEvent event) 
 	{
 		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
-			Minecraft.getMinecraft().thePlayer.setSprinting(false);
+			Minecraft.getMinecraft().player.setSprinting(false);
 		}
 		if( (Keyboard.getEventKey() == 1) && (Keyboard.getEventCharacter() != '\u0000')) // ESC
 		{
 			if(Minecraft.getMinecraft() == null)
 				return;
 			
-			if( (Minecraft.getMinecraft().thePlayer != null) && (!Minecraft.getMinecraft().isGamePaused()) )
+			if( (Minecraft.getMinecraft().player != null) && (!Minecraft.getMinecraft().isGamePaused()) )
 			{
 				if(!Minecraft.getMinecraft().isGamePaused())
 				{
 //					System.out.println("ESC Pressed");
-					EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+					EntityPlayer player = Minecraft.getMinecraft().player;
 					
 					if(player.dimension == WorldProviderFlats.dimID)
 					{
@@ -208,7 +208,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(mc.currentScreen == null)
 			{
-				if(mc.thePlayer != null)
+				if(mc.player != null)
 				{
 					mc.displayGuiScreen(new GuiControllerGuide(BiGX.instance().clientContext, mc));
 				}
@@ -220,7 +220,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(mc.currentScreen == null)
 			{
-				if(mc.thePlayer != null)
+				if(mc.player != null)
 				{
 					mc.displayGuiScreen(new GuiAlchemy(BiGX.instance().clientContext, mc));
 				}
@@ -270,9 +270,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		if (keyBindingSwitchToLeftItem.isPressed()) {
 			Minecraft mc = Minecraft.getMinecraft();
 			
-			if(mc.thePlayer != null)
+			if(mc.player != null)
 			{
-				EntityClientPlayerMP player = mc.thePlayer;
+				EntityClientPlayerMP player = mc.player;
 				
 				player.inventory.currentItem --;
 				
@@ -285,9 +285,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		if (keyBindingSwitchToRightItem.isPressed()) {
 			Minecraft mc = Minecraft.getMinecraft();
 			
-			if(mc.thePlayer != null)
+			if(mc.player != null)
 			{
-				EntityClientPlayerMP player = mc.thePlayer;
+				EntityClientPlayerMP player = mc.player;
 				
 				player.inventory.currentItem ++;
 				
@@ -404,24 +404,24 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SideOnly(Side.CLIENT)
 	public void onClientTick(TickEvent.ClientTickEvent event)
 	{
-		if ((Minecraft.getMinecraft().thePlayer!=null) 
+		if ((Minecraft.getMinecraft().player!=null) 
 				&& (event.phase==TickEvent.Phase.END)) {
 			
 			// TODO
 			synchronized (previousLocationLogTimeStampLock) {
 				if((System.currentTimeMillis() - previousLocationLogTimeStamp ) > 2000)
 				{
-					BigxContext.logWriter(LOGTYPE.LOCATION, "" + Minecraft.getMinecraft().thePlayer.dimension + "\t" + Minecraft.getMinecraft().thePlayer.posX + "\t" + Minecraft.getMinecraft().thePlayer.posY + "\t" + Minecraft.getMinecraft().thePlayer.posZ);
+					BigxContext.logWriter(LOGTYPE.LOCATION, "" + Minecraft.getMinecraft().player.dimension + "\t" + Minecraft.getMinecraft().player.posX + "\t" + Minecraft.getMinecraft().player.posY + "\t" + Minecraft.getMinecraft().player.posZ);
 					previousLocationLogTimeStamp = System.currentTimeMillis();
 				}
 			}
 			
 			if(context.getQuestManager() == null)
 			{
-				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().thePlayer));
+				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().player));
 			}
 			
-			if(BigxClientContext.getIsGameSaveRead() && flagOpenChapterGui && (Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0))
+			if(BigxClientContext.getIsGameSaveRead() && flagOpenChapterGui && (Minecraft.getMinecraft().player.worldObj.provider.dimensionId == 0))
 			{	
 				Minecraft mc = Minecraft.getMinecraft();
 				
@@ -445,8 +445,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			//TODO
 			if(BigxClientContext.getIsGameSaveRead() && flagChapterCorrectionFromLoading)
 			{
-				if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == 0) {
-					EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+				if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == 0) {
+					EntityClientPlayerMP p = Minecraft.getMinecraft().player;
 					
 					if( (!GuiChapter.isTodayWorkoutDone()) && (GuiChapter.getChapterNumber() > 3) ) {
 						System.out.println("Chasing Seq 1 dim["+p.dimension+"]");
@@ -496,7 +496,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					flagChapterCorrectionFromLoading = false;
 				}
 				else {
-					EntityClientPlayerMP p = Minecraft.getMinecraft().thePlayer;
+					EntityClientPlayerMP p = Minecraft.getMinecraft().player;
 					
 					if(p.dimension != 100)
 					{
@@ -526,7 +526,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				// Monster Encounter Sound Play
 				String chosenSong = "minebike:monsterencounter";
 
-				Minecraft.getMinecraft().thePlayer.playSound(chosenSong, 1.5f, 1.0f);
+				Minecraft.getMinecraft().player.playSound(chosenSong, 1.5f, 1.0f);
 				
 				CommonEventHandler.flagOpenMonsterEncounter = false;
 				
@@ -572,7 +572,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			 */
 			
 			// Handling Player Skills
-			EntityPlayer p = Minecraft.getMinecraft().thePlayer;
+			EntityPlayer p = Minecraft.getMinecraft().player;
 			
 			if (p.worldObj.rainingStrength > 0.0f) {
 				p.worldObj.setRainStrength(0.0f);
@@ -653,7 +653,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			{
 				hungerTickCount = 0;
 				
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/effect @p 23 2 255");				
+				Minecraft.getMinecraft().player.sendChatMessage("/effect @p 23 2 255");				
 			}
 
 			
@@ -730,11 +730,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					}
 					
 					if (chosenSong != "" && chosenSong != previousSong) {
-//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_faire stop");
-//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_camelot stop");
-//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_avalon stop");
-//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
-//						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb minebike:bg_rama stop");
+//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_faire stop");
+//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_camelot stop");
+//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_avalon stop");
+//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
+//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_rama stop");
 						
 						stopPreviousTracks(chosenSong);
 
@@ -743,7 +743,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 						
 						previousSong = chosenSong;
 						
-						Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
+						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
 					}
 					else
 					{
@@ -824,7 +824,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			{
 				if(!chosenSong.equals(previousSong))
 				{
-					Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + previousSong + " stop");
+					Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + previousSong + " stop");
 					System.out.println("bigx Song["+previousSong+"]");
 				}
 			}

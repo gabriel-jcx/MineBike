@@ -39,6 +39,6 @@ public class jeff extends CustomNPCAbstract
 			
 		//this is what happens when the player interacts with this NPC
 		
-//		QuestTeleporter.teleport(Minecraft.getMinecraft().thePlayer, -1, 1, 11, 0);
+//		QuestTeleporter.teleport(Minecraft.getMinecraft().player, -1, 1, 11, 0);
 	}
 }

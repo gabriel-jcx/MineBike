@@ -131,8 +131,8 @@ public class GuiStats extends GuiScreen {
     	FontRenderer fontRendererObj;
     	String text = "";
 
-    	if (mc.thePlayer != null) {
-	    	EntityPlayer p = mc.thePlayer;
+    	if (mc.player != null) {
+	    	EntityPlayer p = mc.player;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int WIDTH = 200;
 	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
@@ -151,7 +151,7 @@ public class GuiStats extends GuiScreen {
 
 	    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    	
-	    	if(mc.thePlayer.worldObj.provider.dimensionId == 0)
+	    	if(mc.player.worldObj.provider.dimensionId == 0)
 	    	{
 	    		if(mc.currentScreen == null)
 				{
@@ -189,16 +189,16 @@ public class GuiStats extends GuiScreen {
 	    	/**
 	    	 * Pedaling Mode Related Drawing
 	    	 */
-	    	if(mc.thePlayer.getHeldItem() != null)
+	    	if(mc.player.getHeldItem() != null)
 	    	{
-	    		if(mc.thePlayer.getHeldItem().getItem() == Items.paper)
+	    		if(mc.player.getHeldItem().getItem() == Items.paper)
 				{
 	    			text = "Press LT to open Quest List Menu";
 
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
 				}
-	    		else if(mc.thePlayer.getHeldItem().getDisplayName().contains("Phone"))
+	    		else if(mc.player.getHeldItem().getDisplayName().contains("Phone"))
 	    		{
 	    			text = "Press LT to Change Bike Mode (Move/Mining/Building)";
 
@@ -211,11 +211,11 @@ public class GuiStats extends GuiScreen {
 	    	 * Draw the fist instruction screen
 	    	 * 88, 74, 241), new Vec3d(91, 80, 244
 	    	 */
-	    	if( (mc.thePlayer.dimension == 0) && (GuiChapter.getChapterNumber() == 1) )
+	    	if( (mc.player.dimension == 0) && (GuiChapter.getChapterNumber() == 1) )
 	    	{
-	    		if( (mc.thePlayer.posX >= 88) && (mc.thePlayer.posX <= 91) &&
-	    				(mc.thePlayer.posY >= 74) && (mc.thePlayer.posY <=80) &&
-	    				(mc.thePlayer.posZ >= 241) && (mc.thePlayer.posZ <= 244) )
+	    		if( (mc.player.posX >= 88) && (mc.player.posX <= 91) &&
+	    				(mc.player.posY >= 74) && (mc.player.posY <=80) &&
+	    				(mc.player.posZ >= 241) && (mc.player.posZ <= 244) )
 	    		{
 	    			GL11.glPushMatrix();
 	    				GL11.glPushMatrix();

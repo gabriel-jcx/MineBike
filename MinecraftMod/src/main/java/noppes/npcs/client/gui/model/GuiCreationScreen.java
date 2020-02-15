@@ -140,7 +140,7 @@ public class GuiCreationScreen extends GuiModelInterface implements ICustomScrol
       this.addScroll(scroll);
       scroll.setList(PixelmonHelper.getPixelmonList());
       scroll.setSelected(PixelmonHelper.getName(entity));
-      Minecraft.getMinecraft().thePlayer.sendChatMessage(PixelmonHelper.getName(entity));
+      Minecraft.getMinecraft().player.sendChatMessage(PixelmonHelper.getName(entity));
    }
 
    private void showEntityButtons(EntityLivingBase entity) {

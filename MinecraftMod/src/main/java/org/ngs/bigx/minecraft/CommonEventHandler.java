@@ -517,10 +517,10 @@ public class CommonEventHandler {
 				//Making sure it remains daytime all the time
 //				World current_world = MinecraftServer.getServer().getEntityWorld();
 
-				if(Minecraft.getMinecraft().thePlayer != null)
+				if(Minecraft.getMinecraft().player != null)
 				{
-					Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamerule doDaylightCycle false");
-					Minecraft.getMinecraft().thePlayer.sendChatMessage("/gamemode s");
+					Minecraft.getMinecraft().player.sendChatMessage("/gamerule doDaylightCycle false");
+					Minecraft.getMinecraft().player.sendChatMessage("/gamemode s");
 				}
 //				current_world.setWorldTime(8000);
 			}

@@ -60,7 +60,7 @@ public class GuiMonsterStunned extends GuiScreen {
 				}
 				else if(mc.currentScreen instanceof GuiMonsterStunned)
 				{
-					Minecraft.getMinecraft().thePlayer.closeScreen();
+					Minecraft.getMinecraft().player.closeScreen();
 				}
 			}
 		}, 4*1000);

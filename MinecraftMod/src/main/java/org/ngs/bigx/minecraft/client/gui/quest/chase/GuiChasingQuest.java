@@ -230,7 +230,7 @@ public class GuiChasingQuest extends GuiScreen {
 				break;
 			case 4:
 		        if(mc.currentScreen != null) {
-		    		Minecraft.getMinecraft().thePlayer.closeScreen();
+		    		Minecraft.getMinecraft().player.closeScreen();
 					System.out.println("Chasing Quest START Selected");
 		        }
 				break;

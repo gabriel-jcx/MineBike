@@ -81,7 +81,7 @@ public class GuiBuildinglistManager extends GuiScreen {
     	{
             if(mc.currentScreen != null) {
             	Minecraft.getMinecraft().player.closeScreen();
-            	//Minecraft.getMinecraft().thePlayer.closeScreen();
+            	//Minecraft.getMinecraft().player.closeScreen();
             }
     	}
     }

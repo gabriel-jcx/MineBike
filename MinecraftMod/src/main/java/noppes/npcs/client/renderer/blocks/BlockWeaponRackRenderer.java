@@ -71,7 +71,7 @@ public class BlockWeaponRackRenderer extends BlockRendererInterface {
                f4 = (float)(f11 >> 8 & 255) / 255.0F;
                float f5 = (float)(f11 & 255) / 255.0F;
                GL11.glColor4f(f12, f4, f5, 1.0F);
-               RenderManager.instance.itemRenderer.renderItem(Minecraft.getMinecraft().thePlayer, item, k);
+               RenderManager.instance.itemRenderer.renderItem(Minecraft.getMinecraft().player, item, k);
             }
          } else {
             k = item.getItem().getColorFromItemStack(item, 0);
@@ -79,7 +79,7 @@ public class BlockWeaponRackRenderer extends BlockRendererInterface {
             f12 = (float)(k >> 8 & 255) / 255.0F;
             f4 = (float)(k & 255) / 255.0F;
             GL11.glColor4f(var8, f12, f4, 1.0F);
-            RenderManager.instance.itemRenderer.renderItem(Minecraft.getMinecraft().thePlayer, item, 0);
+            RenderManager.instance.itemRenderer.renderItem(Minecraft.getMinecraft().player, item, 0);
          }
 
          GL11.glPopMatrix();

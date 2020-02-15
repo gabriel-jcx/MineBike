@@ -137,7 +137,7 @@ public class GuiChapter extends GuiScreen {
 			GuiChapter.unsetFlagProceedToNextChapter();
 			
 			// Play Sound
-			Minecraft.getMinecraft().thePlayer.playSound("minebike:victory", 1.5f, 1.0f);
+			Minecraft.getMinecraft().player.playSound("minebike:victory", 1.5f, 1.0f);
 
 			// Start Timer for close screen
 	        Timer timer = new Timer(true);
@@ -145,7 +145,7 @@ public class GuiChapter extends GuiScreen {
 				@Override
 				public void run() {
 		    		// Play Sound
-					Minecraft.getMinecraft().thePlayer.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
+					Minecraft.getMinecraft().player.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
 				}
 			}, 750);
 		}
@@ -245,7 +245,7 @@ public class GuiChapter extends GuiScreen {
 					didOneSecondPassed = true;
 					
 					// Play Sound
-					Minecraft.getMinecraft().thePlayer.playSound("minebike:chaptertada", 1.0f, 1.0f);
+					Minecraft.getMinecraft().player.playSound("minebike:chaptertada", 1.0f, 1.0f);
 					
 					if(GuiChapter.chapterNumber == 1)
 					{
@@ -255,7 +255,7 @@ public class GuiChapter extends GuiScreen {
 							@Override
 							public void run() {
 					    		// Play Sound
-								Minecraft.getMinecraft().thePlayer.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
+								Minecraft.getMinecraft().player.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
 							}
 						}, 1000);
 					}
@@ -275,7 +275,7 @@ public class GuiChapter extends GuiScreen {
 				{
 					didOneSecondPassed = false;
 			        if(mc.currentScreen != null) {
-			        	Minecraft.getMinecraft().thePlayer.closeScreen();
+			        	Minecraft.getMinecraft().player.closeScreen();
 			        }
 				}
 			}

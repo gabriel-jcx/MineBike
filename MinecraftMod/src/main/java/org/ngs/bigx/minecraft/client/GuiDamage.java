@@ -134,8 +134,8 @@ public class GuiDamage extends GuiScreen {
     	String text;
     	ArrayList<DamageTextItem> removeList = new ArrayList<DamageTextItem>();
 
-    	if (mc.thePlayer != null) {
-	    	EntityPlayer p = mc.thePlayer;
+    	if (mc.player != null) {
+	    	EntityPlayer p = mc.player;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int WIDTH = 200;
 	    	int mcWidth = sr.getScaledWidth();

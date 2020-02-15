@@ -30,7 +30,7 @@ public class QuestTeleporter {
 	
     // Move the Entity to the portal
     public static void teleport(Entity entity, int targetDimensionId,int x,int y,int z) {
-		Minecraft.getMinecraft().thePlayer.sendChatMessage("/tpx" + " " + targetDimensionId + " " + x + " " + y + " " + z);
+		Minecraft.getMinecraft().player.sendChatMessage("/tpx" + " " + targetDimensionId + " " + x + " " + y + " " + z);
 		
 		teleportFlag = true;
 		dimId = targetDimensionId;
@@ -38,9 +38,9 @@ public class QuestTeleporter {
 		posY = y;
 		posZ = z;
 		
-		if(targetDimensionId == Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId)
+		if(targetDimensionId == Minecraft.getMinecraft().player.worldObj.provider.dimensionId)
 		{
-			System.out.println("[BiGX] Teleport to the same dimension?? isRemote[" + Minecraft.getMinecraft().thePlayer.worldObj.isRemote + "]");
+			System.out.println("[BiGX] Teleport to the same dimension?? isRemote[" + Minecraft.getMinecraft().player.worldObj.isRemote + "]");
 			(new Exception()).printStackTrace();
 		}
     }

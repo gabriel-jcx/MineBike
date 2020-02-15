@@ -102,8 +102,8 @@ public class GuiStatsSkill extends GuiScreen {
     	FontRenderer fontRendererObj;
     	String text;
 
-    	if (mc.thePlayer != null) {
-	    	EntityPlayer p = mc.thePlayer;
+    	if (mc.player != null) {
+	    	EntityPlayer p = mc.player;
 		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();

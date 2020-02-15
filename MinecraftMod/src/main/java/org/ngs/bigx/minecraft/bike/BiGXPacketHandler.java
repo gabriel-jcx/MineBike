@@ -39,7 +39,7 @@ public class BiGXPacketHandler {
 				context.heartrate = buf.getInt();
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.MOVE_FORWARDBACKWARD:
-				if (Minecraft.getMinecraft().thePlayer!=null) {
+				if (Minecraft.getMinecraft().player!=null) {
 					change = packet.data[1] | (packet.data[2] << 8);
 					
 					double maxSpeed = .0;

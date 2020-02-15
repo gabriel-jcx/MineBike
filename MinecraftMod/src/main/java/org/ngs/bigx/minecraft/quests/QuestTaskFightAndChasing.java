@@ -271,7 +271,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	{
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 
-		Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " stop");
+		Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " stop");
 		chosenSong = "";
 		
 		System.out.println("goBackToTheOriginalWorld");
@@ -287,7 +287,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		pausedTime = 0;
 		thiefLevelSet = false;
 		
-		Minecraft.getMinecraft().thePlayer.getFoodStats().setFoodLevel(initialHunger);
+		Minecraft.getMinecraft().player.getFoodStats().setFoodLevel(initialHunger);
 		
 		if(world.isRemote)
 			((BigxClientContext)clientContext).setSpeed(0);
@@ -435,7 +435,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		boolean isReboot = !isActive;
 		Minecraft mc = Minecraft.getMinecraft();
 		
-		initialHunger = mc.thePlayer.getFoodStats().getFoodLevel();
+		initialHunger = mc.player.getFoodStats().getFoodLevel();
 		time = 0;
 		initThiefStat();
 		countdown = 5;
@@ -948,8 +948,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				else
 					chosenSong = "minebike:mus_breaks";
 
-//				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + chosenSong + " loop");
-				Minecraft.getMinecraft().thePlayer.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop @p 0.5f");
+//				Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " loop");
+				Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + "minebike:mus_metal" + " loop @p 0.5f");
 				
 				Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 				setThiefLevel(levelSys.getPlayerLevel());
@@ -1399,7 +1399,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		
 //		if(mc.getMinecraft().objectMouseOver != null) {
 //			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-//				mc.getMinecraft().playerController.attackEntity(mc.thePlayer, mc.getMinecraft().objectMouseOver.entityHit);
+//				mc.getMinecraft().playerController.attackEntity(mc.player, mc.getMinecraft().objectMouseOver.entityHit);
 //			}
 //		}
 //		player.swingItem();
@@ -1407,19 +1407,19 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	private static void setBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block);
 	}
 	
 	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
 	{
-		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block, direction, 3);
 	}
 	
 	private static void cleanBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().thePlayer.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block);
 	}
 
@@ -2095,6 +2095,6 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	}
 
 	private void playAudioFeedBack(String audioEffectName) {
-		Minecraft.getMinecraft().thePlayer.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
+		Minecraft.getMinecraft().player.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
 	}
 }
