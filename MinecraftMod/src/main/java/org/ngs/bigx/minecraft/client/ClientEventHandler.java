@@ -338,7 +338,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			EntityPlayer player = (EntityPlayer) event.entity;
 			Minecraft mc = Minecraft.getMinecraft();
 			
-			if( (player.worldObj.provider.dimensionId == 105) )
+			if( (player.world.provider.dimensionId == 105) )
 			{
 				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
 				flagOpenChapterGui = true;

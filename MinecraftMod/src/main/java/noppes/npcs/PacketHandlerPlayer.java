@@ -221,7 +221,7 @@ public class PacketHandlerPlayer {
                sign = (PlayerMail)tile1.next();
                if(sign.time == x4 && sign.sender.equals(z1)) {
                   ContainerMail.staticmail = sign;
-                  player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 0, 0, 0);
+                  player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.world, 0, 0, 0);
                   break;
                }
             }
@@ -247,7 +247,7 @@ public class PacketHandlerPlayer {
                x6 = buffer.readInt();
                y = buffer.readInt();
                z = buffer.readInt();
-               tileentity4 = player.worldObj.getTileEntity(x6, y, z);
+               tileentity4 = player.world.getTileEntity(x6, y, z);
                if(tileentity4 == null || !(tileentity4 instanceof TileBigSign)) {
                   return;
                }
@@ -256,13 +256,13 @@ public class PacketHandlerPlayer {
                if(tile2.canEdit) {
                   tile2.setText(Server.readString(buffer));
                   tile2.canEdit = false;
-                  player.worldObj.markBlockForUpdate(x6, y, z);
+                  player.world.markBlockForUpdate(x6, y, z);
                }
             } else if(type == EnumPlayerPacket.SaveBook) {
                x6 = buffer.readInt();
                y = buffer.readInt();
                z = buffer.readInt();
-               tileentity4 = player.worldObj.getTileEntity(x6, y, z);
+               tileentity4 = player.world.getTileEntity(x6, y, z);
                if(!(tileentity4 instanceof TileBook)) {
                   return;
                }

@@ -21,7 +21,7 @@ public class ItemCrossbow extends ItemNpcInterface {
    }
 
    public void onPlayerStoppedUsing(ItemStack stack, World par2World, EntityPlayer player, int count) {
-      if(!player.worldObj.isRemote) {
+      if(!player.world.isRemote) {
          if(stack.stackTagCompound.getInteger("IsLoaded") == 1 || player.capabilities.isCreativeMode) {
             if(stack.stackTagCompound.getInteger("Reloading") == 1 && !player.capabilities.isCreativeMode) {
                stack.stackTagCompound.setInteger("Reloading", 0);
@@ -29,7 +29,7 @@ public class ItemCrossbow extends ItemNpcInterface {
             }
 
             stack.damageItem(1, player);
-            EntityProjectile projectile = new EntityProjectile(player.worldObj, player, new ItemStack(Items.arrow, 1, 0), false);
+            EntityProjectile projectile = new EntityProjectile(player.world, player, new ItemStack(Items.arrow, 1, 0), false);
             projectile.damage = 10.0F;
             projectile.setSpeed(20);
             projectile.setHasGravity(true);
@@ -38,8 +38,8 @@ public class ItemCrossbow extends ItemNpcInterface {
                this.consumeItem(player, CustomItems.crossbowBolt);
             }
 
-            player.worldObj.playSoundAtEntity(player, "random.bow", 0.9F, Item.itemRand.nextFloat() * 0.3F + 0.8F);
-            player.worldObj.spawnEntityInWorld(projectile);
+            player.world.playSoundAtEntity(player, "random.bow", 0.9F, Item.itemRand.nextFloat() * 0.3F + 0.8F);
+            player.world.spawnEntityInWorld(projectile);
             stack.stackTagCompound.setInteger("IsLoaded", 0);
          }
 
@@ -47,11 +47,11 @@ public class ItemCrossbow extends ItemNpcInterface {
    }
 
    public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
-      if(!player.worldObj.isRemote) {
+      if(!player.world.isRemote) {
          int ticks = this.getMaxItemUseDuration(stack) - count;
          if(!player.capabilities.isCreativeMode && stack.stackTagCompound.getInteger("Reloading") == 1 && this.hasItem(player, CustomItems.crossbowBolt)) {
             if(ticks == 20) {
-               player.worldObj.playSoundAtEntity(player, "random.click", 1.0F, 1.0F);
+               player.world.playSoundAtEntity(player, "random.click", 1.0F, 1.0F);
                stack.stackTagCompound.setInteger("IsLoaded", 1);
             }
 

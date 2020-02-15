@@ -101,8 +101,8 @@ public class FishingQuest extends CustomQuestAbstract
 		time = 300;
 		timeElapsed = 0;
 		CustomFishHook.numFish = 0;
-		EntityItem entityitem = new EntityItem(event.player.worldObj, 0, 11, 0, new ItemStack(Items.gold_ingot, 5));
-		(event.player.worldObj).spawnEntityInWorld(entityitem);
+		EntityItem entityitem = new EntityItem(event.player.world, 0, 11, 0, new ItemStack(Items.gold_ingot, 5));
+		(event.player.world).spawnEntityInWorld(entityitem);
 		QuestTeleporter.teleport(player, FISHINGDIMENSIONID, 0, 11, 0);
 	}
 	

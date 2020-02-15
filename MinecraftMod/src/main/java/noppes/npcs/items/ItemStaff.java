@@ -40,7 +40,7 @@ public class ItemStaff extends ItemNpcInterface implements IProjectileCallback {
    public void onPlayerStoppedUsing(ItemStack stack, World worldObj, EntityPlayer player, int par4) {
       if(!worldObj.isRemote) {
          if(stack.stackTagCompound != null) {
-            Entity entity = ((WorldServer)player.worldObj).getEntityByID(stack.stackTagCompound.getInteger("MagicProjectile"));
+            Entity entity = ((WorldServer)player.world).getEntityByID(stack.stackTagCompound.getInteger("MagicProjectile"));
             if(entity != null && entity instanceof EntityProjectile) {
                EntityProjectile item = (EntityProjectile)entity;
                item.callback = this;
@@ -51,7 +51,7 @@ public class ItemStaff extends ItemNpcInterface implements IProjectileCallback {
                item.prevRotationYaw = item.rotationYaw = player.rotationYaw;
                item.prevRotationPitch = item.rotationPitch = player.rotationPitch;
                item.shoot(2.0F);
-               player.worldObj.playSoundAtEntity(player, "customnpcs:magic.shot", 1.0F, 1.0F);
+               player.world.playSoundAtEntity(player, "customnpcs:magic.shot", 1.0F, 1.0F);
             }
          }
       }
@@ -59,7 +59,7 @@ public class ItemStaff extends ItemNpcInterface implements IProjectileCallback {
 
    public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
       int tick = this.getMaxItemUseDuration(stack) - count;
-      if(player.worldObj.isRemote) {
+      if(player.world.isRemote) {
          this.spawnParticle(stack, player);
       } else {
          int chargeTime = 20 + this.material.getHarvestLevel() * 8;
@@ -74,25 +74,25 @@ public class ItemStaff extends ItemNpcInterface implements IProjectileCallback {
                this.consumeItem(player, CustomItems.mana);
             }
 
-            player.worldObj.playSoundAtEntity(player, "customnpcs:magic.charge", 1.0F, 1.0F);
+            player.world.playSoundAtEntity(player, "customnpcs:magic.charge", 1.0F, 1.0F);
             if(stack.stackTagCompound == null) {
                stack.stackTagCompound = new NBTTagCompound();
             }
 
-            int entity = 6 + this.material.getDamageVsEntity() + player.worldObj.rand.nextInt(4);
+            int entity = 6 + this.material.getDamageVsEntity() + player.world.rand.nextInt(4);
             entity = (int)((float)entity + (float)(entity * EnchantInterface.getLevel(EnchantInterface.Damage, stack)) * 0.5F);
-            EntityMagicProjectile item = new EntityMagicProjectile(player.worldObj, player, this.getProjectile(stack), false);
+            EntityMagicProjectile item = new EntityMagicProjectile(player.world, player, this.getProjectile(stack), false);
             item.damage = (float)entity;
             item.setSpeed(25);
             dx = (double)(-MathHelper.sin((float)((double)(player.rotationYaw / 180.0F) * 3.141592653589793D)) * MathHelper.cos((float)((double)(player.rotationPitch / 180.0F) * 3.141592653589793D)));
             dz = (double)(MathHelper.cos((float)((double)(player.rotationYaw / 180.0F) * 3.141592653589793D)) * MathHelper.cos((float)((double)(player.rotationPitch / 180.0F) * 3.141592653589793D)));
             item.setPosition(player.posX + dx * 0.8D, player.posY + 1.5D - (double)(player.rotationPitch / 80.0F), player.posZ + dz * 0.8D);
-            player.worldObj.spawnEntityInWorld(item);
+            player.world.spawnEntityInWorld(item);
             stack.stackTagCompound.setInteger("MagicProjectile", item.getEntityId());
          }
 
          if(tick > chargeTime && stack.stackTagCompound != null) {
-            Entity entity1 = ((WorldServer)player.worldObj).getEntityByID(stack.stackTagCompound.getInteger("MagicProjectile"));
+            Entity entity1 = ((WorldServer)player.world).getEntityByID(stack.stackTagCompound.getInteger("MagicProjectile"));
             if(entity1 == null || !(entity1 instanceof EntityProjectile)) {
                return;
             }

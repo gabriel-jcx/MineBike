@@ -56,6 +56,6 @@ public class RolePostman extends RoleInterface {
    }
 
    public void interact(EntityPlayer player) {
-      player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 1, 1, 0);
+      player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.world, 1, 1, 0);
    }
 }

@@ -16,7 +16,7 @@ public class GuiNpcWaypoint extends GuiNPCInterface {
 
 
    public GuiNpcWaypoint(int x, int y, int z) {
-      this.tile = (TileWaypoint)super.player.worldObj.getTileEntity(x, y, z);
+      this.tile = (TileWaypoint)super.player.world.getTileEntity(x, y, z);
       super.xSize = 265;
    }
 

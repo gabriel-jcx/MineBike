@@ -21,7 +21,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
-import org.bukkit.event.entity.EntityInteractEvent;
+//import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -39,63 +40,62 @@ public class NpcEvents {
 	}
 	
 	//NPC Interactions
-	public 	static void InteractWithNPC(EntityPlayer player, EntityInteractEvent event){
-//		System.out.println(event.target.posX + " " + event.target.posY + " " + event.target.posZ);
-		if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.dad, NpcLocations.dad.addVector(1, 1, 1))) //checks to see if NPC is Dad
+	public 	static void InteractWithNPC(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
+//		System.out.println(event.getTarget().posX + " " + event.getTarget().posY + " " + event.getTarget().posZ);
+		if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.dad, NpcLocations.dad.addVector(1, 1, 1))) //checks to see if NPC is Dad
 			InteractWithFather(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.weaponsMerchant, NpcLocations.weaponsMerchant.addVector(1, 1, 1)))  //checks to see if NPC is Weapons Merch
 			InteractWithWeaponsMerchant(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.blacksmith, NpcLocations.blacksmith.addVector(1, 1, 1)))  //checks to see if NPC is Blacksmith
 			InteractWithBlacksmith(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.skillSeller, NpcLocations.skillSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.skillSeller, NpcLocations.skillSeller.addVector(1, 1, 1)))  //checks to see if NPC is PotionSeller
 			InteractWithSkillSeller(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.trader, NpcLocations.trader.addVector(1, 1, 1)))  //checks to see if NPC is Trader
 			InteractWithTrader(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1)))  //checks to see if NPC is TrainingBot
 			InteractWithTrainingBot(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1)))  //checks to see if NPC is Police Officer
 			InteractWithOfficer(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.tutorialExit.addVector(0, -1, 0), NpcLocations.tutorialExit.addVector(1, 0, 1)))
 			InteractWithTeleportExit(player, event);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.tutorialGuy.addVector(-5, -5, -5), NpcLocations.tutorialGuy.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.tutorialGuy.addVector(-5, -5, -5), NpcLocations.tutorialGuy.addVector(5, 5, 5)))
 			InteractWithTutorialGuy(player, event);
 		
 
 		
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.guard1.addVector(-5, -5, -5), NpcLocations.guard1.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.guard1.addVector(-5, -5, -5), NpcLocations.guard1.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.guard1);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.guard2.addVector(-5, -5, -5), NpcLocations.guard2.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.guard2.addVector(-5, -5, -5), NpcLocations.guard2.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.guard2);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.sergeantWeirdo.addVector(-5, -5, -5), NpcLocations.sergeantWeirdo.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.sergeantWeirdo.addVector(-5, -5, -5), NpcLocations.sergeantWeirdo.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.sergeantWeirdo);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.wanderer.addVector(-5, -5, -5), NpcLocations.wanderer.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.wanderer.addVector(-5, -5, -5), NpcLocations.wanderer.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.wanderer);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.doctor.addVector(-5, -5, -5), NpcLocations.doctor.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.doctor.addVector(-5, -5, -5), NpcLocations.doctor.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.doctor);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.farmer.addVector(-5, -5, -5), NpcLocations.farmer.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.farmer.addVector(-5, -5, -5), NpcLocations.farmer.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.farmer);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.cook.addVector(-5, -5, -5), NpcLocations.cook.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.cook.addVector(-5, -5, -5), NpcLocations.cook.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.cook);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.marketPlaceAd.addVector(-5, -5, -5), NpcLocations.marketPlaceAd.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.marketPlaceAd.addVector(-5, -5, -5), NpcLocations.marketPlaceAd.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.marketPlaceAd);
-		else if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.thiefInCage.addVector(-5, -5, -5), NpcLocations.thiefInCage.addVector(5, 5, 5)))
+		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.thiefInCage.addVector(-5, -5, -5), NpcLocations.thiefInCage.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.thiefInCage);
 		
 		//checking the custom NPCs for proximity and then interacting with them
 		for(CustomNPCAbstract npc : NpcDatabase.customNPCs)
 		{
-			if (BiGXEventTriggers.checkEntityInArea(event.target, npc.getLocation().addVector(-5, -5, -5), npc.getLocation().addVector(5, 5, 5)))
+			if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), npc.getLocation().addVector(-5, -5, -5), npc.getLocation().addVector(5, 5, 5)))
 				npc.onInteraction(player, event);
 		}
-		
-		if(player.worldObj.provider.dimensionId == 105)
+		if(player.world.provider.getDimension() == 105)
 		{
-			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.baddestGuy.addVector(-3, -3, -3), NpcLocations.baddestGuy.addVector(3, 3, 3)))
+			if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.baddestGuy.addVector(-3, -3, -3), NpcLocations.baddestGuy.addVector(3, 3, 3)))
 			{
 				InteractWithDungeonBoss(player, event);
 			}
 			
-			System.out.println("Interaction with Ifrit dim[" + player.worldObj.provider.dimensionId + "]");
+			System.out.println("Interaction with Ifrit dim[" + player.world.provider.getDimension() + "]");
 		}
 	}
 	
@@ -144,21 +144,22 @@ public class NpcEvents {
 		GuiMessageWindow.showMessage(text);
 	}
 	
-	private static void InteractWithTeleportExit(EntityPlayer player, EntityInteractEvent event) {
+	private static void InteractWithTeleportExit(EntityPlayer player, PlayerInteractEvent.EntityInteract event) {
 		// TODO Add confirmation GUI? "Want to try the tutorial again?"
-		if (player.worldObj.isRemote)
+		if (player.world.isRemote)
 			QuestTeleporter.teleport(player, 0, 91, 78, 243);
 	}
 	
-	private static void InteractWithFather(EntityPlayer player, EntityInteractEvent event){
-		if (!player.worldObj.isRemote)
+	private static void InteractWithFather(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
+		if (!player.world.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
 		
 		try {
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+			WorldServer ws =net.minecraftforge.common.DimensionManager.getWorld(0);
 			Quest quest;
 			
-			if(player.worldObj.isRemote)
+			if(player.world.isRemote)
 			{
 				System.out.println("InteractWithFather Quest Generation: CLIENT");
 				
@@ -214,8 +215,8 @@ public class NpcEvents {
 		}
 	}
 	
-	private static void InteractWithDungeonBoss(EntityPlayer player, EntityInteractEvent event) {
-		if (!player.worldObj.isRemote) 
+	private static void InteractWithDungeonBoss(EntityPlayer player, PlayerInteractEvent.EntityInteract event) {
+		if (!player.world.isRemote) 
 		{
 			
 			// This gets triggered when the screen closes
@@ -235,23 +236,23 @@ public class NpcEvents {
 		}
 	}
 	
-	private static void InteractWithOfficer(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithOfficer(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Officer...");
 		GuiMessageWindow.showMessage("We're kind of busy here.\nCome back later.");
 		//Giving player teleportation potion
 //		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
 //				BiGXTextBoxDialogue.officerRequestHelp);
-//		if (!player.worldObj.isRemote && gavePotion)
+//		if (!player.world.isRemote && gavePotion)
 //			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
 	
-	private static void InteractWithTrainingBot(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithTrainingBot(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.instructionsAttackNPC);
 	}
 	
-	private static void InteractWithWeaponsMerchant(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithWeaponsMerchant(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Weapons NPC");
-		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
@@ -261,9 +262,9 @@ public class NpcEvents {
 			createWeaponsSold(traderInterface.inventorySold);
 	}
 	
-	private static void InteractWithBlacksmith(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithBlacksmith(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Blacksmith NPC");
-		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
@@ -273,9 +274,9 @@ public class NpcEvents {
 			createBlacksmithSold(traderInterface.inventorySold);
 	}
 	
-	private static void InteractWithSkillSeller(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithSkillSeller(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Skill Seller NPC");
-		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
@@ -285,9 +286,9 @@ public class NpcEvents {
 			createSkillSold(traderInterface.inventorySold);
 	}
 	
-	private static void InteractWithTrader(EntityPlayer player, EntityInteractEvent event){
+	private static void InteractWithTrader(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Trader NPC");
-		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
 		
@@ -297,9 +298,9 @@ public class NpcEvents {
 			createTraderSold(traderInterface.inventorySold);
 	}
 	
-	private static void InteractWithTutorialGuy(EntityPlayer player, EntityInteractEvent event) {
+	private static void InteractWithTutorialGuy(EntityPlayer player, PlayerInteractEvent.EntityInteract event) {
 		System.out.println("Interact with Tutorial Guy");
-		EntityCustomNpc npc = (EntityCustomNpc) event.target;
+		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 
 		// Unlock the next chapter and open Gui Chapter
 		if(GuiChapter.getChapterNumber() == 2)
@@ -308,7 +309,7 @@ public class NpcEvents {
 		}
 		
 		// TODO add confirmation prompt
-		if (player.worldObj.isRemote) {
+		if (player.world.isRemote) {
 			QuestTeleporter.teleport(player, 102, 512, 65, 0);
 		}
 	}
@@ -364,7 +365,7 @@ public class NpcEvents {
 	private static void createSkillSold(NpcMiscInventory inventorySold){
 		int i = 0;
 		for (String name : skillNames){
-			ItemStack p = new ItemStack(Items.enchanted_book);
+			ItemStack p = new ItemStack(Items.ENCHANTED_BOOK);
 			p.setStackDisplayName(name);
 			inventorySold.setInventorySlotContents(i++, p);
 		}
@@ -377,11 +378,11 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(1,  new ItemStack(Item.getItemById(3),32)); //Dirt block
 		inventoryCurrency.setInventorySlotContents(2,  new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
 		inventoryCurrency.setInventorySlotContents(3,  new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
-		inventoryCurrency.setInventorySlotContents(4,  new ItemStack(Items.wooden_sword)); //Wood Sword
-		inventoryCurrency.setInventorySlotContents(5,  new ItemStack(Items.iron_sword)); //Iron Sword
+		inventoryCurrency.setInventorySlotContents(4,  new ItemStack(Items.WOODEN_SWORD)); //Wood Sword
+		inventoryCurrency.setInventorySlotContents(5,  new ItemStack(Items.IRON_SWORD)); //Iron Sword
 		inventoryCurrency.setInventorySlotContents(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
 		inventoryCurrency.setInventorySlotContents(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
-		inventoryCurrency.setInventorySlotContents(8,  new ItemStack(Items.feather,6)); //Feather
+		inventoryCurrency.setInventorySlotContents(8,  new ItemStack(Items.FEATHER,6)); //Feather
 		inventoryCurrency.setInventorySlotContents(9,  new ItemStack(Items.BLAZE_POWDER,6)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(10, new ItemStack(Blocks.CACTUS,12)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Item.getItemById(37),12));

@@ -47,7 +47,7 @@ public class PlayerQuestController {
       PlayerQuestData data = playerdata.questData;
       data.activeQuests.remove(Integer.valueOf(quest.id));
       if(quest.repeat != EnumQuestRepeat.RLDAILY && quest.repeat != EnumQuestRepeat.RLWEEKLY) {
-         data.finishedQuests.put(Integer.valueOf(quest.id), Long.valueOf(player.worldObj.getTotalWorldTime()));
+         data.finishedQuests.put(Integer.valueOf(quest.id), Long.valueOf(player.world.getTotalWorldTime()));
       } else {
          data.finishedQuests.put(Integer.valueOf(quest.id), Long.valueOf(System.currentTimeMillis()));
       }
@@ -76,7 +76,7 @@ public class PlayerQuestController {
                return false;
             } else {
                long questTime = ((Long)data.finishedQuests.get(Integer.valueOf(quest.id))).longValue();
-               return quest.repeat == EnumQuestRepeat.MCDAILY?player.worldObj.getTotalWorldTime() - questTime >= 24000L:(quest.repeat == EnumQuestRepeat.MCWEEKLY?player.worldObj.getTotalWorldTime() - questTime >= 168000L:(quest.repeat == EnumQuestRepeat.RLDAILY?System.currentTimeMillis() - questTime >= 86400000L:(quest.repeat == EnumQuestRepeat.RLWEEKLY?System.currentTimeMillis() - questTime >= 604800000L:false)));
+               return quest.repeat == EnumQuestRepeat.MCDAILY?player.world.getTotalWorldTime() - questTime >= 24000L:(quest.repeat == EnumQuestRepeat.MCWEEKLY?player.world.getTotalWorldTime() - questTime >= 168000L:(quest.repeat == EnumQuestRepeat.RLDAILY?System.currentTimeMillis() - questTime >= 86400000L:(quest.repeat == EnumQuestRepeat.RLWEEKLY?System.currentTimeMillis() - questTime >= 604800000L:false)));
             }
          } else {
             return true;

@@ -110,7 +110,7 @@ public class NoppesUtilPlayer {
          player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, player.rotationYaw, player.rotationPitch);
       }
 
-      player.worldObj.updateEntityWithOptionalForce(player, false);
+      player.world.updateEntityWithOptionalForce(player, false);
    }
 
    private static void followerBuy(RoleFollower role, IInventory currencyInv, EntityPlayerMP player, EntityNPCInterface npc) {
@@ -299,7 +299,7 @@ public class NoppesUtilPlayer {
          if(data.quest.questInterface.isCompleted(player)) {
             data.quest.questInterface.handleComplete(player);
             if(data.quest.rewardExp > 0) {
-               player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.8F));
+               player.world.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.world.rand.nextFloat() - player.world.rand.nextFloat()) * 0.7F + 1.8F));
                player.addExperience(data.quest.rewardExp);
             }
 

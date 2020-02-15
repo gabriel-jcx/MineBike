@@ -4,7 +4,7 @@ import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public abstract class CustomNPCAbstract 
 {
@@ -19,7 +19,7 @@ public abstract class CustomNPCAbstract
 		NpcDatabase.registerNPC(name, location);
 	}
 	
-	public abstract void onInteraction(EntityPlayer player, EntityInteractEvent event);
+	public abstract void onInteraction(EntityPlayer player, PlayerInteractEvent.EntityInteract event);
 	
 	public Vec3d getLocation() {return location;}
 	public String getName() {return name;}

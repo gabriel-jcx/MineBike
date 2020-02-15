@@ -470,7 +470,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	@Override
 	public void onAttackEntityEvent(AttackEntityEvent event)
 	{
-		Entity e = event.target;
+		Entity e = event.getTarget();
 		if(e instanceof EntityCreeper)
 		{
 			e.setVelocity(e.motionX*4, 0.0, e.motionZ*4);

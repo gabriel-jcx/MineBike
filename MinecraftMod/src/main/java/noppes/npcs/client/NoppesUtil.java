@@ -215,7 +215,7 @@ public class NoppesUtil {
       int x = compound.getInteger("x");
       int y = compound.getInteger("y");
       int z = compound.getInteger("z");
-      TileEntity tile = player.worldObj.getTileEntity(x, y, z);
+      TileEntity tile = player.world.getTileEntity(x, y, z);
       tile.readFromNBT(compound);
       CustomNpcs.proxy.openGui(x, y, z, EnumGuiType.RedstoneBlock, player);
    }
@@ -224,7 +224,7 @@ public class NoppesUtil {
       int x = compound.getInteger("x");
       int y = compound.getInteger("y");
       int z = compound.getInteger("z");
-      TileEntity tile = player.worldObj.getTileEntity(x, y, z);
+      TileEntity tile = player.world.getTileEntity(x, y, z);
       tile.readFromNBT(compound);
       CustomNpcs.proxy.openGui(x, y, z, EnumGuiType.Waypoint, player);
    }

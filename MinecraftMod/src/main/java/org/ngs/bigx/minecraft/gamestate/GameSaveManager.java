@@ -212,7 +212,7 @@ public class GameSaveManager {
 		
 		QuestManager questManager;
 		
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 		{
 			if(BiGX.instance().clientContext.getQuestManager() == null)
 			{
@@ -287,7 +287,7 @@ public class GameSaveManager {
 		
 		QuestManager questManager;
 		
-		if(player.worldObj.isRemote)
+		if(player.world.isRemote)
 		{
 			if(BiGX.instance().clientContext.getQuestManager() == null)
 			{

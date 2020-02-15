@@ -12,7 +12,7 @@ public class GuiBigSign extends SubGuiNpcTextArea {
 
    public GuiBigSign(int x, int y, int z) {
       super("");
-      this.tile = (TileBigSign)super.player.worldObj.getTileEntity(x, y, z);
+      this.tile = (TileBigSign)super.player.world.getTileEntity(x, y, z);
       super.text = this.tile.getText();
    }
 

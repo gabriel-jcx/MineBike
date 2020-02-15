@@ -61,12 +61,12 @@ public class PlayerData implements IExtendedEntityProperties {
       this.uuid = data.getString("UUID");
       this.companionID = data.getInteger("PlayerCompanionId");
       if(data.hasKey("PlayerCompanion") && !this.hasCompanion()) {
-         EntityCustomNpc npc = new EntityCustomNpc(this.player.worldObj);
+         EntityCustomNpc npc = new EntityCustomNpc(this.player.world);
          npc.readEntityFromNBT(data.getCompoundTag("PlayerCompanion"));
          npc.setPosition(this.player.posX, this.player.posY, this.player.posZ);
          this.setCompanion(npc);
          ((RoleCompanion)npc.roleInterface).setSitting(false);
-         this.player.worldObj.spawnEntityInWorld(npc);
+         this.player.world.spawnEntityInWorld(npc);
       }
 
    }

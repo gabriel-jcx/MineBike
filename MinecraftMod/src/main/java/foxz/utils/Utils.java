@@ -12,7 +12,7 @@ public class Utils {
 
    public static List getNearbeEntityFromPlayer(Class cls, EntityPlayerMP player, int dis) {
       AxisAlignedBB range = player.boundingBox.expand((double)dis, (double)dis, (double)dis);
-      List list = player.worldObj.getEntitiesWithinAABB(cls, range);
+      List list = player.world.getEntitiesWithinAABB(cls, range);
       return list;
    }
 

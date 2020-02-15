@@ -64,7 +64,7 @@ import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -923,14 +923,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void countdownTick()
 	{
-		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
+		System.out.println("isClient[" + player.world.isRemote + "] countdown[" + countdown + "]");
 		
 		long timeNow = System.currentTimeMillis();
 		
 		if(countdown > 0){	
 			// REMOVE existing NPC
 			if (countdown == 4) {
-				for (Object o : player.worldObj.loadedEntityList) {
+				for (Object o : player.world.loadedEntityList) {
 					if (((Entity)o) instanceof EntityCustomNpc) {
 						((EntityCustomNpc)o).delete();
 					}
@@ -1003,7 +1003,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			// SPAWN a monster
 			else if (countdown == 1) 
 			{
-				if(player.worldObj.isRemote) {
+				if(player.world.isRemote) {
 				}
 				else
 				{
@@ -1174,7 +1174,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
 				sprintTickCount = sprintTickCountMax;
 				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
-				player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+				player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
 			}
 			
 			if(positionSelectionTickCount > 0)
@@ -1186,7 +1186,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				int nextPosition = (new Random()).nextInt(2) - 1;
 				positionSelectionTickCount = positionSelectionTickCountMax;
 				command.setRunStartX(nextPosition);
-				player.worldObj.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
+				player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
 			}
 			
 			long timeNow = System.currentTimeMillis();
@@ -1350,7 +1350,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	private void playFellDownSound() {
 		int randomNumber = (new Random()).nextInt() % 4 + 1;
-		player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+		player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 	}
 
 	public void handlePlayTimeOnClient()
@@ -1477,7 +1477,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //						System.out.println("[BiGX] FQ AF[!chasingQuestOnCountDown]");
 
 						player.setHealth(player.getMaxHealth());
-						if(!player.worldObj.isRemote)
+						if(!player.world.isRemote)
 						{
 							handlePlayTimeOnServer();
 							
@@ -1504,7 +1504,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 				}
 				
-				if(!player.worldObj.isRemote)
+				if(!player.world.isRemote)
 				{
 					((BigxServerContext)serverContext).updateQuestInformationToClient((BigxServerContext)serverContext);
 				}
@@ -1594,7 +1594,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		if(flagAccomplished)
 		{
 			// Play Monster Scream Sound
-			player.worldObj.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
 			
 			System.out.println("flagAccomplished");
 			
@@ -1773,7 +1773,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void init()
 	{
-		World world = player.worldObj;
+		World world = player.world;
 		isStunnedGuiHappend = false;
 		time = 0;
 		virtualCurrency = 0;
@@ -1816,7 +1816,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	}
 	
 	@Override
-	public void onNpcInteraction(EntityInteractEvent event) {
+	public void onNpcInteraction(PlayerInteractEvent.EntityInteract event) {
 		System.out.println("Interacting with NPC During Quest FQ");
 	}
 	
@@ -1825,7 +1825,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		synchronized (questManager) {
 			player = event.entityPlayer;
 			
-			if(!player.worldObj.isRemote)
+			if(!player.world.isRemote)
 			{
 				ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 				
@@ -1904,7 +1904,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 			// Play Monster Hit Sound
 			int randomNumber = (new Random()).nextInt() % 4 + 1;
-			player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 		}
 	}
 
@@ -1912,7 +1912,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public void unregisterEvents() {
 		QuestEventHandler.unregisterQuestEventAttack(this);
 		
-		if(!player.worldObj.isRemote){
+		if(!player.world.isRemote){
 			QuestEventHandler.unregisterQuestEventItemUse(this);
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 			QuestEventHandler.unregisterQuestEventItemPickUp(this);
@@ -1923,7 +1923,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	@Override
 	public void registerEvents() {
 		QuestEventHandler.registerQuestEventAttack(this);
-		if(!player.worldObj.isRemote)
+		if(!player.world.isRemote)
 		{
 			QuestEventHandler.registerQuestEventItemUse(this);
 			QuestEventHandler.registerQuestEventCheckComplete(this);
@@ -2047,14 +2047,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	public void onItemPickUp(EntityItemPickupEvent event) {
 		if(event.item.getEntityItem().getItem() == Items.feather)
 		{
-			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
 		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
 		{
-			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");
 			// Power Up Effect On
 			damageUpEffectTickCount = damageUpEffectTickCountMax;

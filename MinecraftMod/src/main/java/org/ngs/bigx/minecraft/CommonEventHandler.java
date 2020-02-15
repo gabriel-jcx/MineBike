@@ -51,7 +51,7 @@ import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
@@ -114,9 +114,9 @@ public class CommonEventHandler {
 		
 		if(event.player != null)
 		{	
-			if(!event.player.worldObj.isRemote)
+			if(!event.player.world.isRemote)
 			{
-				if( (event.player.worldObj.provider.dimensionId == 0) || (event.player.worldObj.provider.dimensionId == 105) )
+				if( (event.player.world.provider.dimensionId == 0) || (event.player.world.provider.dimensionId == 105) )
 				{
 					if(!( (event.player.posX >= 70) && (event.player.posX <=132) &&
 						(event.player.posY >= 45) && (event.player.posY <= 100) &&
@@ -164,7 +164,7 @@ public class CommonEventHandler {
 			}
 		}
 		
-		if (event.player.worldObj.isRemote)
+		if (event.player.world.isRemote)
 		{	
 			if(GameSaveManager.flagEnableChasingQuestClient)
 			{
@@ -229,7 +229,7 @@ public class CommonEventHandler {
 			}
 		}
 		
-		if (!event.player.worldObj.isRemote)
+		if (!event.player.world.isRemote)
 		{
 			if(GuiMonsterAppears.isGuiMonsterAppearsClosed)
 			{
@@ -252,7 +252,7 @@ public class CommonEventHandler {
 //						{
 //							for(int k=-1; k<2; k++) // x
 //							{
-//								if(event.player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.AIR)
+//								if(event.player.world.getBlock(origX + k, origY + j, origZ + i) == Blocks.AIR)
 //								{
 //									origX = origX + k;
 //									origY = origY + j;
@@ -262,7 +262,7 @@ public class CommonEventHandler {
 //							}
 //						}
 //					}
-					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.worldObj.provider.dimensionId, origX, origY, origZ);
+					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.world.provider.dimensionId, origX, origY, origZ);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 				} catch (QuestException e) {
 					e.printStackTrace();
@@ -402,7 +402,7 @@ public class CommonEventHandler {
 		ItemStack itemOnPlayersHand= p.getHeldItem();
 		
 		if (itemOnPlayersHand != null){
-			if (itemOnPlayersHand.getItem() == Items.enchanted_book){
+			if (itemOnPlayersHand.getItem() == Items.ENCHANTED_BOOK){
 				if (itemOnPlayersHand.getDisplayName().contains("Skill")){
 					System.out.println("Adding Skill!");	
 					BigxClientContext context = BiGX.instance().clientContext;
@@ -461,33 +461,33 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onAttackEntityEvent(AttackEntityEvent event) {
-		if (event.target.worldObj.isRemote){
-			if (event.target.toString().contains("Scientist"))
+		if (event.getTarget().worldObj.isRemote){
+			if (event.getTarget().toString().contains("Scientist"))
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
-			else if (event.target.dimension == 0)
+			else if (event.getTarget().dimension == 0)
 				return;
-			else if (event.target.dimension == 102){
+			else if (event.getTarget().dimension == 102){
 				BiGXEventTriggers.attackNPC(event);
 			}
 			else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
 				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
+				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.getTarget());
 			}
 		}
 //		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
-//			if (event.target.toString().contains("Scientist"))
+//			if (event.getTarget().toString().contains("Scientist"))
 //				return;
-//			else if (event.target.dimension == 0)
+//			else if (event.getTarget().dimension == 0)
 //				return;
-//			else if (event.target.dimension == 102)
+//			else if (event.getTarget().dimension == 102)
 //				BiGXEventTriggers.attackNPC(event);
 //			Quest activeQuest = BiGX.instance().serverContext.getQuestManager().getActiveQuest();
 //			QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-//			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.target);
+//			tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.getTarget());
 //		}
 		else {
-			if (event.target.dimension == 0 || event.target.dimension == 102) {
+			if (event.getTarget().dimension == 0 || event.getTarget().dimension == 102) {
 				BiGXEventTriggers.attackNPC(event);
 			}
 		}

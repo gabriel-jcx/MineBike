@@ -90,7 +90,7 @@ import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -1009,7 +1009,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	public void countdownTick()
 	{
-		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
+		System.out.println("isClient[" + player.world.isRemote + "] countdown[" + countdown + "]");
 		
 		long timeNow = System.currentTimeMillis();
 		
@@ -1021,16 +1021,16 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		
 		// PLAY SOUND
 		if (countdown == 2 || countdown == 1) {
-			player.worldObj.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
 //			player.playSound("minebike:beep-ready", 1.0f, 1.0f);
 		} else if (countdown == 0) {
-			player.worldObj.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
 //			player.playSound("minebike:beep-go", 1.0f, 1.0f);
 		}
 		
 		if(countdown > 0){	
 			if (countdown == 7) {
-				for (Object o : player.worldObj.loadedEntityList) {
+				for (Object o : player.world.loadedEntityList) {
 					if (((Entity)o) instanceof EntityCustomNpc) {
 						((EntityCustomNpc)o).delete();
 					}
@@ -1046,7 +1046,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				npcFellDownTimestamp = 0;
 			}
 			if (countdown == 5) {
-				if(player.worldObj.isRemote) {
+				if(player.world.isRemote) {
 				}
 				else
 				{
@@ -1158,7 +1158,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				synchronized (clientContext) {
 					if(Minecraft.getMinecraft().currentScreen == null)
 					{
-//						if(player.worldObj.isRemote) 
+//						if(player.world.isRemote) 
 						{
 							System.out.println("BIGX: Show Gui Chasing Quest Instruction");
 							Minecraft.getMinecraft().displayGuiScreen(new GuiChasingQuestInstruction(BiGX.instance().clientContext, Minecraft.getMinecraft()));
@@ -1201,7 +1201,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					System.out.println("Thief's level is: " + getThiefLevel());
 					thiefLevelSet = true;
 				}
-				if(player.worldObj.isRemote) {
+				if(player.world.isRemote) {
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
 				}
 			}
@@ -1341,7 +1341,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				}
 				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
 				if(thiefLevel>1)
-					player.worldObj.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+					player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
 			}
 			
 			if(positionSelectionTickCount > 0)
@@ -1353,7 +1353,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				int nextPosition = (new Random()).nextInt(2) - 1;
 				positionSelectionTickCount = positionSelectionTickCountMax;
 				command.setRunStartX(nextPosition);
-				player.worldObj.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
+				player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
 			}
 			
 			long timeNow = System.currentTimeMillis();
@@ -1519,7 +1519,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	private void playFellDownSound() {
 		int randomNumber = (new Random()).nextInt() % 4 + 1;
-		player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+		player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 	}
 
 	public void handlePlayTimeOnClient()
@@ -1631,7 +1631,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						// BUILD CENTER
 						// BUILD SIDE
 						player.setHealth(player.getMaxHealth());
-						if(!player.worldObj.isRemote)
+						if(!player.world.isRemote)
 						{
 							handlePlayTimeOnServer();
 							
@@ -1648,7 +1648,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					}
 				}
 				
-				if(!player.worldObj.isRemote)
+				if(!player.world.isRemote)
 				{
 					((BigxServerContext)serverContext).updateQuestInformationToClient((BigxServerContext)serverContext);
 				}
@@ -1735,7 +1735,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		if(flagAccomplished)
 		{
 			// Play Monster Scream Sound
-			player.worldObj.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
 			
 			flagAccomplished = false;
 			isRewardState = true;
@@ -2005,7 +2005,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	@Override
 	public void init()
 	{
-		World world = player.worldObj;
+		World world = player.world;
 		time = 0;
 		virtualCurrency = 0;
 		initThiefStat();
@@ -2053,13 +2053,13 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 	
 	@Override
-	public void onNpcInteraction(EntityInteractEvent event) {
+	public void onNpcInteraction(PlayerInteractEvent.EntityInteract event) {
 		System.out.println("Interacting with NPC During Quest");
 		
-		if(!player.worldObj.isRemote)
+		if(!player.world.isRemote)
 		{
-			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
-				if(player.worldObj.provider.dimensionId != 0)
+			if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
+				if(player.world.provider.dimensionId != 0)
 					return;
 					
 				try {
@@ -2080,7 +2080,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //					{
 //						for(int k=-1; k<2; k++) // x
 //						{
-//							if(player.worldObj.getBlock(origX + k, origY + j, origZ + i) == Blocks.AIR)
+//							if(player.world.getBlock(origX + k, origY + j, origZ + i) == Blocks.AIR)
 //							{
 //								origX = origX + k;
 //								origY = origY + j;
@@ -2102,7 +2102,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		synchronized (questManager) {
 			player = event.entityPlayer;
 			
-			if(!player.worldObj.isRemote)
+			if(!player.world.isRemote)
 			{
 				ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 				
@@ -2180,7 +2180,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 			// Play Monster Hit Sound
 			int randomNumber = (new Random()).nextInt() % 4 + 1;
-			player.worldObj.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 		}
 	}
 
@@ -2188,7 +2188,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	public void unregisterEvents() {
 		QuestEventHandler.unregisterQuestEventAttack(this);
 		
-		if(!player.worldObj.isRemote){
+		if(!player.world.isRemote){
 			QuestEventHandler.unregisterQuestEventItemUse(this);
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 			QuestEventHandler.unregisterQuestEventItemPickUp(this);
@@ -2199,7 +2199,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	@Override
 	public void registerEvents() {
 		QuestEventHandler.registerQuestEventAttack(this);
-		if(!player.worldObj.isRemote)
+		if(!player.world.isRemote)
 		{
 			QuestEventHandler.registerQuestEventItemUse(this);
 			QuestEventHandler.registerQuestEventCheckComplete(this);
@@ -2336,14 +2336,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	public void onItemPickUp(EntityItemPickupEvent event) {
 		if(event.item.getEntityItem().getItem() == Items.feather)
 		{
-			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
 		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
 		{
-			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");
 			// Power Up Effect On
 			damageUpEffectTickCount = damageUpEffectTickCountMax;

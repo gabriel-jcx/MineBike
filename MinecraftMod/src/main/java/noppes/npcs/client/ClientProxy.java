@@ -506,7 +506,7 @@ public class ClientProxy extends CommonProxy {
 
    public void openGui(EntityPlayer player, Object guiscreen) {
       Minecraft minecraft = Minecraft.getMinecraft();
-      if(player.worldObj.isRemote && guiscreen instanceof GuiScreen) {
+      if(player.world.isRemote && guiscreen instanceof GuiScreen) {
          if(guiscreen != null) {
             minecraft.displayGuiScreen((GuiScreen)guiscreen);
          }
@@ -525,7 +525,7 @@ public class ClientProxy extends CommonProxy {
          int particles = ((Integer)ob[1]).intValue();
 
          for(int npc = 0; npc < particles; ++npc) {
-            Random minecraft = player.worldObj.rand;
+            Random minecraft = player.world.rand;
             height = (minecraft.nextDouble() - 0.5D) * (double)player.width;
             double rand = (double)player.getEyeHeight();
             x = (minecraft.nextDouble() - 0.5D) * (double)player.width;
@@ -555,7 +555,7 @@ public class ClientProxy extends CommonProxy {
                f = (var28.nextDouble() - 0.5D) * 2.0D;
                double f1 = -var28.nextDouble();
                double f2 = (var28.nextDouble() - 0.5D) * 2.0D;
-               var27.effectRenderer.addEffect(new EntityRainbowFX(player.worldObj, x, y, z, f, f1, f2));
+               var27.effectRenderer.addEffect(new EntityRainbowFX(player.world, x, y, z, f, f1, f2));
             }
          }
       }

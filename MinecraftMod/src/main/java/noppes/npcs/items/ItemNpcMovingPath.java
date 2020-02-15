@@ -90,7 +90,7 @@ public class ItemNpcMovingPath extends Item {
 
    @SideOnly(Side.CLIENT)
    public void registerIcons(IIconRegister par1IconRegister) {
-      super.itemIcon = Items.iron_sword.getIconFromDamage(0);
+      super.itemIcon = Items.IRON_SWORD.getIconFromDamage(0);
    }
 
    public Item setUnlocalizedName(String name) {

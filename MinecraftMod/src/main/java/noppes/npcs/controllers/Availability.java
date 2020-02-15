@@ -149,14 +149,14 @@ public class Availability implements ICompatibilty {
    public boolean isAvailable(EntityPlayer player) {
       long time;
       if(this.daytime == EnumDayTime.Day) {
-         time = player.worldObj.getWorldTime() % 24000L;
+         time = player.world.getWorldTime() % 24000L;
          if(time > 12000L) {
             return false;
          }
       }
 
       if(this.daytime == EnumDayTime.Night) {
-         time = player.worldObj.getWorldTime() % 24000L;
+         time = player.world.getWorldTime() % 24000L;
          if(time < 12000L) {
             return false;
          }

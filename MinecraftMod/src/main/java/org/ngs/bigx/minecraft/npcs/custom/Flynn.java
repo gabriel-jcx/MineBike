@@ -7,7 +7,7 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class Flynn extends CustomNPCAbstract 
 {
@@ -29,7 +29,7 @@ public class Flynn extends CustomNPCAbstract
 	}
 	
 	@Override
-	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
+	public void onInteraction(EntityPlayer player, PlayerInteractEvent.EntityInteract event) 
 	{
 		CustomQuestJson json = new CustomQuestJson(quest);
 		//the quest breaks if you don't reset it like this. 

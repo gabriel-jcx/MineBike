@@ -18,7 +18,7 @@ public class GuiNpcRedstoneBlock extends GuiNPCInterface {
 
 
    public GuiNpcRedstoneBlock(int x, int y, int z) {
-      this.tile = (TileRedstoneBlock)super.player.worldObj.getTileEntity(x, y, z);
+      this.tile = (TileRedstoneBlock)super.player.world.getTileEntity(x, y, z);
    }
 
    public void initGui() {

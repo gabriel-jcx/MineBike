@@ -162,7 +162,7 @@ public class PixelmonHelper {
             ob = m.invoke(ob, new Object[]{player});
             e = Class.forName("com.pixelmonmod.pixelmon.storage.PlayerStorage");
             m = e.getMethod("getFirstAblePokemon", new Class[]{World.class});
-            Entity pixelmon = (Entity)m.invoke(ob, new Object[]{player.worldObj});
+            Entity pixelmon = (Entity)m.invoke(ob, new Object[]{player.world});
             Class cEntity = Class.forName("com.pixelmonmod.pixelmon.entities.pixelmon.EntityPixelmon");
             m = e.getMethod("EntityAlreadyExists", new Class[]{cEntity});
             if(!((Boolean)m.invoke(ob, new Object[]{pixelmon})).booleanValue()) {

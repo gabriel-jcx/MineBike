@@ -18,7 +18,7 @@ public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 
 
    public GuiBorderBlock(int x, int y, int z) {
-      this.tile = (TileBorder)super.player.worldObj.getTileEntity(x, y, z);
+      this.tile = (TileBorder)super.player.world.getTileEntity(x, y, z);
       Client.sendData(EnumPacketServer.GetTileEntity, new Object[]{Integer.valueOf(x), Integer.valueOf(y), Integer.valueOf(z)});
    }
 

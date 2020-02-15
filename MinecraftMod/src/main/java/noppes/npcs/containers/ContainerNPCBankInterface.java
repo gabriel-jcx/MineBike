@@ -33,7 +33,7 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
       }
 
       NpcMiscInventory items = new NpcMiscInventory(54);
-      if(!player.worldObj.isRemote) {
+      if(!player.world.isRemote) {
          this.data = PlayerDataController.instance.getBankData(player, bankid);
          items = (NpcMiscInventory)this.data.getBankOrDefault(bankid).itemSlots.get(Integer.valueOf(slot));
       }
@@ -93,7 +93,7 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
 
    public void onContainerClosed(EntityPlayer entityplayer) {
       super.onContainerClosed(entityplayer);
-      if(!entityplayer.worldObj.isRemote) {
+      if(!entityplayer.world.isRemote) {
          ItemStack var3 = this.currencyMatrix.getStackInSlot(0);
          this.currencyMatrix.setInventorySlotContents(0, (ItemStack)null);
          if(var3 != null) {

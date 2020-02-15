@@ -199,8 +199,8 @@ public class NoppesUtilServer {
       if(player instanceof EntityPlayerMP) {
          setEditingNpc(player, npc);
          sendExtraData(player, npc, gui, i, j, k);
-         if(CustomNpcs.proxy.getServerGuiElement(gui.ordinal(), player, player.worldObj, i, j, k) != null) {
-            player.openGui(CustomNpcs.instance, gui.ordinal(), player.worldObj, i, j, k);
+         if(CustomNpcs.proxy.getServerGuiElement(gui.ordinal(), player, player.world, i, j, k) != null) {
+            player.openGui(CustomNpcs.instance, gui.ordinal(), player.world, i, j, k);
          } else {
             Server.sendData((EntityPlayerMP)player, EnumPacketClient.GUI, new Object[]{Integer.valueOf(gui.ordinal()), Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(k)});
             ArrayList list = getScrollData(player, gui, npc);
@@ -265,8 +265,8 @@ public class NoppesUtilServer {
       if(comp.getString("id").equalsIgnoreCase("entityhorse")) {
          player.addChatMessage(new ChatComponentTranslation("Currently you cant create horse spawner, its a minecraft bug", new Object[0]));
       } else {
-         player.worldObj.setBlock(x, y, z, Blocks.mob_spawner);
-         TileEntityMobSpawner tile = (TileEntityMobSpawner)player.worldObj.getTileEntity(x, y, z);
+         player.world.setBlock(x, y, z, Blocks.mob_spawner);
+         TileEntityMobSpawner tile = (TileEntityMobSpawner)player.world.getTileEntity(x, y, z);
          MobSpawnerBaseLogic logic = tile.func_145881_a();
          WeightedRandomMinecart var10001;
          logic.getClass();
@@ -571,7 +571,7 @@ public class NoppesUtilServer {
       int x = compound.getInteger("x");
       int y = compound.getInteger("y");
       int z = compound.getInteger("z");
-      TileEntity tile = player.worldObj.getTileEntity(x, y, z);
+      TileEntity tile = player.world.getTileEntity(x, y, z);
       if(tile != null) {
          tile.readFromNBT(compound);
       }
@@ -600,7 +600,7 @@ public class NoppesUtilServer {
    }
 
    public static void sendNearbyNpcs(EntityPlayerMP player) {
-      List npcs = player.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, player.boundingBox.expand(120.0D, 120.0D, 120.0D));
+      List npcs = player.world.getEntitiesWithinAABB(EntityNPCInterface.class, player.boundingBox.expand(120.0D, 120.0D, 120.0D));
       HashMap map = new HashMap();
       Iterator var3 = npcs.iterator();
 

@@ -82,7 +82,7 @@
 ////import net.minecraft.world.WorldSettings.GameType;
 //import net.minecraftforge.common.util.EnumFacing;
 //import net.minecraftforge.event.entity.player.AttackEntityEvent;
-//import org.bukkit.event.entity.EntityInteractEvent;
+//import net.minecraftforge.event.entity.player.PlayerInteractEvent
 //import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 //import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 //import noppes.npcs.entity.EntityCustomNpc;
@@ -910,7 +910,7 @@
 ////				WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 ////				Quest quest;
 ////				
-////				if(player.worldObj.isRemote)
+////				if(player.world.isRemote)
 ////				{
 ////					System.out.println("QUEST WIN CONDITION NEW QUEST GENERATION: CLIENT");
 ////					quest = new Quest(newQuestID, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
@@ -1022,7 +1022,7 @@
 //	
 //	public void countdownTick()
 //	{
-//		System.out.println("isClient[" + player.worldObj.isRemote + "] countdown[" + countdown + "]");
+//		System.out.println("isClient[" + player.world.isRemote + "] countdown[" + countdown + "]");
 //		
 //		long timeNow = System.currentTimeMillis();
 //		
@@ -1033,16 +1033,16 @@
 //		
 //		// PLAY SOUND
 //		if (countdown == 2 || countdown == 1) {
-//			player.worldObj.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
+//			player.world.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
 ////			player.playSound("minebike:beep-ready", 1.0f, 1.0f);
 //		} else if (countdown == 0) {
-//			player.worldObj.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
+//			player.world.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
 ////			player.playSound("minebike:beep-go", 1.0f, 1.0f);
 //		}
 //		
 //		if(countdown > 0){	
 //			if (countdown == 7) {
-//				for (Object o : player.worldObj.loadedEntityList) {
+//				for (Object o : player.world.loadedEntityList) {
 //					if (((Entity)o) instanceof EntityCustomNpc) {
 //						((EntityCustomNpc)o).delete();
 //					}
@@ -1055,7 +1055,7 @@
 //				endingZ = (int)player.posZ;
 //			}
 //			if (countdown == 5) {
-//				if(player.worldObj.isRemote) {
+//				if(player.world.isRemote) {
 //				}
 //				else
 //				{
@@ -1192,7 +1192,7 @@
 //					System.out.println("Thief's level is: " + getThiefLevel());
 //					thiefLevelSet = true;
 //				}
-//				if(player.worldObj.isRemote) {
+//				if(player.world.isRemote) {
 //					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
 //				}
 //			}
@@ -1490,7 +1490,7 @@
 //						// BUILD CENTER
 //						// BUILD SIDE
 //						player.setHealth(player.getMaxHealth());
-//						if(!player.worldObj.isRemote)
+//						if(!player.world.isRemote)
 //							handlePlayTimeOnServer();
 //						else
 //						{
@@ -1500,7 +1500,7 @@
 //					}
 //				}
 //				
-//				if(!player.worldObj.isRemote)
+//				if(!player.world.isRemote)
 //				{
 //					((BigxServerContext)serverContext).updateQuestInformationToClient((BigxServerContext)serverContext);
 //				}
@@ -1705,7 +1705,7 @@
 //	@Override
 //	public void init()
 //	{
-//		World world = player.worldObj;
+//		World world = player.world;
 //		time = 0;
 //		virtualCurrency = 0;
 //		initThiefStat();
@@ -1746,13 +1746,13 @@
 //	}
 //	
 //	@Override
-//	public void onNpcInteraction(EntityInteractEvent event) {
+//	public void onNpcInteraction(PlayerInteractEvent.EntityInteract event) {
 //		System.out.println("Interacting with NPC During Quest");
 //		EntityPlayer player = event.entityPlayer;
 //		
-//		if(!player.worldObj.isRemote)
+//		if(!player.world.isRemote)
 //		{
-//			if (BiGXEventTriggers.checkEntityInArea(event.target, NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
+//			if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
 //				handleQuestStart();
 //			}
 //		}
@@ -1763,7 +1763,7 @@
 //		synchronized (questManager) {
 //			player = event.entityPlayer;
 //			
-//			if(!player.worldObj.isRemote)
+//			if(!player.world.isRemote)
 //			{
 //				ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
 //				
@@ -1833,7 +1833,7 @@
 //	public void unregisterEvents() {
 //		QuestEventHandler.unregisterQuestEventAttack(this);
 //		
-//		if(!player.worldObj.isRemote){
+//		if(!player.world.isRemote){
 //			QuestEventHandler.unregisterQuestEventItemUse(this);
 //			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 //			QuestEventHandler.unregisterQuestEventItemPickUp(this);
@@ -1844,7 +1844,7 @@
 //	@Override
 //	public void registerEvents() {
 //		QuestEventHandler.registerQuestEventAttack(this);
-//		if(!player.worldObj.isRemote)
+//		if(!player.world.isRemote)
 //		{
 //			QuestEventHandler.registerQuestEventItemUse(this);
 //			QuestEventHandler.registerQuestEventCheckComplete(this);
@@ -1981,14 +1981,14 @@
 //	public void onItemPickUp(EntityItemPickupEvent event) {
 //		if(event.item.getEntityItem().getItem() == Items.feather)
 //		{
-//			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+//			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 //			System.out.println("speedUpEffectTickCount refresh");
 //			// Speed Up Effect On
 //			speedUpEffectTickCount = speedUpEffectTickCountMax;
 //		}
 //		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
 //		{
-//			player.worldObj.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+//			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 //			System.out.println("damageUpEffectTickCount refresh");
 //			// Power Up Effect On
 //			damageUpEffectTickCount = damageUpEffectTickCountMax;

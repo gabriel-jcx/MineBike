@@ -45,7 +45,7 @@ public class ItemMachineGun extends ItemNpcInterface {
    }
 
    public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
-      if(!player.worldObj.isRemote) {
+      if(!player.world.isRemote) {
          int ticks = this.getMaxItemUseDuration(stack) - count;
          if(ticks % 6 == 0) {
             int shotsleft = stack.stackTagCompound.getInteger("ShotsLeft") - ticks / 6;
@@ -54,19 +54,19 @@ public class ItemMachineGun extends ItemNpcInterface {
             } else {
                if(stack.stackTagCompound.getBoolean("Reloading2") && this.hasItem(player, CustomItems.bulletBlack)) {
                   if(ticks > 0 && ticks <= 24) {
-                     player.worldObj.playSoundAtEntity(player, "customnpcs:gun.ak47.load", 1.0F, 1.0F);
+                     player.world.playSoundAtEntity(player, "customnpcs:gun.ak47.load", 1.0F, 1.0F);
                   }
 
                   return;
                }
 
                if(shotsleft <= 0 || !this.hasItem(player, CustomItems.bulletBlack) || !CustomNpcs.GunsEnabled) {
-                  player.worldObj.playSoundAtEntity(player, "customnpcs:gun.empty", 1.0F, 1.0F);
+                  player.world.playSoundAtEntity(player, "customnpcs:gun.empty", 1.0F, 1.0F);
                   return;
                }
             }
 
-            EntityProjectile projectile = new EntityProjectile(player.worldObj, player, new ItemStack(CustomItems.bulletBlack, 1, 0), false);
+            EntityProjectile projectile = new EntityProjectile(player.world, player, new ItemStack(CustomItems.bulletBlack, 1, 0), false);
             projectile.damage = 4.0F;
             projectile.setSpeed(40);
             projectile.shoot(2.0F);
@@ -74,8 +74,8 @@ public class ItemMachineGun extends ItemNpcInterface {
                this.consumeItem(player, CustomItems.bulletBlack);
             }
 
-            player.worldObj.playSoundAtEntity(player, "customnpcs:gun.pistol.shot", 0.9F, Item.itemRand.nextFloat() * 0.3F + 0.8F);
-            player.worldObj.spawnEntityInWorld(projectile);
+            player.world.playSoundAtEntity(player, "customnpcs:gun.pistol.shot", 0.9F, Item.itemRand.nextFloat() * 0.3F + 0.8F);
+            player.world.spawnEntityInWorld(projectile);
          }
       }
    }

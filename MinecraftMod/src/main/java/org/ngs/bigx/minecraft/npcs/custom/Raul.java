@@ -6,7 +6,7 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class Raul extends CustomNPCAbstract 
 {
@@ -29,7 +29,7 @@ public class Raul extends CustomNPCAbstract
 	}
 	
 	@Override
-	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
+	public void onInteraction(EntityPlayer player, PlayerInteractEvent.EntityInteract event) 
 	{
 		System.out.println("Interacting with raul!");
 		quest.start();

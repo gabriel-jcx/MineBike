@@ -188,7 +188,7 @@ public class PacketHandlerServer {
       } else {
          NBTTagCompound faction;
          if(type == EnumPacketServer.GetTileEntity) {
-            TileEntity compound = player.worldObj.getTileEntity(buffer.readInt(), buffer.readInt(), buffer.readInt());
+            TileEntity compound = player.world.getTileEntity(buffer.readInt(), buffer.readInt(), buffer.readInt());
             faction = new NBTTagCompound();
             compound.writeToNBT(faction);
             Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{faction});
@@ -327,14 +327,14 @@ public class PacketHandlerServer {
             } else {
                Entity market2;
                if(type == EnumPacketServer.RemoteMainMenu) {
-                  market2 = player.worldObj.getEntityByID(buffer.readInt());
+                  market2 = player.world.getEntityByID(buffer.readInt());
                   if(market2 == null || !(market2 instanceof EntityNPCInterface)) {
                      return;
                   }
 
                   NoppesUtilServer.sendOpenGui(player, EnumGuiType.MainMenuDisplay, (EntityNPCInterface)market2);
                } else if(type == EnumPacketServer.RemoteDelete) {
-                  market2 = player.worldObj.getEntityByID(buffer.readInt());
+                  market2 = player.world.getEntityByID(buffer.readInt());
                   if(market2 == null || !(market2 instanceof EntityNPCInterface)) {
                      return;
                   }
@@ -350,7 +350,7 @@ public class PacketHandlerServer {
                   CustomNpcs.FreezeNPCs = !CustomNpcs.FreezeNPCs;
                   Server.sendData(player, EnumPacketClient.SCROLL_SELECTED, new Object[]{CustomNpcs.FreezeNPCs?"Unfreeze Npcs":"Freeze Npcs"});
                } else if(type == EnumPacketServer.RemoteReset) {
-                  market2 = player.worldObj.getEntityByID(buffer.readInt());
+                  market2 = player.world.getEntityByID(buffer.readInt());
                   if(market2 == null || !(market2 instanceof EntityNPCInterface)) {
                      return;
                   }
@@ -358,7 +358,7 @@ public class PacketHandlerServer {
                   npc = (EntityNPCInterface)market2;
                   npc.reset();
                } else if(type == EnumPacketServer.RemoteTpToNpc) {
-                  market2 = player.worldObj.getEntityByID(buffer.readInt());
+                  market2 = player.world.getEntityByID(buffer.readInt());
                   if(market2 == null || !(market2 instanceof EntityNPCInterface)) {
                      return;
                   }
@@ -442,7 +442,7 @@ public class PacketHandlerServer {
                                        bo1 = buffer.readInt();
                                        market8.readNBT(Server.readNBT(buffer));
                                        NoppesUtilServer.setEditingQuest(player, market8);
-                                       player.openGui(CustomNpcs.instance, bo1, player.worldObj, 0, 0, 0);
+                                       player.openGui(CustomNpcs.instance, bo1, player.world, 0, 0, 0);
                                     } else {
                                        Dialog market9;
                                        if(type == EnumPacketServer.DialogRemove) {
@@ -687,7 +687,7 @@ public class PacketHandlerServer {
                                                       market13.setBoolean("RoleData", true);
                                                       Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{npc.roleInterface.writeToNBT(market13)});
                                                    } else if(type == EnumPacketServer.MerchantUpdate) {
-                                                      market2 = player.worldObj.getEntityByID(buffer.readInt());
+                                                      market2 = player.world.getEntityByID(buffer.readInt());
                                                       if(market2 == null || !(market2 instanceof EntityVillager)) {
                                                          return;
                                                       }
@@ -702,7 +702,7 @@ public class PacketHandlerServer {
                                                       PlayerMail market15 = new PlayerMail();
                                                       market15.readNBT(Server.readNBT(buffer));
                                                       ContainerMail.staticmail = market15;
-                                                      player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 1, 0, 0);
+                                                      player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.world, 1, 0, 0);
                                                    } else if(type == EnumPacketServer.TransformSave) {
                                                       boolean market16 = npc.transform.isValid();
                                                       npc.transform.readOptions(Server.readNBT(buffer));
@@ -748,8 +748,8 @@ public class PacketHandlerServer {
 
    private void mountPackets(EnumPacketServer type, ByteBuf buffer, EntityPlayerMP player) throws IOException {
       if(type == EnumPacketServer.SpawnRider) {
-         Entity list = EntityList.createEntityFromNBT(Server.readNBT(buffer), player.worldObj);
-         player.worldObj.spawnEntityInWorld(list);
+         Entity list = EntityList.createEntityFromNBT(Server.readNBT(buffer), player.world);
+         player.world.spawnEntityInWorld(list);
          list.mountEntity(ServerEventsHandler.mounted);
       } else if(type == EnumPacketServer.PlayerRider) {
          player.mountEntity(ServerEventsHandler.mounted);
@@ -792,7 +792,7 @@ public class PacketHandlerServer {
             return;
          }
 
-         Entity entity = NoppesUtilServer.spawnClone(compound1, compound, name, name1, player.worldObj);
+         Entity entity = NoppesUtilServer.spawnClone(compound1, compound, name, name1, player.world);
          if(entity == null) {
             player.addChatMessage(new ChatComponentText("Failed to create an entity out of your clone"));
             return;

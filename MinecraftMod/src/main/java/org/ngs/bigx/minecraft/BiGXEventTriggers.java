@@ -68,7 +68,7 @@ public class BiGXEventTriggers {
 			//if (event.entityPlayer.getHeldItem() != null && event.entityPlayer.getHeldItem().getDisplayName().contains("Wooden Sword"))
 				deduction = 2; //System.out.println(event.entityPlayer.getHeldItem().getDisplayName());
 			if (event.getTarget().world.isRemote){
-				//if(event.target.world.isRemote){
+				//if(event.getTarget().world.isRemote){
 				GuiDamage.addDamageText(deduction, 255, 10, 10);
 				NpcEvents.botHealth -= deduction;
 			}
@@ -79,7 +79,7 @@ public class BiGXEventTriggers {
 					botHitClient = false;
 					botHitServer = false;
 				}
-				//event.target.setDead();
+				//event.getTarget().setDead();
 			}
 		}
 	}

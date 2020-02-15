@@ -188,7 +188,7 @@ public class TRONQuest extends CustomQuestAbstract
 	@Override
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event)
 	{
-		if (event.player.worldObj.provider.dimensionId != WorldProviderTRON.TRONDIMENSIONID) // makes sure the player
+		if (event.player.world.provider.dimensionId != WorldProviderTRON.TRONDIMENSIONID) // makes sure the player
 																								// has finished spawning
 		{
 			return;

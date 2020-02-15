@@ -61,8 +61,8 @@ public class ItemGun extends ItemNpcInterface implements IProjectileCallback {
 
    public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
       int ticks = this.getMaxItemUseDuration(stack) - count;
-      if(ticks == 8 && !player.worldObj.isRemote) {
-         player.worldObj.playSoundAtEntity(player, "customnpcs:gun.pistol.trigger", 1.0F, 1.0F / (player.worldObj.rand.nextFloat() * 0.4F + 0.8F));
+      if(ticks == 8 && !player.world.isRemote) {
+         player.world.playSoundAtEntity(player, "customnpcs:gun.pistol.trigger", 1.0F, 1.0F / (player.world.rand.nextFloat() * 0.4F + 0.8F));
       }
 
    }

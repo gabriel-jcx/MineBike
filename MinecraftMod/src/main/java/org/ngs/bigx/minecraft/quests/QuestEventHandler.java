@@ -191,7 +191,7 @@ public class QuestEventHandler {
 		{
 			tickCountOneSecond = 0;
 			
-			if (!event.player.worldObj.isRemote)
+			if (!event.player.world.isRemote)
 			{
 				if(questEventCheckCompleteList != null)
 				{

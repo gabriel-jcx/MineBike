@@ -22,13 +22,13 @@ public class ItemMusket extends ItemNpcInterface {
    }
 
    public void onPlayerStoppedUsing(ItemStack stack, World par2World, EntityPlayer player, int count) {
-      if(!player.worldObj.isRemote) {
+      if(!player.world.isRemote) {
          if((stack.stackTagCompound.getBoolean("IsLoaded2") || player.capabilities.isCreativeMode) && CustomNpcs.GunsEnabled) {
             if(stack.stackTagCompound.getBoolean("Reloading2") && !player.capabilities.isCreativeMode) {
                stack.stackTagCompound.setBoolean("Reloading2", false);
             } else {
                stack.damageItem(1, player);
-               EntityProjectile projectile = new EntityProjectile(player.worldObj, player, new ItemStack(CustomItems.bulletBlack, 1, 0), false);
+               EntityProjectile projectile = new EntityProjectile(player.world, player, new ItemStack(CustomItems.bulletBlack, 1, 0), false);
                projectile.damage = 16.0F;
                projectile.setSpeed(50);
                projectile.setParticleEffect(EnumParticleType.Smoke);
@@ -37,23 +37,23 @@ public class ItemMusket extends ItemNpcInterface {
                   this.consumeItem(player, CustomItems.bulletBlack);
                }
 
-               player.worldObj.playSoundAtEntity(player, "random.explode", 0.9F, Item.itemRand.nextFloat() * 0.3F + 1.8F);
-               player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 2.0F, Item.itemRand.nextFloat() * 0.3F + 1.8F);
-               player.worldObj.spawnEntityInWorld(projectile);
+               player.world.playSoundAtEntity(player, "random.explode", 0.9F, Item.itemRand.nextFloat() * 0.3F + 1.8F);
+               player.world.playSoundAtEntity(player, "ambient.weather.thunder", 2.0F, Item.itemRand.nextFloat() * 0.3F + 1.8F);
+               player.world.spawnEntityInWorld(projectile);
                stack.stackTagCompound.setBoolean("IsLoaded2", false);
             }
          } else {
-            player.worldObj.playSoundAtEntity(player, "customnpcs:gun.empty", 1.0F, 1.0F);
+            player.world.playSoundAtEntity(player, "customnpcs:gun.empty", 1.0F, 1.0F);
          }
       }
    }
 
    public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
-      if(!player.worldObj.isRemote) {
+      if(!player.world.isRemote) {
          int ticks = this.getMaxItemUseDuration(stack) - count;
          if(!player.capabilities.isCreativeMode && stack.stackTagCompound.getBoolean("Reloading2") && this.hasItem(player, CustomItems.bulletBlack)) {
             if(ticks == 60) {
-               player.worldObj.playSoundAtEntity(player, "customnpcs:gun.ak47.load", 1.0F, 1.0F);
+               player.world.playSoundAtEntity(player, "customnpcs:gun.ak47.load", 1.0F, 1.0F);
                stack.stackTagCompound.setBoolean("IsLoaded2", true);
             }
 

@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class john extends CustomNPCAbstract 
 {
@@ -34,14 +34,16 @@ public class john extends CustomNPCAbstract
 
 	
 	@Override
-	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
+	public void onInteraction(EntityPlayer player, PlayerInteractEvent.EntityInteract event) 
 	{
 		GuiMessageWindow.showMessage("Hello, I understand \nyou come for the sword.");
 		GuiMessageWindow.showMessage("Here it is.\nUse it wisely.");
 		
-		World world = Minecraft.getMinecraft().player.world;
+		//World world = Minecraft.getMinecraft().player.world;
 		
-		world = MinecraftServer.getServer().getEntityWorld();
+		//world = MinecraftServer.getServer()
+		World world = Minecraft.getMinecraft().player.world;
+		world = MinecraftServer.getEntityWorld();
 		
 		
 		if (!world.isRemote && !swordGiven)

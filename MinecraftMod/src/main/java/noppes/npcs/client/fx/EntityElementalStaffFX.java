@@ -14,7 +14,7 @@ public class EntityElementalStaffFX extends EntityPortalFX {
 
 
    public EntityElementalStaffFX(EntityLivingBase player, double d, double d1, double d2, double f1, double f2, double f3, int color) {
-      super(player.worldObj, player.posX + d, player.posY + d1, player.posZ + d2, f1, f2, f3);
+      super(player.world, player.posX + d, player.posY + d1, player.posZ + d2, f1, f2, f3);
       this.player = player;
       this.x = d;
       this.y = d1;

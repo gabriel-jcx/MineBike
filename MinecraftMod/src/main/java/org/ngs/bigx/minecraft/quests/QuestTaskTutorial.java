@@ -23,7 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcInteraction {
@@ -137,14 +137,14 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 
 	@Override
 	public void unregisterEvents() {
-		if(!player.worldObj.isRemote){
+		if(!player.world.isRemote){
 			QuestEventHandler.unregisterQuestEventCheckComplete(this);
 		}
 	}
 	
 	@Override
 	public void registerEvents() {
-		if(!player.worldObj.isRemote)
+		if(!player.world.isRemote)
 		{
 			QuestEventHandler.registerQuestEventCheckComplete(this);
 		}
@@ -171,12 +171,12 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	public void hitEntity(EntityPlayer player, EntityLivingBase target){
 		if (BiGXEventTriggers.checkEntityInArea(target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
 			if (player.inventory.mainInventory[player.inventory.currentItem] != null)
-				deductThiefHealth(player.inventory.mainInventory[player.inventory.currentItem].getItem(), player.worldObj.isRemote);
+				deductThiefHealth(player.inventory.mainInventory[player.inventory.currentItem].getItem(), player.world.isRemote);
 			else
-				deductThiefHealth(null, player.worldObj.isRemote);
+				deductThiefHealth(null, player.world.isRemote);
 
 			if (botHealth <= 0){
-				if (player.worldObj.isRemote)
+				if (player.world.isRemote)
 					GuiMessageWindow.showMessage("You got the torch!");
 				player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(50)));
 				botHealth = 10;

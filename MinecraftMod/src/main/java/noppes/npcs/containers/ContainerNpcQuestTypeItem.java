@@ -13,7 +13,7 @@ public class ContainerNpcQuestTypeItem extends Container {
 
    public ContainerNpcQuestTypeItem(EntityPlayer player) {
       Quest quest = NoppesUtilServer.getEditingQuest(player);
-      if(player.worldObj.isRemote) {
+      if(player.world.isRemote) {
          quest = GuiNPCManageQuest.quest;
       }
 

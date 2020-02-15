@@ -7,7 +7,7 @@ import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import org.bukkit.event.entity.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class Chum extends CustomNPCAbstract
 {
@@ -28,7 +28,7 @@ public class Chum extends CustomNPCAbstract
 	}
 	
 	@Override
-	public void onInteraction(EntityPlayer player, EntityInteractEvent event) 
+	public void onInteraction(EntityPlayer player, PlayerInteractEvent.EntityInteract event) 
 	{
 		// TODO Auto-generated method stub
 		quest.start();

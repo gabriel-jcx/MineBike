@@ -31,7 +31,7 @@ public class PedalingToBuildEventHandler {
 			/**
 			 * Only one side to increment tick count
 			 */
-			if(!event.player.worldObj.isRemote)
+			if(!event.player.world.isRemote)
 			{
 				onPlayerTickEventCount++;
 				
@@ -48,9 +48,9 @@ public class PedalingToBuildEventHandler {
 							{
 								for(int z=0; z<5; z++)
 								{
-									if(!event.player.worldObj.getBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz()).equals(Blocks.AIR))
+									if(!event.player.world.getBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz()).equals(Blocks.AIR))
 									{
-										event.player.worldObj.setBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz(), Blocks.AIR);
+										event.player.world.setBlock(x + pedalingToBuild.getPosx(), y + pedalingToBuild.getPosy(), z + pedalingToBuild.getPosz(), Blocks.AIR);
 									}
 								}
 							}
@@ -70,7 +70,7 @@ public class PedalingToBuildEventHandler {
 						{
 							Block block = BlockPositionMapping.block;
 							TerrainBiomeAreaIndex areaIndex = BlockPositionMapping.terrainBiomeAreaIndex;
-							event.player.worldObj.setBlock(areaIndex.x + pedalingToBuild.getPosx(), areaIndex.y + pedalingToBuild.getPosy(), areaIndex.z + pedalingToBuild.getPosz(), block);
+							event.player.world.setBlock(areaIndex.x + pedalingToBuild.getPosx(), areaIndex.y + pedalingToBuild.getPosy(), areaIndex.z + pedalingToBuild.getPosz(), block);
 						}
 						pedalingToBuild.emptyBlockToBePlaced();
 					}

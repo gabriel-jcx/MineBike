@@ -177,7 +177,7 @@ public class CmdNoppes extends ChMcLogger {
       }
 
       AxisAlignedBB var12 = player.boundingBox.expand((double)range, (double)range, (double)range);
-      List var13 = player.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, var12);
+      List var13 = player.world.getEntitiesWithinAABB(EntityLivingBase.class, var12);
       Iterator var14 = var13.iterator();
 
       Entity entity;
@@ -189,7 +189,7 @@ public class CmdNoppes extends ChMcLogger {
       }
 
       if(toDelete.contains(EntityXPOrb.class)) {
-         var13 = player.worldObj.getEntitiesWithinAABB(EntityXPOrb.class, var12);
+         var13 = player.world.getEntitiesWithinAABB(EntityXPOrb.class, var12);
 
          for(var14 = var13.iterator(); var14.hasNext(); ++var11) {
             entity = (Entity)var14.next();
@@ -198,7 +198,7 @@ public class CmdNoppes extends ChMcLogger {
       }
 
       if(toDelete.contains(EntityItem.class)) {
-         var13 = player.worldObj.getEntitiesWithinAABB(EntityItem.class, var12);
+         var13 = player.world.getEntitiesWithinAABB(EntityItem.class, var12);
 
          for(var14 = var13.iterator(); var14.hasNext(); ++var11) {
             entity = (Entity)var14.next();
