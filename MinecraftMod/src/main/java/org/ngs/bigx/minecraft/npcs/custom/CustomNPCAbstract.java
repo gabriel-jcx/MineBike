@@ -4,7 +4,7 @@ import org.ngs.bigx.minecraft.npcs.NpcDatabase;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 
 public abstract class CustomNPCAbstract 
 {

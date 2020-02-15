@@ -90,7 +90,7 @@ import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
 import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;

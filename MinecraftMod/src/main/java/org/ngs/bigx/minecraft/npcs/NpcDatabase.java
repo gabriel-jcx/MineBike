@@ -110,16 +110,16 @@ public class NpcDatabase {
 		EntityCustomNpc npc = null;
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).x, (int)npcs.get(name).y, (int)npcs.get(name).z, 
-					MinecraftServer.getServer().worldServerForDimension(0), name, getTexture(name));
+					net.minecraftforge.common.DimensionManager.getWorld(0), name, getTexture(name));
 			npc.ai.movingType = getMovement(name);
 //			int dialogId = getDialog(name);
 		}
 		else if (dimID == 102){
 			npc = NpcCommand.spawnNpc((int)npcsTutorial.get(name).x, (int)npcsTutorial.get(name).y, 
-					(int)npcsTutorial.get(name).z, MinecraftServer.getServer().worldServerForDimension(102), name, getTexture(name));
+					(int)npcsTutorial.get(name).z, net.minecraftforge.common.DimensionManager.getWorld(102), name, getTexture(name));
 		} else if (dimID == WorldProviderDungeon.dimID) {
 			npc = NpcCommand.spawnNpc((int)npcsDungeon.get(name).x, (int)npcsDungeon.get(name).y,
-					(int)npcsDungeon.get(name).z, MinecraftServer.getServer().worldServerForDimension(WorldProviderDungeon.dimID), name, getTexture(name));
+					(int)npcsDungeon.get(name).z, net.minecraftforge.common.DimensionManager.getWorld(WorldProviderDungeon.dimID), name, getTexture(name));
 		}
 		if (npc != null){
 //			npc.display.texture = getTexture(name);

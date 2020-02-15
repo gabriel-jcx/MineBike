@@ -21,7 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.entity.EntityCustomNpc;

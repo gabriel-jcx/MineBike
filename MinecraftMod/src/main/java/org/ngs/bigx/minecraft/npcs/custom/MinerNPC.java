@@ -7,7 +7,7 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 
 public class MinerNPC extends CustomNPCAbstract
 {
