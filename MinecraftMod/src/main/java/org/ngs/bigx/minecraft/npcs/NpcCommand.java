@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import akka.dispatch.CachingConfig;
 import net.minecraft.pathfinding.Path;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.context.BigxContext;
@@ -24,10 +25,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.util.EnumFacing;
-import noppes.npcs.constants.EnumAnimation;
-import noppes.npcs.constants.EnumMovingType;
+//import org.ngs.bigx.minecraft.npcs.EnumAnimation;
+//import noppes.npcs.constants.EnumAnimation;
+
+//import noppes.npcs.constants.EnumMovingType;
+import noppes.npcs.api.constants.AnimationType;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+
+// NOTE: npc.ais.setMovingType(int type);
+// 0:standing 1:Wandering, 2: Movingpath
 
 public class NpcCommand {
 
@@ -69,7 +76,7 @@ public class NpcCommand {
 		if (items == null)
 			return;
 	
-		// Check DataInventory.setInventorySlotContents() for index information
+		// Check Dataisnventory.setInventorySlotContents() for index information
 		int itemIterator = 0;
 		for (int i = npc.inventory.getSizeInventory()-1; i >= 4; --i) {
 			if (npc.inventory.getStackInSlot(i) != null) {
@@ -83,14 +90,17 @@ public class NpcCommand {
 	
 	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name, String texture) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
-		npc.display.name = name;
+		npc.display.setName(name);
+		//npc.display.name = name;
 		npc.setPosition(x, y, z);
-		npc.display.texture = texture;
-	
-		npc.ai.startPos = new int[]{
-	    		MathHelper.floor(x),
-	    		MathHelper.floor(y),
-	    		MathHelper.floor(z)};
+		npc.display.setSkinTexture(texture);
+		//npc.display.texture = texture;
+		BlockPos pos = new BlockPos(MathHelper.floor(x),MathHelper.floor(y),MathHelper.floor(z));
+		npc.ais.setStartPos(pos);
+		//npc.aiss.startPos = new int[]{
+	    //		MathHelper.floor(x),
+	    //		MathHelper.floor(y),
+		//		MathHelper.floor(z)};
 
 		npc.attackEntityAsMob(Minecraft.getMinecraft().player);
 		
@@ -102,13 +112,14 @@ public class NpcCommand {
 	
 	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
-		npc.display.name = name;
+		npc.display.setName(name);
 		npc.setPosition(x, y, z);
-	
-		npc.ai.startPos = new int[]{
-	    		MathHelper.floor(x),
-	    		MathHelper.floor(y),
-	    		MathHelper.floor(z)};
+		BlockPos pos = new BlockPos(MathHelper.floor(x),MathHelper.floor(y),MathHelper.floor(z));
+		npc.ais.setStartPos(pos);
+//		npc.ais.startPos = new int[]{
+//	    		MathHelper.floor(x),
+//	    		MathHelper.floor(y),
+//	    		MathHelper.floor(z)};
 	
 		w.spawnEntity(npc);
 	    npc.setHealth(10000f);
@@ -139,7 +150,9 @@ public class NpcCommand {
 			theifOnRegularChaseQuestSpawnFlag = false;
 	
 			npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
-			npc.ai.stopAndInteract = false;
+
+			npc.ais.stopAndInteract = false;
+			//npc.ais.stopAndInteract = false;
 //			npc.faction.isAggressiveToPlayer(true)
 	
 			questTaskChasing.setNpc(npc);
@@ -176,7 +189,7 @@ public class NpcCommand {
 			for (String name : NpcDatabase.NpcNames(dimensionId)) {
 				int found = 0;
 				for (Object obj : listOfNpc)
-					if (((EntityCustomNpc)obj).display.name.equals(name))
+					if (((EntityCustomNpc)obj).display.getName().equals(name))
 						++found;
 	
 				if (found == 0) {
@@ -185,7 +198,7 @@ public class NpcCommand {
 				} else if (found > 1) {
 					List<EntityCustomNpc> list = new ArrayList<EntityCustomNpc>();
 					for (Object obj : listOfNpc)
-						if (((EntityCustomNpc)obj).display.name.equals(name))
+						if (((EntityCustomNpc)obj).display.getName().equals(name))
 							list.add((EntityCustomNpc)obj);
 					NpcDatabase.sortFurthestSpawn(list);
 					for (int i = 0; i < list.size()-1; ++i)
@@ -196,17 +209,17 @@ public class NpcCommand {
 	}
 	
 	public List getPath() {
-		return npc.ai.getMovingPath();
+		return npc.ais.getMovingPath();
 	}
 	
 	public void setPath(List l) {
-		npc.ai.setMovingPath(l);
+		npc.ais.setMovingPath(l);
 	}
 	
 	public void addPathPoint(int[] coords) {
 		// TODO Finish writing!
 		/*
-		// We have to wait until the npc is on the ground
+		// We have to waist until the npc is on the ground
 		final Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -233,7 +246,7 @@ public class NpcCommand {
 		//for(Object point : coordList) {
 		//	System.out.println(((PathPoint)point).toString());
 		//}
-		List path = npc.ai.getMovingPath();
+		List path = npc.ais.getMovingPath();
 		int[] lastPos = (int[])path.get(path.size()-1);
 		float dx = coords[0] - lastPos[0];
 		float dy = coords[1] - lastPos[1];
@@ -250,7 +263,7 @@ public class NpcCommand {
 					coords[2] + (int)(dz * i / dist)});
 		}
 		path.add(coords);
-		npc.ai.setMovingPath(path);*/
+		npc.ais.setMovingPath(path);*/
 
 	}
 	
@@ -259,31 +272,33 @@ public class NpcCommand {
 		synchronized (NPCCOMMANDLOCK)
 		{
 			int yy = (int)npc.posY;
-			npc.ai.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
-			npc.ai.setMovingPath(new ArrayList());
+			BlockPos pos = new BlockPos((int)npc.posX,(int)npc.posY,(int)npc.posZ);
+			npc.ais.setStartPos(pos);
+			//npc.ais.startPos = new int[]{(int)npc.posX, (int)npc.posY, (int)npc.posZ};
+			npc.ais.setMovingPath(new ArrayList());
 			switch(direction) {
 			case NORTH:
-				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 20});
-				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 30});
+				npc.ais.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 20});
+				npc.ais.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ - 30});
 				break;
 			case SOUTH:
-				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 20});
-				npc.ai.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 30});
+				npc.ais.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 20});
+				npc.ais.getMovingPath().add(new int[]{(int) runStartX, yy, (int)npc.posZ + 30});
 				break;
 			case EAST:
-				npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 20, yy, (int)runStartZ});
-				npc.ai.getMovingPath().add(new int[]{(int) npc.posX + 30, yy, (int)runStartZ});
+				npc.ais.getMovingPath().add(new int[]{(int) npc.posX + 20, yy, (int)runStartZ});
+				npc.ais.getMovingPath().add(new int[]{(int) npc.posX + 30, yy, (int)runStartZ});
 				break;
 			case WEST:
-				npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)runStartZ});
-				npc.ai.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)runStartZ});
+				npc.ais.getMovingPath().add(new int[]{(int) npc.posX - 20, yy, (int)runStartZ});
+				npc.ais.getMovingPath().add(new int[]{(int) npc.posX - 30, yy, (int)runStartZ});
 				break;
 			default:
 				System.out.println("[BiGX] Direction to NO WHERE!");
 				break;
 			}
 			
-			npc.ai.getMovingPath().remove(0);
+			npc.ais.getMovingPath().remove(0);
 			
 			if( (npc.motionZ == 0) && (!npc.isDead))
 			{
@@ -292,8 +307,8 @@ public class NpcCommand {
 				npc.setFaction(0);
 				setSpeed(10);
 				enableMoving(true);
-//					System.out.println("[BiGX] AI : [" + runStartX + "][" + npc.getSpeed() + "]");
-//					System.out.println("[BiGX] CQ Var: [" + npc.ai.movingType + "] [" + npc.ai.movingPause + "] [" + npc.getSpeed() + "]");
+//					System.out.println("[BiGX] ais : [" + runStartX + "][" + npc.getSpeed() + "]");
+//					System.out.println("[BiGX] CQ Var: [" + npc.ais.movingType + "] [" + npc.ais.movingPause + "] [" + npc.getSpeed() + "]");
 			}
 		}
 	}
@@ -314,18 +329,23 @@ public class NpcCommand {
 				
 				if(NpcCommand.hasFallen)
 				{
-					npc.ai.movingType = EnumMovingType.Standing;
-					npc.ai.movingPause = true;
-					
+					//npc.ais.movementType
+					//npc.ais.movementType = EnumMovingType.Standing;
+					npc.ais.setMovingType(0);
+					npc.ais.movingPause = true;
+
 					if(NpcCommand.isSiting)
-						npc.ai.animationType = EnumAnimation.SITTING;
+						npc.ais.animationType = AnimationType.SIT;//EnumAnimation.SITTING;
 					else
-						npc.ai.animationType = EnumAnimation.CRAWLING;
+						npc.ais.animationType = AnimationType.CRAWL;
 				}
 				else
 				{
-					npc.ai.movingType = EnumMovingType.MovingPath;
-					npc.ai.animationType = EnumAnimation.NONE;
+					// 0:standing 1:Wandering, 2: Movingpath
+					npc.ais.setMovingType(2);
+					//npc.ais.movementType = EnumMovingType.MovingPath;
+					//npc.ais.mov
+					npc.ais.animationType = AnimationType.NO;
 					correctRunningDirection(direction);
 				}
 			}
@@ -373,7 +393,9 @@ public class NpcCommand {
 	public static void removeNpc(String name, int dimension) {
 		for (Object obj : getCustomNpcsInDimension(dimension)) {
 			if (obj instanceof EntityNPCInterface) {
-				if (((EntityNPCInterface)obj).display.name == name) {
+				if (((EntityNPCInterface)obj).display.getName() == name) {
+					System.out.println(((EntityNPCInterface)obj).display.getName());
+					System.out.println(name);
 					((EntityNPCInterface)obj).spawnExplosionParticle();
 					((EntityNPCInterface)obj).delete();
 				}
@@ -382,24 +404,29 @@ public class NpcCommand {
 	}
 	
 	public void setSpeed(int speed) {
-		npc.ai.setWalkingSpeed(speed);
+		npc.ais.setWalkingSpeed(speed);
 	}
 	
 	public int getSpeed() {
-		return npc.ai.getWalkingSpeed();
+		return npc.ais.getWalkingSpeed();
 	}
 	
 	public void enableMoving(boolean enable) {
 		if (enable) {
-			npc.ai.movingType = EnumMovingType.MovingPath;
-			npc.ai.canSprint = true;
-			npc.ai.movingPause = false;
+			npc.ais.setMovingType(0);
+			//npc.ais.movingType = EnumMovingType.MovingPath;
+			npc.ais.canSprint = true;
+			npc.ais.movingPause = false;
 		} else {
-			npc.ai.movingType = EnumMovingType.Standing;
-			npc.ai.canSprint = false;
-			npc.ai.movingPause = true;
+			npc.ais.setMovingType(0);
+			//npc.ais.movingType = EnumMovingType.Standing;
+			npc.ais.canSprint = false;
+			npc.ais.movingPause = true;
 		}
-		npc.updateTasks();
+
+		// TODO: figure out if the next two lines are the same
+		//npc.updateTasks();
+		npc.updateClient();
 		npc.setHealth(10000f);
 	}
 	

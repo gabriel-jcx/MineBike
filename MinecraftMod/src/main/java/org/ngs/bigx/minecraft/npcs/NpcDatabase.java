@@ -14,9 +14,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
-import noppes.npcs.constants.EnumMovingType;
-import noppes.npcs.controllers.DialogOption;
+//import noppes.npcs.constants.EnumMovingType;
+//import noppes.npcs.controllers.DialogOption;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.api.item.IItemStack;
 
 public class NpcDatabase {
 	
@@ -111,7 +112,7 @@ public class NpcDatabase {
 		if (dimID == 0){
 			npc = NpcCommand.spawnNpc((int)npcs.get(name).x, (int)npcs.get(name).y, (int)npcs.get(name).z, 
 					net.minecraftforge.common.DimensionManager.getWorld(0), name, getTexture(name));
-			npc.ai.movingType = getMovement(name);
+			npc.ais.setMovingType(getMovement(name));
 //			int dialogId = getDialog(name);
 		}
 		else if (dimID == 102){
@@ -123,11 +124,13 @@ public class NpcDatabase {
 		}
 		if (npc != null){
 //			npc.display.texture = getTexture(name);
-			npc.setRoleDataWatcher(getRole(name));	
+			npc.setRoleData(getRole((name)));
+			//npc.setRoleDataWatcher(getRole(name));
 			if (name.contains("Training Bot")){
-				System.out.println("Altering Training Bot");
-				npc.ai.stopAndInteract = false;
-				npc.inventory.setOffHand(new ItemStack(Item.getItemById(50)));
+				System.out.println("Altering Training Bot in NPCDataBase");
+				npc.ais.stopAndInteract = false;
+				//npc.inventory.setLeftHand(new IItemStack());
+				//npc.inventory.setLeftHand(new ItemStack(Item.getItemById(50)));
 			}
 		}
 	}
@@ -160,28 +163,30 @@ public class NpcDatabase {
 		return -1;
 	}
 	
-	private static EnumMovingType getMovement(String name)
+	private static int getMovement(String name)
 	{
-		if (name.contains("Gate Guard Ivan"))
-			return EnumMovingType.Standing;
-		else if (name.contains("Gate Guard Roy"))
-			return EnumMovingType.Standing;
-		else if (name.contains("sergeant Weirdo"))
-			return EnumMovingType.Standing;
-		else if (name.contains("George"))
-			return EnumMovingType.Standing;
-		else if (name.contains("Dr. Jose"))
-			return EnumMovingType.Standing;
-		else if (name.contains("Farmer Sam"))
-			return EnumMovingType.Standing;
-		else if (name.contains("B.F.F James"))
-			return EnumMovingType.Standing;
-		else if (name.contains("Paul"))
-			return EnumMovingType.Standing;
-		else if (name.contains("Johnson"))
-			return EnumMovingType.Standing;
-		else
-			return EnumMovingType.Standing;
+		//TODO: looks like it just return standing for now ???
+		return 1;
+//		if (name.contains("Gate Guard Ivan"))
+//			return 1;//EnumMovingType.Standing;
+//		else if (name.contains("Gate Guard Roy"))
+//			return 1;//Standing;
+//		else if (name.contains("sergeant Weirdo"))
+//			return EnumMovingType.Standing;
+//		else if (name.contains("George"))
+//			return EnumMovingType.Standing;
+//		else if (name.contains("Dr. Jose"))
+//			return EnumMovingType.Standing;
+//		else if (name.contains("Farmer Sam"))
+//			return EnumMovingType.Standing;
+//		else if (name.contains("B.F.F James"))
+//			return EnumMovingType.Standing;
+//		else if (name.contains("Paul"))
+//			return EnumMovingType.Standing;
+//		else if (name.contains("Johnson"))
+//			return EnumMovingType.Standing;
+//		else
+//			return EnumMovingType.Standing;
 	}
 	
 	private static String getTexture(String name) {

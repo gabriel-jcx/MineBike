@@ -23,7 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcInteraction {

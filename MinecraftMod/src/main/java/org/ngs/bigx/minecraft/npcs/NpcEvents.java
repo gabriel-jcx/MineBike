@@ -327,8 +327,9 @@ public class NpcEvents {
 	private static void createWeaponsSold(NpcMiscInventory inventorySold){
 		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(268)));
 		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(267)));
-		inventorySold.setInventorySlotContents(2, new ItemStack(CustomItems.swordBronze));
-		inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
+		//TODO: need to figure out how to spwan the sword on the
+		//inventorySold.setInventorySlotContents(2, new ItemStack(CustomItems.));
+		//inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
 //		inventorySold.setInventorySlotContents(4, new ItemStack(CustomItems.swordEmerald));
 	}
 	
@@ -380,8 +381,8 @@ public class NpcEvents {
 		inventoryCurrency.setInventorySlotContents(3,  new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
 		inventoryCurrency.setInventorySlotContents(4,  new ItemStack(Items.WOODEN_SWORD)); //Wood Sword
 		inventoryCurrency.setInventorySlotContents(5,  new ItemStack(Items.IRON_SWORD)); //Iron Sword
-		inventoryCurrency.setInventorySlotContents(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
-		inventoryCurrency.setInventorySlotContents(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
+		//inventoryCurrency.setInventorySlotContents(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
+		//inventoryCurrency.setInventorySlotContents(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
 		inventoryCurrency.setInventorySlotContents(8,  new ItemStack(Items.FEATHER,6)); //Feather
 		inventoryCurrency.setInventorySlotContents(9,  new ItemStack(Items.BLAZE_POWDER,6)); //Burn Element thing
 		inventoryCurrency.setInventorySlotContents(10, new ItemStack(Blocks.CACTUS,12)); //Burn Element thing
