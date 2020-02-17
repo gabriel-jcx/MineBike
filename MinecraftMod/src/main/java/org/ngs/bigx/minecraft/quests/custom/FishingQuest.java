@@ -18,13 +18,14 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChunkCoordinates;
+//import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldSettings;
-
-import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraft.util.math.BlockPos;
+//import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+//import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class FishingQuest extends CustomQuestAbstract
@@ -72,7 +73,7 @@ public class FishingQuest extends CustomQuestAbstract
 	//Used To get out of the Dimension and complete quest
 	public void onAttackEntityEvent(AttackEntityEvent event)
 	{
-		QuestTeleporter.teleport(player, 0, (int) Chum.LOCATION.xCoord, (int) Chum.LOCATION.yCoord, (int) Chum.LOCATION.zCoord);
+		QuestTeleporter.teleport(player, 0, (int) Chum.LOCATION.x, (int) Chum.LOCATION.y, (int) Chum.LOCATION.z);
 		CustomFishHook.fishingLocation = 0;
 		super.complete();
 	}
