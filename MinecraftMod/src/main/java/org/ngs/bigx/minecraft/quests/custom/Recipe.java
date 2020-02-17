@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.quests.custom;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

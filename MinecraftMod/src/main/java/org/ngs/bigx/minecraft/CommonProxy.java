@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft;
 
+import net.minecraft.world.DimensionType;
 import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
 import org.ngs.bigx.minecraft.quests.custom.FishingQuest;
 import org.ngs.bigx.minecraft.quests.custom.MinerQuest;
@@ -15,11 +16,11 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderOvercooked;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderSoccer;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderTRON;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -27,11 +28,13 @@ public class CommonProxy {
 	CommonEventHandler events = new CommonEventHandler();
 	
 	public void preInit(FMLPreInitializationEvent e) {
-		DimensionManager.registerProviderType(WorldProviderFlats.dimID, WorldProviderFlats.class, true);
-		DimensionManager.registerDimension(WorldProviderFlats.dimID, WorldProviderFlats.dimID);
-		
-		DimensionManager.registerProviderType(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.class, true);
-		DimensionManager.registerDimension(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.fireQuestDimID);
+		DimensionType flatDType = DimensionType.register("Flats","Yunho?" ,WorldProviderFlats.dimID,WorldProviderFlats.class, true);
+		//DimensionManager.registerProviderType(WorldProviderFlats.dimID, WorldProviderFlats.class, true);
+		DimensionManager.registerDimension(WorldProviderFlats.dimID, flatDType);
+
+		DimensionType fireQuestDType = DimensionType.register("Fire","Yunho?" ,WorldProviderFlats.fireQuestDimID,WorldProviderFlats.class, true);
+		//DimensionManager.registerProviderType(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.class, true);
+		DimensionManager.registerDimension(WorldProviderFlats.fireQuestDimID, fireQuestDType);
 		
 		DimensionManager.registerProviderType(WorldProviderDark.dimID, WorldProviderDark.class, true);
 		DimensionManager.registerDimension(WorldProviderDark.dimID, WorldProviderDark.dimID);
@@ -60,8 +63,9 @@ public class CommonProxy {
 		DimensionManager.registerProviderType(MinerQuest.MINERUNDIMENSIONID, WorldProviderMineRun.class, true);
 		DimensionManager.registerDimension(MinerQuest.MINERUNDIMENSIONID, MinerQuest.MINERUNDIMENSIONID);
 		
-		DimensionManager.registerProviderType(WorldProviderTRON.TRONDIMENSIONID, WorldProviderTRON.class, true);
-		DimensionManager.registerDimension(WorldProviderTRON.TRONDIMENSIONID, WorldProviderTRON.TRONDIMENSIONID);
+		//DimensionManager.registerProviderType(WorldProviderTRON.TRONDIMENSIONID, WorldProviderTRON.class, true);
+		DimensionType tronDType = DimensionType.register("Tron","2019_Summer" ,WorldProviderTRON.TRONDIMENSIONID,WorldProviderTRON.class, true);
+		DimensionManager.registerDimension(WorldProviderTRON.TRONDIMENSIONID, tronDType);
 		
 		FMLCommonHandler.instance().bus().register(events);
     	MinecraftForge.EVENT_BUS.register(events);

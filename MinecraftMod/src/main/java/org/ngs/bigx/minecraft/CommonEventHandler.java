@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.bukkit.block.Block;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.area.Area;
@@ -27,9 +31,9 @@ import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,19 +50,22 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+//import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+//import net.minecraftforge.event.entity.player.Entit
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 
 public class CommonEventHandler {
+
 	private static boolean EVENT_PLAYERSTATE_FLAG = false;
 	private static boolean EVENT_PLAYERSTATE_RESET = false;
 	private static boolean EVENT_PLAYERSTATE_LOAD = false;
@@ -116,7 +123,7 @@ public class CommonEventHandler {
 		{	
 			if(!event.player.world.isRemote)
 			{
-				if( (event.player.world.provider.dimensionId == 0) || (event.player.world.provider.dimensionId == 105) )
+				if( (event.player.world.provider.getDimension() == 0) || (event.player.world.provider.getDimension() == 105) )
 				{
 					if(!( (event.player.posX >= 70) && (event.player.posX <=132) &&
 						(event.player.posY >= 45) && (event.player.posY <= 100) &&
@@ -125,17 +132,17 @@ public class CommonEventHandler {
 						if(!Minecraft.getMinecraft().isGamePaused())
 							fightAndChaseQuestTick ++;
 					}
-					
+
 					if(fightAndChaseQuestTick >= fightAndChaseQuestTickCount)
 					{
 						fightAndChaseQuestTick = 0;
-						
+
 						if(BiGX.instance().serverContext.getQuestManager() != null)
-						{	
-							if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null) 
+						{
+							if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null)
 							{
 								if(BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE) != null)
-								{	
+								{
 									if(!( (event.player.posX >= 70) && (event.player.posX <=132) &&
 										(event.player.posY >= 45) && (event.player.posY <= 100) &&
 										(event.player.posZ >= 140) && (event.player.posZ <=256)))
@@ -152,7 +159,7 @@ public class CommonEventHandler {
 				{
 					fightAndChaseQuestTick = 0;
 				}
-				
+
 				if(QuestTeleporter.teleportFlag)
 				{
 					if(event.player.dimension == QuestTeleporter.dimId)
@@ -163,9 +170,9 @@ public class CommonEventHandler {
 				}
 			}
 		}
-		
+
 		if (event.player.world.isRemote)
-		{	
+		{
 			if(GameSaveManager.flagEnableChasingQuestClient)
 			{
 				try {
@@ -173,18 +180,18 @@ public class CommonEventHandler {
 				} catch (QuestException e) {
 					e.printStackTrace();
 				}
-				
+
 				GameSaveManager.flagEnableChasingQuestClient = false;
-				
+
 				System.out.println("[BiGX] Enabling Chasing Quest Initiated.");
 			}
 			else if(GameSaveManager.flagUpdatePlayerLevelClient)
 			{
 				GameSaveManager.flagUpdatePlayerLevelClient = false;
-				
+
 				GameSaveManager.updatePlayerLevel();
 			}
-			
+
 			if(GameSaveManager.flagEnableFightAndChasingQuestClient)
 			{
 				try {
@@ -205,18 +212,18 @@ public class CommonEventHandler {
 				} catch (QuestException e) {
 					e.printStackTrace();
 				}
-				
+
 				GameSaveManager.flagEnableChasingQuestServer = false;
-				
+
 				System.out.println("[BiGX] Enabling Chasing Quest Initiated.");
 			}
 			else if(GameSaveManager.flagUpdatePlayerLevelServer)
 			{
 				GameSaveManager.flagUpdatePlayerLevelServer = false;
-				
+
 				GameSaveManager.updatePlayerLevel();
 			}
-			
+
 			if(GameSaveManager.flagEnableFightAndChasingQuestServer)
 			{
 				try {
@@ -228,24 +235,24 @@ public class CommonEventHandler {
 				}
 			}
 		}
-		
+
 		if (!event.player.world.isRemote)
 		{
 			if(GuiMonsterAppears.isGuiMonsterAppearsClosed)
 			{
 				GuiMonsterAppears.isGuiMonsterAppearsClosed = false;
-				
+
 				// This gets triggered when the screen closes
-				System.out.println("[BiGX] Start Fight And Chase Quest");									
+				System.out.println("[BiGX] Start Fight And Chase Quest");
 				Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
-				
+
 				try {
 					BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).isBoss = false;
 					int posy = ((int) event.player.posY == event.player.posY)?(int) event.player.posY:((int) event.player.posY)+1;
 					int origX = (int)event.player.posX, origY = (int)event.player.posY, origZ = (int)event.player.posZ;
-					
+
 //					for(int i=-1; i<2; i++) // z
 //					{
 //						for(int j=-1; j<2; j++) // y
@@ -262,19 +269,19 @@ public class CommonEventHandler {
 //							}
 //						}
 //					}
-					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.world.provider.dimensionId, origX, origY, origZ);
+					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).setPreviousLocationBeforeTheQuest(event.player.world.provider.getDimension(), origX, origY, origZ);
 					((QuestTaskFightAndChasing)quest.getCurrentQuestTask()).handleQuestStart();
 				} catch (QuestException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			try {
 				onPlayerTickEventCount++;
-				
+
 				if(onPlayerTickEventCount >= 50)
 					onPlayerTickEventCount = 0;
-				
+
 				if(onPlayerTickEventCount == 0)
 				{
 					if(EVENT_PLAYERSTATE_FLAG)
@@ -287,12 +294,12 @@ public class CommonEventHandler {
 						if(EVENT_PLAYERSTATE_RESET)
 						{
 							/**
-							 * 
-							 * 
-							 * 
+							 *
+							 *
+							 *
 							 * FILL THIS IN TO IMPLEMENT THE GAME STATE RESET FEATURE
-							 * 
-							 * 
+							 *
+							 *
 							 */
 							EVENT_PLAYERSTATE_RESET = false;
 						}
@@ -301,7 +308,7 @@ public class CommonEventHandler {
 							GameSaveManager.sendCustomCommand((BigxClientContext)BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.SETGAMESAVES);
 							EVENT_PLAYERSTATE_SAVE = false;
 						}
-						
+
 						if(!(EVENT_PLAYERSTATE_LOAD || EVENT_PLAYERSTATE_RESET || EVENT_PLAYERSTATE_SAVE))
 							EVENT_PLAYERSTATE_FLAG = false;
 					}
@@ -313,24 +320,24 @@ public class CommonEventHandler {
 			}
 		}
 	}
-	
+
 	private boolean inBounds(EntityPlayer player, Vec3d edge1, Vec3d edge2) {
-		return (player.posX >= edge1.xCoord && player.posX <= edge2.xCoord || player.posX <= edge1.xCoord && player.posX >= edge2.xCoord) &&
-				(player.posY >= edge1.yCoord && player.posY <= edge2.yCoord || player.posY <= edge1.yCoord && player.posY >= edge2.yCoord) &&
-				(player.posZ >= edge1.zCoord && player.posZ <= edge2.zCoord || player.posZ <= edge1.zCoord && player.posZ >= edge2.zCoord);
+		return (player.posX >= edge1.x && player.posX <= edge2.x || player.posX <= edge1.x && player.posX >= edge2.x) &&
+				(player.posY >= edge1.y && player.posY <= edge2.y || player.posY <= edge1.y && player.posY >= edge2.y) &&
+				(player.posZ >= edge1.z && player.posZ <= edge2.z || player.posZ <= edge1.z && player.posZ >= edge2.z);
 	}
-	
+
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		System.out.println("[BiGX] onWorldLoad(WorldEvent.Load event)");
-		
+
 //		event.world.provider.setWorldTime(0);
-		event.world.provider.resetRainAndThunder();
-		
-		if(event.world.isRemote)
-		{	
+		event.getWorld().provider.resetRainAndThunder();
+
+		if(event.getWorld().isRemote)
+		{
 			NpcCommand.setNpcSpawnFlag();
-			NpcCommand.addNpcSpawnDimensionId(event.world.provider.dimensionId);
+			NpcCommand.addNpcSpawnDimensionId(event.getWorld().provider.getDimension());
 		}
 	}
 	
@@ -340,8 +347,8 @@ public class CommonEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void entityInteractEvent(EntityInteractEvent e) {
-		EntityPlayer player = e.entityPlayer;
+	public void entityInteractEvent(PlayerInteractEvent.EntityInteract e) {
+		EntityPlayer player = e.getEntityPlayer();
 		System.out.println("Interacting with NPC...");
 		NpcEvents.InteractWithNPC(player, e);
 	}
@@ -350,11 +357,11 @@ public class CommonEventHandler {
 	public void entityAttacked(LivingAttackEvent event)
 	{
 //		System.out.println("Attack the player!");
-		EntityLivingBase attackedEnt = event.entityLiving;
-		DamageSource attackSource = event.source;
+		EntityLivingBase attackedEnt = event.getEntityLiving();
+		DamageSource attackSource = event.getSource();
 		if(attackedEnt instanceof EntityPlayer)
 		{
-			if(attackSource == DamageSource.fall)
+			if(attackSource == DamageSource.FALL)
 			{
 				System.out.println("NO FALL!!!");
 				event.setCanceled(true);
@@ -365,41 +372,42 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onLivingFallEvent(LivingFallEvent event) {
 //		System.out.println("Falling...");
-		if (event.entityLiving != null && event.entityLiving instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.entityLiving;
+		if (event.getEntityLiving() != null && event.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
 			player.fallDistance = 0.1F;
 		}
 	}
 
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		EntityPlayer player = e.entityPlayer;
-		World w = e.world;
+		EntityPlayer player = e.getEntityPlayer();
+		World w = e.getWorld();
 
 		if (!w.isRemote) {
-			if (w.getBlock(e.x, e.y, e.z) == Blocks.chest)
+			//BlockPos pos = new BlockPos();
+			if (w.getBlockState(e.getPos()).getBlock()== Blocks.CHEST)
 				BiGXEventTriggers.chestInteract(e, w, levelSys);
 		}
 	}
 	
 	@SubscribeEvent
 	public void onItemToss(ItemTossEvent event) {
-	    Item droppedItem = event.entityItem.getEntityItem().getItem();
-	    if (droppedItem == Items.paper) {
+	    Item droppedItem = event.getEntityItem().getItem().getItem();
+	    if (droppedItem == Items.PAPER) {
 	        event.setCanceled(true);
-	        event.player.inventory.addItemStackToInventory(new ItemStack(Items.paper));
+	        event.getPlayer().inventory.addItemStackToInventory(new ItemStack(Items.PAPER));
 	    }
 	    if (droppedItem == Item.getItemById(4801)) {
 	        event.setCanceled(true);
-	        event.player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));
+	        event.getPlayer().inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));
 	    }
 	}
 	
 	@SubscribeEvent
 	public void onPlayerUse(PlayerInteractEvent event){
-		EntityPlayer p = event.entityPlayer;
+		EntityPlayer p = event.getEntityPlayer();
 		
-		ItemStack itemOnPlayersHand= p.getHeldItem();
+		ItemStack itemOnPlayersHand= p.getHeldItem(p.getActiveHand());
 		
 		if (itemOnPlayersHand != null){
 			if (itemOnPlayersHand.getItem() == Items.ENCHANTED_BOOK){
@@ -414,13 +422,14 @@ public class CommonEventHandler {
 							skill.unlockSkillState();
 						}
 					}
-					p.inventory.consumeInventoryItem(itemOnPlayersHand.getItem());
+					p.inventory.addItemStackToInventory(itemOnPlayersHand);
+					//p.inventory.consumeInventoryItem(itemOnPlayersHand.getItem());
 					System.out.println("Skill Added!");
 				}
 			}
-			if(itemOnPlayersHand.getItem() == Items.paper)
+			if(itemOnPlayersHand.getItem() == Items.PAPER)
 			{
-				if(!p.worldObj.isRemote)
+				if(!p.getEntityWorld().isRemote)
 					return;
 				
 				Minecraft mc = Minecraft.getMinecraft();
@@ -461,7 +470,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onAttackEntityEvent(AttackEntityEvent event) {
-		if (event.getTarget().worldObj.isRemote){
+		if (event.getTarget().getEntityWorld().isRemote){
 			if (event.getTarget().toString().contains("Scientist"))
 				GuiMessageWindow.showMessage("Scientist: Don't hit me...");
 			else if (event.getTarget().dimension == 0)
@@ -472,7 +481,7 @@ public class CommonEventHandler {
 			else if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
 				Quest activeQuest = BiGX.instance().clientContext.getQuestManager().getActiveQuest();
 				QuestTaskTutorial tutorialTask = (QuestTaskTutorial) activeQuest.getCurrentQuestTask();
-				tutorialTask.hitEntity(event.entityPlayer, (EntityLivingBase) event.getTarget());
+				tutorialTask.hitEntity(event.getEntityPlayer(), (EntityLivingBase) event.getTarget());
 			}
 		}
 //		else if (BiGX.instance().serverContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_TUTORIAL){
@@ -496,8 +505,8 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {
-		if (event.world.provider.getDimensionName() == WorldProviderFlats.dimName) {
-			if (event.type == DecorateBiomeEvent.Decorate.EventType.PUMPKIN) {
+		if (event.getWorld().provider.getDimensionType().getName() == WorldProviderFlats.dimName) {
+			if (event.getType() == DecorateBiomeEvent.Decorate.EventType.PUMPKIN) {
 				// Stops the specified EventType from decorating during chunk generation
 				event.setResult(Result.DENY);
 			}
@@ -506,8 +515,8 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
-		if (MinecraftServer.getServer() != null && event.phase == TickEvent.Phase.END) {
-			boolean isServer = MinecraftServer.getServer().isDedicatedServer();
+		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null && event.phase == TickEvent.Phase.END) {
+			boolean isServer = FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer();
 			server_tick++;
 			
 			//200 ticks = 10 second
@@ -539,7 +548,7 @@ public class CommonEventHandler {
 				int doorOpenDistance = 5;
 				int doorCheckRadius = 10;
 				
-				for (WorldServer ws : MinecraftServer.getServer().worldServers) {
+				for (WorldServer ws : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
 					for (EntityPlayer player : (List<EntityPlayer>) ws.playerEntities) {
 						
 						int pX = (int) player.posX;
@@ -550,21 +559,23 @@ public class CommonEventHandler {
 							for (int zz = pZ-doorCheckRadius; zz < pZ+doorCheckRadius; ++zz) {
 								for (int yy = pY-doorCheckRadius; yy < pY+doorCheckRadius; ++yy) {
 									
-									if (ws.getBlock(xx, yy, zz) == Blocks.wooden_door) {
+									if (ws.getBlockState(new BlockPos(xx,yy,zz)).getBlock() == Blocks.OAK_DOOR) {
 										double blockDistance = Math.sqrt(Math.pow(Math.abs(xx-pX), 2) + Math.pow(Math.abs((yy-pY)), 2) + Math.pow(Math.abs(zz-pZ), 2));
 										// Open if close
-										int gottenMeta = ws.getBlockMetadata(xx, yy, zz);
-										int meta = gottenMeta;
-										
-										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
-											meta += 4;
-											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
-											ws.playAuxSFX(1003, xx, yy, zz, 0);
-										} else if (blockDistance > doorOpenDistance && (gottenMeta >= 4 && gottenMeta < 8)){
-											meta -= 4;
-											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
-											ws.playAuxSFX(1003, xx, yy, zz, 0);
-										}
+										IBlockState gottenMeta = ws.getBlockState(new BlockPos(xx, yy, zz));
+										// TODO: re-write the logic for door being annoying, auto-open in range
+//										int meta = gottenMeta;
+//										gottenMeta.getBlock()
+//
+//										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
+//											meta += 4;
+//											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
+//											ws.playAuxSFX(1003, xx, yy, zz, 0);
+//										} else if (blockDistance > doorOpenDistance && (gottenMeta >= 4 && gottenMeta < 8)){
+//											meta -= 4;
+//											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
+//											ws.playAuxSFX(1003, xx, yy, zz, 0);
+//										}
 									}
 								}
 							}

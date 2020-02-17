@@ -3,6 +3,10 @@ package org.ngs.bigx.minecraft.quests.custom;
 import java.time.Clock;
 import java.util.ArrayList;
 
+// TODO: Implment the functionality for deleting the wanted item from the ItemStack
+
+
+import net.minecraft.util.math.BlockPos;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
@@ -20,9 +24,10 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestAbstract.Difficul
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderOvercooked;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
+//import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -31,7 +36,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -43,7 +48,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 		
 	private boolean teleported; //true if player has been teleported to kitchen, false if not
 	
-	private ArrayList<ChunkCoordinates> ingredientCoordinates; //holds ingredient plate chunkcoordinates
+	private ArrayList<BlockPos> ingredientCoordinates; //holds ingredient plate BlockPos
 	private ArrayList<Recipe> recipes; //holds all different recipes (10)
 	private ArrayList<Recipe> orderList; //holds the orders being displayed to the gui, removes orders when completed
 	private ArrayList<Recipe> completedOrders; //the orders that have been completed
@@ -86,7 +91,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 		
 		teleported = false;
 		
-		ingredientCoordinates = new ArrayList<ChunkCoordinates>();
+		ingredientCoordinates = new ArrayList<BlockPos>();
 		setIngredientCoordinatesList();
 		
 		recipes = new ArrayList<Recipe>();
@@ -146,12 +151,12 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//adds coordinates to the list of ingredient coordinates
 	private void setIngredientCoordinatesList()
 	{
-		ingredientCoordinates.add(new ChunkCoordinates(-2,10,70)); // 0=bowl
-		ingredientCoordinates.add(new ChunkCoordinates(-1,10,28)); // 1=chicken
-		ingredientCoordinates.add(new ChunkCoordinates(-21,10,16)); // 2=bread
-		ingredientCoordinates.add(new ChunkCoordinates(-52,10,48)); // 3=lettuce
-		ingredientCoordinates.add(new ChunkCoordinates(-52,10,76)); // 4=bun
-		ingredientCoordinates.add(new ChunkCoordinates(-18,10,81)); // 5=potato
+		ingredientCoordinates.add(new BlockPos(-2,10,70)); // 0=bowl
+		ingredientCoordinates.add(new BlockPos(-1,10,28)); // 1=chicken
+		ingredientCoordinates.add(new BlockPos(-21,10,16)); // 2=bread
+		ingredientCoordinates.add(new BlockPos(-52,10,48)); // 3=lettuce
+		ingredientCoordinates.add(new BlockPos(-52,10,76)); // 4=bun
+		ingredientCoordinates.add(new BlockPos(-18,10,81)); // 5=potato
 	}
 	
 	//adds recipes to recipe list
@@ -306,7 +311,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 			ItemStack item = event.player.inventory.getStackInSlot(i);
 			if(item!=null) {
 				playerInventory[i] = item;
-				event.player.inventory.decrStackSize(i, item.stackSize);
+				event.player.inventory.decrStackSize(i, item.getCount());
 			}
 		}
 	}
@@ -343,15 +348,16 @@ public class OverCookedQuest extends CustomQuestAbstract
 		HudManager.unregisterString(num);
 		HudManager.unregisterRectangle(rectangletimer);
 		HudManager.unregisterString(TIMER);
-		QuestTeleporter.teleport(player, 0, (int) ChefGusteau.LOCATION.xCoord - 3, (int) ChefGusteau.LOCATION.yCoord, (int) ChefGusteau.LOCATION.zCoord);
+		//BlockPos pos = new BlockPos();
+		QuestTeleporter.teleport(player, 0,(int) ChefGusteau.LOCATION.x - 3, (int) ChefGusteau.LOCATION.x, (int) ChefGusteau.LOCATION.z);
 	}
 	
 	//teleports the player from the instruction room to the kitchen to start the game
 	//generates the first order (the rest will be generated in onPlayerTickEvent
 	private void teleport(TickEvent.PlayerTickEvent event)
 	{
-		ChunkCoordinates coord = event.player.getPlayerCoordinates();		
-		if((coord.posX >= 126 && coord.posX <= 128) && (coord.posZ >= 54 && coord.posZ <= 56))
+		BlockPos coord = event.player.getPosition();
+		if((coord.getX() >= 126 && coord.getX() <= 128) && (coord.getZ() >= 54 && coord.getZ() <= 56))
 		{
 			countTicks = true;
 			gotInv = true;
@@ -392,8 +398,8 @@ public class OverCookedQuest extends CustomQuestAbstract
             	
             	//if there is more than one ingredient in player inventory, reduce it to one
             	if(areLettuce || arePotatoes || areSBread || areHBun || areChickens || areBowls) 
-            		if(stack.stackSize > 1)
-               			stack.stackSize = 1;
+            		if(stack.getCount() > 1)
+               			stack.setCount(1);
             }
         }
 	}
@@ -402,7 +408,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//if player has the ingredient in inventory, does not add anything
 	private void giveIngredient(TickEvent.PlayerTickEvent event)
 	{
-		ChunkCoordinates coord = event.player.getPlayerCoordinates();
+		BlockPos coord = event.player.getPosition();
 		if(returnIngredientType(coord) >= 0)
 		{
 			NewItemStack ingredient = createIngredientStack(returnIngredientType(coord));
@@ -428,7 +434,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 	
 	//returns the int that corresponds to the ingredient in the ingredients arraylist
 	//if not on an ingredient space, return -1
-	private int returnIngredientType(ChunkCoordinates coord)
+	private int returnIngredientType(BlockPos coord)
 	{
 		for(int i = 0; i<ingredientCoordinates.size(); i++)
 		{
@@ -439,15 +445,15 @@ public class OverCookedQuest extends CustomQuestAbstract
 	}
 	
 	//returns true if player is on the ingredient passed in as item
-	private boolean onIngredient(ChunkCoordinates item, ChunkCoordinates coord)
+	private boolean onIngredient(BlockPos item, BlockPos coord)
 	{
-		int xMax = item.posX;
+		int xMax = item.getX();
 		int xMin = xMax - 3;
 		
-		int zMax = item.posZ;
+		int zMax = item.getZ();
 		int zMin = zMax - 3;
 	
-		return (coord.posX >= xMin && coord.posX <= xMax) && (coord.posZ >= zMin && coord.posZ <= zMax);
+		return (coord.getX() >= xMin && coord.getX() <= xMax) && (coord.getZ() >= zMin && coord.getZ() <= zMax);
 	}
 	
 	//returns a NewItemStack with an ItemStack containing one ingredient and its name as a string
@@ -536,9 +542,9 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//returns true if player is on crafting table plates
 	private boolean onCrafting(TickEvent.PlayerTickEvent event)
 	{
-		ChunkCoordinates coord = event.player.getPlayerCoordinates();
-		return (coord.posX >= -5 && coord.posX <= -2) && ((coord.posZ >= 75 && coord.posZ <= 78) || 
-				(coord.posZ >= 71 && coord.posZ <= 74));
+		BlockPos coord = event.player.getPosition();
+		return (coord.getX() >= -5 && coord.getX() <= -2) && ((coord.getZ() >= 75 && coord.getZ() <= 78) ||
+				(coord.getZ() >= 71 && coord.getZ() <= 74));
 	}
 	
 	//randomly chooses a recipe to put as the next order, adds it to order list
@@ -626,8 +632,8 @@ public class OverCookedQuest extends CustomQuestAbstract
 	//returns true if player is on turn in plates
 	public boolean onTurnIn(TickEvent.PlayerTickEvent event)
 	{
-		ChunkCoordinates coord = event.player.getPlayerCoordinates();
-		return (coord.posX >= -48 && coord.posX <= -43) && (coord.posZ >= 13 && coord.posZ <= 16);
+		BlockPos coord = event.player.getPosition();
+		return (coord.getX() >= -48 && coord.getX() <= -43) && (coord.getZ() >= 13 && coord.getZ() <= 16);
 	}
   
 	//setting difficulty changes the time that it takes for orders to expire as well as the minimum goal of points necessary
@@ -659,13 +665,13 @@ public class OverCookedQuest extends CustomQuestAbstract
 		
 		if(score >= goal)
 		{
-			EntityItem entityitem1 = new EntityItem(event.world.provider.worldObj, 365, 20, 177, new ItemStack(Items.gold_ingot,4));
-	        event.world.provider.worldObj.spawnEntityInWorld(entityitem1);
+			EntityItem entityitem1 = new EntityItem(event.world, 365, 20, 177, new ItemStack(Items.GOLD_INGOT,4));
+	        event.world.spawnEntity(entityitem1);
 		}
 		else
 		{
-			EntityItem entityitem1 = new EntityItem(event.world.provider.worldObj, 365, 20, 177, new ItemStack(Items.gold_ingot,2));
-	        event.world.provider.worldObj.spawnEntityInWorld(entityitem1);
+			EntityItem entityitem1 = new EntityItem(event.world, 365, 20, 177, new ItemStack(Items.GOLD_INGOT,2));
+	        event.world.spawnEntity(entityitem1);
 		}
 		HudManager.unregisterRectangle(rectangletimer);
 		HudManager.unregisterString(TIMER);
@@ -704,6 +710,6 @@ public class OverCookedQuest extends CustomQuestAbstract
 ////returns true of player is on furnace plate
 //private boolean onFurnace(TickEvent.PlayerTickEvent event)
 //{
-//	ChunkCoordinates coord = event.player.getPlayerCoordinates();
+//	BlockPos coord = event.player.getPlayerCoordinates();
 //	return (coord.posX >= -54 && coord.posX <= -51) && (coord.posZ >= 14 && coord.posZ <= 23);
 //}

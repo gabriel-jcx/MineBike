@@ -24,9 +24,9 @@ public class QuestRFMChest extends BlockChest {
     {
         return 0;
     }
-	
+
 	//If the block's drop is a block.
-    @Override
+    //@Override
     public Item getItemDropped(int metadata, Random random, int fortune) {
         return Item.getItemFromBlock(Blocks.BED);
     }

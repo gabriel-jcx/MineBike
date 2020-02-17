@@ -23,6 +23,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 //import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+
 import noppes.npcs.CustomItems;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -60,9 +62,9 @@ public class NpcEvents {
 			InteractWithTeleportExit(player, event);
 		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.tutorialGuy.addVector(-5, -5, -5), NpcLocations.tutorialGuy.addVector(5, 5, 5)))
 			InteractWithTutorialGuy(player, event);
-		
 
-		
+
+
 		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.guard1.addVector(-5, -5, -5), NpcLocations.guard1.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.guard1);
 		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.guard2.addVector(-5, -5, -5), NpcLocations.guard2.addVector(5, 5, 5)))
@@ -81,7 +83,7 @@ public class NpcEvents {
 			InteractWithVillagers(villagerEnum.marketPlaceAd);
 		else if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.thiefInCage.addVector(-5, -5, -5), NpcLocations.thiefInCage.addVector(5, 5, 5)))
 			InteractWithVillagers(villagerEnum.thiefInCage);
-		
+
 		//checking the custom NPCs for proximity and then interacting with them
 		for(CustomNPCAbstract npc : NpcDatabase.customNPCs)
 		{
@@ -94,16 +96,16 @@ public class NpcEvents {
 			{
 				InteractWithDungeonBoss(player, event);
 			}
-			
+
 			System.out.println("Interaction with Ifrit dim[" + player.world.provider.getDimension() + "]");
 		}
 	}
-	
+
 	private static void InteractWithVillagers(villagerEnum villagerEnum){
 		System.out.println("Interacting with Villagers...");
-		
+
 		String text = "Hello! How are you?";
-		
+
 		switch(villagerEnum)
 		{
 		case guard1:
@@ -140,29 +142,29 @@ public class NpcEvents {
 			text = "Hello! How are you?";
 			break;
 		}
-		
+
 		GuiMessageWindow.showMessage(text);
 	}
-	
+
 	private static void InteractWithTeleportExit(EntityPlayer player, PlayerInteractEvent.EntityInteract event) {
 		// TODO Add confirmation GUI? "Want to try the tutorial again?"
 		if (player.world.isRemote)
 			QuestTeleporter.teleport(player, 0, 91, 78, 243);
 	}
-	
+
 	private static void InteractWithFather(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		if (!player.world.isRemote)
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fatherMsg);
-		
+
 		try {
 			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 			WorldServer ws =net.minecraftforge.common.DimensionManager.getWorld(0);
 			Quest quest;
-			
+
 			if(player.world.isRemote)
 			{
 				System.out.println("InteractWithFather Quest Generation: CLIENT");
-				
+
 				if(BiGX.instance().clientContext.getQuestManager().getActiveQuest() == null) {
 					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
 				}
@@ -172,14 +174,14 @@ public class NpcEvents {
 					else
 						quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().clientContext.getQuestManager());
 				}
-				
+
 				QuestEventHandler.unregisterAllQuestEventRewardSession();
 				QuestTaskChasing questTaskChasing = new QuestTaskChasing(new LevelSystem(), BiGX.instance().clientContext.getQuestManager(), player, ws, 1, 4);
 				QuestEventHandler.registerQuestEventRewardSession(questTaskChasing);
 				quest.addTasks(questTaskChasing);
 				if(BiGX.instance().clientContext.getQuestManager().addAvailableQuestList(quest))
 					BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_CHASE_REG);
-				
+
 				// Unlock the next chapter and open Gui Chapter
 				if(GuiChapter.getChapterNumber() == 1)
 				{
@@ -190,7 +192,7 @@ public class NpcEvents {
 			else
 			{
 				System.out.println("InteractWithFather Quest Generation: SERVER");
-				
+
 				if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() == null)
 				{
 					quest = new Quest(Quest.QUEST_ID_STRING_CHASE_REG, BiGXTextBoxDialogue.questChase1Title, BiGXTextBoxDialogue.questChase1Description, BiGX.instance().serverContext.getQuestManager());
@@ -214,15 +216,15 @@ public class NpcEvents {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void InteractWithDungeonBoss(EntityPlayer player, PlayerInteractEvent.EntityInteract event) {
-		if (!player.world.isRemote) 
+		if (!player.world.isRemote)
 		{
-			
+
 			// This gets triggered when the screen closes
-			System.out.println("[BiGX] Start Boss Fight And Chase Quest");									
+			System.out.println("[BiGX] Start Boss Fight And Chase Quest");
 			Quest quest = BiGX.instance().serverContext.getQuestManager().getAvailableQuestList().get(Quest.QUEST_ID_STRING_FIGHT_CHASE);
-			
+
 			try {
 				BiGX.instance().serverContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
 				BiGX.instance().clientContext.getQuestManager().setActiveQuest(Quest.QUEST_ID_STRING_FIGHT_CHASE);
@@ -235,69 +237,69 @@ public class NpcEvents {
 			}
 		}
 	}
-	
+
 	private static void InteractWithOfficer(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Officer...");
 		GuiMessageWindow.showMessage("We're kind of busy here.\nCome back later.");
 		//Giving player teleportation potion
-//		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest", 
+//		boolean gavePotion = BiGXEventTriggers.givePlayerPotion(player, "Teleportation Potion - Quest",
 //				BiGXTextBoxDialogue.officerRequestHelp);
 //		if (!player.world.isRemote && gavePotion)
 //			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.officerPotionHelp);
 	}
-	
+
 	private static void InteractWithTrainingBot(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		GuiMessageWindow.showMessage(BiGXTextBoxDialogue.instructionsAttackNPC);
 	}
-	
+
 	private static void InteractWithWeaponsMerchant(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Weapons NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
-		
+
 		if (traderInterface.inventoryCurrency.items.isEmpty())
 			createWeaponsCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
 		if (traderInterface.inventorySold.items.isEmpty())
 			createWeaponsSold(traderInterface.inventorySold);
 	}
-	
+
 	private static void InteractWithBlacksmith(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Blacksmith NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
-		
+
 		if (traderInterface.inventoryCurrency.items.isEmpty())
 			createBlacksmithCurrency(traderInterface.inventoryCurrency);
 		if (traderInterface.inventorySold.items.isEmpty())
 			createBlacksmithSold(traderInterface.inventorySold);
 	}
-	
+
 	private static void InteractWithSkillSeller(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Skill Seller NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
-		
+
 		if (traderInterface.inventoryCurrency.items.isEmpty())
 			createSkillCurrency(traderInterface.inventoryCurrency, Item.getItemById(266));
 		if (traderInterface.inventorySold.items.isEmpty())
 			createSkillSold(traderInterface.inventorySold);
 	}
-	
+
 	private static void InteractWithTrader(EntityPlayer player, PlayerInteractEvent.EntityInteract event){
 		System.out.println("Interacting with Trader NPC");
 		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();
 		npc.advanced.setRole(1);
 		RoleTrader traderInterface = (RoleTrader) npc.roleInterface;
-		
+
 		if (traderInterface.inventoryCurrency.items.isEmpty())
 			createTraderCurrency(traderInterface.inventoryCurrency);
 		if (traderInterface.inventorySold.items.isEmpty())
 			createTraderSold(traderInterface.inventorySold);
 	}
-	
+
 	private static void InteractWithTutorialGuy(EntityPlayer player, PlayerInteractEvent.EntityInteract event) {
 		System.out.println("Interact with Tutorial Guy");
 		EntityCustomNpc npc = (EntityCustomNpc) event.getTarget();

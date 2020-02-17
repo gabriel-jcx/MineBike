@@ -3,6 +3,8 @@ package org.ngs.bigx.minecraft.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import jdk.nashorn.internal.ir.Block;
+import net.minecraft.util.math.BlockPos;
 import org.ngs.bigx.minecraft.BiGX;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class TileEntityQuestChest extends TileEntity implements IInventory {
+public class TileEntityQuestChest extends TileEntity{
 	
 	private static final int chestSize = 18;
 	private static final int stackLimit = 64;
@@ -40,7 +42,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		if (this.isUseableByPlayer(player)) {
 			if (playerContents.get(player.getDisplayName()) == null)
 			{
-				playerContents.put(player.getDisplayName(), new ItemStack[getSizeInventory()]);
+				playerContents.put(player.getDisplayNameString(), new ItemStack[getSizeInventory()]);
 			} else {
 				// playerContents.put(player.getDisplayName(), );
 			}
@@ -59,12 +61,12 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		customName = newName;
 	}
 	
-	@Override
+	//@Override
 	public int getSizeInventory() {
 		return chestSize;
 	}
 
-	@Override
+	//@Override
 	public ItemStack getStackInSlot(int i) {
 		return getStackInSlot("", i);
 		/*
@@ -86,7 +88,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		return playerContents.get(p)[i];
 	}
 	
-	@Override
+	//@Override
 	public ItemStack decrStackSize(int index, int count) {
 		return decrStackSize("", index, count);
 		/*
@@ -121,7 +123,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		if (getStackInSlot(p, i) != null) {
 			ItemStack itemStack;
 			
-			if (getStackInSlot(p, i).stackSize <= count) {
+			if (getStackInSlot(p, i).getCount() <= count) {
 				itemStack = getStackInSlot(p, i);
 				setInventorySlotContents(p, i, null);
 				markDirty();
@@ -129,7 +131,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 			} else {
 				itemStack = getStackInSlot(p, i).splitStack(count);
 				
-				if (getStackInSlot(p, i).stackSize <= 0) {
+				if (getStackInSlot(p, i).getCount() <= 0) {
 					setInventorySlotContents(p, i, null);
 				} else {
 					setInventorySlotContents(p, i, this.getStackInSlot(p, i));
@@ -143,7 +145,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		}
 	}
 	
-	@Override
+	//@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
 		return getStackInSlotOnClosing("", i);
 		/*
@@ -159,7 +161,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		return itemStack;
 	}
 	
-	@Override
+	//@Override
 	public void setInventorySlotContents(int i, ItemStack itemStack) {
 		setInventorySlotContents("", i, itemStack);
 		/*
@@ -186,11 +188,11 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		{
 			return;
 		}
-		if (itemStack != null && itemStack.stackSize > getInventoryStackLimit())
+		if (itemStack != null && itemStack.getCount() > getInventoryStackLimit())
 		{
-			itemStack.stackSize = getInventoryStackLimit();
+			itemStack.setCount(getInventoryStackLimit());
 		}
-		if (itemStack != null && itemStack.stackSize == 0)
+		if (itemStack != null && itemStack.getCount() == 0)
 		{
 			itemStack = null;
 		}
@@ -198,7 +200,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		markDirty();
 	}
 	
-	@Override
+	//@Override
 	public String getInventoryName() {
 		if (hasCustomInventoryName())
 		{
@@ -210,47 +212,51 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		}
 	}
 
-	@Override
+	//@Override
 	public boolean hasCustomInventoryName() {
 		return customName != null && !customName.equals("");
 	}
 
-	@Override
+	//@Override
 	public int getInventoryStackLimit() {
 		return stackLimit;
 	}
 
-	@Override
+	//@Override
 	public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
-		if (worldObj == null)
+		if (world == null)
 		{
 			return true;
 		}
-		if (worldObj.getTileEntity(xCoord, yCoord, zCoord) != this)
+		if (world.getTileEntity(this.getPos()) != this)
 		{
 			return false;
 		}
-		return entityPlayer.getDistanceSq((double) xCoord + 0.5D, (double) yCoord + 0.5D, (double) zCoord + 0.5D) <= 64D;
+		BlockPos pos = this.getPos();
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		return entityPlayer.getDistanceSq((double)x + 0.5D, (double) y + 0.5D, (double) z + 0.5D) <= 64D;
 	}
 
-	@Override
+	//@Override
 	public void openInventory() {
-		if (worldObj == null)
+		if (world == null)
 		{
 			return;
 		}
 		playerUsing++;
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, BiGX.blockQuestChest, 1, playerUsing);
+		world.addBlockEvent(this.getPos(), BiGX.blockQuestChest, 1, playerUsing);
 	}
 
-	@Override
+	//@Override
 	public void closeInventory() {
-		if (worldObj == null)
+		if (world == null)
 		{
 			return;
 		}
 		playerUsing--;
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, BiGX.blockQuestChest, 1, playerUsing);
+		world.addBlockEvent(getPos(), BiGX.blockQuestChest, 1, playerUsing);
 	}
 	
 	public void setFacing(int facing)
@@ -263,13 +269,13 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 		return facing;
 	}
 	
-	@Override
+	//@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemStack) {
 		return true;
 	}
 	
-	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	//@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 
@@ -288,6 +294,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 	    if (this.hasCustomInventoryName()) {
 	        nbt.setString("CustomName", this.getCustomName());
 	    }
+		return nbt;
 	}
 	
 	@Override
@@ -300,7 +307,7 @@ public class TileEntityQuestChest extends TileEntity implements IInventory {
 	    for (int i = 0; i < list.tagCount(); ++i) {
 	        NBTTagCompound stackTag = list.getCompoundTagAt(i);
 	        int slot = stackTag.getByte("Slot") & 255;
-	        this.setInventorySlotContents(slot, ItemStack.loadItemStackFromNBT(stackTag));
+	        this.setInventorySlotContents(slot, new ItemStack(stackTag));
 	    }
 
 	    if (nbt.hasKey("CustomName", 8)) {

@@ -2,8 +2,8 @@ package org.ngs.bigx.minecraft.server;
 
 import org.ngs.bigx.minecraft.CommonProxy;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ServerProxy extends CommonProxy {

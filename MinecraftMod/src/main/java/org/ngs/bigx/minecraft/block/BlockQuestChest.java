@@ -2,6 +2,9 @@ package org.ngs.bigx.minecraft.block;
 
 import java.util.Random;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
+import org.apache.commons.lang.enums.Enum;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
@@ -20,52 +23,53 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.EnumFacing;
+import net.minecraftforge.common.util.EnumHelper;
+import net.minecraft.util.EnumFacing;
 
 public class BlockQuestChest extends BlockContainer {
-	
+
 	Random random;
-	
+
 	public BlockQuestChest(Material mat) {
 		super(mat);
 	}
-	
+
 	public BlockQuestChest() {
-		super(Material.rock);
-		
-		setBlockName(Names.Blocks.QUEST_CHEST);
-		// Affects block breaking particles -- does NOT change chest texture!
-		// (see TileEntityQuestChestRenderer to identify the chest model texture)
-		setBlockTextureName("log_oak");
-		setCreativeTab(CreativeTabs.tabDecorations);
-		
+		super(Material.ROCK);
+
+//		setBlockName(Names.Blocks.QUEST_CHEST);
+//		// Affects block breaking particles -- does NOT change chest texture!
+//		// (see TileEntityQuestChestRenderer to identify the chest model texture)
+//		setBlockTextureName("log_oak");
+//		setCreativeTab(CreativeTabs.tabDecorations);
+
 		random = new Random();
 	}
 
-    @Override
+    //@Override
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    @Override
+    //@Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    @Override
+    //@Override
     public int getRenderType()
     {
         return 22;
     }
-	
+
     protected boolean canSilkHarvest()
     {
     	return false;
     }
-    
-    @Override
+
+    //@Override
     public void breakBlock(World world, int i, int j, int k, Block block, int n)
     {
     	/*
@@ -107,9 +111,11 @@ public class BlockQuestChest extends BlockContainer {
     		}
     	}
     	*/
+        BlockPos pos = new BlockPos(i,j,k);
+        IBlockState state = new IBlockState(block,n);
     	super.breakBlock(world, i, j, k, block, n);
     }
-    
+
     /*
     @Override
     public void onBlockAdded(World world, int i, int j, int k)
@@ -118,13 +124,13 @@ public class BlockQuestChest extends BlockContainer {
     	world.markBlockForUpdate(i, j, k);
     }
     */
-    
-    @Override
+
+    //@Override
     public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityLiving, ItemStack itemStack)
     {
     	byte chestFacing = 0;
     	int facing = MathHelper.floor((double) ((entityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-    	
+
     	switch(facing)
     	{
     	case 0:
@@ -142,7 +148,7 @@ public class BlockQuestChest extends BlockContainer {
     	default:
     		break;
     	}
-    	
+
     	TileEntity tileEntity = world.getTileEntity(i, j, k);
     	if (tileEntity != null && tileEntity instanceof TileEntityQuestChest)
     	{
@@ -151,12 +157,12 @@ public class BlockQuestChest extends BlockContainer {
     		world.markBlockForUpdate(i, j, k);
     	}
     }
-    
-    @Override
+
+    //@Override
     public boolean onBlockActivated(World world, int i, int j, int k, EntityPlayer player, int i1, float f1, float f2, float f3)
     {
-    	TileEntity tE = world.getTileEntity(i, j, k);
-    	
+    	TileEntity tE = world.getTileEntity(new BlockPos(i,j,k));
+
     	if (!world.isRemote)
     	{
     		return ((TileEntityQuestChest) tE).activate(world, i, j, k, player);
@@ -168,6 +174,6 @@ public class BlockQuestChest extends BlockContainer {
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileEntityQuestChest();
 	}
-    
-	
+
+
 }

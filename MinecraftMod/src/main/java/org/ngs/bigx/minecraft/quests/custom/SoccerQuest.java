@@ -243,14 +243,14 @@ public class SoccerQuest extends CustomQuestAbstract
 			}
 			
 			//spawns the npc
-			npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world.provider.worldObj, Raul.NAME + " ", Raul.TEXTURE);
+			npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world, Raul.NAME + " ", Raul.TEXTURE);
 			command = new NpcCommand(BigxClientContext.getInstance(), npc);
 			command.setSpeed(npcSpeed);
 			
 			npcPathList.add(npcPath);
 			npcPathList.add(npcPath);
 			
-			npc.ai = new DataAI(npc) {
+			npc.ais = new DataAI(npc) {
 				public int[] path = SoccerQuest.npcPath;
 				@Override
 				public int[] getCurrentMovingPath()
@@ -274,11 +274,11 @@ public class SoccerQuest extends CustomQuestAbstract
 			
 			
 			//spawns the ball
-			ball = new SoccerBall(event.world.provider.worldObj);
+			ball = new SoccerBall(event.world);
 			ball.setPosition(0, 10, 0);
 			ball.setLocationAndAngles(0, 10, 0, 0.0f, 0.0f);
 			
-			event.world.provider.worldObj.spawnEntityInWorld(ball);
+			event.world.spawnEntity(ball);
 			
 			ballInit = true;
 		}//end init
@@ -291,7 +291,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		}
 		
 		//this is responsible for handling the ball entering the goal and updating score and clock
-		if (ballInit && event.world.provider.dimensionId == SoccerQuest.SOCCERDIMENSIONID)
+		if (ballInit && event.world.provider.getDimension() == SoccerQuest.SOCCERDIMENSIONID)
 		{
 			//if the ball is in the goal
 			if (entityInsideRedGoal(ball) || entityInsideBlueGoal(ball))
@@ -344,13 +344,13 @@ public class SoccerQuest extends CustomQuestAbstract
 		npc.isDead = true;
 		
 		//spawns the npc
-		npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world.provider.worldObj, Raul.NAME + " ", Raul.TEXTURE);
+		npc = NpcCommand.spawnNpc(1, 10, 15, (WorldServer)event.world, Raul.NAME + " ", Raul.TEXTURE);
 		command = new NpcCommand(BigxClientContext.getInstance(), npc);
 		
 		npcPathList.add(npcPath);
 		npcPathList.add(npcPath);
 		
-		npc.ai = new DataAI(npc) {
+		npc.ais = new DataAI(npc) {
 			public int[] path = SoccerQuest.npcPath;
 			@Override
 			public int[] getCurrentMovingPath()
@@ -365,12 +365,12 @@ public class SoccerQuest extends CustomQuestAbstract
 			}
 		};
 		
-		npc.ai.movingPause = false;
-		npc.ai.movingPos = 0;
-		npc.ai.startPos = npcPath;
-		npc.ai.walkingRange = 100;
-		npc.ai.movingPattern = 0;
-		npc.ai.movingType = EnumMovingType.MovingPath;
+		npc.ais.movingPause = false;
+		npc.ais.movingPos = 0;
+		npc.ais.startPos = npcPath;
+		npc.ais.walkingRange = 100;
+		npc.ais.movingPattern = 0;
+		npc.ais.movingType = EnumMovingType.MovingPath;
 		
 		double d = npc.getPosition(1.0f).distanceTo(new Vec3d(0.0d, SOCCER_Y_LEVEL, 0.0d));
 		double t = 1.0d/d;
