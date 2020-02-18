@@ -9,8 +9,8 @@ import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import cpw.mods.fml.client.GuiScrollingList;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.client.GuiScrollingList;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class GuiChasingQuestLevelSlot extends GuiScrollingList {
 	GuiChasingQuest parent;

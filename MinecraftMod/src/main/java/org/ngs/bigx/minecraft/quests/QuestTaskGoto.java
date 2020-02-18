@@ -25,9 +25,9 @@ public class QuestTaskGoto extends QuestTask {
 
 	@Override
 	public void CheckComplete() {
-		if ((player.posX >= edge1.xCoord && player.posX <= edge2.xCoord || player.posX <= edge1.xCoord && player.posX >= edge2.xCoord) &&
-				(player.posY >= edge1.yCoord && player.posY <= edge2.yCoord || player.posY <= edge1.yCoord && player.posY >= edge2.yCoord) &&
-				(player.posZ >= edge1.zCoord && player.posZ <= edge2.zCoord || player.posZ <= edge1.zCoord && player.posZ >= edge2.zCoord))
+		if ((player.posX >= edge1.x && player.posX <= edge2.x || player.posX <= edge1.x && player.posX >= edge2.x) &&
+				(player.posY >= edge1.y && player.posY <= edge2.y || player.posY <= edge1.y && player.posY >= edge2.y) &&
+				(player.posZ >= edge1.z && player.posZ <= edge2.z || player.posZ <= edge1.z && player.posZ >= edge2.z))
 			completed = true;
 	}
 

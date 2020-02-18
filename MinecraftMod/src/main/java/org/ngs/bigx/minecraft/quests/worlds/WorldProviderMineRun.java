@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
 
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldType;
 
 public class WorldProviderMineRun extends WorldProviderFlats 
@@ -17,5 +18,10 @@ public class WorldProviderMineRun extends WorldProviderFlats
 		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(flatBiomeID), 0F);
 		this.hasNoSky = false;
 		this.terrainType = WorldType.FLAT;
+	}
+
+	@Override
+	public DimensionType getDimensionType() {
+		return null;
 	}
 }

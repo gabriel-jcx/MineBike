@@ -225,11 +225,11 @@ public class ClientAreaEvent {
 		if(player.dimension != area.dimension)
 			return returnArea;
 		
-		if( (player.posX >= area.pointA.xCoord) && (player.posX <= area.pointB.xCoord) )
+		if( (player.posX >= area.pointA.x) && (player.posX <= area.pointB.x) )
 		{
-			if( (player.posY >= area.pointA.yCoord) && (player.posY <= area.pointB.yCoord) )
+			if( (player.posY >= area.pointA.y) && (player.posY <= area.pointB.y) )
 			{
-				if( (player.posZ >= area.pointA.zCoord) && (player.posZ <= area.pointB.zCoord) )
+				if( (player.posZ >= area.pointA.z) && (player.posZ <= area.pointB.z) )
 				{
 					returnArea = area;
 				}
