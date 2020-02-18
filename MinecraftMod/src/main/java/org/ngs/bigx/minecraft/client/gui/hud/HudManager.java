@@ -74,7 +74,7 @@ public class HudManager extends GuiScreen
 	    float a = (float)(color >> 0  & 255) / 255.0F;
 	    
 	    //gl stuff
-	    Tessellator tessellator = Tessellator.instance;
+	    Tessellator tessellator = Tessellator.getInstance();
 	    GL11.glPushAttrib(GL11.GL_COLOR);
 	    GL11.glPushMatrix();
 		    GL11.glEnable(GL11.GL_BLEND);

@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.DimensionManager;
+import org.bukkit.block.Block;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
@@ -17,8 +20,7 @@ import org.ngs.bigx.minecraft.quests.custom.helpers.Utils;
 import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
 import org.ngs.bigx.minecraft.quests.worlds.WorldProviderTRON;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.block.Block;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -29,10 +31,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldSettings;
-import net.minecraftforge.common.util.EnumFacing;
+//import net.minecraftforge.common.util.EnumFacing;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import noppes.npcs.DataAI;
+import noppes.npcs.entity.data.DataAI;
 import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 
@@ -151,8 +154,8 @@ public class TRONQuest extends CustomQuestAbstract
 			npc.isDead = true;
 		npc = null;
 		super.complete();
-		QuestTeleporter.teleport(player, 0, (int) Flynn.LOCATION.xCoord + 1, (int) Flynn.LOCATION.yCoord,
-				(int) Flynn.LOCATION.zCoord + 1);
+		QuestTeleporter.teleport(player, 0, (int) Flynn.LOCATION.x + 1, (int) Flynn.LOCATION.y,
+				(int) Flynn.LOCATION.z + 1);
 	}
 
 	@Override
@@ -188,7 +191,7 @@ public class TRONQuest extends CustomQuestAbstract
 	@Override
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event)
 	{
-		if (event.player.world.provider.dimensionId != WorldProviderTRON.TRONDIMENSIONID) // makes sure the player
+		if (event.player.world.provider.getDimension() != WorldProviderTRON.TRONDIMENSIONID) // makes sure the player
 																								// has finished spawning
 		{
 			return;
@@ -249,9 +252,9 @@ public class TRONQuest extends CustomQuestAbstract
 																		// world tries set back to survival
 		}
 
-		int currentCoX = event.player.getPlayerCoordinates().posX; // current player X location, helps cut down lag
+		int currentCoX = event.player.getPosition().getX(); // current player X location, helps cut down lag
 																	// significantly
-		int currentCoZ = event.player.getPlayerCoordinates().posZ; // current player Z location
+		int currentCoZ = event.player.getPosition().getZ(); // current player Z location
 		int[] tempCoordinate = { currentCoX, currentCoZ };
 
 		if (!setPanePlayer && isNewPlayer(tempCoordinate))
@@ -263,7 +266,7 @@ public class TRONQuest extends CustomQuestAbstract
 			playerLocation.remove(numStagesPlayer); // removes at end of list
 		}
 
-		if (event.player.getPlayerCoordinates().posY < 14) // if player falls from arena
+		if (event.player.getPosition().getY() < 14) // if player falls from arena
 		{
 			// returnToMainMenu();
 			gameEnded = true; // player lost
@@ -292,7 +295,7 @@ public class TRONQuest extends CustomQuestAbstract
 	@Override
 	public void onWorldTickEvent(TickEvent.WorldTickEvent event)
 	{
-		if (!worldLoaded || event.world.provider.dimensionId != WorldProviderTRON.TRONDIMENSIONID
+		if (!worldLoaded || event.world.provider.getDimension() != WorldProviderTRON.TRONDIMENSIONID
 				|| event.world.isRemote)
 		{
 			return; // makes sure world has been loaded before starting game
@@ -308,8 +311,11 @@ public class TRONQuest extends CustomQuestAbstract
 					{
 						glassPanes[i + 100][j + 100] = false;
 					}
-					event.world.setBlock(i, 45, j, Blocks.AIR);
-					event.world.setBlock(i, 46, j, Blocks.AIR);
+					event.world.setBlockState(new BlockPos(i, 45, j), Blocks.AIR.getDefaultState());
+					event.world.setBlockState(new BlockPos(i, 46, j), Blocks.AIR.getDefaultState());
+
+//					event.world.setBlock(i, 45, j, Blocks.AIR);
+//					event.world.setBlock(i, 46, j, Blocks.AIR);
 				}
 			}
 			// reset variables
@@ -325,7 +331,9 @@ public class TRONQuest extends CustomQuestAbstract
 			npcPathList = new ArrayList<int[]>();
 			npcRunDirection = EnumFacing.EAST;
 
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderTRON.TRONDIMENSIONID);
+			WorldServer ws = DimensionManager.getWorld(WorldProviderTRON.TRONDIMENSIONID);
+
+			//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(WorldProviderTRON.TRONDIMENSIONID);
 			synchronized (ws.loadedEntityList)
 			{
 				Iterator iter = ws.loadedEntityList.iterator();
@@ -340,7 +348,7 @@ public class TRONQuest extends CustomQuestAbstract
 			}
 
 			// spawns the npc
-			npc = NpcCommand.spawnNpc(npcStart[0], 45, npcStart[1], (WorldServer) event.world.provider.worldObj,
+			npc = NpcCommand.spawnNpc(npcStart[0], 45, npcStart[1], (WorldServer) event.world,
 					NPC_NAME + " ", Flynn.TEXTURE); // using same texture as flynn
 			npc.velocityChanged = true;
 
@@ -350,7 +358,7 @@ public class TRONQuest extends CustomQuestAbstract
 			npcPathList.add(npcPath); // must add npc path twice for unknown reasons
 			npcPathList.add(npcPath);
 
-			npc.ai = new DataAI(npc)
+			npc.ais = new DataAI(npc)
 			{
 				public int[] path = npcPath;
 
@@ -366,12 +374,12 @@ public class TRONQuest extends CustomQuestAbstract
 					return npcPathList;
 				}
 			};
-			npc.ai.movingPause = false;
-			npc.ai.movingPos = 0;
-			npc.ai.startPos = npcPath;
-			npc.ai.walkingRange = 100;
-			npc.ai.movingPattern = 0;
-			npc.ai.movingType = EnumMovingType.MovingPath;
+			npc.ais.movingPause = false;
+			npc.ais.movingPos = 0;
+			npc.ais.startPos = npcPath;
+			npc.ais.walkingRange = 100;
+			npc.ais.movingPattern = 0;
+			npc.ais.movingType = EnumMovingType.MovingPath;
 			init = true;
 		}
 
@@ -417,7 +425,7 @@ public class TRONQuest extends CustomQuestAbstract
 		{
 			int paneX = playerLocation.get(numStagesPlayer - 1)[0];
 			int paneZ = playerLocation.get(numStagesPlayer - 1)[1];
-
+			//Blocks.STAINED_GLASS_PANE.sta
 			event.world.setBlock(paneX, 45, paneZ, Blocks.stained_glass_pane, 9, 2);
 			event.world.setBlock(paneX, 46, paneZ, Blocks.stained_glass_pane, 9, 2);
 			if (paneX <= 100 && paneX >= -100 && paneZ <= 100 && paneZ >= -100)

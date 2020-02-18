@@ -21,7 +21,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
+//import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import noppes.npcs.entity.EntityCustomNpc;
@@ -69,7 +69,7 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	{
 		int count = 0;
 
-		if(!checkItems(player.inventory, Item.getItemById(Block.getIdFromBlock(Blocks.torch))))
+		if(!checkItems(player.inventory, Item.getItemById(Block.getIdFromBlock(Blocks.TORCH))))
 		{
 			System.out.println("Player Doesn't have Torch");
 			return false;
@@ -157,7 +157,7 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 
 
 	@Override
-	public void onNpcInteraction(EntityInteractEvent e) {
+	public void onNpcInteraction(PlayerInteractEvent.EntityInteract e) {
 //		System.out.println("Interacting with NPC!!!");
 //		if(BiGXEventTriggers.checkEntityInArea(e.target, NpcLocations.scientists, NpcLocations.scientists.addVector(1, 1, 1)))
 //		{
@@ -170,8 +170,10 @@ public class QuestTaskTutorial extends QuestTask implements IQuestEventNpcIntera
 	
 	public void hitEntity(EntityPlayer player, EntityLivingBase target){
 		if (BiGXEventTriggers.checkEntityInArea(target, NpcLocations.trainingBot.addVector(0, -1, 0), NpcLocations.trainingBot.addVector(1, 0, 1))){
-			if (player.inventory.mainInventory[player.inventory.currentItem] != null)
-				deductThiefHealth(player.inventory.mainInventory[player.inventory.currentItem].getItem(), player.world.isRemote);
+			if (player.inventory.mainInventory.get(player.inventory.currentItem) != null)
+				deductThiefHealth(player.inventory.mainInventory.get(player.inventory.currentItem).getItem(), player.world.isRemote);
+			//if (player.inventory.mainInventory[player.inventory.currentItem] != null)
+			//	deductThiefHealth(player.inventory.mainInventory[player.inventory.currentItem].getItem(), player.world.isRemote);
 			else
 				deductThiefHealth(null, player.world.isRemote);
 

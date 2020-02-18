@@ -67,12 +67,12 @@ public class ObstacleBiome {
 		//2 - Bush
 		biomeArea = new TerrainBiomeArea();
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.leaves);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.leaves);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.leaves);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.leaves);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.leaves);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.leaves);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,3,2), Blocks.LEAVES);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.LEAVES);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,0,3,2), Blocks.LEAVES);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,1,3,2), Blocks.LEAVES);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.LEAVES);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(0,1,3,2), Blocks.LEAVES);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//3 - Water
@@ -115,11 +115,11 @@ public class ObstacleBiome {
 		biomeArea.map.put(new TerrainBiomeAreaIndex(4,1,3,2), Blocks.COBBLESTONE);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
-		//7 - Fire
+		//7 - FIRE
 		biomeArea = new TerrainBiomeArea();
 		
-		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,2,2), Blocks.fire);
-		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.fire);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(-1,0,2,2), Blocks.FIRE);
+		biomeArea.map.put(new TerrainBiomeAreaIndex(1,0,2,2), Blocks.FIRE);
 		this.obstacleBiomeDef.areas.add(biomeArea);
 		
 		//8 - Sudden Water Basin

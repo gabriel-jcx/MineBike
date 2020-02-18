@@ -20,7 +20,7 @@ import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
-//import org.ngs.bigx.minecraft.BiGXTextBoxDiaLOGue;
+import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
@@ -90,7 +90,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
-//import net.minecraftforge.common.util.EnumFacing;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -101,10 +101,6 @@ import noppes.npcs.entity.EntityNpcCrystal;
 import net.minecraftforge.common.DimensionManager;
 
 public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlayback, IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
-	@Override
-	public void onItemUse(LivingEntityUseItemEvent.Start event) {
-		// TODO: implement this ;D
-	}
 
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
@@ -913,7 +909,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	private void waitForRewardPickupAndContinue() {
 		
 		// Don't continue if there's an item on the ground nearby
-		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc, AxisAlignedBB.getBoundingBox(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
+		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc,new AxisAlignedBB(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
 			if (e instanceof EntityItem || e instanceof EntityXPOrb) {
 				return;
 			}
@@ -967,10 +963,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			npc.setDead();
 			
 			if (endOfChaseItemCounter > 0) {
-				List<EntityItem> nearbyItems = npc.worldObj.getEntitiesWithinAABB(EntityItem.class,
-						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
-				List<EntityXPOrb> nearbyOrbs = npc.worldObj.getEntitiesWithinAABB(EntityXPOrb.class,
-						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
+				List<EntityItem> nearbyItems = npc.world.getEntitiesWithinAABB(EntityItem.class,
+						new AxisAlignedBB(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
+				List<EntityXPOrb> nearbyOrbs = npc.world.getEntitiesWithinAABB(EntityXPOrb.class,
+						new AxisAlignedBB(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
 				
 				if (endOfChaseItemCounter == 0) {
 					// TODO move items to player
@@ -1061,8 +1057,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				{
 					System.out.println("if (countdown == 5)");
 					
-					GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.questChaseShowup);
-					GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.questChaseHintWeapon);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
 					
 					switch(this.questChaseType)
 					{
@@ -1112,13 +1108,13 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Ifrit");
 						npcStopAndInteractFalse(npc);
 //						npc.ai.stopAndInteract = false;
-						npc.display.texture = "customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png";
+						npc.display.setSkinTexture("customnpcs:textures/entity/humanmale/Evil_Gold_Knight.png");
 						break;
 					default:
 						npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief");
 						npcStopAndInteractFalse(npc);
 //						npc.ai.stopAndInteract = false;
-						npc.display.texture = "customnpcs:textures/entity/humanmale/GangsterSteve.png";
+						npc.display.setSkinTexture("customnpcs:textures/entity/humanmale/GangsterSteve.png");
 						break;
 					};
 					
@@ -1211,7 +1207,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					thiefLevelSet = true;
 				}
 				if(player.world.isRemote) {
-					GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.questChaseBeginning);
+					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
 				}
 			}
 		} else {
@@ -1235,7 +1231,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	private void npcStopAndInteractFalse(EntityCustomNpc npc2) {
 		try{
-			npc.ai.stopAndInteract = false;
+			npc.ais.stopAndInteract = false;
 		}
 		catch(Exception ee)
 		{
@@ -1277,7 +1273,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	public void handlePlayTimeOnServer()
 	{
-		dist = player.getDistanceToEntity(npc);
+		dist = player.getDistance(npc);
 		ratio = (initialDist-dist)/initialDist;
 		
 		if (Minecraft.getMinecraft().isGamePaused())
@@ -1585,20 +1581,23 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 	private static void setBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
-			world.setBlock(x, y, z, block);
+		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
+			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState());
+			//world.setBlock(x, y, z, block);
 	}
 	
 	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
 	{
-		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
 			world.setBlock(x, y, z, block, direction, 3);
 	}
 	
 	private static void cleanBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
-			world.setBlock(x, y, z, block);
+		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
+			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState());
+
+		//world.setBlock(x, y, z, block);
 	}
 
 	@Override
@@ -1630,7 +1629,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //					}
 					if(chasingQuestOnCountDown)
 					{
-						if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
+						if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
 							handleCountdown();
 						else
 							countdown = 11;
@@ -1644,7 +1643,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						{
 							handlePlayTimeOnServer();
 							
-							if(updateProgressStats((float)player.posZ, (float)player.getDistanceToEntity(npc)))
+							if(updateProgressStats((float)player.posZ, (float)player.getDistance(npc)))
 								audioFeedback.updateState(getAudioFeedbackEnum((float)player.posZ, (float)npc.posZ, distMovedLastFewSeconds, damageLastFewSeconds, (damageLastFewSeconds>0)));
 						}
 						else
@@ -1763,7 +1762,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
 			endingZ = (int)player.posZ;
 			LeaderboardRow row = new LeaderboardRow();
-			row.name = player.getDisplayName();
+			row.name = player.getDisplayNameString();
 			row.level = Integer.toString(thiefLevel);
 			row.time_elapsed = "" + time;
 			row.combo = "" + bestCombo;
@@ -1847,10 +1846,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				break;
 			case 9:
 				specialItemName = "Diamond Tool Set";
-				npc.entityDropItem(new ItemStack(Items.diamond_axe), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_hoe), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_pickaxe), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_shovel), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_AXE), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_HOE), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_PICKAXE), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_SHOVEL), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_sword), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_boots), 1);
 				npc.entityDropItem(new ItemStack(Items.diamond_chestplate), 1);
@@ -1866,8 +1865,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				break;
 			};
 			
-			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
-			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.APPLE), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.APPLE), random.nextInt(16)/8F);
 			
 			for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
 				npc.entityDropItem(new ItemStack(Items.GOLD_INGOT), 1);//, random.nextInt(16)/8F);
@@ -1878,8 +1877,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				npc.entityDropItem(new ItemStack(Items.GOLD_INGOT), 1);
 			}
 			
-			GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.goldBarInfo);
-			GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.goldSpendWisely);
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
+			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
 
 			Minecraft mc = Minecraft.getMinecraft();
 			
@@ -2068,7 +2067,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		if(!player.world.isRemote)
 		{
 			if (BiGXEventTriggers.checkEntityInArea(event.getTarget(), NpcLocations.officer.addVector(0, -1, 0), NpcLocations.officer.addVector(1, 0, 1))){
-				if(player.world.provider.dimensionId != 0)
+				if(player.world.provider.getDimension() != 0)
 					return;
 					
 				try {
@@ -2077,7 +2076,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				} catch (QuestException e) {
 					e.printStackTrace();
 				}
-				EntityPlayer player = event.entityPlayer;
+				EntityPlayer player = event.getEntityPlayer();
 
 				int posy = ((int) player.posY == player.posY)?(int) player.posY:((int) player.posY)+1;
 				//TODO
@@ -2107,9 +2106,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 	
 	@Override
-	public void onItemUse(Start event) {
+	public void onItemUse(LivingEntityUseItemEvent.Start event) {
 		synchronized (questManager) {
-			player = event.entityPlayer;
+			player = event.getEntityLiving();
 			
 			if(!player.world.isRemote)
 			{

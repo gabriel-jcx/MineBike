@@ -1,9 +1,9 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
-public class BiomeGenDungeon extends BiomeGenBase {
+public class BiomeGenDungeon extends Biome {
 
 	public BiomeGenDungeon(int par1) {
 		super(par1);
