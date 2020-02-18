@@ -28,9 +28,11 @@ import net.minecraft.client.audio.SoundRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+
+//import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestEventHandler {
@@ -158,7 +160,7 @@ public class QuestEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void onItemUse(PlayerUseItemEvent.Start event) {
+	public void onItemUse(LivingEntityUseItemEvent.Start event) {
 		synchronized (questEventItemUseList) {
 			for(IQuestEventItemUse questEventItemUse : questEventItemUseList)
 			{
@@ -266,7 +268,7 @@ public class QuestEventHandler {
 			
 			for(String villanName : QuestTaskChasing.villainNames)
 			{
-				if(villanName.equals(target.display.name))
+				if(villanName.equals(target.display.getName()))
 				{
 					isVillain = true;
 					break;
@@ -275,7 +277,7 @@ public class QuestEventHandler {
 			
 			for(String villanName : QuestTaskFightAndChasing.villainNames)
 			{
-				if(villanName.equals(target.display.name))
+				if(villanName.equals(target.display.getName()))
 				{
 					isVillain = true;
 					break;
@@ -313,14 +315,14 @@ public class QuestEventHandler {
 					}
 					questEventAttackListDel.clear();
 				}
-				
-				event.entityPlayer.worldObj.playSoundAtEntity(event.entityPlayer, "minebike:hit" + hit, 1.0f, 1.0f);
+				//TODO: figure out how to play sounds
+				//event.getEntityPlayer().getEntityWorld().playSoundAtEntity(event.getEntityPlayer(), "minebike:hit" + hit, 1.0f, 1.0f);
 			}
 		}
 	}
 	
 	@SubscribeEvent
-	public void entityInteractEvent(EntityInteractEvent e) {
+	public void entityInteractEvent(PlayerInteractEvent.EntityInteract e) {
 		synchronized (questEventNpcInteractionList) {
 			for(IQuestEventNpcInteraction questEventNpcInteraction : questEventNpcInteractionList)
 			{
@@ -358,9 +360,10 @@ public class QuestEventHandler {
 		
 		GameSaveManager.flagGameSaveContinue = true;
 		
-		if (event.entity instanceof EntityPlayer && event.entity.dimension == WorldProviderFlats.dimID) {
+		if (event.getEntity() instanceof EntityPlayer && event.getEntity().dimension == WorldProviderFlats.dimID) {
 			if (BiGX.instance().clientContext.getQuestManager().getActiveQuestId() == Quest.QUEST_ID_STRING_CHASE_REG) {
-				event.entity.worldObj.playSoundAtEntity(event.entity, "minebike:chasemusic", 1.0f, 1.0f);
+				//TODO: figure out how to play sounds
+				//event.getEntity().getEntityWorld().playSoundAtEntity(event.entity, "minebike:chasemusic", 1.0f, 1.0f);
 			}
 			
 		}

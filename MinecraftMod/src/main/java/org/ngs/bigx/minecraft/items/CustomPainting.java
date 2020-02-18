@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.items;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,6 +33,8 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
 
     public CustomPainting(World p_i1600_1_, int p_i1600_2_, int p_i1600_3_, int p_i1600_4_, int p_i1600_5_)
     {
+        BlockPos pos = new BlockPos( p_i1600_2_, p_i1600_3_, p_i1600_4_);
+
         super(p_i1600_1_, p_i1600_2_, p_i1600_3_, p_i1600_4_, p_i1600_5_);
         ArrayList<EnumArt> arraylist = new ArrayList<EnumArt>();
         CustomPainting.EnumArt[] aenumart = CustomPainting.EnumArt.values();
@@ -140,6 +143,11 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
         }
 
         this.entityDropItem(new ItemStack(MineBikeCustomItems.itemMap.get("item.CustomPainting")), 0.0F);
+    }
+
+    @Override
+    public void playPlaceSound() {
+        //TODO: implement playPlaceSound
     }
 
     public static enum EnumArt

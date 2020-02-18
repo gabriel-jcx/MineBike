@@ -1,7 +1,8 @@
 package org.ngs.bigx.minecraft.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -17,6 +18,11 @@ import org.lwjgl.opengl.GL12;
 public class RenderCustomPainting  extends Render
 {
     private static final ResourceLocation field_110807_a = new ResourceLocation("customnpcs:textures/painting/custompainting.png");
+
+    // Added the default constructor that matches super.
+    protected RenderCustomPainting(RenderManager renderManager) {
+        super(renderManager);
+    }
 
     public void doRender(CustomPainting p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
     {
@@ -70,7 +76,8 @@ public class RenderCustomPainting  extends Render
                 float f20 = (float)(p_77010_4_ + p_77010_2_ - (i1 + 1) * 16) / 512.0F;
                 float f21 = (float)(p_77010_5_ + p_77010_3_ - j1 * 16) / 512.0F;
                 float f22 = (float)(p_77010_5_ + p_77010_3_ - (j1 + 1) * 16) / 512.0F;
-                Tessellator tessellator = Tessellator.instance;
+                Tessellator tessellator = Tessellator.getInstance();
+                //tessellator.
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 0.0F, -1.0F);
                 tessellator.addVertexWithUV((double)f15, (double)f18, (double)(-f2), (double)f20, (double)f21);

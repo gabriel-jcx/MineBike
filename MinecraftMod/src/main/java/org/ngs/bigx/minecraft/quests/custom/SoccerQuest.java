@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.DimensionManager;
+import noppes.npcs.entity.data.DataAI;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
@@ -39,17 +42,19 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import noppes.npcs.DataAI;
-import noppes.npcs.constants.EnumMovingType;
+import noppes.npcs.entity.data.DataAI;
+import noppes.npcs.ai.EntityAIMovingPath;
+//import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 import scala.actors.threadpool.Arrays;
-
+import net.minecraftforge.common.DimensionManager;
 public class SoccerQuest extends CustomQuestAbstract
 {
+
 	private int playerScore;
 	private int enemyScore;
-	
+
 	private boolean ballInit;
 	private SoccerBall ball;
 	
@@ -232,7 +237,7 @@ public class SoccerQuest extends CustomQuestAbstract
 			
 			NpcCommand.removeNpc(Raul.NAME + " ", SoccerQuest.SOCCERDIMENSIONID);
 			
-			WorldServer ws = MinecraftServer.getServer().worldServerForDimension(SoccerQuest.SOCCERDIMENSIONID);
+			WorldServer ws =DimensionManager.getWorld(SoccerQuest.SOCCERDIMENSIONID);
 			synchronized (ws.loadedEntityList) {
 				Iterator iter = ws.loadedEntityList.iterator();
 				while (iter.hasNext()) {
@@ -264,12 +269,15 @@ public class SoccerQuest extends CustomQuestAbstract
 					return npcPathList;
 				}
 			};
-			npc.ai.movingPause = false;
-			npc.ai.movingPos = 0;
-			npc.ai.startPos = npcPath;
-			npc.ai.walkingRange = 100;
-			npc.ai.movingPattern = 0;
-			npc.ai.movingType = EnumMovingType.MovingPath;
+			npc.ais.movingPause = false;
+			npc.ais.movingPos = 0;
+			BlockPos startPos = new BlockPos(npcPath[0],npcPath[1],npcPath[2]);
+			npc.ais.setStartPos(startPos);// = npcPath;
+			npc.ais.walkingRange = 100;
+			npc.ais.movingPattern = 0;
+
+			npc.ais.setMovingType(2); // NOTE: 2 is the value for Moving Path appearantly
+			//npc.ais.movingType = EnumMovingType.MovingPath;
 			
 			
 			
@@ -349,7 +357,7 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		npcPathList.add(npcPath);
 		npcPathList.add(npcPath);
-		
+
 		npc.ais = new DataAI(npc) {
 			public int[] path = SoccerQuest.npcPath;
 			@Override
@@ -367,12 +375,14 @@ public class SoccerQuest extends CustomQuestAbstract
 		
 		npc.ais.movingPause = false;
 		npc.ais.movingPos = 0;
-		npc.ais.startPos = npcPath;
+		BlockPos startPos = new BlockPos(npcPath[0],npcPath[1],npcPath[2]);
+		npc.ais.setStartPos(startPos);// = npcPath;
 		npc.ais.walkingRange = 100;
 		npc.ais.movingPattern = 0;
-		npc.ais.movingType = EnumMovingType.MovingPath;
+
+		npc.ais.setMovingType(2); // NOTE: 2 is the value for Moving Path appearantly
 		
-		double d = npc.getPosition(1.0f).distanceTo(new Vec3d(0.0d, SOCCER_Y_LEVEL, 0.0d));
+		double d = npc.getPosition().getDistance(0,(int)SOCCER_Y_LEVEL, 0);//distanceTo(new Vec3d(0.0d, SOCCER_Y_LEVEL, 0.0d));
 		double t = 1.0d/d;
 		t *= 3;
 		double[] newPoint = Utils.lerp(
@@ -388,11 +398,11 @@ public class SoccerQuest extends CustomQuestAbstract
 		npcPathList.set(0, npcPath);
 		npcPathList.set(1, npcPath);
 		
-		npc.ai.setMovingPath(npcPathList);
+		npc.ais.setMovingPath(npcPathList);
 		
 //		command.addPathPoint(intPoint);
 		
-		npc.ai.getMovingPath().add(intPoint);
+		npc.ais.getMovingPath().add(intPoint);
 		
 		command.enableMoving(true);
 		command.setSpeed(npcSpeed);
@@ -401,7 +411,7 @@ public class SoccerQuest extends CustomQuestAbstract
 	
 	private void updateNpcPath() 
 	{
-		double d = npc.getPosition(1.0f).distanceTo(ball.getPosition(1.0f));
+		double d = npc.getPosition().distanceSq(ball.getPosition());
 		double t = 1.0d/d;
 		t *= 3;
 		double[] newPoint = Utils.lerp(
@@ -417,11 +427,11 @@ public class SoccerQuest extends CustomQuestAbstract
 		npcPathList.set(0, npcPath);
 		npcPathList.set(1, npcPath);
 		
-		npc.ai.setMovingPath(npcPathList);
+		npc.ais.setMovingPath(npcPathList);
 		
 //		command.addPathPoint(intPoint);
 		
-		npc.ai.getMovingPath().add(intPoint);
+		npc.ais.getMovingPath().add(intPoint);
 		
 		command.enableMoving(true);
 		
@@ -429,16 +439,16 @@ public class SoccerQuest extends CustomQuestAbstract
 
 	public static boolean entityInsideBlueGoal(EntityLiving e)
 	{
-		double x = e.getPosition(1.0f).xCoord;
-		double z = e.getPosition(1.0f).zCoord;
+		double x = e.getPosition().getX();
+		double z = e.getPosition().getZ();
 		
 		return (x < 3.0 && x  > -2.0) && z < -48.8;
 	}
 	
 	public static boolean entityInsideRedGoal(EntityLiving e)
 	{
-		double x = e.getPosition(1.0f).xCoord;
-		double z = e.getPosition(1.0f).zCoord;
+		double x = e.getPosition().getX();
+		double z = e.getPosition().getZ();
 		return (x < 3.0 && x  > -2.0) && z > 49.8;
 	}
 		
@@ -457,11 +467,11 @@ public class SoccerQuest extends CustomQuestAbstract
 			return;
 		
 		double HIT_SPEED = 3.0d;
-		if (event.player.getPosition(1.0f).distanceTo(ball.getPosition(1.0f)) < 2)
+		if (event.player.getPosition().distanceSq(ball.getPosition()) < 2)
 		{
 			ball.getHitFrom(event.player.posX, event.player.posY, event.player.posZ);
 		}
-		if (npc.getPosition(1.0f).distanceTo(ball.getPosition(1.0f)) < 2)
+		if (npc.getPosition().distanceSq(ball.getPosition()) < 2)
 		{
 			ball.getHitTowards(0, SOCCER_Y_LEVEL, -50);
 		}

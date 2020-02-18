@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.quests.custom;
 import java.time.Clock;
 import java.util.Random;
 
+import net.minecraft.util.math.BlockPos;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
@@ -18,7 +19,9 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderTRON;
 
 //import cpw.mods.fml.common.gameevent.TickEvent;
 //import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
-//import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -134,14 +137,14 @@ public class MinerQuest extends CustomQuestAbstract
 		public void onQuit(ClientDisconnectionFromServerEvent event)
 		{
 			
-			QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.xCoord, (int) MinerNPC.LOCATION.yCoord, (int) MinerNPC.LOCATION.zCoord);
+			QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.x, (int) MinerNPC.LOCATION.y, (int) MinerNPC.LOCATION.z);
 		}
 		
 		static boolean worldLoaded = false;
 		@Override
 		public void onWorldLoadEvent(WorldEvent.Load event)
 		{
-			if (event.world.provider.dimensionId == MINERUNDIMENSIONID)
+			if (event.getWorld().provider.getDimension() == MINERUNDIMENSIONID)
 				worldLoaded = true;
 			initialize = false;
 			posXofLava = -40;
@@ -158,29 +161,38 @@ public class MinerQuest extends CustomQuestAbstract
 					{
 						Random rand = new Random();
 						int randomInt = rand.nextInt(10);
+						BlockPos pos = new BlockPos((int)(startx)+x,20, (int)(startz)+z);
 						switch(randomInt)
 						{
 						case 0:
-							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.iron_ore);
+							world.setBlockState(pos, Blocks.IRON_ORE.getDefaultState());
+							//world.setBlock((int) (startx)+x, 20, (int) (startz+z),Blocks.iron_ore);
 						break;
 						case 1:
-							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.gold_ore);
+							world.setBlockState(pos, Blocks.GOLD_ORE.getDefaultState());
+							//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.gold_ore);
 						break;
 						case 2:
-							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.diamond_ore);
+							world.setBlockState(pos, Blocks.DIAMOND_ORE.getDefaultState());
+							//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.diamond_ore);
 						break;
 						case 3:
-							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.redstone_ore);
+							world.setBlockState(pos, Blocks.REDSTONE_ORE.getDefaultState());
+							//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.redstone_ore);
 						break;
 						case 4:
-							world.setBlock((int) (startx)+x, 20,(int) (startz+z), Blocks.glowstone);
+							world.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
+							//world.setBlock((int) (startx)+x, 20,(int) (startz+z), Blocks.glowstone);
 						break;
 						default:
-							world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.STONE);
+							world.setBlockState(pos, Blocks.STONE.getDefaultState());
+							//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.STONE);
 						break;
 						}
 						//set it to air above
-						world.setBlock((int) startx + x, 21, (int) (startz + z), Blocks.AIR);
+						pos = pos.add(0,1,0);
+						world.setBlockState(pos,Blocks.AIR.getDefaultState());
+						//world.setBlock((int) startx + x, 21, (int) (startz + z), Blocks.AIR);
 					}
 				}
 		}
@@ -189,39 +201,46 @@ public class MinerQuest extends CustomQuestAbstract
 			for(int z = 0; z < 11; z++)
 			{
 				
-					Random rand = new Random();
-					int randomInt = rand.nextInt(10);
-					switch(randomInt)
-					{
+				Random rand = new Random();
+				int randomInt = rand.nextInt(10);
+				BlockPos pos = new BlockPos((int)(startx),20, (int)(startz)+z);
+				switch(randomInt)
+				{
 					case 0:
-						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.iron_ore);
-					break;
+						world.setBlockState(pos, Blocks.IRON_ORE.getDefaultState());
+						//world.setBlock((int) (startx)+x, 20, (int) (startz+z),Blocks.iron_ore);
+						break;
 					case 1:
-						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.gold_ore);
-					break;
+						world.setBlockState(pos, Blocks.GOLD_ORE.getDefaultState());
+						//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.gold_ore);
+						break;
 					case 2:
-						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.diamond_ore);
-					break;
+						world.setBlockState(pos, Blocks.DIAMOND_ORE.getDefaultState());
+						//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.diamond_ore);
+						break;
 					case 3:
-						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.redstone_ore);
-					break;
+						world.setBlockState(pos, Blocks.REDSTONE_ORE.getDefaultState());
+						//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.redstone_ore);
+						break;
 					case 4:
-						world.setBlock((int) (startx), 20,(int) (startz+z), Blocks.glowstone);
-					break;
+						world.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState());
+						//world.setBlock((int) (startx)+x, 20,(int) (startz+z), Blocks.glowstone);
+						break;
 					default:
-						world.setBlock((int) (startx), 20, (int) (startz+z), Blocks.STONE);
-					break;
+						world.setBlockState(pos, Blocks.STONE.getDefaultState());
+						//world.setBlock((int) (startx)+x, 20, (int) (startz+z), Blocks.STONE);
+						break;
 				}
 			}
 		}
 		@Override
 		public void onWorldTickEvent(TickEvent.WorldTickEvent event)
 		{
-			World world= event.world.provider.worldObj;
-			if (event.world.provider.worldObj.isRemote)
+			World world= event.world;
+			if (event.world.isRemote)
 				return;
 			
-			if(worldLoaded && event.world.provider.dimensionId == WorldProviderMineRun.MINERUNDIMENSIONID && !pleaseStop)
+			if(worldLoaded && event.world.provider.getDimension() == WorldProviderMineRun.MINERUNDIMENSIONID && !pleaseStop)
 			{
 				
 				
@@ -248,7 +267,7 @@ public class MinerQuest extends CustomQuestAbstract
 							HudManager.unregisterRectangle(timerRectangle);
 							HudManager.unregisterString(timerString);
 							currentTick = 0;
-							QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.xCoord, (int) MinerNPC.LOCATION.yCoord, (int) MinerNPC.LOCATION.zCoord);
+							QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.x, (int) MinerNPC.LOCATION.y, (int) MinerNPC.LOCATION.z);
 							initialize = false;
 						}
 						timerString.text = ""+(seconds - secondsPassed);
@@ -308,8 +327,8 @@ public class MinerQuest extends CustomQuestAbstract
 						switch(randomInt5)
 						{							
 							case 1:
-							EntityItem entityitem1 = new EntityItem(event.world.provider.worldObj, posXofPlayer+20, 21, randomInt4, new ItemStack(Items.gold_ingot,1));
-							event.world.provider.worldObj.spawnEntityInWorld(entityitem1);
+							EntityItem entityitem1 = new EntityItem(event.world, posXofPlayer+20, 21, randomInt4, new ItemStack(Items.GOLD_INGOT,1));
+							event.world.spawnEntity(entityitem1);
 							break;
 							
 						}
@@ -345,7 +364,7 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int y = 21; y < 24; y++)
 				{
-					 if(world.getBlock((int) startx, y, z).equals(Blocks.COBBLESTONE))
+					 if(world.getBlockState(new BlockPos((int) startx, y, z)).equals(Blocks.COBBLESTONE))
 					 {
 						 return true;
 					 }
@@ -362,7 +381,8 @@ public class MinerQuest extends CustomQuestAbstract
 				{
 					for(int y = 21; y < 24; y++)
 					{
-						 world.setBlock((int) startx, y, z, Blocks.AIR);
+						world.setBlockState(new BlockPos((int) startx, y, z),Blocks.AIR.getDefaultState());
+						//world.setBlock((int) startx, y, z, Blocks.AIR);
 					}
 				}
 		}
@@ -374,7 +394,8 @@ public class MinerQuest extends CustomQuestAbstract
 				{
 					for(int y = 21; y < 24; y++)
 					{
-						 world.setBlock(x, y, z, Blocks.AIR);
+						world.setBlockState(new BlockPos((int) x, y, z),Blocks.AIR.getDefaultState());
+						//world.setBlock(x, y, z, Blocks.AIR);
 					}
 				}
 			}
@@ -385,23 +406,24 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int y = 21; y < 24; y++)
 				{
-					 world.setBlock((int) startx, y, z, Blocks.fire);
+					world.setBlockState(new BlockPos((int) startx, y, z),Blocks.FIRE.getDefaultState());
+					//world.setBlock((int) startx, y, z, Blocks.fire);
 				}
 			}
 		}
 		@Override
 	    public void onPlayerTickEvent(TickEvent.PlayerTickEvent event)
 	    {
-	        posXofPlayer = event.player.getPlayerCoordinates().posX;
-	        posZofPlayer = event.player.getPlayerCoordinates().posZ;
-	        posYofPlayer = event.player.getPlayerCoordinates().posY;
+	        posXofPlayer = event.player.getPosition().getX();
+	        posZofPlayer = event.player.getPosition().getZ();
+	        posYofPlayer = event.player.getPosition().getY();
 			if(event.player.isBurning())
 			{
 				super.complete();
 				HudManager.unregisterRectangle(timerRectangle);
 				HudManager.unregisterString(timerString);
 				currentTick = 0;
-				QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.xCoord, (int) MinerNPC.LOCATION.yCoord, (int) MinerNPC.LOCATION.zCoord);
+				QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.x, (int) MinerNPC.LOCATION.y, (int) MinerNPC.LOCATION.zCoord);
 				seconds = 60;
 				initialize = false;
 			}
@@ -419,10 +441,11 @@ public class MinerQuest extends CustomQuestAbstract
 		{
 			for(int z = 0; z < 11; z++)
 			{
-				if(world.isAirBlock((int) (startx), 21, (int) (startz+z)))
+				if(world.isAirBlock(new BlockPos((int) (startx), 21, (int) (startz+z))))
 				{
-				
-				 world.setBlock((int) (startx), 21, (int) (startz+z), Blocks.emerald_ore);
+					world.setBlockState(new BlockPos((int) startx, 21, (int)startz+ z),Blocks.EMERALD_ORE.getDefaultState());
+
+					//world.setBlock((int) (startx), 21, (int) (startz+z), Blocks.emerald_ore);
 				}
 			}
 		}
@@ -433,7 +456,9 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int y = 21; y < 24; y++)
 				{
-					 world.setBlock((int) startx, y, z, Blocks.COBBLESTONE);
+					world.setBlockState(new BlockPos((int) startx, y, (int)startz+ z),Blocks.COBBLESTONE.getDefaultState());
+
+					//world.setBlock((int) startx, y, z, Blocks.COBBLESTONE);
 				}
 			}
 		}
@@ -443,7 +468,9 @@ public class MinerQuest extends CustomQuestAbstract
 			{
 				for(int z = (int) startz; z < startz+3; z++)
 				{
-					 world.setBlock(x, 20, z, Blocks.lava);
+					world.setBlockState(new BlockPos( x, 20,  z),Blocks.LAVA.getDefaultState());
+
+					//world.setBlock(x, 20, z, Blocks.lava);
 				}
 			}
 		}

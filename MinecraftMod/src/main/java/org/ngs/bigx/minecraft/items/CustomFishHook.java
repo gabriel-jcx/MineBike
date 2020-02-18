@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -39,6 +39,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.WeightedRandomFishable;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -142,7 +143,7 @@ public class CustomFishHook extends EntityFishHook
 	/*
 	 * 
 	 */
-	private List<ArrayList<WeightedRandomFishable>> fishingSpots = new ArrayList<ArrayList<WeightedRandomFishable>>();
+	private List<ArrayList<WeightedSpawnerEntity>> fishingSpots = new ArrayList<ArrayList<WeightedSpawnerEntity>>();
 	
 	
 	//The Gui for the Power Level Display
@@ -156,9 +157,9 @@ public class CustomFishHook extends EntityFishHook
  	public static HudString failTime = new HudString(0, 0, "Failure in " + 5 + " Seconds", 5, true, true);
 	
 	//List that stores the catchable custom fish
-	public static List<WeightedRandomFishable> temp2;
+	public static List<WeightedSpawnerEntity> temp2;
 	
-    public static List<WeightedRandomFishable> func_174855_j()
+    public static List<WeightedSpawnerEntity> func_174855_j()
     {
         return temp2;
     }

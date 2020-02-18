@@ -102,8 +102,8 @@ public class FishingQuest extends CustomQuestAbstract
 		time = 300;
 		timeElapsed = 0;
 		CustomFishHook.numFish = 0;
-		EntityItem entityitem = new EntityItem(event.player.world, 0, 11, 0, new ItemStack(Items.gold_ingot, 5));
-		(event.player.world).spawnEntityInWorld(entityitem);
+		EntityItem entityitem = new EntityItem(event.player.world, 0, 11, 0, new ItemStack(Items.GOLD_INGOT, 5));
+		(event.player.world).spawnEntity(entityitem);
 		QuestTeleporter.teleport(player, FISHINGDIMENSIONID, 0, 11, 0);
 	}
 	
@@ -162,13 +162,13 @@ public class FishingQuest extends CustomQuestAbstract
 			if(!event.player.capabilities.isCreativeMode && checkDimension == true)
 				event.player.setGameType(WorldSettings.getGameTypeById(1));
 			
-			ChunkCoordinates coord = event.player.getPlayerCoordinates();
+			BlockPos coord = event.player.getPosition();
 			
 			//Used to Return the Player to the Overworld and end the quest
 			if(checkArea(-36, -35, 9, 25, -7, 7, coord, checkDimension))
 			{
 				System.out.println("Return");
-				QuestTeleporter.teleport(player, 0, (int) Chum.LOCATION.xCoord, (int) Chum.LOCATION.yCoord, (int) Chum.LOCATION.zCoord);
+				QuestTeleporter.teleport(player, 0, (int) Chum.LOCATION.x, (int) Chum.LOCATION.y, (int) Chum.LOCATION.z);
 				CustomFishHook.fishingLocation = 0;
 				super.complete();
 			}
@@ -225,9 +225,9 @@ public class FishingQuest extends CustomQuestAbstract
 	 * Ex: the coordinates are (-42, 15, 72) and (10, -20, 32)
 	 * The Parameters for these coords are checkArea(-42, 10, -20, 15, 32, 72)
 	 */
-	public boolean checkArea(int xLow, int xHigh, int yLow, int yHigh, int zLow, int zHigh, ChunkCoordinates coord, boolean dimension)
+	public boolean checkArea(int xLow, int xHigh, int yLow, int yHigh, int zLow, int zHigh, BlockPos coord, boolean dimension)
 	{
-		if((coord.posX >= xLow && coord.posX <= xHigh) && (coord.posY >= yLow && coord.posY <= yHigh) && (coord.posZ >= zLow && coord.posZ <= zHigh)
+		if((coord.getX() >= xLow && coord.getX() <= xHigh) && (coord.getY() >= yLow && coord.getY() <= yHigh) && (coord.getX() >= zLow && coord.getZ() <= zHigh)
 				&& dimension)
 		{
 			return true;

@@ -9,7 +9,7 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 
 import com.google.common.collect.Maps;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class StatRegistry {
 
@@ -17,8 +17,8 @@ protected static Map<Class<? extends Entity>, Set<EntityStat>> registry = Maps.n
 
 	@SubscribeEvent
 	public void onEntityContruct(EntityConstructing event) {
-		if (registry.containsKey(event.entity.getClass())) {
-		ExtendedProperties.register(event.entity);
+		if (registry.containsKey(event.getEntity().getClass())) {
+		ExtendedProperties.register(event.getEntity());
 		}
 	}
 	

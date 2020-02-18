@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
@@ -18,7 +20,7 @@ import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.dictionary.protocol.Specification.GameTagType;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
-import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
+//import org.ngs.bigx.minecraft.BiGXTextBoxDiaLOGue;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.GuiDamage;
 import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
@@ -64,9 +66,9 @@ import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -81,22 +83,29 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
+//import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
-import net.minecraftforge.common.util.EnumFacing;
+//import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
+//import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNpcCrystal;
+import net.minecraftforge.common.DimensionManager;
 
 public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlayback, IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
+	@Override
+	public void onItemUse(LivingEntityUseItemEvent.Start event) {
+		// TODO: implement this ;D
+	}
+
 	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int NPCRUNNINGSPEED = 11; // 11: FAST (70-80) 10: Medium (60-70) 9: Slow (50-60)
@@ -320,12 +329,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			((BigxClientContext)clientContext).setSpeed(0);
 		
 		if(npc != null)
-			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+			command.removeNpc(npc.display.getName(), WorldProviderFlats.dimID);
 
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 100, (int)entity.posZ + 16);
 		System.out.println("[BiGX] Cleaning Done.");
-		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.x, (int)returnLocation.y, (int)returnLocation.z);
 		System.out.println("[BiGX] Teleport Called");
 	}
 	
@@ -338,7 +347,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				cleanBlock(world, dx, initY-1, dz, Blocks.GRASS);
 				for(int dy= initY; dy<initY+16; dy++)
 				{
-					if(!(world.getBlock(dx, dy, dz) == Blocks.AIR))
+					if(!(world.getBlockState(new BlockPos(dx,dy,dz)) == Blocks.AIR))
 						setBlock(world, dx, dy, dz, Blocks.AIR);
 				}
 			}
@@ -520,7 +529,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			time = 0;
 		}
 
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 		QuestTeleporter.teleport(player, this.questDestinationDimensionId, 1, 11, 0);
 
 		chasingQuestInitialPosX = 1;
@@ -530,20 +539,20 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		blocks = new ArrayList<Vec3d>();
 		
 		for (int z = -16; z < (int)player.posZ+64; ++z) {
-			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
 		for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 		}
 		
 		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
-			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 		}
 		
@@ -561,34 +570,34 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				for (int y = origY; y < origY + 5; ++y) {
 					for (int z = origZ; z < origZ + 11; ++z) {
 						if (z == origZ || z == origZ + 10)
-							setBlock(w, x, y, z, Blocks.log);
+							setBlock(w, x, y, z, Blocks.LOG);
 						else
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 						blocks.add(new Vec3d(x, y, z));
 					}
 				}
-				setBlock(w, x, origY+1, origZ+5, Blocks.glass);
-				setBlock(w, x, origY+2, origZ+5, Blocks.glass);
+				setBlock(w, x, origY+1, origZ+5, Blocks.GLASS);
+				setBlock(w, x, origY+2, origZ+5, Blocks.GLASS);
 			} else {
 				for (int y = origY; y < origY + 7; ++y) {
 					for (int z = origZ; z < origZ + 11; ++z) {
 						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 							blocks.add(new Vec3d(x, y, z));
 						}
 						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 							blocks.add(new Vec3d(x, y, z));
 						}
 						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 							blocks.add(new Vec3d(x, y, z));
 						}
 					}
 				}
 				if (x == origX + 2 || x == origX + 4) {
-					setBlock(w, x, origY+1, origZ, Blocks.glass);
-					setBlock(w, x, origY+2, origZ, Blocks.glass);
+					setBlock(w, x, origY+1, origZ, Blocks.GLASS);
+					setBlock(w, x, origY+2, origZ, Blocks.GLASS);
 				}
 			}
 		}
@@ -597,12 +606,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	private void generateStructuresOnSides()
 	{
 		/**
-		 * Generates structures on sides (fence and Fake house on sides)
+		 * Generates structures on sides (OAK_FENCE); //FENCE and Fake house on sides)
 		 */
 		for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
-			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
 		
@@ -619,12 +628,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 	
 	private void generateTerrainByPatientProfile() {
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 		
 		if(serverContext.isSuggestedGamePropertiesReady())
 		{
 			/**
-			 * Generates structures inside fence
+			 * Generates structures inside OAK_FENCE); //FENCE
 			 */
 			ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
 			int currentRelativePosition = (int)player.posZ - chasingQuestInitialPosZ;
@@ -692,10 +701,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						if(levelSys.getPlayerLevel() < 6)
 							areas.add(terrainBiome.getRandomDesertBiome());
 						else
-							areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+							areas.add(terrainBiomeFire.getRandomLAVAFountainBiome());
 						break;
 					case FIRE:
-						areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+						areas.add(terrainBiomeFire.getRandomLAVAFountainBiome());
 						break;
 					default:
 						areas.add(new TerrainBiomeArea());
@@ -753,7 +762,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			if(areas.size() != 0)
 				areas.clear();
 			/**
-			 * END OF Generates structures inside fence
+			 * END OF Generates structures inside OAK_FENCE); //FENCE
 			 */
 		}
 		else{
@@ -835,7 +844,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 	
 	private void generateDroppedItems() {
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 		
 		Random randomNumber = new Random();
 		
@@ -864,23 +873,23 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			x += 8;
 		}
 		
-		// Select What Item (Gold Ingot(10%), Blaze Powder(35%) or feather(55%))
+		// Select What Item (Gold Ingot(10%), Blaze Powder(35%) or FEATHER(55%))
 		randDouble = randomNumber.nextDouble();
 		if(randDouble < 0.1)
 		{
-			randomItem = Items.gold_ingot;
+			randomItem = Items.GOLD_INGOT;
 		}
 		else if(randDouble < 0.45)
 		{
-			randomItem = Items.blaze_powder;
+			randomItem = Items.GLAZE_POWDER;
 		}
 		else
 		{
-			randomItem = Items.feather;
+			randomItem = Items.FEATHER;
 		}
 		
 		EntityItem item = new EntityItem(ws, x, y, z, new ItemStack(randomItem,1));
-		ws.spawnEntityInWorld(item);
+		ws.spawnEntity(item);
 	}
 	
 	public float getPlayerPitch() {
@@ -1052,8 +1061,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				{
 					System.out.println("if (countdown == 5)");
 					
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
+					GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.questChaseShowup);
+					GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.questChaseHintWeapon);
 					
 					switch(this.questChaseType)
 					{
@@ -1173,20 +1182,20 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				blocks = new ArrayList<Vec3d>();
 				
 				for (int z = -16; z < (int)player.posZ+64; ++z) {
-					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 				}
 				for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-					setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+					setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 				}
 				
 				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
-					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+					setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 				}
 			}
@@ -1202,7 +1211,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					thiefLevelSet = true;
 				}
 				if(player.world.isRemote) {
-					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseBeginning);
+					GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.questChaseBeginning);
 				}
 			}
 		} else {
@@ -1861,16 +1870,16 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
 			
 			for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
-				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
+				npc.entityDropItem(new ItemStack(Items.GOLD_INGOT), 1);//, random.nextInt(16)/8F);
 			}
 			
 			//Combo Bonus
 			for (int i = 0; i < (bestCombo/2); ++i){
-				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);
+				npc.entityDropItem(new ItemStack(Items.GOLD_INGOT), 1);
 			}
 			
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
-			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldSpendWisely);
+			GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.goldBarInfo);
+			GuiMessageWindow.showMessage(BiGXTextBoxDiaLOGue.goldSpendWisely);
 
 			Minecraft mc = Minecraft.getMinecraft();
 			
@@ -1933,20 +1942,20 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			blocks = new ArrayList<Vec3d>();
 			
 			for (int z = -16; z < (int)player.posZ+64; ++z) {
-				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 				blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 				blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 			}
 			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE); //FENCE);
 				blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 			}
 			
 			for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 				blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
-				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 				blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 			}
 			
@@ -2104,7 +2113,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			
 			if(!player.world.isRemote)
 			{
-				ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+				ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 				
 				int x1,y1,z1;
 				int x2,y2,z2;
@@ -2334,14 +2343,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	@Override
 	public void onItemPickUp(EntityItemPickupEvent event) {
-		if(event.item.getEntityItem().getItem() == Items.feather)
+		if(event.item.getEntityItem().getItem() == Items.FEATHER)
 		{
 			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
-		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
+		else if(event.item.getEntityItem().getItem() == Items.GLAZE_POWDER)
 		{
 			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");

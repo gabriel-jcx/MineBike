@@ -46,7 +46,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
 //import net.minecraftforge.client
-import net.minecraftforge.client.IItemRenderer;
+//import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import noppes.npcs.CustomItems;
@@ -110,6 +110,7 @@ import noppes.npcs.CustomItems;
 	    public void preInit(FMLPreInitializationEvent e) {
 	    	for(Item item : customItems)
 	    	{
+
 	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
 	    		//GameRegistry.registerTileEntity(item, item.getUnlocalizedName().substring(5));
 				//GameRegistry.registerEntitySelector(item, item.getUnlocalizedName().substring(5));

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import jdk.nashorn.internal.ir.Block;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldNameable;
 import org.ngs.bigx.minecraft.BiGX;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,20 +16,29 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class TileEntityQuestChest extends TileEntity{
+
+// NEED TO LOOK AT TileEntityChest.java for detailed implementation
+public class TileEntityQuestChest extends TileEntity implements IInventory{
 	
 	private static final int chestSize = 18;
 	private static final int stackLimit = 64;
 	
 	private int facing;
 	private int playerUsing;
-	
+
 	String userName;
 	
 	public Map<String, ItemStack[]> playerContents;
 	public ItemStack[] chestContents;
 	private String customName;
-	
+	public String getName(){
+		return "";
+	}
+	public boolean hasCustomName(){
+		if(customName != null)
+			return true;
+		return false;
+	}
 	public TileEntityQuestChest()
 	{
 		chestContents = new ItemStack[getSizeInventory()];
@@ -317,5 +327,44 @@ public class TileEntityQuestChest extends TileEntity{
 	
 	public boolean indexInInventory(int i) {
 		return (i > 0 || i <= getSizeInventory());
+	}
+
+	public boolean isEmpty(){
+		// TODO: figure out the logic for isEmpty()
+		return false;
+	}
+	public ItemStack removeStackFromSlot(int index){
+		// TODO: figure out the logic for removeStackFromSlot()
+		return null;
+	}
+	public boolean isUsableByPlayer(EntityPlayer player){
+		return true;
+	}
+	public void openInventory(EntityPlayer player){
+
+	}
+
+	public void closeInventory(EntityPlayer player){
+
+	}
+
+	/**
+	 * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot. For
+	 * guis use Slot.isItemValid
+	 */
+
+	public int getField(int id){
+		return 0;
+	}
+	public void setField(int id, int value){
+
+	}
+
+	public int getFieldCount(){
+		return 0;
+	}
+
+	public void clear(){
+
 	}
 }

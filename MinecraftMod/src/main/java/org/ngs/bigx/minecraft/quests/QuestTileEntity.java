@@ -4,6 +4,7 @@ import net.minecraft.block.BlockSign;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class QuestTileEntity extends TileEntity {
 	
@@ -18,8 +19,7 @@ public class QuestTileEntity extends TileEntity {
 	    signText[5] = l5;
 	    signText[6] = l6;
 	    signText[7] = l7;
-	    
-	    worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	    world.markBlockRangeForRenderUpdate(getPos(),getPos());
     }
     
     @Override
@@ -35,11 +35,11 @@ public class QuestTileEntity extends TileEntity {
     }
     
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
     	super.writeToNBT(nbt);
         for (int i = 0; i < 8; ++i) 
                 nbt.setString("L" + i, signText[i]);
-   
+   		return nbt;
 //        System.out.println("ABC " + signText[0] + " " + signText[1] + " " + signText[2] + " " + signText[3] + " " + signText[4] + " " + signText[5] + " " + signText[6] + " " + signText[7]);
     }
 
