@@ -423,7 +423,7 @@ public class MinerQuest extends CustomQuestAbstract
 				HudManager.unregisterRectangle(timerRectangle);
 				HudManager.unregisterString(timerString);
 				currentTick = 0;
-				QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.x, (int) MinerNPC.LOCATION.y, (int) MinerNPC.LOCATION.zCoord);
+				QuestTeleporter.teleport(player, 0, (int) MinerNPC.LOCATION.x, (int) MinerNPC.LOCATION.y, (int) MinerNPC.LOCATION.z);
 				seconds = 60;
 				initialize = false;
 			}
@@ -483,14 +483,15 @@ public class MinerQuest extends CustomQuestAbstract
 				{
 					Random rand = new Random();
 					int randomInt = rand.nextInt(10);
-					if(world.isAirBlock((int) (startx+x), 20, (int) (startz+z))) 
+					if(world.isAirBlock(new BlockPos((int) (startx+x), 20, (int) (startz+z))) )
 					//|| world.getBlock((int) (startx+x), 20, (int) (startz+z)).equals(Blocks.lava))
 					{
 					
 					switch(randomInt)
 					{
 					case 0:
-					 world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.iron_ore);
+						world.setBlockState(new BlockPos((int) (startx+x), 20, (int) (startz+z)), Blocks.IRON_ORE);
+						//world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.iron_ore);
 					break;
 					case 1:
 						world.setBlock((int) (startx+x), 20, (int) (startz+z), Blocks.gold_ore);

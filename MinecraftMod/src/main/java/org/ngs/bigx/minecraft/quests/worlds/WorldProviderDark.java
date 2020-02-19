@@ -1,12 +1,13 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+//import cpw.mods.fml.relauncher.Side;
+//import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderFlat;
+//import net.minecraft.world.gen.ChunkProviderFlat;
 
 public class WorldProviderDark extends WorldProvider {
 	public static int dimID = 101;
@@ -16,11 +17,15 @@ public class WorldProviderDark extends WorldProvider {
 	public static String dimName = "Chasing - Caves";
 	private static String flatGenPreset = "2;7,9x1,7x0,2x1;" + Integer.toString(flatBiomeID) + ";";
 	public static int groundHeight = 11;
-	
-	@Override
-	public String getDimensionName() {
-		return dimName;
-	}
+
+	public DimensionType getDimensionType(){
+		DimensionType a = new DimensionType( dimID, dimName, "?", this);
+		return a;
+	};
+//	@Override
+//	public String getDimensionName() {
+//		return dimName;
+//	}
 	
 	public void registerWorldChunkManager() {
 		this.dimensionId = dimID;

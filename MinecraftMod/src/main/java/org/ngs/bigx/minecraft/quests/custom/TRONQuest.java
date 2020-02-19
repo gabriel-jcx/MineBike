@@ -7,7 +7,7 @@ import java.util.Random;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.DimensionManager;
-import org.bukkit.block.Block;
+//import org.bukkit.block.Block;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
@@ -36,7 +36,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.data.DataAI;
-import noppes.npcs.constants.EnumMovingType;
+//import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class TRONQuest extends CustomQuestAbstract

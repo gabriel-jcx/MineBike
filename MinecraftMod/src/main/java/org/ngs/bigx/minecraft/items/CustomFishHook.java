@@ -9,13 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.registry.GameData;
+//import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderItem;
+//import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
@@ -35,12 +35,12 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
+//import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedSpawnerEntity;
-import net.minecraft.util.WeightedRandomFishable;
+//import net.minecraft.util.WeightedRandomFishable;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -175,7 +175,7 @@ public class CustomFishHook extends EntityFishHook
         this.ignoreFrustumCheck = true;
         this.angler = fishingPlayer;
         
-        if(worldIn.isRemote) System.out.println(this.angler.getCommandSenderName() + "<client");
+        if(worldIn.isRemote) System.out.println(this.angler.getName() + "<client");
        
         this.setSize(0.25F, 0.25F);
         this.setLocationAndAngles(fishingPlayer.posX, fishingPlayer.posY + (double)fishingPlayer.getEyeHeight(), fishingPlayer.posZ, fishingPlayer.rotationYaw, fishingPlayer.rotationPitch);
@@ -219,7 +219,7 @@ public class CustomFishHook extends EntityFishHook
     //Handles what happens when the hook is cast
     public void handleHookCasting(double p_146035_1_, double p_146035_3_, double p_146035_5_, float p_146035_7_, float p_146035_8_)
     {
-        float f2 = MathHelper.sqrt_double(p_146035_1_ * p_146035_1_ + p_146035_3_ * p_146035_3_ + p_146035_5_ * p_146035_5_);
+        float f2 = MathHelper.sqrt(p_146035_1_ * p_146035_1_ + p_146035_3_ * p_146035_3_ + p_146035_5_ * p_146035_5_);
         p_146035_1_ /= (double)f2;
         p_146035_3_ /= (double)f2;
         p_146035_5_ /= (double)f2;
@@ -232,7 +232,7 @@ public class CustomFishHook extends EntityFishHook
         this.motionX = p_146035_1_;
         this.motionY = p_146035_3_;
         this.motionZ = p_146035_5_;
-        float f3 = MathHelper.sqrt_double(p_146035_1_ * p_146035_1_ + p_146035_5_ * p_146035_5_);
+        float f3 = MathHelper.sqrt(p_146035_1_ * p_146035_1_ + p_146035_5_ * p_146035_5_);
         this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(p_146035_1_, p_146035_5_) * 180.0D / Math.PI);
         this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(p_146035_3_, (double)f3) * 180.0D / Math.PI);
         this.ticksInGround = 0;
@@ -434,7 +434,8 @@ public class CustomFishHook extends EntityFishHook
             double d7 = this.posX + (this.fishX - this.posX) / (double)this.fishPosRotationIncrements;
             double d8 = this.posY + (this.fishY - this.posY) / (double)this.fishPosRotationIncrements;
             double d9 = this.posZ + (this.fishZ - this.posZ) / (double)this.fishPosRotationIncrements;
-            double d1 = MathHelper.wrapAngleTo180_double(this.fishYaw - (double)this.rotationYaw);
+            double d1 = MathHelper. wrapDegrees(this.fishYaw - (double)this.rotationYaw);
+//            double d1 = MathHelper.wrapAngleTo180_double(this.fishYaw - (double)this.rotationYaw);
             this.rotationYaw = (float)((double)this.rotationYaw + d1 / (double)this.fishPosRotationIncrements);
             this.rotationPitch = (float)((double)this.rotationPitch + (this.fishPitch - (double)this.rotationPitch) / (double)this.fishPosRotationIncrements);
             --this.fishPosRotationIncrements;
