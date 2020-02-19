@@ -5,12 +5,16 @@ import net.minecraft.world.DimensionType;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+//import cpw.mods.fml.relauncher.Side;
+//import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
 /* import net.minecraft.world.gen.ChunkProviderFlat; */
+
 
 public class WorldProviderDark extends WorldProvider{
 	public static int dimID = 101;
@@ -20,18 +24,27 @@ public class WorldProviderDark extends WorldProvider{
 	public static String dimName = "Chasing - Caves";
 	private static String flatGenPreset = "2;7,9x1,7x0,2x1;" + Integer.toString(flatBiomeID) + ";";
 	public static int groundHeight = 11;
-	
+
 	
 	public String getDimensionName() {
 		return dimName;
 	}
-	
+	@Override
+	public DimensionType getDimensionType(){
+		// TODO: yet to be implemented
+		DimensionType a = null;// = new DimensionType( dimID, dimName, "?", this);
+		return a;
+	};
+//	@Override
+//	public String getDimensionName() {
+//		return dimName;
+//	}
+
 	public void registerWorldChunkManager() {
 		this.setDimension(dimID);
 		//Biome.BiomeProperties properties = new Biome.BiomeProperties("FlatCaves");
 		//this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlatCaves(properties), 0F);
 		this.hasSkyLight = false;
-		this.
 		this.terrainType = WorldType.FLAT;
 		
 	}
@@ -108,9 +121,5 @@ public class WorldProviderDark extends WorldProvider{
 		return 0.0D;
 	}
 
-	@Override
-	public DimensionType getDimensionType() {
-		// TODO: yet to be implemented
-		return null;
-	}
+
 }

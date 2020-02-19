@@ -488,8 +488,7 @@ public class MinerQuest extends CustomQuestAbstract
 					if(world.isAirBlock(pos))
 					//|| world.getBlock((int) (startx+x), 20, (int) (startz+z)).equals(Blocks.lava))
 					{
-						switch(randomInt)
-						{
+						switch (randomInt) {
 							case 0:
 								world.setBlockState(pos, Blocks.IRON_ORE.getDefaultState());
 								//world.setBlock((int) (startx)+x, 20, (int) (startz+z),Blocks.iron_ore);

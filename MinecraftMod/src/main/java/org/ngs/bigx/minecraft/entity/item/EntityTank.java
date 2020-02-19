@@ -2,7 +2,7 @@ package org.ngs.bigx.minecraft.entity.item;
 
 import org.ngs.bigx.minecraft.BiGX;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
+//import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
@@ -11,7 +11,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+//import net.minecraft.world.biome.BiomeGenBase;
 
 public class EntityTank extends EntityMob 
 {
