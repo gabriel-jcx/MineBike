@@ -290,7 +290,7 @@ public class GuiChapter extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 
@@ -303,23 +303,23 @@ public class GuiChapter extends GuiScreen {
 			    
 			    if(flagUnlocked)
 			    {
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(strUnlocked, -1 * fontRendererObj.getStringWidth(strUnlocked)/2, mcHeight/4 - 50, 0xFF3333);
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		    		fontRenderer.drawString(strUnlocked, -1 * fontRenderer.getStringWidth(strUnlocked)/2, mcHeight/4 - 50, 0xFF3333);
 			    }
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(chapterText, -1 * fontRendererObj.getStringWidth(chapterText)/2, mcHeight/4 - 40, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(chapterText, -1 * fontRenderer.getStringWidth(chapterText)/2, mcHeight/4 - 40, 0xFFFFFF);
 	
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(title, -1 * fontRendererObj.getStringWidth(title)/2, mcHeight/4 - 30, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(title, -1 * fontRenderer.getStringWidth(title)/2, mcHeight/4 - 30, 0xFFFFFF);
 	    		
 	    		if(didOneSecondPassed)
 	    		{
-	    			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	        		fontRendererObj.drawString(subtitleLine1, -1 * fontRendererObj.getStringWidth(subtitleLine1)/2, mcHeight/4 - 10, 0xCCCCCC);
+	    			fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	        		fontRenderer.drawString(subtitleLine1, -1 * fontRenderer.getStringWidth(subtitleLine1)/2, mcHeight/4 - 10, 0xCCCCCC);
 	
-	            	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	        		fontRendererObj.drawString(subtitleLine2, -1 * fontRendererObj.getStringWidth(subtitleLine2)/2, mcHeight/4, 0xCCCCCC);
+	            	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	        		fontRenderer.drawString(subtitleLine2, -1 * fontRenderer.getStringWidth(subtitleLine2)/2, mcHeight/4, 0xCCCCCC);
 	    		}
     		GL11.glPopMatrix();
 

@@ -14,6 +14,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraftforge.common.DimensionManager;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
@@ -208,7 +209,8 @@ public class GameSaveManager {
 		}
 		
 		Quest quest;
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+		WorldServer ws = DimensionManager.getWorld(0);
+		//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 		
 		QuestManager questManager;
 		
@@ -283,7 +285,8 @@ public class GameSaveManager {
 		}
 		
 		Quest quest;
-		WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
+		WorldServer ws = DimensionManager.getWorld(0);
+		//WorldServer ws = MinecraftServer.getServer().worldServerForDimension(0);
 		
 		QuestManager questManager;
 		

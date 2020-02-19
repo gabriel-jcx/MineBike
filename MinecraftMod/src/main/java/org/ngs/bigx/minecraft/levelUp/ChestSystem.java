@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.levelUp;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.util.text.event.ClickEvent;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.GuiMessageWindow;
@@ -19,7 +20,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 
 public class ChestSystem {
-	
+
 	private static Map<String, String> normalChests = populateNormalChests();
 	private static Map<String, String> lockedChests = populateLockedChests();
 	

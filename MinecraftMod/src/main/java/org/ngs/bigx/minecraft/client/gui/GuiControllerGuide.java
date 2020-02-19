@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client.gui;
 
+import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -50,8 +51,7 @@ public class GuiControllerGuide extends GuiScreen {
 	}
 
     @Override
-    public void keyTyped(char c, int i)
-    {
+    public void keyTyped(char c, int i) throws IOException {
     	super.keyTyped(c, i);
     	
     	if( (c == 'q') || (c=='Q') )
@@ -75,7 +75,7 @@ public class GuiControllerGuide extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 

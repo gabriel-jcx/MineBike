@@ -15,6 +15,7 @@ public class ClientStatHandler implements IMessageHandler<StatPacket, IMessage> 
 		Entity entity = world.getEntityByID(message.getEntityID());
 		
 		if (entity != null) {
+			//StatRegistry.(message.getStatName());
 			ISyncedStat stat = (ISyncedStat) StatRegistry.getStat(entity, message.getStatName());
 			stat.readFromNBT(message.getTag());
 		}

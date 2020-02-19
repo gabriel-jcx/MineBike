@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.minecraft.client.resources.I18n;
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -18,10 +19,11 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
 //import net.minecraft.util.EnumChatFormatting;
 
+
 public class GuiConnection extends GuiScreen {
+
 	private final GuiScreen back;
 	protected String name = "Connection";
 	private static BigxClientContext context;
@@ -47,8 +49,8 @@ public class GuiConnection extends GuiScreen {
 		this.buttonList.add(this.buttonDone);
 		
 		this.context.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-		
-		this.textFieldUserName = new GuiTextField(this.fontRendererObj, width / 2 - 100, height / 2 + 10, 200, 20);
+		// TODO: the next component id for guitextField is probably wrong, need to figure out
+		this.textFieldUserName = new GuiTextField(0,this.fontRenderer, width / 2 - 100, height / 2 + 10, 200, 20);
 		this.textFieldUserName.setText(this.context.BiGXUserName);
 		this.textFieldUserName.setMaxStringLength(30);
 		this.textFieldUserName.setFocused(true);
@@ -101,13 +103,16 @@ public class GuiConnection extends GuiScreen {
 	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_)
     {
         this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRendererObj, this.name, this.width / 2, 15, 16777215);
-        String msg = EnumChatFormatting.RED+I18n.format("gui.connection.connected.false", new Object[0]);
-        if (context.bigxclient.getIsConnected() == true) {
-        	msg = EnumChatFormatting.GREEN+I18n.format("gui.connection.connected.true", new Object[0]);
+        this.drawCenteredString(this.fontRenderer, this.name, this.width / 2, 15, 16777215);
+        //String msg = EnumChatFormatting.RED+"Not Connected";
+		String msg = "Not Connected";
+
+		if (context.bigxclient.getIsConnected() == true) {
+
+        	msg = "Connected";
         }
-        this.drawCenteredString(this.fontRendererObj, msg, this.width / 2, this.height / 6 + 40, 16777215);
-        this.drawCenteredString(this.fontRendererObj, "Please Enter Your Name (First Last)", width / 2, height / 2 - 10, 16777215);
+        this.drawCenteredString(this.fontRenderer, msg, this.width / 2, this.height / 6 + 40, 16777215);
+        this.drawCenteredString(this.fontRenderer, "Please Enter Your Name (First Last)", width / 2, height / 2 - 10, 16777215);
         this.textFieldUserName.drawTextBox();
         super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
     }

@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,8 +81,7 @@ public class GuiQuestlistManager extends GuiScreen {
 	}
 
     @Override
-    public void keyTyped(char c, int i)
-    {
+    public void keyTyped(char c, int i) throws IOException {
     	super.keyTyped(c, i);
     	
     	if( (c == 'K') || (c=='k') )

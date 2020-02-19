@@ -18,7 +18,7 @@ protected static Map<Class<? extends Entity>, Set<EntityStat>> registry = Maps.n
 	@SubscribeEvent
 	public void onEntityContruct(EntityConstructing event) {
 		if (registry.containsKey(event.getEntity().getClass())) {
-		ExtendedProperties.register(event.getEntity());
+		//ExtendedProperties.register(event.getEntity());
 		}
 	}
 	
@@ -41,12 +41,14 @@ protected static Map<Class<? extends Entity>, Set<EntityStat>> registry = Maps.n
 		registry.get(clazz).add(stat);
 	}
 	
-	public static EntityStat getStat(Entity entity, String name) {
-		return ExtendedProperties.get(entity).getStat(name);
-	}
+//	public static EntityStat getStat(Entity entity, String name) {
+//		return ExtendedProperties.get(entity).getStat(name);
+//	}
 	
+/*
 	public static EntityStat getStat(Entity entity, EntityStat stat) {
 		return getStat(entity, stat.getName());
 	}
+*/
 
 }

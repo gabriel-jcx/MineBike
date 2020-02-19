@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client.gui.quest.chase;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
@@ -87,7 +88,7 @@ public class GuiFinishChasingQuest extends GuiScreen {
 	}
 
     @Override
-    public void keyTyped(char c, int i) {
+    public void keyTyped(char c, int i) throws IOException {
     	
     	super.keyTyped(c, i);
     }

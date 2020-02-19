@@ -27,19 +27,19 @@ public class CustomGuiButton extends GuiButton
      * Draws this button to the screen.
      */
 	@Override
-	public void drawButton(Minecraft minecraft, int xCoord, int yCoord)
+	public void drawButton(Minecraft minecraft, int xCoord, int yCoord, float partialTicks)
     {
         if (this.visible)
         {
             FontRenderer fontrenderer = minecraft.fontRenderer;
             minecraft.getTextureManager().bindTexture(buttonTexture);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.field_146123_n = xCoord >= this.xPosition && yCoord >= this.yPosition && xCoord < this.xPosition + this.width && yCoord < this.yPosition + this.height;
-            int k = this.getHoverState(this.field_146123_n);
+            this.hovered = xCoord >= this.x && yCoord >= this.y && xCoord < this.x + this.width && yCoord < this.y + this.height;
+            int k = this.getHoverState(this.hovered);
             GL11.glEnable(GL11.GL_BLEND);
             OpenGlHelper.glBlendFunc(770, 771, 1, 0);
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, 0, 0, this.width, this.height);
+            this.drawTexturedModalRect(this.x, this.y, 0, 0, this.width, this.height);
 //            this.drawTexturedModalRect(this.xPosition + this.width / 2, this.yPosition, 200 - this.width / 2, 46 + k * 20, this.width / 2, this.height);
             this.mouseDragged(minecraft, xCoord, yCoord);
             int l = 14737632;
@@ -52,12 +52,12 @@ public class CustomGuiButton extends GuiButton
             {
                 l = 10526880;
             }
-            else if (this.field_146123_n)
+            else if (this.hovered)
             {
                 l = 16777120;
             }
 
-            this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 4) / 2, l);
+            this.drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 4) / 2, l);
         }
     }
 }

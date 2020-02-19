@@ -44,11 +44,11 @@ public String getName()
 	return name;
 }
 
-//@Override
+@Override
 public int func_150905_g(ItemStack stack) {
     ItemFishFood.FishType itemfishfood$fishtype = ItemFishFood.FishType.func_150978_a(stack);
     return this.field_150907_b && itemfishfood$fishtype.func_150973_i()?itemfishfood$fishtype.func_150970_e():itemfishfood$fishtype.func_150975_c();
-    super.
+    //super.
 	super.func_150905_g(stack);
     return EnumFishType.values()[stack.getItemDamage()].getHealAmount();
 }

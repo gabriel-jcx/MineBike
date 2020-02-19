@@ -5,6 +5,9 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
@@ -48,13 +51,13 @@ import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
-//import cpw.mods.fml.common.eventhandler.EventPriority;
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-//import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-//import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
-//import cpw.mods.fml.common.gameevent.TickEvent;
-//import cpw.mods.fml.relauncher.Side;
-//import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -146,7 +149,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void onLivingJump(LivingJumpEvent event) {
 		if (enableLock)
-			event.entity.motionY = 0;
+			event.getEntity().motionY = 0;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -272,8 +275,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(mc.player != null)
 			{
-				EntityClientPlayerMP player = mc.player;
-				
+				EntityPlayerSP player = mc.player;
+
 				player.inventory.currentItem --;
 				
 				if(player.inventory.currentItem < 0)
@@ -287,7 +290,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(mc.player != null)
 			{
-				EntityClientPlayerMP player = mc.player;
+				EntityPlayerSP player = mc.player;
 				
 				player.inventory.currentItem ++;
 				
@@ -301,13 +304,13 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (event.entity.worldObj.provider.dimensionId == 0 && event.world.isRemote && event.entity instanceof EntityClientPlayerMP) {
+		if (event.getEntity().world.provider.getDimension() == 0 && event.getWorld().isRemote && event.getEntity() instanceof EntityPlayerSP) {
 			// TODO fill in JSON boundary int when it's implemented
 			int bounds = 0;
 			
-			EntityClientPlayerMP p = (EntityClientPlayerMP) event.entity;
+			EntityPlayerSP p = (EntityPlayerSP)event.getEntity();
 			
-			if(p.worldObj.provider.dimensionId == 0)
+			if(p.world.provider.getDimension() == 0)
 			{
 //				if (GuiChapter.getChapterNumber() < 3) {
 //					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
@@ -333,12 +336,12 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			}
 		}
 		
-		if(event.world.isRemote && event.entity instanceof EntityPlayer) 
+		if(event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer) event.entity;
+			EntityPlayer player = (EntityPlayer) event.getEntity();
 			Minecraft mc = Minecraft.getMinecraft();
 			
-			if( (player.world.provider.dimensionId == 105) )
+			if( (player.world.provider.getDimension() == 105) )
 			{
 				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
 				flagOpenChapterGui = true;
@@ -369,30 +372,31 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void entityAttacked(LivingHurtEvent event)
 	{
-		if(event.source.getSourceOfDamage() instanceof EntityPlayer)
+		if(event.getSource().getTrueSource() instanceof EntityPlayer)
 		{
 			if(context.getCurrentGameState().getSkillManager().getSkills().get(1).getSkillState() == enumSkillState.EFFECTIVE)
 			{
-				event.ammount += SkillBoostDamage.boostRate;
+				event.setAmount(event.getAmount()+(float)SkillBoostDamage.boostRate);
+				//event.ammount += SkillBoostDamage.boostRate;
 //				System.out.println("Damage Boost["+event.ammount+"]");
 			}
 		}
 		
-		if(event.entityLiving.getClass().getName().equals(EntityLiving.class.getName()))
+		if(event.getEntityLiving().getClass().getName().equals(EntityLiving.class.getName()))
 		{
-			EntityLiving attackedEnt = (EntityLiving) event.entityLiving;
-			DamageSource attackSource = event.source;
-			if (attackSource.getSourceOfDamage() != null)
+			EntityLiving attackedEnt = (EntityLiving) event.getEntityLiving();
+			DamageSource attackSource = event.getSource();
+			if (attackSource.getTrueSource() != null)
 			{
-				EntityPlayer player = (EntityPlayer) attackSource.getSourceOfDamage();
-				if(player.getHeldItem() != null)
+				EntityPlayer player = (EntityPlayer) attackSource.getTrueSource();
+				if(player.getHeldItem(EnumHand.MAIN_HAND) != null)
 				{
-					ItemStack itemstack = player.getHeldItem();
+					ItemStack itemstack = player.getHeldItem(EnumHand.MAIN_HAND);
 					if (itemstack.getDisplayName().equals("Baton"))
 					{
 						NBTTagCompound tag = itemstack.getTagCompound();
 						int damageAmmount = tag.getInteger("Damage");
-						event.ammount = damageAmmount;
+						event.setAmount(damageAmmount);
 					}
 				}
 			}
@@ -421,7 +425,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().player));
 			}
 			
-			if(BigxClientContext.getIsGameSaveRead() && flagOpenChapterGui && (Minecraft.getMinecraft().player.worldObj.provider.dimensionId == 0))
+			if(BigxClientContext.getIsGameSaveRead() && flagOpenChapterGui && (Minecraft.getMinecraft().player.world.provider.getDimension() == 0))
 			{	
 				Minecraft mc = Minecraft.getMinecraft();
 				
@@ -445,8 +449,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			//TODO
 			if(BigxClientContext.getIsGameSaveRead() && flagChapterCorrectionFromLoading)
 			{
-				if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == 0) {
-					EntityClientPlayerMP p = Minecraft.getMinecraft().player;
+				if(Minecraft.getMinecraft().player.world.provider.getDimension() == 0) {
+					EntityPlayerSP p = Minecraft.getMinecraft().player;
 					
 					if( (!GuiChapter.isTodayWorkoutDone()) && (GuiChapter.getChapterNumber() > 3) ) {
 						System.out.println("Chasing Seq 1 dim["+p.dimension+"]");
@@ -496,7 +500,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					flagChapterCorrectionFromLoading = false;
 				}
 				else {
-					EntityClientPlayerMP p = Minecraft.getMinecraft().player;
+					EntityPlayerSP p = Minecraft.getMinecraft().player;
 					
 					if(p.dimension != 100)
 					{
@@ -574,8 +578,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			// Handling Player Skills
 			EntityPlayer p = Minecraft.getMinecraft().player;
 			
-			if (p.worldObj.rainingStrength > 0.0f) {
-				p.worldObj.setRainStrength(0.0f);
+			if (p.world.rainingStrength > 0.0f) {
+				p.world.setRainStrength(0.0f);
 			}
 			
 			// Degrade the current player's speed
@@ -584,7 +588,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			//Dealing with locking keys
 			if (enableLock) {
-				p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0D);
+				p.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0D);
 				//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
 				p.jumpMovementFactor = 0f;
 				p.capabilities.setPlayerWalkSpeed(0f);
@@ -595,7 +599,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				p.rotationPitch = 0f;
 				p.rotationYaw = 0f;
 			} else {
-				p.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(PLAYER_DEFAULTSPEED);
+				p.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(PLAYER_DEFAULTSPEED);
 				Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
 				p.capabilities.setFlySpeed(0.05F);
 				p.capabilities.setPlayerWalkSpeed(0.1F);
@@ -618,19 +622,19 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			if(levelUpSoundPlayFlag)
 			{
 				levelUpSoundPlayFlag = false;
-				p.worldObj.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
+				p.world.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
 			}
 
 			if(levelDownSoundPlayFlag)
 			{
 				levelDownSoundPlayFlag = false;
-				p.worldObj.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
+				p.world.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
 			}
 
 			if(gaugeUpSoundPlayFlag)
 			{
 				gaugeUpSoundPlayFlag = false;
-				p.worldObj.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
+				p.world.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
 			}
 			
 			/**
@@ -782,9 +786,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			context.setRotationX(0);
 			
 			// Obtain the block under the main character and set the resistance
-			Block b = p.getEntityWorld().getBlock((int) p.posX,(int) p.posY-2,(int) p.posZ);
+			Block b = p.getEntityWorld().getBlockState(new BlockPos((int) p.posX,(int) p.posY-2,(int) p.posZ)).getBlock();
 			if (b==Blocks.AIR) {
-				b = p.getEntityWorld().getBlock((int) p.posX, (int) p.posY-3,(int) p.posZ);
+				b = p.getEntityWorld().getBlockState(new BlockPos((int) p.posX, (int) p.posY-3,(int) p.posZ)).getBlock();
 			}
 	
 			float new_resistance = context.resistance;
@@ -886,10 +890,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event) {
-		if (event.gui instanceof GuiMainMenu) {
+		if (event.getGui() instanceof GuiMainMenu) {
 			GuiMenu gui = new GuiMenu();
 			gui.setContext(context);
-			event.gui = gui;
+			event.setGui(gui);
 		}
 		
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiMonsterAppears)
@@ -909,7 +913,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	{
 		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
 		{
-			event.newSpeed = (float) (event.originalSpeed + SkillBoostMining.boostRate);
+			event.setNewSpeed((float) (event.getOriginalSpeed() + SkillBoostMining.boostRate));
 //			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
 		}
 		
@@ -922,17 +926,17 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				damage = (((float)this.context.rpm) / 10F) - 3F;
 				damage = damage<0?0:damage;
 				damage *= 2;
-				damage += event.originalSpeed;
+				damage += event.getOriginalSpeed();
 				damage = damage>=15?15:damage;
-				event.newSpeed = damage;
+				event.setNewSpeed(damage);
 			}
 		}
 		else if(pedalingModeState == 2)
 		{
 			if(PedalingToBuildEventHandler.buildingId.equals(""))
 				return;
-			
-			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(event.x, event.y+1, event.z, 9, PedalingToBuildEventHandler.buildingId);
+			BlockPos pos = event.getPos();
+			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(pos.getX(), pos.getY()+1, pos.getZ(), 9, PedalingToBuildEventHandler.buildingId);
 		}
 	}
 

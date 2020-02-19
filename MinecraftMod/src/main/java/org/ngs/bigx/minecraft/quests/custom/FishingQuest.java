@@ -74,7 +74,7 @@ public class FishingQuest extends CustomQuestAbstract
 	public void onAttackEntityEvent(AttackEntityEvent event)
 	{
 		QuestTeleporter.teleport(player, 0, (int) Chum.LOCATION.x, (int) Chum.LOCATION.y, (int) Chum.LOCATION.z);
-		CustomFishHook.fishingLocation = 0;
+		//CustomFishHook.fishingLocation = 0;
 		super.complete();
 	}
 	

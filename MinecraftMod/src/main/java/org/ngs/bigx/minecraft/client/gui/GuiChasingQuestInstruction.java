@@ -141,7 +141,7 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 
@@ -160,9 +160,9 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			    	
 			    	text = "Look around. And find the thief";
 			
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
 //		        	(text, 5, mcHeight/4 - 20, combotextColor);
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
+		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
 
 		    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
 			        drawTexturedModalRect(-27, mcHeight/4 - 27, 0, 100, 54 , 54);
@@ -180,9 +180,9 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 			    	
 			    	text = "Stay Close";
 			
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
 //		        	(text, 5, mcHeight/4 - 20, combotextColor);
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
+		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
 
 		    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
 			        drawTexturedModalRect(-50, mcHeight/4 - 25, 0, 0, 100 , 50);
@@ -209,9 +209,9 @@ public class GuiChasingQuestInstruction extends GuiScreen {
 				    	text = "Aim &";
 			    	}
 			
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-//		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 40, 0xFFFFFF);
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+//		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 40, 0xFFFFFF);
+		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 45, combotextColor);
 	    		
 		    		mc.renderEngine.bindTexture(CHASING_QUEST_INSTRUCTION_TEXTURE);
 			        drawTexturedModalRect(-50, mcHeight/4 - 25, 0, 50, 100 , 50);

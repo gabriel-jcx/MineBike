@@ -11,13 +11,13 @@ package org.ngs.bigx.minecraft.entity.item;
 
 import org.ngs.bigx.minecraft.BiGX;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.biome.BiomeGenBase;
+//import net.minecraft.world.biome.BiomeGenBase;
 
 
 public class ModelRacingCar extends ModelBase

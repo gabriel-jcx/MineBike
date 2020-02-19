@@ -75,7 +75,7 @@ public class GuiMonsterStunned extends GuiScreen {
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
 		mc = Minecraft.getMinecraft();
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 
@@ -85,11 +85,11 @@ public class GuiMonsterStunned extends GuiScreen {
 		    GL11.glTranslatef(mcWidth/2, 0, 0);
 	    	GL11.glScalef(2F, 2F, 2F);
 
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 5, 0xFFFFFF);
+        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 5, 0xFFFFFF);
 
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawString(text2, -1 * fontRendererObj.getStringWidth(text2)/2, mcHeight/4 + 5, 0xFFFFFF);
+        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    		fontRenderer.drawString(text2, -1 * fontRenderer.getStringWidth(text2)/2, mcHeight/4 + 5, 0xFFFFFF);
 		GL11.glPopMatrix();
 		
 		super.drawScreen(mx, my, partialTicks);

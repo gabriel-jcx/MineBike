@@ -15,9 +15,9 @@ import org.ngs.bigx.minecraft.quests.Quest;
 import org.ngs.bigx.minecraft.quests.QuestException;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-//import cpw.mods.fml.common.registry.GameRegistry;
-//import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+//import net.minecraftforge.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -324,7 +324,7 @@ public class GuiAlchemy extends GuiScreen {
 	public void drawScreen(int mx, int my, float partialTicks) {
 		if (mc.player != null) {
 	    	EntityPlayer p = mc.player;
-		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+		    ScaledResolution sr = new ScaledResolution(mc);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();
 	    	int i=0, j=0;
@@ -367,10 +367,11 @@ public class GuiAlchemy extends GuiScreen {
 //	    	    		    	EntityPlayer player = Minecraft.getMinecraft().player;
 	    	    		    	ItemStack item = this.inventoryItemStack[(i*6 + j)];
     	    		            if(item != null) {
-    	    	    		    	UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
+									item.getUnlocalizedName();
+    	    	    		    	//UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
     	    	    		    	String itemID;
     	    	    		    	
-				    		    	itemID = "textures/originalIcons/items/" + UID.name + ".png";
+				    		    	itemID = "textures/originalIcons/items/" + item.getDisplayName() + ".png";
 				    		    	ResourceLocation tempItemTexture = new ResourceLocation(BiGX.TEXTURE_PREFIX, itemID);
 				    		    	mc.renderEngine.bindTexture(tempItemTexture);
 				    		    	GL11.glPushMatrix();
@@ -382,12 +383,12 @@ public class GuiAlchemy extends GuiScreen {
     				    			GL11.glPopMatrix();
     				    			
 //    				    			text = "2";
-    				    			if(item.stackSize > 1)
+    				    			if(item.getCount() > 1)
     				    			{
-    				    				text = "" + item.stackSize;
-	    				    			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    					    		fontRendererObj.drawStringWithShadow(text, (j+1)*boxSize - 8 - fontRendererObj.getStringWidth(text)/2, (i+1)*boxSize - 10, 0xFFFFFF);    				    			}
-    					    		//fontRendererObj.drawStringWithShadow(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
+    				    				text = "" + item.getCount();
+	    				    			fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    					    		fontRenderer.drawStringWithShadow(text, (j+1)*boxSize - 8 - fontRenderer.getStringWidth(text)/2, (i+1)*boxSize - 10, 0xFFFFFF);    				    			}
+    					    		//fontRenderer.drawStringWithShadow(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
     	    		            }
 	    					}
 	    				}
@@ -413,10 +414,10 @@ public class GuiAlchemy extends GuiScreen {
 	    	    		    	{
 	    	    		            if(this.listOfItemToBeAlchemied.get(i*2 + j) != null) {
 	    	    		            	ItemStack item = this.listOfItemToBeAlchemied.get(i*2 + j).item;
-	    	    	    		    	UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
+	    	    	    		    	//UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
 	    	    	    		    	String itemID;
-	    	    	    		    	
-					    		    	itemID = "textures/originalIcons/items/" + UID.name + ".png";
+										itemID = "textures/originalIcons/items/" + item.getDisplayName() + ".png";
+										//itemID = "textures/originalIcons/items/" + UID.name + ".png";
 					    		    	ResourceLocation tempItemTexture = new ResourceLocation(BiGX.TEXTURE_PREFIX, itemID);
 					    		    	mc.renderEngine.bindTexture(tempItemTexture);
 					    		    	GL11.glPushMatrix();
@@ -431,10 +432,10 @@ public class GuiAlchemy extends GuiScreen {
 //	    				    			if(item.stackSize > 1)
 //	    				    			{
 //	    				    				text = "" + item.stackSize;
-//		    				    			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-//		    					    		fontRendererObj.drawStringWithShadow(text, (j+1)*boxSize - 8 - fontRendererObj.getStringWidth(text)/2, (i+1)*boxSize - 10, 0xFFFFFF);
+//		    				    			fontRenderer = Minecraft.getMinecraft().fontRenderer;
+//		    					    		fontRenderer.drawStringWithShadow(text, (j+1)*boxSize - 8 - fontRenderer.getStringWidth(text)/2, (i+1)*boxSize - 10, 0xFFFFFF);
 //	    					    		}
-//	    					    		//fontRendererObj.drawStringWithShadow(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
+//	    					    		//fontRenderer.drawStringWithShadow(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
 	    	    		            }
 	    	    		    	}
 	    					}
@@ -446,8 +447,8 @@ public class GuiAlchemy extends GuiScreen {
 						drawRect(boxSize + 1, i*boxSize*3/2 + 11, (2)*boxSize - 2, i*boxSize*3/2 + boxSize + 8, 0x99000000); // The Background for the items
 						
 						text = "?";
-		    			fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-			    		fontRendererObj.drawStringWithShadow(text, boxSize*3/2 - fontRendererObj.getStringWidth(text)/2, i*boxSize*2 - 22, 0xFFFFFF);
+		    			fontRenderer = Minecraft.getMinecraft().fontRenderer;
+			    		fontRenderer.drawStringWithShadow(text, boxSize*3/2 - fontRenderer.getStringWidth(text)/2, i*boxSize*2 - 22, 0xFFFFFF);
 			    		
 	    		    	GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					GL11.glPopMatrix();
@@ -572,10 +573,10 @@ public class GuiAlchemy extends GuiScreen {
     	    		    	{
 	    						if(this.listOfItemToBeAlchemied.get(i) != null) {
 		    		            	ItemStack item = this.listOfItemToBeAlchemied.get(i).item;
-		    	    		    	UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
+		    	    		    	//UniqueIdentifier UID = GameRegistry.findUniqueIdentifierFor(item.getItem());
 		    	    		    	String itemID;
 		    	    		    	
-				    		    	itemID = "textures/originalIcons/items/" + UID.name + ".png";
+				    		    	itemID = "textures/originalIcons/items/" + item.getDisplayName() + ".png";
 				    		    	ResourceLocation tempItemTexture = new ResourceLocation(BiGX.TEXTURE_PREFIX, itemID);
 				    		    	mc.renderEngine.bindTexture(tempItemTexture);
 				    		    	GL11.glPushMatrix();
@@ -761,10 +762,10 @@ public class GuiAlchemy extends GuiScreen {
 					if(item == null)
 						return;
 					
-					int itemSz = item.stackSize;
+					int itemSz = item.getCount();
 					if(itemSz > 1)
 					{
-						item.stackSize --;
+						item.setCount(itemSz-1); // item.stackSize --;
 					}
 					else
 					{
@@ -774,7 +775,7 @@ public class GuiAlchemy extends GuiScreen {
 					// Create an Alchemy item with the item stack id
 					ItemToBeAlchemied itemToBeAlchemied = new ItemToBeAlchemied();
 					itemToBeAlchemied.item = item.copy();
-					itemToBeAlchemied.item.stackSize = 1;
+					itemToBeAlchemied.item.setCount(1); //= 1;
 					itemToBeAlchemied.itemStackId = inveotyrItemStackIdx;
 					
 					// Add the Alchemy item to the list
@@ -797,7 +798,7 @@ public class GuiAlchemy extends GuiScreen {
 							}
 							else
 							{
-								this.inventoryItemStack[itemToBeAlchemied.itemStackId].stackSize++;
+								this.inventoryItemStack[itemToBeAlchemied.itemStackId].setCount(this.inventoryItemStack[itemToBeAlchemied.itemStackId].getCount()+1);
 							}
 							
 							this.listOfItemToBeAlchemied.remove(button.id - 70);

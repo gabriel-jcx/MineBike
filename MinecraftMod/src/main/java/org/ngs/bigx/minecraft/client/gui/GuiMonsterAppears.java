@@ -15,7 +15,7 @@ import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 
 import com.ibm.icu.impl.ICUService.Key;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -80,7 +80,7 @@ public class GuiMonsterAppears extends GuiScreen {
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {	
 		mc = Minecraft.getMinecraft();
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 
@@ -92,8 +92,8 @@ public class GuiMonsterAppears extends GuiScreen {
 
 			String text  = "A MONSTER APPEARED!";
 
-        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-    		fontRendererObj.drawStringWithShadow(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
+        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    		fontRenderer.drawStringWithShadow(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4, 0xFFFFFF);
 		GL11.glPopMatrix();
 		
 		super.drawScreen(my, mx, partialTicks);

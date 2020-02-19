@@ -262,8 +262,7 @@ public class GuiChasingQuest extends GuiScreen {
 	}
 
     @Override
-    public void keyTyped(char c, int i)
-    {
+    public void keyTyped(char c, int i) throws IOException {
     	super.keyTyped(c, i);
     }
 	

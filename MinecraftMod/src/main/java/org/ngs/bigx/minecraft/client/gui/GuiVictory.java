@@ -122,7 +122,7 @@ public class GuiVictory extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mx, int my, float partialTicks) {
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 
@@ -145,8 +145,8 @@ public class GuiVictory extends GuiScreen {
 		    	int dx = (fdx>0.80f)?1:(fdx>0.20)?0:-1;
 		    	int dy = (fdy>0.80f)?1:(fdy>0.20)?0:-1;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2 + dx, mcHeight/4 - 30 + dy, 0xFF8888);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2 + dx, mcHeight/4 - 30 + dy, 0xFF8888);
     		
     		GL11.glPopMatrix();
 		}
@@ -160,37 +160,37 @@ public class GuiVictory extends GuiScreen {
 			    	
 			    	text = victoryMessageLine1;
 			
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 40, 0xFFFFFF);
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 40, 0xFFFFFF);
 	    		GL11.glPopMatrix();
 		    	
 		    	text = victoryMessageLineExp;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 20, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2 - 20, 0xFFFFFF);
 		    	
 		    	text = victoryMessageLineGold;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 10, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2 - 10, 0xFFFFFF);
 		    	
 		    	text = victoryMessageLineExtraGold;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2, 0xFFFFFF);
 		    	
 	    		if(!victoryMessageLineSpecialItem.equals(""))
 		    	{
 	    			text = victoryMessageLineSpecialItem;
 		
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 10, 0xFFFFFF);
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2 + 10, 0xFFFFFF);
 		    	}
 		    	
 		    	text = victoryMessageLine2;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 20, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2 + 20, 0xFFFFFF);
     		
     		GL11.glPopMatrix();
 		}
@@ -204,8 +204,8 @@ public class GuiVictory extends GuiScreen {
 			    	
 			    	text = hintMessageLineTitle;
 			
-		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-		    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/4 - 50, 0xFFFFFF);
+		        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+		    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/4 - 50, 0xFFFFFF);
 	    		GL11.glPopMatrix();
 	    		
 	    		mc.renderEngine.bindTexture(HINT_TEXTURE);
@@ -215,13 +215,13 @@ public class GuiVictory extends GuiScreen {
 		    	
 		    	text = hintMessageLine1;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 60, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2 + 60, 0xFFFFFF);
 		    	
 		    	text = hintMessageLine2;
 		
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
-	    		fontRendererObj.drawString(text, -1 * fontRendererObj.getStringWidth(text)/2, mcHeight/2 + 75, 0xFFFFFF);
+	        	fontRenderer = Minecraft.getMinecraft().fontRenderer;
+	    		fontRenderer.drawString(text, -1 * fontRenderer.getStringWidth(text)/2, mcHeight/2 + 75, 0xFFFFFF);
     		
     		GL11.glPopMatrix();
 		}
