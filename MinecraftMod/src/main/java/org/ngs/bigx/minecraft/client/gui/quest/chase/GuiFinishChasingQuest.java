@@ -54,7 +54,7 @@ public class GuiFinishChasingQuest extends GuiScreen {
 	public void drawScreen(int mx, int my, float partialTicks) {
 		Minecraft mc = Minecraft.getMinecraft();
 
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		int mcWidth = sr.getScaledWidth();
     	int mcHeight = sr.getScaledHeight();
 

@@ -3,8 +3,8 @@ package org.ngs.bigx.minecraft.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import cpw.mods.fml.client.GuiScrollingList;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+//import cpw.mods.fml.client.GuiScrollingList;
+//import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class GuiQuestlistDescriptionSlot extends GuiScrollingList {
 	GuiQuestlistManager parent;

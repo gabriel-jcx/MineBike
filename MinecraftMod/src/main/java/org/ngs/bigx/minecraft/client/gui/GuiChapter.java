@@ -23,7 +23,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import com.ibm.icu.impl.ICUService.Key;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;

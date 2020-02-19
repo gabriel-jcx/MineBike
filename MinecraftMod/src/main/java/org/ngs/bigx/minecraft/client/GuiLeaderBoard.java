@@ -15,7 +15,7 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;

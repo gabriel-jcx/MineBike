@@ -4,7 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
-import org.apache.commons.lang.enums.Enum;
+//import org.apache.commons.lang.enums.Enum;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
@@ -113,7 +113,7 @@ public class BlockQuestChest extends BlockContainer {
     	*/
         BlockPos pos = new BlockPos(i,j,k);
         IBlockState state = new IBlockState(block,n);
-    	super.breakBlock(world, i, j, k, block, n);
+    	super.breakBlock(world,pos,state);
     }
 
     /*

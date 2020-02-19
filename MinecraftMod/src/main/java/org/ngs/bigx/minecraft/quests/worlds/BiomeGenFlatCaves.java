@@ -1,7 +1,7 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
 import net.minecraft.init.Blocks;
-import net.minecraft.world.biome.BiomeGenBase;
+//import net.minecraft.world.biome.BiomeGenBase;
 
 public class BiomeGenFlatCaves extends BiomeGenBase {
 	

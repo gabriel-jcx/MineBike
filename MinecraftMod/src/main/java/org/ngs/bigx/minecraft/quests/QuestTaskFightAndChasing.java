@@ -62,11 +62,11 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
-import net.minecraftforge.common.util.EnumFacing;
+//import net.minecraftforge.common.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
+//import net.minecraftforge.event.entity.player.PlayerUseItemEvent.Start;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbackPlayback, IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {

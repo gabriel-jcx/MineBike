@@ -23,7 +23,7 @@ import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -195,8 +195,8 @@ public class GuiChasingQuest extends GuiScreen {
 	    		String name = leaderboardRows.get(i).name;
 	    		String levelstr = leaderboardRows.get(i).level;
 	    		String time_elapsed = leaderboardRows.get(i).time_elapsed;
-	
-	        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+
+				FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    		fontRendererObj.drawString(rank, 0, i*14, 0xFFFFFF);
 	    		fontRendererObj.drawString(name, 30, i*14, 0xFFFFFF);
 	    		fontRendererObj.drawString(levelstr, 140, i*14, 0xFFFFFF);
