@@ -37,6 +37,7 @@ public class CommonProxy {
 		DimensionManager.registerDimension(WorldProviderFlats.fireQuestDimID, fireQuestDType);
 
 		DimensionType DarkQuestDType = DimensionType.register("Dark","?" ,WorldProviderDark.dimID,WorldProviderDark.class, true);
+		//DarkQuestDType.createDimension();
 		//DimensionManager.registerProviderType(WorldProviderDark.dimID, WorldProviderDark.class, true);
 		DimensionManager.registerDimension(WorldProviderDark.dimID, DarkQuestDType);
 

@@ -3,7 +3,7 @@ package org.ngs.bigx.minecraft.items;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import cpw.mods.fml.common.registry.GameData;
+import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.RegistryNamespaced;

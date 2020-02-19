@@ -15,12 +15,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class QuestRFMChest extends BlockChest {
 
-	public QuestRFMChest(int p_i45397_1_) {
-		super(p_i45397_1_);
-		// TODO Auto-generated constructor stub
-	}
 
-	public int idDropped(int i, Random random)
+    public QuestRFMChest(Type chestTypeIn) {
+        super(chestTypeIn);
+    }
+
+    public int idDropped(int i, Random random)
     {
         return 0;
     }

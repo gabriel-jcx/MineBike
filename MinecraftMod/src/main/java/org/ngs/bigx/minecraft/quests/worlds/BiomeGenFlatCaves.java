@@ -1,20 +1,20 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
 import net.minecraft.init.Blocks;
-//import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
-public class BiomeGenFlatCaves extends BiomeGenBase {
+public class BiomeGenFlatCaves extends Biome {
 	
-	public BiomeGenFlatCaves(int par1) {
-		super(par1);
-		this.setBiomeName("FlatCaves");
+	public BiomeGenFlatCaves(Biome.BiomeProperties properties) {
+		super(properties);
+		//this.setBiomeName("FlatCaves");
 		this.spawnableCreatureList.clear();
 		this.spawnableMonsterList.clear();
-		this.topBlock = Blocks.STONE;
-		this.fillerBlock = Blocks.STONE;
-		this.setHeight(height_LowPlains);
-		this.theBiomeDecorator.treesPerChunk = -999;
-		this.theBiomeDecorator.grassPerChunk = -999;
-		this.theBiomeDecorator.flowersPerChunk = -999;
+		this.topBlock = Blocks.STONE.getDefaultState();
+		this.fillerBlock = Blocks.STONE.getDefaultState();
+		//this.setHeight(height_LowPlains);
+		this.decorator.treesPerChunk = -999;
+		this.decorator.grassPerChunk = -999;
+		this.decorator.flowersPerChunk = -999;
 	}
 }

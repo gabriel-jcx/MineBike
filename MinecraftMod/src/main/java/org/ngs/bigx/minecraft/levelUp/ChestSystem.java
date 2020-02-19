@@ -47,9 +47,9 @@ public class ChestSystem {
 	
 	public static void interactWithChests(PlayerInteractEvent e, LevelSystem levelSys){
 		System.out.println("Interacting with Chest");
-		String chestCoords = new Vec3d(e.x, e.y, e.z).toString();
+		String chestCoords = new Vec3d(e.getPos()).toString();
 		System.out.println(chestCoords);
-		
+
 		// If we need to know this chest location, then player can't break it!
 		if (e.action == Action.LEFT_CLICK_BLOCK && (normalChests.containsKey(chestCoords) || lockedChests.containsKey(chestCoords)))
 			e.setCanceled(true);
@@ -61,7 +61,7 @@ public class ChestSystem {
 	
 	public static void interactWithNormalChest(PlayerInteractEvent e, String chestName){
 		System.out.println("CHEST FOUND");
-		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
+		TileEntityChest c = (TileEntityChest)e.getWorld().getTileEntity(e.getPos());
 		if (e.action == Action.LEFT_CLICK_BLOCK)
 			e.setCanceled(true);
 		
@@ -78,12 +78,12 @@ public class ChestSystem {
 	
 	public static void interactWithLockedChest(PlayerInteractEvent e, LevelSystem levelSys, String keyName){
 		System.out.println("LOCKED CHEST FOUND");
-		ChestLocked(e, e.entityPlayer, keyName);
-		TileEntityChest c = (TileEntityChest)e.world.getTileEntity(e.x, e.y, e.z);
+		ChestLocked(e, e.getEntityPlayer(), keyName);
+		TileEntityChest c = (TileEntityChest)e.getWorld().getTileEntity(e.getPos());
 		
 		if (keyName == "Shiny Key"){
 			putPotionInChest(c, "Teleportation Potion - Past", 0);
-			c.setInventorySlotContents(1, new ItemStack(Items.paper));
+			c.setInventorySlotContents(1, new ItemStack(Items.PAPER));
 		}
 		
 		if (keyName == "Burnt Key"){
@@ -117,7 +117,7 @@ public class ChestSystem {
 	}
 	
 	private static void putPotionInChest(TileEntityChest c, String displayName, int slot, boolean stack) {
-		ItemStack p = new ItemStack(Items.potionitem);
+		ItemStack p = new ItemStack(Items.POTIONITEM);
 		// If duplicates are allowed, do the operation and return
 		if (stack) {
 			p.setStackDisplayName(displayName);

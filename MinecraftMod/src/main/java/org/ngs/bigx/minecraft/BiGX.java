@@ -2,6 +2,8 @@ package org.ngs.bigx.minecraft;
 	
 import java.util.ArrayList;
 
+import net.minecraft.block.BlockChest;
+import net.minecraft.block.BlockChest.Type;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
@@ -71,9 +73,11 @@ import noppes.npcs.CustomItems;
 	    private static BiGX instance;
 
 	    // TODO: need to figure out which function to set the Name of the QuestFRMCheck
+		// TODO: figure out what this freaking 538 means.....
 		// 1. setRegistryName("QuestRFMLucky);
 		// 2. setUnlocalizedName("QuestFRMLucky");
-	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(538)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
+		//BlockChest.Type = new BlockChest.Type(538); //
+	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Type.BASIC)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
 
 
 	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();

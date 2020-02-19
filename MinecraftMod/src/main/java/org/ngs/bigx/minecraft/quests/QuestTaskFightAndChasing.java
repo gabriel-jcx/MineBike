@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
 import org.ngs.bigx.dictionary.objects.game.properties.Stage;
 import org.ngs.bigx.dictionary.objects.game.properties.StageSettings;
@@ -62,7 +66,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 //import net.minecraft.world.WorldSettings.GameType;
-//import net.minecraftforge.common.util.EnumFacing;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -70,7 +74,8 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbackPlayback, IQuestEventRewardSession, IQuestEventAttack, IQuestEventItemUse, IQuestEventItemPickUp, IQuestEventNpcInteraction {
-public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
+
+	public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 	public static final int NPCRUNNINGSPEED = QuestTaskChasing.NPCRUNNINGSPEED;
 	public static final double NPCRUNNINGSPEEDBOOSTRATE = QuestTaskChasing.NPCRUNNINGSPEEDBOOSTRATE;
@@ -311,8 +316,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		initThiefStat();
 		cleanArea(world, chasingQuestInitialPosX, chasingQuestInitialPosY, (int)entity.posZ - 100, (int)entity.posZ + 16);
 		System.out.println("[BiGX] Cleaning Done.");
-		System.out.println("Teleport x["+(int)returnLocation.xCoord+"] y["+(int)returnLocation.yCoord+"] z["+(int)returnLocation.zCoord+"]");
-		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.xCoord, (int)returnLocation.yCoord, (int)returnLocation.zCoord);
+		System.out.println("Teleport x["+(int)returnLocation.x+"] y["+(int)returnLocation.y+"] z["+(int)returnLocation.z+"]");
+		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.x, (int)returnLocation.y, (int)returnLocation.z);
 		System.out.println("[BiGX] Teleport Called");
 	}
 	
@@ -325,7 +330,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				cleanBlock(world, dx, initY-1, dz, Blocks.GRASS);
 				for(int dy= initY; dy<initY+16; dy++)
 				{
-					if(!(world.getBlock(dx, dy, dz) == Blocks.AIR))
+					if(!(world.getBlockState(new BlockPos(dx, dy, dz)) == Blocks.AIR))
 						setBlock(world, dx, dy, dz, Blocks.AIR);
 				}
 			}
@@ -478,20 +483,20 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		blocks = new ArrayList<Vec3d>();
 		
 		for (int z = -16; z < (int)player.posZ+64; ++z) {
-			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
 		for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 		}
 		
 		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
-			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 		}
 		
@@ -509,34 +514,34 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 				for (int y = origY; y < origY + 5; ++y) {
 					for (int z = origZ; z < origZ + 11; ++z) {
 						if (z == origZ || z == origZ + 10)
-							setBlock(w, x, y, z, Blocks.log);
+							setBlock(w, x, y, z, Blocks.LOG);
 						else
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 						blocks.add(new Vec3d(x, y, z));
 					}
 				}
-				setBlock(w, x, origY+1, origZ+5, Blocks.glass);
-				setBlock(w, x, origY+2, origZ+5, Blocks.glass);
+				setBlock(w, x, origY+1, origZ+5, Blocks.GLASS);
+				setBlock(w, x, origY+2, origZ+5, Blocks.GLASS);
 			} else {
 				for (int y = origY; y < origY + 7; ++y) {
 					for (int z = origZ; z < origZ + 11; ++z) {
 						if ((z == origZ || z == origZ + 10) && y < origY + 5) {
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 							blocks.add(new Vec3d(x, y, z));
 						}
 						if (z > origZ && z < origZ + 10 && y == origY + 5 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 							blocks.add(new Vec3d(x, y, z));
 						}
 						if (z > origZ + 1 && z < origZ + 9 && x > origX + 1 && x < origX + 5 && y == origY + 6 && !(x == origX + 3 && (z == origZ + 3 || z == origZ + 7))) {
-							setBlock(w, x, y, z, Blocks.planks);
+							setBlock(w, x, y, z, Blocks.PLANKS);
 							blocks.add(new Vec3d(x, y, z));
 						}
 					}
 				}
 				if (x == origX + 2 || x == origX + 4) {
-					setBlock(w, x, origY+1, origZ, Blocks.glass);
-					setBlock(w, x, origY+2, origZ, Blocks.glass);
+					setBlock(w, x, origY+1, origZ, Blocks.GLASS);
+					setBlock(w, x, origY+2, origZ, Blocks.GLASS);
 				}
 			}
 		}
@@ -548,9 +553,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		 * Generates structures on sides (fence and Fake house on sides)
 		 */
 		for (int z = (int)player.posZ+32; z < (int)player.posZ+64; ++z) {
-			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
 		
@@ -567,7 +572,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	}
 	
 	private void generateTerrainByPatientProfile() {
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 		
 		if(serverContext.isSuggestedGamePropertiesReady())
 		{
@@ -640,10 +645,10 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						if(levelSys.getPlayerLevel() < 6)
 							areas.add(terrainBiome.getRandomDesertBiome());
 						else
-							areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+							areas.add(terrainBiomeFire.getRandomLAVAFountainBiome());
 						break;
 					case FIRE:
-						areas.add(terrainBiomeFire.getRandomLavaFountainBiome());
+						areas.add(terrainBiomeFire.getRandomLAVAFountainBiome());
 						break;
 					default:
 						areas.add(new TerrainBiomeArea());
@@ -816,19 +821,19 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 		randDouble = randomNumber.nextDouble();
 		if(randDouble < 0.1)
 		{
-			randomItem = Items.gold_ingot;
+			randomItem = items.GOLD_INGOT;
 		}
 		else if(randDouble < 0.45)
 		{
-			randomItem = Items.blaze_powder;
+			randomItem = Items.BLAZE_POWDER;
 		}
 		else
 		{
-			randomItem = Items.feather;
+			randomItem = Items.FEATHER;
 		}
 		
 		EntityItem item = new EntityItem(ws, x, y, z, new ItemStack(randomItem,1));
-		ws.spawnEntityInWorld(item);
+		ws.spawnEntity(item);
 	}
 	
 	public float getPlayerPitch() {
@@ -1033,8 +1038,8 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					npc.faction.neutralPoints = 2000;
 					npc.faction.friendlyPoints = 3000;
 					npc.faction.defaultPoints = 2500;
-					npc.faction.attackFactions.add(player);
-					npc.ai.canLeap = true;
+					npc.faction.attackFactions.add(player.getEntityId()); // TODO: not sure if the EntityId here is correct
+					npc.ais.canLeap = true;
 					npc.attackEntityAsMob(player);
 					
 					System.out.print("[BiGX] Faction id[" + npc.getFaction().id + "] attacked[" + npc.getFaction().getsAttacked + "] AF[" + npc.getFaction().attackFactions + "]");
@@ -1116,7 +1121,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	public void handlePlayTimeOnServer()
 	{
-		dist = player.getDistanceToEntity(npc);
+		dist = player.getDistance(npc);
 		ratio = (initialDist-dist)/initialDist;
 		
 		if (Minecraft.getMinecraft().isGamePaused())
@@ -1405,22 +1410,28 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 //		player.swingItem();
 	}
 
+
+	// TODO: The logic of the next three functions should be re-written, terrible coding practice
 	private static void setBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
-			world.setBlock(x, y, z, block);
+		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
+			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState());
+			//world.setBlock(x, y, z, block);
 	}
 	
 	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
 	{
-		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
-			world.setBlock(x, y, z, block, direction, 3);
+		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
+			// TODO: here need to set the direction
+			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState(),3);
+			//world.setBlock(x, y, z, block, direction, 3);
 	}
 	
 	private static void cleanBlock(World world, int x, int y, int z, Block block)
 	{
-		if(Minecraft.getMinecraft().player.worldObj.provider.dimensionId == WorldProviderFlats.dimID)
-			world.setBlock(x, y, z, block);
+		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
+			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState());
+			//world.setBlock(x, y, z, block);
 	}
 
 	@Override
@@ -1455,11 +1466,11 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 						{
 							isStunnedGuiHappend = true;
 
-							npc.ai.canLeap = false;
+							npc.ais.canLeap = false;
 						    npc.setHealth(10000f);
 						    npc.faction.attackFactions.remove(player);
-						    npc.ai.avoidsWater = true;
-						    npc.ai.onAttack = 3;
+						    npc.ais.avoidsWater = true;
+						    npc.ais.onAttack = 3;
 						    npc.setResponse();
 
 							int tempThiefSpeed = NPCRUNNINGSPEED;
@@ -1607,7 +1618,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
 			endingZ = (int)player.posZ;
 			LeaderboardRow row = new LeaderboardRow();
-			row.name = player.getDisplayName();
+			row.name = player.getDisplayNameString();
 			row.level = Integer.toString(thiefLevel);
 			row.time_elapsed = "" + time;
 			row.combo = "" + bestCombo;
@@ -1628,17 +1639,17 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			while (totalXP > 0) {
 		         xpGiven = random.nextBoolean() || totalXP == 1 ? 1 : 2;
 		         totalXP -= xpGiven;
-		         npc.worldObj.spawnEntityInWorld(new EntityXPOrb(npc.worldObj, npc.posX, npc.posY, npc.posZ, xpGiven));
+		         npc.world.spawnEntity(new EntityXPOrb(npc.world, npc.posX, npc.posY, npc.posZ, xpGiven));
 		    }
 			
-			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
-			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.APPLE), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.APPLE), random.nextInt(16)/8F);
 			for (int i = 0; i < BiGXEventTriggers.convertCoinsToGold(virtualCurrency); ++i) {
-				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);//, random.nextInt(16)/8F);
+				npc.entityDropItem(new ItemStack(Items.GOLD_INGOT), 1);//, random.nextInt(16)/8F);
 			}
 			//Combo Bonus
 			for (int i = 0; i < (bestCombo/2); ++i){
-				npc.entityDropItem(new ItemStack(Items.gold_ingot), 1);
+				npc.entityDropItem(new ItemStack(Items.GOLD_INGOT), 1);
 			}
 			
 			GuiMessageWindow.showMessage(BiGXTextBoxDialogue.goldBarInfo);
@@ -1703,20 +1714,20 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			blocks = new ArrayList<Vec3d>();
 			
 			for (int z = -16; z < (int)player.posZ+64; ++z) {
-				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE);
 				blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
-				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE);
 				blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 			}
 			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
-				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.fence);
+				setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE);
 				blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 			}
 			
 			for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
-				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE);
 				blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
-				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.fence);
+				setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE);
 				blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 			}
 			
@@ -1726,7 +1737,7 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 
 			// Need to remove the previous thief
 			if(npc != null)
-				command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+				command.removeNpc(npc.display.getName(), WorldProviderFlats.dimID);
 		}
 		else if(flagLeave)
 		{
@@ -1821,9 +1832,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	}
 	
 	@Override
-	public void onItemUse(Start event) {
+	public void onItemUse(LivingEntityUseItemEvent.Start event) {
 		synchronized (questManager) {
-			player = event.entityPlayer;
+			player = (EntityPlayer)event.getEntityLiving();
 			
 			if(!player.world.isRemote)
 			{
@@ -1844,8 +1855,9 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 					x1=94; y1=53; z1=-54; x2=99; y2=58; z2=-48;
 					break;
 				};
-				
-				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
+
+				// TODO: need to figure out if this checks left hand or right hand
+				if (player.getHeldItem(EnumHand.MAIN_HAND).getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == this.questDestinationDimensionId)
 				{
 					// CHASE QUEST LOSE CONDITION
@@ -1879,10 +1891,10 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 			
 			if( (chasingQuestOnGoing) && (!chasingQuestOnCountDown) )
 			{
-				if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
+				if (event.getEntityPlayer().inventory.mainInventory.get(event.getEntityPlayer().inventory.currentItem) == null)
 					deductThiefHealth(null);
 				else
-					deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+					deductThiefHealth(event.getEntityPlayer().inventory.mainInventory.get(event.getEntityPlayer().inventory.currentItem).getItem());
 				
 				npc.setHealth(10000f);
 				
@@ -2045,14 +2057,14 @@ public enum QuestChaseTypeEnum { REGULAR, FIRE, ICE, AIR, LIFE };
 	
 	@Override
 	public void onItemPickUp(EntityItemPickupEvent event) {
-		if(event.item.getEntityItem().getItem() == Items.feather)
+		if(event.getItem().getItem().getItem() == Items.FEATHER)
 		{
 			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
-		else if(event.item.getEntityItem().getItem() == Items.blaze_powder)
+		else if(event.getItem().getItem().getItem() == Items.BLAZE_POWDER)
 		{
 			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");

@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
@@ -119,18 +121,18 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	private static boolean flagContinue = false;
 	private static boolean flagOpenQuestMenuGui = false;
 	private static boolean flagLeave = false;
-	
+
 	private static boolean isRewardState = false;
-	
+
 	private String id = "QUEST_TASK_CHASE";
-	
+
 	private float playerQuestPitch, playerQuestYaw;
-	
+
 	protected long questTimeStamp = 0;
-	 
+
 	protected long lastCountdownTickTimestamp = 0;
 	protected int countdown = 11;
-	
+
 	protected int time = 0;
 	protected double elapsedTime = 0;
 	protected double pausedTime = 0;
@@ -144,18 +146,18 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	protected int obstacleRefreshed = 4;
 	protected int obstacleTime = obstacleRefreshed/2; // 0 to init selection -3 to spawn
 	protected int obstacleId = -1;
-	
+
 	protected long comboTime = 0;
 	protected int comboCount = 0;
 	protected int bestCombo = 0;
 	protected final int comboTimeLimit = 400;
-	
+
 	protected float initialDist, dist = 0;
 	protected int startingZ, endingZ;
 	private boolean doMakeBlocks;
 	float ratio;
 	private Vec3d returnLocation;
-	
+
 	private CharacterProperty characterProperty = BiGX.instance().characterProperty;
 	private EntityCustomNpc npc;
 	private NpcCommand command;
@@ -172,7 +174,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	protected TerrainBiome terrainBiome = new TerrainBiome();
 	protected ObstacleBiome obstacleBiome = new ObstacleBiome();
 	protected TerrainBiomeFire terrainBiomeFire = new TerrainBiomeFire();
-	
+
 	protected ArrayList<Integer> questSettings = null;
 
 	protected int chasingQuestInitialPosX = 0;
@@ -185,38 +187,38 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	protected int thiefMaxLevel = 1;
 	protected boolean thiefLevelUpFlag = false;
 	protected boolean thiefLevelSet = false;
-	
+
 	private WorldServer ws;
 	private int questDestinationDimensionId = -1;
 	private int questSourceDimensionId = -1;
-	
+
 	private static LevelSystem levelSys;
-	
+
 	public EntityPlayer player;
 	private List<Vec3d> blocks = new ArrayList<Vec3d>();
-	
+
 	private boolean menuOpen = false;
 	public static GuiChasingQuest guiChasingQuest;
 
 	public static final int speedUpEffectTickCountMax = 60;
 	public static final int damageUpEffectTickCountMax = 60;
 	public static final int thiefSpeedUpEffectTickCountMax = 10;
-	
+
 	private static int speedUpEffectTickCount = 0;
 	private static int damageUpEffectTickCount = 0;
 	private static int thiefSpeedUpEffectTickCount = 0;
-	
+
 	public static int sprintTickCount = 0;
 	public static int sprintTickCountMax = 120;
 	public static int sprintTickCountMinMax = 10; // 7 seconds
-	
+
 	public static int positionSelectionTickCount = 0;
 	public static int positionSelectionTickCountMax = 100;
-	
+
 	private int questTypeId = 1;
-	
+
 	private int initialHunger;
-	
+
 	public String chosenSong = "";
 	private static float distMovedLastFewSeconds;
 	private static float damageLastFewSeconds;
@@ -225,23 +227,23 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	public static boolean isContinueSelected = false;
 	public static boolean isRetrySelected = false;
 	public static boolean isExitSelected = false;
-	
+
 	private static AudioFeedback audioFeedback;
 	private static float playerPosZLastFewSecondsAgo;
 	private static float distToNpcLastFewSeconds;
-	
+
 	private static boolean isNpcFellDown = false;
 	private static boolean npcFellDownFlag = false;
 	private static int npcFellDownTimestamp = 0;
 	private static int npcFellDownLength = 10;
 	private static int npcFellDownPeriod = 12;
-	
+
 	public static LevelSystem getLevelSystem()
 	{
 		return levelSys;
 	}
-	
-	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType) 
+
+	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel, QuestChaseTypeEnum questChaseType)
 	{
 		super(questManager, true);
 
@@ -251,7 +253,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		thiefLevel = level;
 		thiefMaxLevel = maxLevel;
 		this.id = this.id + "_" + questChaseType;
-		
+
 		switch(questChaseType)
 		{
 		case REGULAR:
@@ -265,11 +267,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		default:
 			break;
 		}
-		
+
 		this.questChaseType = questChaseType;
 		audioFeedback = new AudioFeedback(this);
 	}
-	
+
 	public QuestTaskChasing(LevelSystem levelSys, QuestManager questManager, EntityPlayer p, WorldServer worldServer, int level, int maxLevel) {
 		this(levelSys, questManager, p, worldServer, level, maxLevel, QuestChaseTypeEnum.REGULAR);
 	}
@@ -278,11 +280,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				player.posY >= y1 && player.posY <= y2 &&
 				player.posZ >= z1 && player.posZ <= z2;
 	}
-	
+
 	public Block getBlockByDifficulty(int difficultyLevel)
 	{
 		int category = difficultyLevel;
-		
+
 		switch(category)
 		{
 		case 0:
@@ -299,16 +301,16 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			return null;
 		}
 	}
-	
+
 	public void goBackToTheOriginalWorld(World world, Entity entity)
 	{
 		Minecraft.getMinecraft().gameSettings.thirdPersonView = 0;
 
 		Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " stop");
 		chosenSong = "";
-		
+
 		System.out.println("goBackToTheOriginalWorld isRemote[" + world.isRemote + "]");
-		
+
 		chasingQuestOnGoing = false;
 		chasingQuestOnCountDown = false;
 		timeFallBehind = 0;
@@ -318,12 +320,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		lastCountdownTickTimestamp = 0;
 		pausedTime = 0;
 		thiefLevelSet = false;
-		
+
 		Minecraft.getMinecraft().player.getFoodStats().setFoodLevel(initialHunger);
-		
+
 		if(world.isRemote)
 			((BigxClientContext)clientContext).setSpeed(0);
-		
+
 		if(npc != null)
 			command.removeNpc(npc.display.getName(), WorldProviderFlats.dimID);
 
@@ -333,7 +335,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		QuestTeleporter.teleport(entity, this.questSourceDimensionId, (int)returnLocation.x, (int)returnLocation.y, (int)returnLocation.z);
 		System.out.println("[BiGX] Teleport Called");
 	}
-	
+
 	public void cleanArea(World world, int initX, int initY, int initZ, int endZ)
 	{
 		for(int dz=initZ; dz<endZ+16; dz++)
@@ -351,20 +353,20 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			cleanBlock(world, chasingQuestInitialPosX+16, initY, dz, Blocks.AIR);
 		}
 	}
-	
+
 	public void initThiefStat()
 	{
 		thiefHealthMax = 15;
 		thiefHealthCurrent = thiefHealthMax;
 		thiefLevel = 1;
 	}
-	
+
 	public void setThiefLevel(int level)
 	{
 		thiefLevel = level;
 		if (thiefLevel > thiefMaxLevel)
 			thiefMaxLevel = thiefLevel;
-		
+
 //		thiefHealthMax = 41 + (int) Math.pow(9, thiefLevel);
 		switch(thiefLevel)
 		{
@@ -405,11 +407,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		thiefHealthCurrent = thiefHealthMax;
 		System.out.println("Thief's level has been set!");
 	}
-	
+
 	public void deductThiefHealth(Item itemOnHands)
 	{
 		long currentTime = System.currentTimeMillis();
-		
+
 		if( (currentTime - comboTime) < comboTimeLimit )
 			comboCount ++;
 		else {
@@ -418,7 +420,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			comboCount = 0;
 			System.out.println("Best Combo: " + bestCombo);
 		}
-		
+
 		int deduction = 1;
 		if (itemOnHands != null) {
 			if(itemOnHands.getUnlocalizedName().equals("item.swordWood"))
@@ -436,7 +438,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			else if(itemOnHands.getUnlocalizedName().equals("item.npcMithrilSword"))
 			{
 				deduction = 5;
-			} 
+			}
 			else if(itemOnHands.getUnlocalizedName().equals("item.npcEmeraldSword"))
 			{
 				deduction = 6;
@@ -448,48 +450,48 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						deduction = 8;
 			}
 		}
-		
+
 		if(((BigxClientContext)BigxClientContext.getInstance()).getCurrentGameState().getSkillManager().getSkills().get(1).getSkillState() == enumSkillState.EFFECTIVE)
 		{
 			deduction += SkillBoostDamage.boostRate;
 		}
-		
+
 		// Combo Calculation
 		deduction = (int) (deduction + comboCount*(deduction*.5));
-		
+
 		if(damageUpEffectTickCount > 0)
 		{
 			System.out.println("DAMAGE BOOST");
 			deduction *= 2f;
 		}
-		
+
 		thiefHealthCurrent -= deduction;
-		
+
 		virtualCurrency += deduction;
-		
+
 		if(thiefHealthCurrent <= 0)
 		{
 			thiefHealthCurrent = 0;
 			thiefLevelUpFlag = true;
 		}
-		
+
 		GuiDamage.addDamageText(deduction, 255, 10, 10);
-		
+
 		comboTime = currentTime;
 	}
 
 	public void handleQuestStart(){
 		// TODO
 		showLevelSelectionGui();
-		
+
 		distMovedLastFewSeconds = 0;
 		damageLastFewSeconds = 0;
 		progressStatTimeStamp = 0;
-		
+
 		boolean isReboot = !isActive;
 //		player.setGameType(GameType.CREATIVE);
 		Minecraft mc = Minecraft.getMinecraft();
-		
+
 		initialHunger = mc.player.getFoodStats().getFoodLevel();
 		time = 0;
 		initThiefStat();
@@ -498,21 +500,21 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		dist = 0;
 		pausedTime = 0;
 		completed = false;
-		
+
 //		if (guiChasingQuest.getSelectedQuestLevelIndex() >= 0)
 //			setThiefLevel(guiChasingQuest.getSelectedQuestLevelIndex()+1);
 //		else
 //			setThiefLevel(levelSys.getPlayerLevel());
 //		System.out.println("Thief's level is: " + getThiefLevel());
-		
+
 		// INIT questSettings ArrayList if there is any
 		if(serverContext.isSuggestedGamePropertiesReady())
 		{
-			time = 0; 
+			time = 0;
 			questSettings = new ArrayList<Integer>();
 			StageSettings stagesettings = serverContext.suggestedGameProperties.getQuestProperties().getStageSettingsArray().get(0);
 			List<Stage> stageList = stagesettings.stages;
-			
+
 			for(int i=0; i<stageList.size();i++)
 			{
 				for(int j=0; j<stageList.get(i).duration; j++)
@@ -531,9 +533,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		chasingQuestInitialPosX = 1;
 		chasingQuestInitialPosY = 10;
 		chasingQuestInitialPosZ = 0;
-		
+
 		blocks = new ArrayList<Vec3d>();
-		
+
 		for (int z = -16; z < (int)player.posZ+64; ++z) {
 			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
@@ -544,22 +546,22 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 		}
-		
+
 		for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
 			setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
 			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY-2, z));
 		}
-		
+
 		chasingQuestOnGoing = true;
-		chasingQuestOnCountDown = true; 
+		chasingQuestOnCountDown = true;
 		questTimeStamp = System.currentTimeMillis();
-		
+
 		if(isReboot)
 			reactivateTask();
 	}
-	
+
 	private void generateFakeHouse(World w, List<Vec3d> blocks, int origX, int origY, int origZ) {
 		for (int x = origX; x < origX + 7; ++x) {
 			if (x == origX || x == origX + 6) {
@@ -598,7 +600,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			}
 		}
 	}
-	
+
 	private void generateStructuresOnSides()
 	{
 		/**
@@ -610,22 +612,22 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			setBlock(ws, chasingQuestInitialPosX+16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 			blocks.add(new Vec3d((int)player.posX+16, chasingQuestInitialPosY, z));
 		}
-		
+
 		Random rand = new Random();
 		if (rand.nextInt(10) < 2) {
 			generateFakeHouse(ws, blocks, chasingQuestInitialPosX-25, chasingQuestInitialPosY, (int)player.posZ+64);
-			
+
 		}
 		rand = new Random();
 		if (rand.nextInt(10) < 2) {
 			generateFakeHouse(ws, blocks, chasingQuestInitialPosX+18, chasingQuestInitialPosY, (int)player.posZ+64);
-			
+
 		}
 	}
-	
+
 	private void generateTerrainByPatientProfile() {
 		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
-		
+
 		if(serverContext.isSuggestedGamePropertiesReady())
 		{
 			/**
@@ -634,17 +636,17 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			ArrayList<TerrainBiomeArea> areas = new ArrayList<TerrainBiomeArea>();
 			int currentRelativePosition = (int)player.posZ - chasingQuestInitialPosZ;
 			int currentRelativeTime = (int) (currentRelativePosition/chaseRunSpeedInBlocks);
-			
+
 			if(currentRelativeTime >= questSettings.size())
 			{
 				currentRelativeTime = questSettings.size() -1;
 			}
-			
+
 			int currentQuestDifficulty = questSettings.get(currentRelativeTime);
 			Block blockByDifficulty = getBlockByDifficulty(currentQuestDifficulty);
 
-			if( (blockByDifficulty == Blocks.BRICK_BLOCK) || 
-					(blockByDifficulty == Blocks.STONE) || 
+			if( (blockByDifficulty == Blocks.BRICK_BLOCK) ||
+					(blockByDifficulty == Blocks.STONE) ||
 					(blockByDifficulty == Blocks.GRAVEL) )
 			{
 				for(int idx = 0; idx<4; idx++)
@@ -712,14 +714,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				System.out.println("DIFFICULTY IS OUT OF OUR HAND...");
 				blockByDifficulty = Blocks.STONE;
 			}
-			
+
 			for (int x = chasingQuestInitialPosX-16; x < chasingQuestInitialPosX+16; ++x) {
 				for (int z = (int)player.posZ+48; z < (int)player.posZ+64; ++z) {
 					setBlock(ws, x, chasingQuestInitialPosY-1, z, blockByDifficulty);
 					blocks.add(new Vec3d(x, chasingQuestInitialPosY-1, z));
 				}
 			}
-			
+
 			for(int row=0; row<1; row++)
 			{
 				for(int idx=0; idx<areas.size(); idx++)
@@ -742,9 +744,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					}
 					int y = chasingQuestInitialPosY;
 					int z = (int)player.posZ+49 + row*9;
-					
+
 					TerrainBiomeArea terrainBiomeArea = areas.get(idx);
-					
+
 					for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 					{
 						if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.WATER)
@@ -754,7 +756,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					}
 				}
 			}
-			
+
 			if(areas.size() != 0)
 				areas.clear();
 			/**
@@ -779,18 +781,18 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		// Check if the game is running
 		if(!chasingQuestOnGoing)
 			return;
-		
+
 		if(chasingQuestOnCountDown)
 			return;
-		
+
 		// Obstacle Timer Check
 		if(obstacleTime == 0)  // Start spawn an Obstacle
 		{
 			// Select Obstacle
 			Random rand = new Random();
-			
+
 			int obstacleBiomeLevel = this.obstacleBiome.obstacleBiomeDef.areas.size();
-			
+
 			if(levelSys.getPlayerLevel() == 1)
 				obstacleBiomeLevel = 2;
 			else if(levelSys.getPlayerLevel() == 2)
@@ -818,17 +820,17 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		{
 			// Refresh Obstacle Spawn Time
 			this.obstacleTime = obstacleRefreshed;
-			
+
 			System.out.println("this.obstacleId["+this.obstacleId+"]");;
-			
+
 			// Get Obstacle
 			TerrainBiomeArea terrainBiomeArea = this.obstacleBiome.getObstacleBiomeByIndex(this.obstacleId);
-			
+
 			// Spawn Obstacle
 			int x = (int)npc.posX;
 			int y = chasingQuestInitialPosY;
 			int z = (int)npc.posZ-4;
-			
+
 			for(TerrainBiomeAreaIndex terrainBiomeAreaIndex : terrainBiomeArea.map.keySet())
 			{
 				if(terrainBiomeArea.map.get(terrainBiomeAreaIndex) == Blocks.WATER)
@@ -838,26 +840,26 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			}
 		}
 	}
-	
+
 	private void generateDroppedItems() {
 		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
-		
+
 		Random randomNumber = new Random();
-		
+
 		int x = (int)player.posX;
 		int y = (int)player.posY+10;
 		int z = (int)player.posZ+56;
-		
+
 		double randDouble = 0;
-		
+
 		Item randomItem;
-		
+
 		// Decision to place or not (66% chance spawn)
 		if(randomNumber.nextDouble() > 0.66)
 		{
 			return;
 		}
-		
+
 		// Select Region (left, right (1 out of 3 regions)
 		randDouble = randomNumber.nextDouble();
 		if(randDouble < 0.33)
@@ -868,7 +870,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		{
 			x += 8;
 		}
-		
+
 		// Select What Item (Gold Ingot(10%), Blaze Powder(35%) or FEATHER(55%))
 		randDouble = randomNumber.nextDouble();
 		if(randDouble < 0.1)
@@ -877,17 +879,17 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		}
 		else if(randDouble < 0.45)
 		{
-			randomItem = Items.GLAZE_POWDER;
+			randomItem = Items.BLAZE_POWDER;
 		}
 		else
 		{
 			randomItem = Items.FEATHER;
 		}
-		
+
 		EntityItem item = new EntityItem(ws, x, y, z, new ItemStack(randomItem,1));
 		ws.spawnEntity(item);
 	}
-	
+
 	public float getPlayerPitch() {
 		return playerQuestPitch;
 	}
@@ -895,26 +897,26 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	public float getPlayerYaw() {
 		return playerQuestYaw;
 	}
-	
+
 	public void setNpc(EntityCustomNpc npc)
 	{
 		this.npc = npc;
 	}
-	
+
 	public void setNpcCommand(NpcCommand npcCommand)
 	{
 		this.command = npcCommand;
 	}
-	
+
 	private void waitForRewardPickupAndContinue() {
-		
+
 		// Don't continue if there's an item on the ground nearby
 		for (Object e : ws.getEntitiesWithinAABBExcludingEntity(npc,new AxisAlignedBB(npc.posX-4, npc.posY-4, npc.posZ-4, npc.posX+4, npc.posY+4, npc.posZ+4))) {
 			if (e instanceof EntityItem || e instanceof EntityXPOrb) {
 				return;
 			}
 		}
-		
+
 		if (thiefLevel == 2){//levelSys.getPlayerLevel() == 2){
 			player.inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4615)));//4420))); //water element
 		}
@@ -922,36 +924,36 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			ItemStack key = new ItemStack(Item.getItemById(4424));
 			BiGXEventTriggers.givePlayerKey(player, "Burnt Key", "");
 		}
-		
+
 		levelSys.levelUp();
-		
+
 		isActive = false;
 		completed = true;
 
 		goBackToTheOriginalWorld(ws, player);
 	}
-	
+
 	@Override
 	public void CheckComplete() {
 		// CHASE QUEST WINNING CONDITION == WHEN the HP of the bad guy reached 0 or below
 		System.out.println("Checking if Chasing Quest is Complete");
-		
+
 		if(chasingQuestOnGoing)
 		{
-			if (thiefHealthCurrent <= 0) 
+			if (thiefHealthCurrent <= 0)
 			{
 				flagAccomplished = true;
 				chasingQuestOnGoing = false;
 			}
-			
+
 			if(isExitSelected)
 			{
 				flagGiveup = true;
 				chasingQuestOnGoing = false;
 			}
-			
+
 	//		waitForRewardPickupAndContinue();
-			
+
 			// CHASE QUEST LOSE CONDITION
 			if(timeFallBehind >= 30)
 			{
@@ -961,21 +963,21 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		}
 		else if(isRewardState) {
 			npc.setDead();
-			
+
 			if (endOfChaseItemCounter > 0) {
 				List<EntityItem> nearbyItems = npc.world.getEntitiesWithinAABB(EntityItem.class,
 						new AxisAlignedBB(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
 				List<EntityXPOrb> nearbyOrbs = npc.world.getEntitiesWithinAABB(EntityXPOrb.class,
 						new AxisAlignedBB(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
-				
+
 				if (endOfChaseItemCounter == 0) {
 					// TODO move items to player
 				}
-				
+
 				if (nearbyItems.size() == 0 && nearbyOrbs.size() == 0) {
 					endOfChaseItemCounter = 0;
 				}
-				
+
 				if((System.currentTimeMillis() - endOfChaseItemCounterTimestamp) > 19000)
 				{
 					endOfChaseItemCounter = 0;
@@ -985,45 +987,45 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			{
 				flagOpenQuestMenuGui = true;
 			}
-			
+
 			if(isExitSelected)
 			{
 				flagLeave = true;
 				chasingQuestOnGoing = false;
 			}
-			
+
 			if(isRetrySelected)
 			{
 				flagRetry = true;
 				chasingQuestOnGoing = false;
 			}
-			
+
 			if(isContinueSelected)
 			{
 				flagContinue = true;
 				chasingQuestOnGoing = false;
 			}
 		}
-		
+
 		if(isRetrySelected)
 		{
 			flagRetry = true;
 			chasingQuestOnGoing = false;
 		}
 	}
-	
+
 	public void countdownTick()
 	{
 		System.out.println("isClient[" + player.world.isRemote + "] countdown[" + countdown + "]");
-		
+
 		long timeNow = System.currentTimeMillis();
-		
+
 		// COUNT DOWN TIME
 		if (Minecraft.getMinecraft().currentScreen != guiChasingQuest) {
 			System.out.println("[BiGX] Count Down by One");
 			countdown --;
 		}
-		
+
 		// PLAY SOUND
 		if (countdown == 2 || countdown == 1) {
 			player.world.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
@@ -1032,8 +1034,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			player.world.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
 //			player.playSound("minebike:beep-go", 1.0f, 1.0f);
 		}
-		
-		if(countdown > 0){	
+
+		if(countdown > 0){
 			if (countdown == 7) {
 				for (Object o : player.world.loadedEntityList) {
 					if (((Entity)o) instanceof EntityCustomNpc) {
@@ -1046,7 +1048,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				dist = 0;
 				startingZ = (int)player.posZ;
 				endingZ = (int)player.posZ;
-				
+
 				isNpcFellDown = false;
 				npcFellDownTimestamp = 0;
 			}
@@ -1056,10 +1058,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				else
 				{
 					System.out.println("if (countdown == 5)");
-					
+
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseShowup);
 					GuiMessageWindow.showMessage(BiGXTextBoxDialogue.questChaseHintWeapon);
-					
+
 					switch(this.questChaseType)
 					{
 					case REGULAR:
@@ -1100,7 +1102,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 							npc = NpcCommand.spawnNpc(0, 11, 20, ws, "Thief", "customnpcs:textures/entity/humanmale/GangsterSteve.png");
 							break;
 						}
-						
+
 						npcStopAndInteractFalse(npc);
 //						npc.ai.stopAndInteract = false;
 						break;
@@ -1117,14 +1119,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						npc.display.setSkinTexture("customnpcs:textures/entity/humanmale/GangsterSteve.png");
 						break;
 					};
-					
+
 					setNpc(npc);
-					
+
 					command = new NpcCommand(serverContext, npc);
 					command.setSpeed(0);
 					command.enableMoving(false);
 					command.runInDirection(EnumFacing.SOUTH);
-					
+
 					setNpcCommand(command);
 				}
 			}
@@ -1148,22 +1150,22 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			{
 				player.rotationPitch = 0f;
 				player.rotationYaw = 0f;
-				
+
 				/**
 				 * PLAYING MUSIC FOR CHASING QUEST
 				 */
-				
+
 				if (thiefLevel < 2 || thiefLevel > 3)
 					chosenSong = "minebike:mus_metal";
 				else
 					chosenSong = "minebike:mus_breaks";
 
 				Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
-				
+
 				synchronized (clientContext) {
 					if(Minecraft.getMinecraft().currentScreen == null)
 					{
-//						if(player.world.isRemote) 
+//						if(player.world.isRemote)
 						{
 							System.out.println("BIGX: Show Gui Chasing Quest Instruction");
 							Minecraft.getMinecraft().displayGuiScreen(new GuiChasingQuestInstruction(BiGX.instance().clientContext, Minecraft.getMinecraft()));
@@ -1174,9 +1176,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				chasingQuestInitialPosX = 1;
 				chasingQuestInitialPosY = 10;
 				chasingQuestInitialPosZ = 0;
-				
+
 				blocks = new ArrayList<Vec3d>();
-				
+
 				for (int z = -16; z < (int)player.posZ+64; ++z) {
 					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY, z, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY, z));
@@ -1187,7 +1189,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					setBlock(ws, x, chasingQuestInitialPosY, -16, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d(x, chasingQuestInitialPosY, -16));
 				}
-				
+
 				for (int z = (int)player.posZ; z < (int)player.posZ+64; ++z) {
 					setBlock(ws, chasingQuestInitialPosX-16, chasingQuestInitialPosY-2, z, Blocks.OAK_FENCE); //FENCE);
 					blocks.add(new Vec3d((int)player.posX-16, chasingQuestInitialPosY-2, z));
@@ -1228,7 +1230,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //			Minecraft.getMinecraft().gameSettings.mouseSensitivity = 0;
 		}
 	}
-	
+
 	private void npcStopAndInteractFalse(EntityCustomNpc npc2) {
 		try{
 			npc.ais.stopAndInteract = false;
@@ -1246,10 +1248,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			questTimeStamp += System.currentTimeMillis() - lastCountdownTickTimestamp;
 			return;
 		}
-		
+
 		int tickCount = 0;
 		long timeNow = System.currentTimeMillis();
-		
+
 		// Calulate Tick Numbers
 		if(countdown == 11)
 		{
@@ -1265,17 +1267,17 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 		if(tickCount != 0)
 			lastCountdownTickTimestamp = timeNow;
-		
+
 		// Tick Countdown
 		for(int i=0; i<tickCount; i++)
 			countdownTick();
 	}
-	
+
 	public void handlePlayTimeOnServer()
 	{
 		dist = player.getDistance(npc);
 		ratio = (initialDist-dist)/initialDist;
-		
+
 		if (Minecraft.getMinecraft().isGamePaused())
 		{
 			pausedTime += (QuestEventHandler.tickCountUpperLimit*20);
@@ -1284,10 +1286,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		{
 			if(speedUpEffectTickCount > 0)
 				speedUpEffectTickCount--;
-			
+
 			if(damageUpEffectTickCount > 0)
 				damageUpEffectTickCount--;
-			
+
 			if(thiefSpeedUpEffectTickCount > 0)
 				thiefSpeedUpEffectTickCount --;
 
@@ -1322,14 +1324,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					NpcCommand.isSiting = false;
 				}
 			}
-			
+
 //			if(npcFellDownFlag)
 //			{
 //				npcFellDownFlag = false;
 //			}
-			
-			
-			
+
+
+
 			if(sprintTickCount > 0)
 			{
 				if(!isNpcFellDown)
@@ -1337,7 +1339,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			}
 			else
 			{
-				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
+				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12;
 				if(time > 60*4) {
 					sprintTickCount = sprintTickCountMax/2;
 				}
@@ -1348,7 +1350,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				if(thiefLevel>1)
 					player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
 			}
-			
+
 			if(positionSelectionTickCount > 0)
 			{
 				positionSelectionTickCount --;
@@ -1360,7 +1362,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				command.setRunStartX(nextPosition);
 				player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
 			}
-			
+
 			long timeNow = System.currentTimeMillis();
 			if( (timeNow - lastTickTime - pausedTime) < 125 )
 			{
@@ -1377,7 +1379,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					obstacleRefreshed = 2;
 				else
 					obstacleRefreshed = 2;
-				
+
 				// Time Limit
 				if (time > 60*6) {
 					obstacleRefreshed = 16;
@@ -1387,11 +1389,11 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				else if (time > 60*4) {
 					obstacleRefreshed = 4;
 				}
-					
+
 //				System.out.println("GENERATING");
-				
+
 				lastTickStage ++;
-				
+
 				// Make Obstacles and structures on the side
 				this.generateStructuresOnSides();
 				this.generateTerrainByPatientProfile();
@@ -1400,7 +1402,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
-				
+
 				if(isNpcFellDown)
 				{
 					command.setSpeed(0);
@@ -1422,20 +1424,20 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					//TODO
 					timeFallBehind = 0;
 					int tempThiefSpeed = NPCRUNNINGSPEED;
-					
+
 					if (time > 60*6) {
 						tempThiefSpeed = (int)(NPCRUNNINGSPEED - 1);
 					}
-					
+
 					if (dist > 30) {
 						tempThiefSpeed = (int)(NPCRUNNINGSPEED - 1);
 					}
-					
+
 					if( (thiefSpeedUpEffectTickCount > 0) && (thiefLevel>1) )
 						tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
 					command.setSpeed(tempThiefSpeed);
 				}
-				
+
 				this.time++;
 				this.obstacleTime--;
 			}
@@ -1450,12 +1452,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			else if(lastTickStage == 3)
 			{
 //				System.out.println("CLEANING 1");
-				
+
 				lastTickStage++;
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
-				
+
 				// CLEAN the terrain behind
 				/**
 				 * Terrain Cleaning
@@ -1473,7 +1475,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
-				
+
 				// CLEAN the terrain behind
 				/**
 				 * Terrain Cleaning
@@ -1486,12 +1488,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			else if(lastTickStage == 5)
 			{
 //				System.out.println("CLEANING 3");
-				
+
 				lastTickStage++;
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
-				
+
 				// CLEAN the terrain behind
 				/**
 				 * Terrain Cleaning
@@ -1504,12 +1506,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			else if(lastTickStage == 6)
 			{
 //				System.out.println("CLEANING 4");
-				
+
 				lastTickStage = 0;
 
 				this.pausedTime = 0;
 				this.lastTickTime = System.currentTimeMillis();
-				
+
 				// CLEAN the terrain behind
 				/**
 				 * Terrain Cleaning
@@ -1521,7 +1523,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			}
 		}
 	}
-	
+
 	private void playFellDownSound() {
 		int randomNumber = (new Random()).nextInt() % 4 + 1;
 		player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
@@ -1533,7 +1535,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		BigxClientContext context = (BigxClientContext) this.clientContext;
 		speedchange = 0f;
 		float speedchangerate = 0.025f;
-		
+
 		// Handling Player heart rate and rpm as mechanics for Chase Quest
 		BiGXPatientPrescription playerperscription;
 		try{
@@ -1546,14 +1548,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			playerperscription.setTargetMax(100);
 			System.out.println("[BiGX] player prescription is not avilable.");
 		}
-		
+
 		if (playerperscription.getTargetMin() > context.heartrate || context.rpm < 40)
 			speedchange += speedchangerate;
 		else if (playerperscription.getTargetMax() >= context.heartrate || context.rpm > 60 && context.rpm <= 90)
 			speedchange += speedchangerate;
 		else if (playerperscription.getTargetMax() < context.heartrate)
 			speedchange -= speedchangerate/2;
-		
+
 		if (context.rpm <= 60 && context.rpm > 40)
 			speedchange += speedchangerate;
 		else if (context.rpm <= 90 && context.rpm > 60)
@@ -1562,15 +1564,15 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			speedchange += speedchangerate/2;
 		else if (context.rpm <= 40)
 			speedchange -= speedchangerate;
-		
+
 		if(speedUpEffectTickCount > 0)
 		{
 			System.out.println("SPEED BOOST");
 			speedchange *= 1.5f;
 		}
-		
+
 		Minecraft mc = Minecraft.getMinecraft();
-		
+
 //		if(mc.getMinecraft().objectMouseOver != null) {
 //			if(mc.getMinecraft().objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
 //				mc.getMinecraft().playerController.attackEntity(mc.player, mc.getMinecraft().objectMouseOver.entityHit);
@@ -1585,13 +1587,15 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState());
 			//world.setBlock(x, y, z, block);
 	}
-	
-	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l) 
+
+	private void setBlock(World world, int x, int y, int z, Block block, int direction, int l)
 	{
 		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
-			world.setBlock(x, y, z, block, direction, 3);
+			// TODO: write the code to deal with the block direction
+			world.setBlockState(new BlockPos(x,y,z),block.getDefaultState(),3);
+			//world.setBlock(x, y, z, block, direction, 3);
 	}
-	
+
 	private static void cleanBlock(World world, int x, int y, int z, Block block)
 	{
 		if(Minecraft.getMinecraft().player.world.provider.getDimension() == WorldProviderFlats.dimID)
@@ -1606,14 +1610,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		System.out.println("[BiGX] Quest Chasing Task Started");
  		synchronized (questManager) {
 			init();
-			
+
 			while(isActive)
-			{	
+			{
 				if(checkChasingQuestTaskActivityFlags() == 2)
 					continue;
-				
+
 				checkComboCount();
-				
+
 				if(chasingQuestOnGoing)
 				{
 //					if (guiChasingQuest != null)
@@ -1642,7 +1646,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 						if(!player.world.isRemote)
 						{
 							handlePlayTimeOnServer();
-							
+
 							if(updateProgressStats((float)player.posZ, (float)player.getDistance(npc)))
 								audioFeedback.updateState(getAudioFeedbackEnum((float)player.posZ, (float)npc.posZ, distMovedLastFewSeconds, damageLastFewSeconds, (damageLastFewSeconds>0)));
 						}
@@ -1651,16 +1655,16 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 							System.out.println("handlePlayTimeOnClient");
 							handlePlayTimeOnClient();
 						}
-						
+
 						Minecraft.getMinecraft().gameSettings.thirdPersonView = 1;
 					}
 				}
-				
+
 				if(!player.world.isRemote)
 				{
 					((BigxServerContext)serverContext).updateQuestInformationToClient((BigxServerContext)serverContext);
 				}
-				
+
 				try {
 					questManager.wait();
 				} catch (InterruptedException e) {
@@ -1675,27 +1679,27 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			((BigxServerContext)serverContext).updateQuestInformationToClient(null);
 		}
 	}
-	
+
 	private static boolean updateProgressStats(float playerPosZ, float distToNpc) {
 		boolean returnValue = false;
-		
+
 		if((System.currentTimeMillis() - progressStatTimeStamp) > 2000)
 		{
 			progressStatTimeStamp = System.currentTimeMillis();
 			distMovedLastFewSeconds = playerPosZ - playerPosZLastFewSecondsAgo;
 			playerPosZLastFewSecondsAgo = playerPosZ;
 			distToNpcLastFewSeconds += distToNpc;
-			
+
 			returnValue = true;
 		}
-		
+
 		return returnValue;
 	}
 
 	private AudioFeedBackEnum getAudioFeedbackEnum(float playerPosZ, float npcPosZ, float distMovedLastFewSeconds, float damageLastFewSeconds, boolean hitFlag) // Every Two Seconds
 	{
 		AudioFeedBackEnum returnValue = AudioFeedBackEnum.REGULAR;
-		
+
 		// 6) Good Job
 		if(hitFlag)
 		{
@@ -1708,21 +1712,21 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			{
 				returnValue = AudioFeedBackEnum.AHEAD;
 			}
-			
+
 			// 3) Stuck an obstacles
 			else if(distMovedLastFewSeconds < 4)
 			{
 				System.out.println("BIGX Audio Effect NOMOVE["+distMovedLastFewSeconds+"]");
 				returnValue = AudioFeedBackEnum.NOMOVE;
 			}
-			
+
 			// 4) No able to hit him
 			else if( (damageLastFewSeconds < 2) && (distToNpcLastFewSeconds < 20) )
 			{
 				System.out.println("BIGX Audio Effect NOHIT["+distToNpcLastFewSeconds+"]");
 				returnValue = AudioFeedBackEnum.NOHIT;
 			}
-			
+
 			// 5) Not too far but no progress
 			else if(distToNpcLastFewSeconds < 100)
 			{
@@ -1730,27 +1734,27 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				returnValue = AudioFeedBackEnum.NOTCLOSEENOUGH;
 			}
 		}
-		
+
 		this.distMovedLastFewSeconds = 0;
 		this.distToNpcLastFewSeconds = 0;
-		
+
 		return returnValue;
 	}
 
 	private int checkChasingQuestTaskActivityFlags() {
 		int returnValue = 1;
-		
+
 		if(flagAccomplished)
 		{
 			// Play Monster Scream Sound
 			player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
-			
+
 			flagAccomplished = false;
 			isRewardState = true;
 			returnValue = 2;		// ACCOMPLISHED
 
 			levelSys.levelUp();
-			
+
 			if(levelSys.getPlayerLevel() > 2)
 			{
 				if(GuiChapter.getChapterNumber() == 5)
@@ -1758,7 +1762,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					GuiChapter.proceedToNextChapter();
 				}
 			}
-			
+
 			this.sendQuestGameTag(QuestActivityTagEnum.ACCOMPLESHED);
 			endingZ = (int)player.posZ;
 			LeaderboardRow row = new LeaderboardRow();
@@ -1766,82 +1770,82 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			row.level = Integer.toString(thiefLevel);
 			row.time_elapsed = "" + time;
 			row.combo = "" + bestCombo;
-			
+
 			try {
 				GuiLeaderBoard.writeToLeaderboard(row);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+
 			command.setSpeed(0);
 //			npc.setHealth(0f);
 			npc.setDead();
-			
+
 			// REWARD ITEMS (Add items with npc.entityDropItem(new ItemStack(), 0.0F) )
 			endOfChaseItemCounter = 15;
 			endOfChaseItemCounterTimestamp = System.currentTimeMillis();
-			
+
 			Random random = new Random();
-			
+
 			int totalXP = 15;
 			int xpGiven; // ignore pls
-			
+
 			while (totalXP > 0) {
 		         xpGiven = random.nextBoolean() || totalXP == 1 ? 1 : 2;
 		         totalXP -= xpGiven;
-		         npc.worldObj.spawnEntityInWorld(new EntityXPOrb(npc.worldObj, npc.posX, npc.posY, npc.posZ, xpGiven));
+		         npc.world.spawnEntity(new EntityXPOrb(npc.world, npc.posX, npc.posY, npc.posZ, xpGiven));
 		    }
-			
-			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
-			npc.entityDropItem(new ItemStack(Items.apple), random.nextInt(16)/8F);
+
+			npc.entityDropItem(new ItemStack(Items.APPLE), random.nextInt(16)/8F);
+			npc.entityDropItem(new ItemStack(Items.APPLE), random.nextInt(16)/8F);
 
 			virtualCurrency = 20 + thiefLevel*10;
 			String specialItemName = "";
-			
+
 			switch(thiefLevel)
 			{
 			case 1:
 				specialItemName = "3 Iron Ignot";
-				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.iron_ingot), 1);
+				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.IRON_INGOT), 1);
 				break;
 			case 2:
 				virtualCurrency = 80;
 				break;
 			case 3:
 				specialItemName = "3 Diamond Gem";
-				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.diamond), 1);
+				for(int i=0; i<3; i++) npc.entityDropItem(new ItemStack(Items.DIAMOND), 1);
 				break;
 			case 4:
 				specialItemName = "4 TNT";
-				for(int i=0; i<4; i++) npc.entityDropItem(new ItemStack(Blocks.tnt), 1);
+				for(int i=0; i<4; i++) npc.entityDropItem(new ItemStack(Blocks.TNT), 1);
 				break;
 			case 5:
 				specialItemName = "2 TNT 2 Diamond Gem";
-				for(int i=0; i<2; i++) 
-				{ 
-					npc.entityDropItem(new ItemStack(Blocks.tnt), 1); 
-					npc.entityDropItem(new ItemStack(Items.diamond), 1);
+				for(int i=0; i<2; i++)
+				{
+					npc.entityDropItem(new ItemStack(Blocks.TNT), 1);
+					npc.entityDropItem(new ItemStack(Items.DIAMOND), 1);
 				}
 				break;
 			case 6:
 				specialItemName = "12 Lapis Ore";
-				for(int i=0; i<12; i++) 
-				{ 
-					npc.entityDropItem(new ItemStack(Blocks.lapis_ore), 1);
+				for(int i=0; i<12; i++)
+				{
+					npc.entityDropItem(new ItemStack(Blocks.LAPIS_ORE), 1);
 				}
 				break;
 			case 7:
 				specialItemName = "12 Emerald Ore";
-				for(int i=0; i<12; i++) 
-				{ 
-					npc.entityDropItem(new ItemStack(Blocks.emerald_ore), 1); 
+				for(int i=0; i<12; i++)
+				{
+					npc.entityDropItem(new ItemStack(Blocks.EMERALD_ORE), 1);
 				}
 				break;
 			case 8:
 				specialItemName = "6 Obsidian Blocks";
-				for(int i=0; i<6; i++) 
-				{ 
-					npc.entityDropItem(new ItemStack(Blocks.OBSIDIAN), 1); 
+				for(int i=0; i<6; i++)
+				{
+					npc.entityDropItem(new ItemStack(Blocks.OBSIDIAN), 1);
 				}
 				break;
 			case 9:
@@ -1850,17 +1854,17 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				npc.entityDropItem(new ItemStack(Items.DIAMOND_HOE), 1);
 				npc.entityDropItem(new ItemStack(Items.DIAMOND_PICKAXE), 1);
 				npc.entityDropItem(new ItemStack(Items.DIAMOND_SHOVEL), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_sword), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_boots), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_chestplate), 1);
-				npc.entityDropItem(new ItemStack(Items.diamond_helmet), 1); 
-				npc.entityDropItem(new ItemStack(Items.diamond_leggings), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_SWORD), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_BOOTS), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_CHESTPLATE), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_HELMET), 1);
+				npc.entityDropItem(new ItemStack(Items.DIAMOND_LEGGINGS), 1);
 				break;
 			case 10:
 				specialItemName = "3 Ender Pearl";
 				for(int i=0; i<3; i++) 
 				{ 
-					npc.entityDropItem(new ItemStack(Items.ender_pearl), 1); 
+					npc.entityDropItem(new ItemStack(Items.ENDER_PEARL), 1);
 				}
 				break;
 			};
@@ -1964,7 +1968,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 			// Need to remove the previous thief
 			if(npc != null)
-				command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+				command.removeNpc(npc.display.getName(), WorldProviderFlats.dimID);
 		}
 		else if(flagLeave)
 		{
@@ -2107,9 +2111,12 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	@Override
 	public void onItemUse(LivingEntityUseItemEvent.Start event) {
+		// WARNING; this on item use only supports player use Item!!!!!
+
+		System.out.println("WARNING; this on item use only supports player use Item!!!!!");
 		synchronized (questManager) {
-			player = event.getEntityLiving();
-			
+			// TODO: figure out if parent class can typecast into subclass
+			player = (EntityPlayer)event.getEntityLiving();
 			if(!player.world.isRemote)
 			{
 				ws = DimensionManager.getWorld(this.questDestinationDimensionId);
@@ -2171,10 +2178,10 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 			
 			if( (chasingQuestOnGoing) && (!chasingQuestOnCountDown) )
 			{
-				if (event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem] == null)
+				if (event.getEntityPlayer().inventory.mainInventory.get(event.getEntityPlayer().inventory.currentItem) == null)
 					deductThiefHealth(null);
 				else
-					deductThiefHealth(event.entityPlayer.inventory.mainInventory[event.entityPlayer.inventory.currentItem].getItem());
+					deductThiefHealth(event.getEntityPlayer().inventory.mainInventory.get(event.getEntityPlayer().inventory.currentItem).getItem());
 
 				npc.setHealth(10000f);
 				
@@ -2342,14 +2349,16 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	
 	@Override
 	public void onItemPickUp(EntityItemPickupEvent event) {
-		if(event.item.getEntityItem().getItem() == Items.FEATHER)
+		if(event.getItem().getItem().getItem() == Items.FEATHER)
+		//if(event.getItem().getEntityItem().getItem() == Items.FEATHER)
 		{
 			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
-		else if(event.item.getEntityItem().getItem() == Items.GLAZE_POWDER)
+		else if(event.getItem().getItem().getItem() == Items.BLAZE_POWDER)
+		//else if(event.getItem().getEntityItem().getItem() == Items.BLAZE_POWDER)
 		{
 			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");

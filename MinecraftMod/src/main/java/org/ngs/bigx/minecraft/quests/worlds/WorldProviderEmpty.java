@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
@@ -25,7 +26,9 @@ public class WorldProviderEmpty extends WorldProvider {
 	
 	public void registerWorldChunkManager() {
 		this.dimensionId = dimID;
-		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(biomeID), 0F);
+		Biome.BiomeProperties properties = new Biome.BiomeProperties("Flat");
+		properties.setBaseHeight()
+		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(properties), 0F);
 		this.hasNoSky = false;
 		this.terrainType = WorldType.FLAT;
 		

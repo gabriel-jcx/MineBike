@@ -5,9 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import jdk.nashorn.internal.ir.Block;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.DimensionManager;
-import org.bukkit.block.Block;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
@@ -36,7 +37,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import noppes.npcs.entity.data.DataAI;
-import noppes.npcs.constants.EnumMovingType;
+//import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class TRONQuest extends CustomQuestAbstract
@@ -313,7 +314,7 @@ public class TRONQuest extends CustomQuestAbstract
 					}
 					event.world.setBlockState(new BlockPos(i, 45, j), Blocks.AIR.getDefaultState());
 					event.world.setBlockState(new BlockPos(i, 46, j), Blocks.AIR.getDefaultState());
-
+//					event.world.getBlockState().getProperties()
 //					event.world.setBlock(i, 45, j, Blocks.AIR);
 //					event.world.setBlock(i, 46, j, Blocks.AIR);
 				}
@@ -376,10 +377,13 @@ public class TRONQuest extends CustomQuestAbstract
 			};
 			npc.ais.movingPause = false;
 			npc.ais.movingPos = 0;
-			npc.ais.startPos = npcPath;
+			BlockPos startPos = new BlockPos(npcPath[0],npcPath[1],npcPath[2]);
+			npc.ais.setStartPos(startPos);// = npcPath;
 			npc.ais.walkingRange = 100;
 			npc.ais.movingPattern = 0;
-			npc.ais.movingType = EnumMovingType.MovingPath;
+			// 2 = MovingPath
+			npc.ais.setMovingType(2);
+			//npc.ais.movingType = EnumMovingType.MovingPath;
 			init = true;
 		}
 
@@ -402,9 +406,11 @@ public class TRONQuest extends CustomQuestAbstract
 			{
 				int paneX = npcLocation.get(numStagesNpc - 1)[0];
 				int paneZ = npcLocation.get(numStagesNpc - 1)[1];
+				event.world.setBlockState(new BlockPos(paneX, 45, paneZ), Blocks.STAINED_GLASS_PANE.getDefaultState(),2);
+				event.world.setBlockState(new BlockPos(paneX, 46, paneZ), Blocks.STAINED_GLASS_PANE.getDefaultState(),2);
+				//event.world.setBlock(paneX, 45, paneZ, Blocks.STAINED_GLASS_PANE, 14, 2);
+				//event.world.setBlock(paneX, 46, paneZ, Blocks.STAINED_GLASS_PANE, 14, 2);
 
-				event.world.setBlock(paneX, 45, paneZ, Blocks.stained_glass_pane, 14, 2);
-				event.world.setBlock(paneX, 46, paneZ, Blocks.stained_glass_pane, 14, 2);
 				if (paneX <= 100 && paneX >= -100 && paneZ <= 100 && paneZ >= -100)
 				// prevent outOfBounds
 				{
@@ -426,8 +432,13 @@ public class TRONQuest extends CustomQuestAbstract
 			int paneX = playerLocation.get(numStagesPlayer - 1)[0];
 			int paneZ = playerLocation.get(numStagesPlayer - 1)[1];
 			//Blocks.STAINED_GLASS_PANE.sta
-			event.world.setBlock(paneX, 45, paneZ, Blocks.stained_glass_pane, 9, 2);
-			event.world.setBlock(paneX, 46, paneZ, Blocks.stained_glass_pane, 9, 2);
+			// TODO: figure out how to setup Block with metadata and flag
+			//Blocks.STAINED_GLASS_PAN;
+			//Blocks.STAINED_GLASS_PANE.
+			event.world.setBlockState(new BlockPos(paneX, 45, paneZ), Blocks.STAINED_GLASS_PANE.getDefaultState(),  2);
+			event.world.setBlockState(new BlockPos(paneX, 46, paneZ), Blocks.STAINED_GLASS_PANE.getDefaultState(),  2);
+			//event.world.setBlock(new BlockPos(paneX, 45, paneZ), Blocks.STAINED_GLASS_PANE, 9, 2);
+			//event.world.setBlock(new BlockPos(paneX, 46, paneZ), Blocks.STAINED_GLASS_PANE, 9, 2);
 			if (paneX <= 100 && paneX >= -100 && paneZ <= 100 && paneZ >= -100)
 			// prevent outOfBounds
 			{
@@ -442,19 +453,21 @@ public class TRONQuest extends CustomQuestAbstract
 			// tp to platform
 			QuestTeleporter.teleport(player, WorldProviderTRON.TRONDIMENSIONID, 134, 98, 99);
 			// spawn gold stack on platform
-			EntityItem entityitem1 = new EntityItem(event.world.provider.worldObj, 137, 98, 102,
+			// Item 266 is the gold
+			EntityItem entityitem1 = new EntityItem(event.world, 137, 98, 102,
 					new ItemStack(Item.getItemById(266), 1));
-			EntityItem entityitem2 = new EntityItem(event.world.provider.worldObj, 137, 98, 102,
+			EntityItem entityitem2 = new EntityItem(event.world, 137, 98, 102,
 					new ItemStack(Item.getItemById(266), 3));
 			if (playerWon) //if player won...
 			{
-				event.world.provider.worldObj.spawnEntityInWorld(entityitem2); // give 6 units of gold
+				event.world.spawnEntity(entityitem2); // give 6 units of gold
 			}
 			else //if player lost...
 			{
-				event.world.provider.worldObj.spawnEntityInWorld(entityitem1); // give 2 units of gold
+				event.world.spawnEntity(entityitem1); // give 2 units of gold
 			}
 			// on item pickup, return to main menu
+			// TODO: this logic seems unimplemented yet
 		}
 
 	}
@@ -500,8 +513,8 @@ public class TRONQuest extends CustomQuestAbstract
 
 		npcPathList.set(0, npcPath);
 		npcPathList.set(1, npcPath);
-		npc.ai.setMovingPath(npcPathList);
-		npc.ai.getMovingPath().add(npcPath);
+		npc.ais.setMovingPath(npcPathList);
+		npc.ais.getMovingPath().add(npcPath);
 		command.enableMoving(true);
 		npc.velocityChanged = true;
 
@@ -560,7 +573,7 @@ public class TRONQuest extends CustomQuestAbstract
 	@Override
 	public void onWorldLoadEvent(WorldEvent.Load event)
 	{
-		if (event.world.provider.dimensionId == WorldProviderTRON.TRONDIMENSIONID)
+		if (event.getWorld().provider.getDimension() == WorldProviderTRON.TRONDIMENSIONID)
 		{
 			worldLoaded = true;
 		}

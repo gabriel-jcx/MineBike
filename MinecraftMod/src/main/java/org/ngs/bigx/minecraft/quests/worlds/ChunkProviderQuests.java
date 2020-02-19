@@ -5,14 +5,15 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ChunkPosition;
-import net.minecraft.world.SpawnerAnimals;
+//import net.minecraft.world.ChunkPosition;
+//import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.WorldChunkManager;
+//import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.MapGenCaves;
 import net.minecraft.world.gen.MapGenRavine;
@@ -22,13 +23,16 @@ import net.minecraft.world.gen.structure.MapGenMineshaft;
 import net.minecraft.world.gen.structure.MapGenScatteredFeature;
 import net.minecraft.world.gen.structure.MapGenStronghold;
 import net.minecraft.world.gen.structure.MapGenVillage;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.GameData;
+//import org.bukkit.block.Biome;
 
 public class ChunkProviderQuests implements IChunkProvider
 {
 	private Random rand;
 	private World worldObj;
 	private final boolean mapFeaturesEnabled;
-	private BiomeGenBase[] biomesForGeneration;
+	private Biome[] biomesForGeneration;
 	float[] parabolicField;
 	int[][] field_73219_j = new int[32][32];
 	
@@ -41,8 +45,10 @@ public class ChunkProviderQuests implements IChunkProvider
 	public void generateTerrain(int par1, int par2, byte[] par3ArrayOfByte) {
 		//stub
 	}
-		
+
+	@Deprecated
 	public Chunk loadChunk(int par1, int par2) {
+		// NOTE: appearently this function is never used lmao
 		return provideChunk(par1, par2);
 	}
 	
@@ -51,12 +57,13 @@ public class ChunkProviderQuests implements IChunkProvider
 		this.rand.setSeed(par1 * 341873128712L + par2 * 132897987541L);
 		byte[] var3 = new byte[32768];
 		generateTerrain(par1, par2, var3);
-		this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
+		this.biomesForGeneration = worldObj.getBiomeProvider().getBiomes(this.biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
+		//this.biomesForGeneration = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(this.biomesForGeneration, par1 * 16, par2 * 16, 16, 16);
 		Chunk var4 = new Chunk(this.worldObj, par1, par2);
 		byte[] var5 = var4.getBiomeArray();
 		for (int var6 = 0; var6 < var5.length; var6++)
 		{
-			var5[var6] = ((byte)this.biomesForGeneration[var6].biomeID);
+			//var5[var6] = ((byte)this.biomesForGeneration[var6].getBiomeName());
 		}
 		var4.generateSkylightMap();
 		return var4;
@@ -85,7 +92,7 @@ public class ChunkProviderQuests implements IChunkProvider
 		//return var5 == null ? null : var5.getSpawnableList(par1EnumCreatureType);
 		return null;
 	}
-	public ChunkPosition findClosestStructure(World par1World, String par2Str, int par3, int par4, int par5) {
+	public BlockPos findClosestStructure(World par1World, String par2Str, int par3, int par4, int par5) {
 		return null;
 	}
 	
@@ -99,15 +106,33 @@ public class ChunkProviderQuests implements IChunkProvider
 	
 	public void recreateStructures(int i, int j) {
 	}
-	@Override
-	public ChunkPosition func_147416_a(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_,
-			int p_147416_5_) {
-		// TODO Auto-generated method stub
+//	@Override
+//	public ChunkPosition func_147416_a(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_,
+//			int p_147416_5_) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//	@Override
+//	public void saveExtraData() {
+//		// TODO Auto-generated method stub
+//
+//	}
+	public Chunk getLoadedChunk(int x, int z){
 		return null;
 	}
-	@Override
-	public void saveExtraData() {
-		// TODO Auto-generated method stub
-		
+
+
+	/**
+	 * Unloads chunks that are marked to be unloaded. This is not guaranteed to unload every such chunk.
+	 */
+	public boolean tick(){
+		return  false;
+	}
+
+	/**
+	 * Converts the instance data to a readable string.
+	 */
+	public boolean isChunkGeneratedAt(int x, int z){
+		return false;
 	}
 }

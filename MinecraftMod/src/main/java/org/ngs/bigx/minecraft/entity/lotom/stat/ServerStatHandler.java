@@ -2,9 +2,9 @@ package org.ngs.bigx.minecraft.entity.lotom.stat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class ServerStatHandler implements IMessageHandler<StatPacket, StatPacket> {
 

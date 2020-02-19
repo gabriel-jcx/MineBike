@@ -112,8 +112,9 @@ public class BlockQuestChest extends BlockContainer {
     	}
     	*/
         BlockPos pos = new BlockPos(i,j,k);
-        IBlockState state = new IBlockState(block,n);
-    	super.breakBlock(world,pos,state);
+        //IBlockState state = new IBlockState(block,n);
+    	super.breakBlock(world,pos,block.getDefaultState());
+		//);
     }
 
     /*
@@ -149,12 +150,12 @@ public class BlockQuestChest extends BlockContainer {
     		break;
     	}
 
-    	TileEntity tileEntity = world.getTileEntity(i, j, k);
+    	TileEntity tileEntity = world.getTileEntity(new BlockPos(i, j, k));
     	if (tileEntity != null && tileEntity instanceof TileEntityQuestChest)
     	{
     		TileEntityQuestChest teQuestChest = (TileEntityQuestChest) tileEntity;
     		teQuestChest.setFacing(chestFacing);
-    		world.markBlockForUpdate(i, j, k);
+    		world.markBlockRangeForRenderUpdate(new BlockPos(i, j, k),new BlockPos(i, j, k));
     	}
     }
 

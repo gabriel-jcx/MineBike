@@ -13,7 +13,7 @@ import org.ngs.bigx.minecraft.items.CustomPainting.EnumArt;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 
-
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +21,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
 
+// TODO: figure out how to set the direction and the hanging direction of the item.
 public class CustomPainting extends EntityHanging implements IEntityAdditionalSpawnData
 {
     public CustomPainting.EnumArt art;
@@ -31,11 +33,11 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
         super(p_i1599_1_);
     }
 
-    public CustomPainting(World p_i1600_1_, int p_i1600_2_, int p_i1600_3_, int p_i1600_4_, int p_i1600_5_)
+    //public CustomPainting(World p_i1600_1_, int p_i1600_2_, int p_i1600_3_, int p_i1600_4_, int p_i1600_5_)
+    public CustomPainting(World p_i1600_1_,BlockPos pos, int p_i1600_5_)
     {
-        BlockPos pos = new BlockPos( p_i1600_2_, p_i1600_3_, p_i1600_4_);
 
-        super(p_i1600_1_, p_i1600_2_, p_i1600_3_, p_i1600_4_, p_i1600_5_);
+        super(p_i1600_1_, pos);
         ArrayList<EnumArt> arraylist = new ArrayList<EnumArt>();
         CustomPainting.EnumArt[] aenumart = CustomPainting.EnumArt.values();
         int i1 = aenumart.length;
@@ -61,9 +63,10 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
     }
 
     @SideOnly(Side.CLIENT)
-    public CustomPainting(World p_i1601_1_, int p_i1601_2_, int p_i1601_3_, int p_i1601_4_, int p_i1601_5_, String p_i1601_6_)
+    public CustomPainting(World p_i1601_1_, BlockPos pos, int p_i1601_5_, String p_i1601_6_)
     {
-        this(p_i1601_1_, p_i1601_2_, p_i1601_3_, p_i1601_4_, p_i1601_5_);
+        //BlockPos pos = new BlockPos(p_i1601_2_, p_i1601_3_, p_i1601_4_);
+        this(p_i1601_1_,pos, p_i1601_5_);
         CustomPainting.EnumArt[] aenumart = CustomPainting.EnumArt.values();
         int i1 = aenumart.length;
 
