@@ -3,15 +3,18 @@ package org.ngs.bigx.minecraft.items;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import net.minecraft.util.registry.RegistryNamespaced;
 import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.RegistryNamespaced;
+import net.minecraftforge.registries.GameData;
 import scala.collection.parallel.mutable.ParHashSetCombiner.AddingFlatHashTable;
 
 public class MineBikeCustomItems
 {
-  public static final RegistryNamespaced itemRegistry = GameData.getItemRegistry(); 
+  public static final RegistryNamespaced itemRegistry = GameData.getItemRegistry();
   public static HashMap<String, Item> itemMap;
  
 	public static ArrayList<Item> createItems()

@@ -78,6 +78,7 @@ public class RenderCustomPainting  extends Render
                 float f22 = (float)(p_77010_5_ + p_77010_3_ - (j1 + 1) * 16) / 512.0F;
                 Tessellator tessellator = Tessellator.getInstance();
                 //tessellator.
+
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 0.0F, -1.0F);
                 tessellator.addVertexWithUV((double)f15, (double)f18, (double)(-f2), (double)f20, (double)f21);

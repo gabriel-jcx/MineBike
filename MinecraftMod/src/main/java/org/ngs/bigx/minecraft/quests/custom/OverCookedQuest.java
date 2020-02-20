@@ -510,7 +510,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 	}
 	
 	//give player the order and remove the ingredients from player inventory
-	private void giveAndRemove(TickEvent.PlayerTickEvent event, int i)
+	private void giveAndRemove(PlayerTickEvent event, int i)
 	{
 		Item[] main = orderList.get(i).getInsides();
 		InventoryPlayer inventory = event.player.inventory;
@@ -524,7 +524,8 @@ public class OverCookedQuest extends CustomQuestAbstract
 				{
 					if(stack.getItem().getUnlocalizedName().equals(main[j].getUnlocalizedName()) || 
 							stack.getItem().getUnlocalizedName().equals(orderList.get(i).getType().getUnlocalizedName()))
-						event.player.inventory.consumeInventoryItem(stack.getItem());
+						//event.player.inventory.consumeInventoryItem(stack.getItem());
+						stack.setCount(stack.getCount() -1);
 				}	
 			}
 		}
@@ -615,6 +616,7 @@ public class OverCookedQuest extends CustomQuestAbstract
 						else if(r.getType().getUnlocalizedName().equals("item.hamburgerbun"))
 						{
 							event.player.inventory.consumeInventoryItem(MineBikeCustomItems.itemMap.get("item.hamburger"));
+
 							//System.out.println("burger consumed");
 							orderList.remove(r);
 							removed = true;

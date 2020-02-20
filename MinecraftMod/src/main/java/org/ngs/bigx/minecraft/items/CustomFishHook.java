@@ -40,7 +40,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedSpawnerEntity;
-//import net.minecraft.util.WeightedRandomFishable;
+import net.minecraft.util.WeightedRandomFishable;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 

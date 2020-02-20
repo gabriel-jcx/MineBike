@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
@@ -69,8 +69,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MouseHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -628,7 +626,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			if(levelDownSoundPlayFlag)
 			{
 				levelDownSoundPlayFlag = false;
-				p.world.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalingleveldown"));
+				p.playSound(se,1.0f,1.0f);
+				p.world.playSound(p,p.getPosition(),se,SoundCategory.,1.0f,1.0f );
+				//p.world.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
 			}
 
 			if(gaugeUpSoundPlayFlag)
