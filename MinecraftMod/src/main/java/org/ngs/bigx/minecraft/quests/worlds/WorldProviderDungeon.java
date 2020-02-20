@@ -1,7 +1,7 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
@@ -18,7 +18,8 @@ public class WorldProviderDungeon extends WorldProvider {
 	public static String dimName = "Dungeon";
 	private static String flatGenPreset = "2;7,254x1;" + Integer.toString(dungeonBiomeID) + ";stronghold,mineshaft,dungeon";
 	public static int groundHeight = 64;
-	
+	private WorldType terrainType;
+
 	@Override
 	public String getDimensionName() {
 		return dimName;

@@ -2,6 +2,8 @@ package org.ngs.bigx.minecraft.client;
 
 import java.text.DecimalFormat;
 
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
@@ -15,7 +17,7 @@ import org.ngs.bigx.minecraft.quests.QuestManager;
 import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
 
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -26,7 +28,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.util.ChunkCoordinates;
+//import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.math.Vec3d;
@@ -100,7 +102,7 @@ public class GuiStats extends GuiScreen {
 	    float f2 = (float)(par4 >> 8 & 255) / 255.0F;
 	    float f3 = (float)(par4 & 255) / 255.0F;
 	    
-	    Tessellator tessellator = Tessellator.instance;
+	    Tessellator tessellator = Tessellator.getInstance();
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -122,7 +124,7 @@ public class GuiStats extends GuiScreen {
 	
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
+	    if(event.isCancelable() || event.getType() != event.getType().TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }
@@ -133,7 +135,7 @@ public class GuiStats extends GuiScreen {
 
     	if (mc.player != null) {
 	    	EntityPlayer p = mc.player;
-		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+		    ScaledResolution sr = new ScaledResolution(mc);
 	    	int WIDTH = 200;
 	    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
 	    	int mcWidth = sr.getScaledWidth();
@@ -151,7 +153,7 @@ public class GuiStats extends GuiScreen {
 
 	    	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 	    	
-	    	if(mc.player.worldObj.provider.dimensionId == 0)
+	    	if(mc.player.world.provider.getDimension() == 0)
 	    	{
 	    		if(mc.currentScreen == null)
 				{
@@ -189,16 +191,16 @@ public class GuiStats extends GuiScreen {
 	    	/**
 	    	 * Pedaling Mode Related Drawing
 	    	 */
-	    	if(mc.player.getHeldItem() != null)
+	    	if(mc.player.getHeldItem(EnumHand.MAIN_HAND) != null)
 	    	{
-	    		if(mc.player.getHeldItem().getItem() == Items.paper)
+	    		if(mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.PAPER)
 				{
 	    			text = "Press LT to open Quest List Menu";
 
 		        	fontRendererObj = Minecraft.getMinecraft().fontRenderer;
 		    		fontRendererObj.drawStringWithShadow(text, mcWidth/2-fontRendererObj.getStringWidth(text)/2, mcHeight/2 - 50, 0xFFFFFF);
 				}
-	    		else if(mc.player.getHeldItem().getDisplayName().contains("Phone"))
+	    		else if(mc.player.getHeldItem(EnumHand.MAIN_HAND).getDisplayName().contains("Phone"))
 	    		{
 	    			text = "Press LT to Change Bike Mode (Move/Mining/Building)";
 
@@ -853,12 +855,13 @@ public class GuiStats extends GuiScreen {
     	}
     }
 	
-	private float calculateLocationIconPositions(Vec3d vLook, ChunkCoordinates playerLocation, ChunkCoordinates questLocation)
+	private float calculateLocationIconPositions(Vec3d vLook, BlockPos playerLocation, BlockPos questLocation)
 	{
 		float scaleFactorLookVector;
 		float scaleFactorQuestVector;
-		
-		Vec3d perpVector = new Vec3d(vLook.yCoord, vLook.xCoord * -1f, vLook.zCoord);
+
+		// TODO: figure out why this is (y, -x, z)????
+		Vec3d perpVector = new Vec3d(vLook.y, vLook.x * -1f, vLook.z);
 		
 		
 		

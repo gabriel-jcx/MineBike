@@ -15,7 +15,7 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -42,13 +42,13 @@ public class GuiLeaderBoard extends GuiScreen {
 	public GuiLeaderBoard(Minecraft mc) {
 		super();
 		this.mc = mc;
-		fontRendererObj = mc.fontRenderer;
+		fontRenderer = mc.fontRenderer;
 	}
 	
 	public GuiLeaderBoard(BigxClientContext c, Minecraft mc) {
 		this(mc);
 		context = c;
-		fontRendererObj = mc.fontRenderer;
+		fontRenderer = mc.fontRenderer;
 	}
 	
 	public static ArrayList<LeaderboardRow> getLeaderboardRows() {
@@ -230,7 +230,7 @@ public class GuiLeaderBoard extends GuiScreen {
 	    float f2 = (float)(par4 >> 8 & 255) / 255.0F;
 	    float f3 = (float)(par4 & 255) / 255.0F;
 	    
-	    Tessellator tessellator = Tessellator.instance;
+	    Tessellator tessellator = Tessellator.getInstance();
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -247,7 +247,7 @@ public class GuiLeaderBoard extends GuiScreen {
 
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
+	    if(event.isCancelable() || event.getType() != event.getType().TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }
@@ -259,12 +259,13 @@ public class GuiLeaderBoard extends GuiScreen {
     	
     	if (textField == null)
     	{
-    		textField = new GuiTextField(mc.fontRenderer, 0, 0, 0, 0);
+    		// Component ID being 0? Is that correct?
+    		textField = new GuiTextField(0,mc.fontRenderer, 0, 0, 0, 0);
     	}
     	
     	if (mc.player != null) {
 	    	EntityPlayer p = mc.player;
-		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+		    ScaledResolution sr = new ScaledResolution(mc);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();
     		
@@ -284,13 +285,13 @@ public class GuiLeaderBoard extends GuiScreen {
 //	        		String stat_1 = leaderboardRows.get(i).stat_1;
 	        		String bestcombo = leaderboardRows.get(i).combo;
 	        		String time_elapsed = leaderboardRows.get(i).time_elapsed;
-	
-		    		fontRendererObj.drawString(rank, -120, 32 + i*14, 0xFFFFFF);
-		    		fontRendererObj.drawString(name, -90, 32 + i*14, 0xFFFFFF);
-		    		fontRendererObj.drawString(level, 5, 32 + i*14, 0xFFFFFF);
+
+					fontRenderer.drawString(rank, -120, 32 + i*14, 0xFFFFFF);
+		    		fontRenderer.drawString(name, -90, 32 + i*14, 0xFFFFFF);
+					fontRenderer.drawString(level, 5, 32 + i*14, 0xFFFFFF);
 //		    		fontRendererObj.drawString(stat_1, 40, 32 + i*14, 0xFFFFFF);
-		    		fontRendererObj.drawString(bestcombo, 30, 32 + i*42, 0xFFFFFF);
-		    		fontRendererObj.drawString(time_elapsed, 75, 32 + i*14, 0xFFFFFF);
+					fontRenderer.drawString(bestcombo, 30, 32 + i*42, 0xFFFFFF);
+					fontRenderer.drawString(time_elapsed, 75, 32 + i*14, 0xFFFFFF);
 	        	}
         	
         	GL11.glPopMatrix();

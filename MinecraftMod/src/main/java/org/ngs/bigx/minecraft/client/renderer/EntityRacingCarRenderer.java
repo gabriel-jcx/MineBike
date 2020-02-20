@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client.renderer;
 
+import net.minecraft.client.Minecraft;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.RefStrings;
 import org.ngs.bigx.minecraft.entity.item.EntityRacingCar;
@@ -13,7 +14,7 @@ public class EntityRacingCarRenderer extends RenderLiving {
 	private static final ResourceLocation mobTextures = new ResourceLocation(BiGX.TEXTURE_PREFIX , "/textures/items/entityRacingCar.png");
 
 	public EntityRacingCarRenderer(ModelBase p_i1262_1_, float p_i1262_2_) {
-		super(p_i1262_1_, p_i1262_2_);
+		super(Minecraft.getMinecraft().getRenderManager(),p_i1262_1_, p_i1262_2_);
 	}
 
 	protected ResourceLocation getEntityTexture(EntityRacingCar entity) {

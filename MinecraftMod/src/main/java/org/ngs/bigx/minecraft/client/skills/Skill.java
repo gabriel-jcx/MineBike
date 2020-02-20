@@ -6,6 +6,8 @@ import java.net.UnknownHostException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
@@ -60,7 +62,8 @@ public abstract class Skill {
 	public void playSkillOnSoundEffect()
 	{
 		EntityPlayer player = Minecraft.getMinecraft().player;
-		player.playSound(soundEffectName, 1.0f, 1.0f);
+		SoundEvent se = new SoundEvent(new ResourceLocation(soundEffectName));
+		player.playSound(se, 1.0f, 1.0f);
 	}
 	
 	public boolean use()

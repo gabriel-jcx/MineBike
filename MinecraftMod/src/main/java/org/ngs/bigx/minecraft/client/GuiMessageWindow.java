@@ -12,7 +12,7 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.utility.Pair;
 
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -92,7 +92,7 @@ public class GuiMessageWindow extends GuiScreen {
 	    float f2 = (float)(par4 >> 8 & 255) / 255.0F;
 	    float f3 = (float)(par4 & 255) / 255.0F;
 	    
-	    Tessellator tessellator = Tessellator.instance;
+	    Tessellator tessellator = Tessellator.getInstance();
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -151,7 +151,7 @@ public class GuiMessageWindow extends GuiScreen {
 
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if (event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
+	    if (event.isCancelable() || event.getType() != event.getType().TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }
@@ -161,7 +161,7 @@ public class GuiMessageWindow extends GuiScreen {
     	if (mc.player != null)
     	{
 	    	EntityPlayer p = mc.player;
-		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+		    ScaledResolution sr = new ScaledResolution(mc);
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();
 	    	long timeDifference = (System.currentTimeMillis() - timestampLastShowWindowCall);

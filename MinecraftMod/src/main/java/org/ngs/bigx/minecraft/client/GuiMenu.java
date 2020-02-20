@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.client;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -28,8 +29,7 @@ public class GuiMenu extends GuiMainMenu {
     }
 	
 	@Override
-	protected void actionPerformed(GuiButton button)
-    {
+	protected void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		if (button.id==13 && context!=null && context.modEnabled) {
 			this.mc.displayGuiScreen(new GuiConnection(context,this));

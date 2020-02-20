@@ -8,10 +8,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-//import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.IItemRenderer;
 
 public class MysteriousKeyRenderer implements IItemRenderer {
-	
+
 	private ModelMysteriousKey modelMysteriousKey;
 	
 	public static ResourceLocation texture = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/items/mysteriouskey.png");

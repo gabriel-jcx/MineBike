@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.client.renderer;
 
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.ngs.bigx.minecraft.BiGX;
@@ -31,13 +33,16 @@ public class TileEntityQuestChestRenderer extends TileEntitySpecialRenderer {
 	
 	private void adjustRotatePivotViaMeta(World world, int i, int j, int k)
 	{
-		int meta = world.getBlockMetadata(i, j, k);
+		//IBlockState state =
+		Block block = world.getBlockState(new BlockPos(i,j,k)).getBlock();
+		// TODO: figure out whether it should be getDefaultState()?
+		int meta = block.getMetaFromState(block.getDefaultState());
 		GL11.glPushMatrix();
 		GL11.glRotatef(meta * (-90), 0.0F, 0.0F, 1.0F);
 		GL11.glPopMatrix();
 	}
 	
-	@Override
+	//@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double x, double y, double z, float scale) {
 		bindTexture(new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/tileentity/questChest.png"));
 		GL11.glPushMatrix();

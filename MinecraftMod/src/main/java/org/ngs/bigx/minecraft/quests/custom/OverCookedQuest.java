@@ -606,7 +606,9 @@ public class OverCookedQuest extends CustomQuestAbstract
 					{
 						if(r.getType().getUnlocalizedName().equals("item.sandwichbread"))
 						{
-							event.player.inventory.consumeInventoryItem(MineBikeCustomItems.itemMap.get("item.sandwich"));
+							event.player.inventory.decrStackSize(MineBikeCustomItems.itemMap.get("item.sandwich"));
+							ItemStack iStack = MineBikeCustomItems.itemMap.get("item.sandwich").get;
+							iStack.setCount(iStack.getCount() -1);
 							//System.out.println("sandwich consumed");
 							orderList.remove(r);
 							removed = true;

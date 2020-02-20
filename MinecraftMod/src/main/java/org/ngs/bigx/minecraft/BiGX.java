@@ -190,7 +190,7 @@ import noppes.npcs.CustomItems;
 	    }
 
 	    public static void sendStatUpdate(ISyncedStat stat, Entity entity) {
-	    	network.sendToDimension(new StatPacket(stat, entity), entity.worldObj.provider.dimensionId);
+	    	network.sendToDimension(new StatPacket(stat, entity), entity.world.provider.getDimension());
 	    }
 
 	    private void registerHooks() {

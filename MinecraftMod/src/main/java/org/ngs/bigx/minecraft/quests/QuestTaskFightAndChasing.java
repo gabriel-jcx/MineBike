@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -298,7 +300,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 			((BigxClientContext)clientContext).setSpeed(0);
 		
 		if(npc != null)
-			command.removeNpc(npc.display.name, WorldProviderFlats.dimID);
+			command.removeNpc(npc.display.getName(), WorldProviderFlats.dimID);
 
 //		switch(this.questChaseType)
 //		{
@@ -473,7 +475,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 			time = 0;
 		}
 
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 		QuestTeleporter.teleport(player, 100, 1, 11, 0);
 
 		chasingQuestInitialPosX = 1;
@@ -788,7 +790,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 	}
 	
 	private void generateDroppedItems() {
-		ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+		ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 		
 		Random randomNumber = new Random();
 		
@@ -821,7 +823,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 		randDouble = randomNumber.nextDouble();
 		if(randDouble < 0.1)
 		{
-			randomItem = items.GOLD_INGOT;
+			randomItem = Items.GOLD_INGOT;
 		}
 		else if(randDouble < 0.45)
 		{
@@ -885,11 +887,11 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 			
 			if (endOfChaseItemCounter > 0) {
 				endOfChaseItemCounter--;
-				
-				List<EntityItem> nearbyItems = npc.worldObj.getEntitiesWithinAABB(EntityItem.class,
-						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
-				List<EntityXPOrb> nearbyOrbs = npc.worldObj.getEntitiesWithinAABB(EntityXPOrb.class,
-						AxisAlignedBB.getBoundingBox(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
+
+				List<EntityItem> nearbyItems = npc.world.getEntitiesWithinAABB(EntityItem.class,
+						new AxisAlignedBB(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
+				List<EntityXPOrb> nearbyOrbs = npc.world.getEntitiesWithinAABB(EntityXPOrb.class,
+						new AxisAlignedBB(npc.posX-5, npc.posY-2, npc.posZ-5, npc.posX+5, npc.posY+2, npc.posZ+5));
 				
 				if (nearbyItems.size() == 0 && nearbyOrbs.size() == 0) {
 					endOfChaseItemCounter = 0;
@@ -1027,7 +1029,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 						npc = NpcCommand.spawnNpc(0, 11, 5, ws, monsterType.get(0), monsterType.get(2));
 					}
 					
-					npc.ai.stopAndInteract = false;
+					npc.ais.stopAndInteract = false;
 					setNpc(npc);
 					
 					npc.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(1);
@@ -1179,7 +1181,9 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 				sprintTickCountMax = ((new Random()).nextInt(5) + sprintTickCountMinMax) * 12; 
 				sprintTickCount = sprintTickCountMax;
 				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
-				player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:getawayfromme"));
+				player.playSound(se, 1.5f,1.0f);
+				//player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
 			}
 			
 			if(positionSelectionTickCount > 0)
@@ -1191,7 +1195,9 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 				int nextPosition = (new Random()).nextInt(2) - 1;
 				positionSelectionTickCount = positionSelectionTickCountMax;
 				command.setRunStartX(nextPosition);
-				player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:boop"));
+				player.playSound(se, 1.5f,1.0f);
+				//player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
 			}
 			
 			long timeNow = System.currentTimeMillis();
@@ -1355,7 +1361,9 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 	
 	private void playFellDownSound() {
 		int randomNumber = (new Random()).nextInt() % 4 + 1;
-		player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+		SoundEvent se = new SoundEvent(new ResourceLocation("minebike:hit" + randomNumber));
+		player.playSound(se, 1.0f,1.0f);
+		//player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 	}
 
 	public void handlePlayTimeOnClient()
@@ -1471,8 +1479,9 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 						    npc.faction.attackFactions.remove(player);
 						    npc.ais.avoidsWater = true;
 						    npc.ais.onAttack = 3;
-						    npc.setResponse();
-
+						    //npc.setResponse();
+							// TODO: figure out update whether update Client is correct
+							npc.updateClient();;
 							int tempThiefSpeed = NPCRUNNINGSPEED;
 							if(thiefSpeedUpEffectTickCount > 0)
 								tempThiefSpeed *= NPCRUNNINGSPEEDBOOSTRATE;
@@ -1492,7 +1501,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 						{
 							handlePlayTimeOnServer();
 							
-							if(updateProgressStats((float)player.posZ, (float)player.getDistanceToEntity(npc)))
+							if(updateProgressStats((float)player.posZ, (float)player.getDistance(npc)))
 								audioFeedback.updateState(getAudioFeedbackEnum((float)player.posZ, (float)npc.posZ, distMovedLastFewSeconds, damageLastFewSeconds, (damageLastFewSeconds>0)));
 						}
 						else
@@ -1605,7 +1614,9 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 		if(flagAccomplished)
 		{
 			// Play Monster Scream Sound
-			player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:monsterdeath"));
+			player.playSound(se, 1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
 			
 			System.out.println("flagAccomplished");
 			
@@ -1838,7 +1849,7 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 			
 			if(!player.world.isRemote)
 			{
-				ws = MinecraftServer.getServer().worldServerForDimension(this.questDestinationDimensionId);
+				ws = DimensionManager.getWorld(this.questDestinationDimensionId);
 				
 				int x1,y1,z1;
 				int x2,y2,z2;
@@ -1916,7 +1927,10 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 
 			// Play Monster Hit Sound
 			int randomNumber = (new Random()).nextInt() % 4 + 1;
-			player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:hit" + randomNumber));
+			player.playSound(se, 1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 		}
 	}
 
@@ -2059,14 +2073,18 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 	public void onItemPickUp(EntityItemPickupEvent event) {
 		if(event.getItem().getItem().getItem() == Items.FEATHER)
 		{
-			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:powerup"));
+			player.playSound(se, 1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
 		}
 		else if(event.getItem().getItem().getItem() == Items.BLAZE_POWDER)
 		{
-			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:powerup"));
+			player.playSound(se, 1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");
 			// Power Up Effect On
 			damageUpEffectTickCount = damageUpEffectTickCountMax;
@@ -2107,6 +2125,8 @@ public class QuestTaskFightAndChasing extends QuestTask implements IAudioFeedbac
 	}
 
 	private void playAudioFeedBack(String audioEffectName) {
-		Minecraft.getMinecraft().player.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
+		SoundEvent se = new SoundEvent(new ResourceLocation("minebike:" + audioEffectName));
+		Minecraft.getMinecraft().player.playSound(se, 1.5f,1.0f);
+		//Minecraft.getMinecraft().player.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
 	}
 }

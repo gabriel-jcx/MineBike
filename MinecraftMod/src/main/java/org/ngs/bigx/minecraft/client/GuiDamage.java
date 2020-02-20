@@ -4,13 +4,15 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.client.renderer.VertexBufferUploader;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -25,13 +27,14 @@ import net.minecraft.util.ResourceLocation;
 //import net.minecraft.util.StatCollector;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import scala.collection.parallel.ParIterableLike;
 
 public class GuiDamage extends GuiScreen {
 
 	public static final long duration = 800;
 	public static final long durationQuarter = duration/4;
 	public static final long durationHalf = duration/2;
-	
+
 	private static Minecraft mc;
 
 //	private ResourceLocation QUEST_TIMER_TEXTURE = new ResourceLocation(BiGX.TEXTURE_PREFIX, "textures/GUI/gauge_bg.png");
@@ -55,7 +58,7 @@ public class GuiDamage extends GuiScreen {
 	{
 		Random random = new Random();
 		DamageTextItem damageTextItem = new DamageTextItem();
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
 		
 		damageTextItem.timestamp = System.currentTimeMillis();
 		damageTextItem.damage = damage;
@@ -107,7 +110,8 @@ public class GuiDamage extends GuiScreen {
 	    float f2 = (float)(par4 >> 8 & 255) / 255.0F;
 	    float f3 = (float)(par4 & 255) / 255.0F;
 	    
-	    Tessellator tessellator = Tessellator.instance;
+	    Tessellator tessellator = Tessellator.getInstance().getBuffer();
+		VertexBuffer buffer = Tessellator.getInstance().getBuffer().b;
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -124,7 +128,7 @@ public class GuiDamage extends GuiScreen {
 
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
+	    if(event.isCancelable() || event.getType() != event.getType().TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }
@@ -136,7 +140,7 @@ public class GuiDamage extends GuiScreen {
 
     	if (mc.player != null) {
 	    	EntityPlayer p = mc.player;
-		    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+		    ScaledResolution sr = new ScaledResolution(mc);
 	    	int WIDTH = 200;
 	    	int mcWidth = sr.getScaledWidth();
 	    	int mcHeight = sr.getScaledHeight();

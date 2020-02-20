@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import net.minecraft.client.audio.Sound;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -527,8 +528,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 
 				// Monster Encounter Sound Play
 				String chosenSong = "minebike:monsterencounter";
-
-				Minecraft.getMinecraft().player.playSound(chosenSong, 1.5f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation(chosenSong));
+				Minecraft.getMinecraft().player.playSound(se, 1.5f, 1.0f);
 				
 				CommonEventHandler.flagOpenMonsterEncounter = false;
 				
@@ -620,7 +621,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			if(levelUpSoundPlayFlag)
 			{
 				levelUpSoundPlayFlag = false;
-				p.world.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalinglevelup"));
+				p.playSound(se, 1.0f, 1.0f);
+				//p.world.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
 			}
 
 			if(levelDownSoundPlayFlag)
@@ -628,14 +631,16 @@ public class ClientEventHandler implements IPedalingComboEvent {
 				levelDownSoundPlayFlag = false;
 				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalingleveldown"));
 				p.playSound(se,1.0f,1.0f);
-				p.world.playSound(p,p.getPosition(),se,SoundCategory.,1.0f,1.0f );
+				//p.world.playSound(p,p.getPosition(),se,SoundCategory.,1.0f,1.0f );
 				//p.world.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
 			}
 
 			if(gaugeUpSoundPlayFlag)
 			{
 				gaugeUpSoundPlayFlag = false;
-				p.world.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalinggaugeup"));
+				p.playSound(se, 1.0f, 1.0f);
+				//p.world.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
 			}
 			
 			/**

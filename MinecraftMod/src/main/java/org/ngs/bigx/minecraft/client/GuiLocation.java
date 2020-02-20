@@ -5,7 +5,7 @@ import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
 import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 
-//import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -56,7 +56,7 @@ public class GuiLocation extends GuiScreen {
 	    float f2 = (float)(par4 >> 8 & 255) / 255.0F;
 	    float f3 = (float)(par4 & 255) / 255.0F;
 	    
-	    Tessellator tessellator = Tessellator.instance;
+	    Tessellator tessellator = Tessellator.getInstance();
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -78,7 +78,7 @@ public class GuiLocation extends GuiScreen {
 	
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) {
-	    if(event.isCancelable() || event.type != event.type.TEXT || !context.modEnabled)
+	    if(event.isCancelable() || event.getType() != event.getType().TEXT || !context.modEnabled)
 	    {      
 	      return;
 	    }
@@ -92,7 +92,7 @@ public class GuiLocation extends GuiScreen {
     		return;
     	
     	EntityPlayer p = mc.player;
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
     	int WIDTH = 200;
 //    	int HEIGHT = HEART_SIZE + mc.fontRenderer.FONT_HEIGHT * 1 + 20 + 2;
     	int mcWidth = sr.getScaledWidth();

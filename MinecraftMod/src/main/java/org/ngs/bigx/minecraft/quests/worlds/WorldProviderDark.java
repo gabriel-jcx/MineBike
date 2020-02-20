@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
-import net.minecraft.server.v1_15_R1.ChunkProviderFlat;
+//import net.minecraft.server.v1_15_R1.ChunkProviderFlat;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,14 +24,16 @@ public class WorldProviderDark extends WorldProvider{
 	public static String dimName = "Chasing - Caves";
 	private static String flatGenPreset = "2;7,9x1,7x0,2x1;" + Integer.toString(flatBiomeID) + ";";
 	public static int groundHeight = 11;
+	private WorldType terrainType;
 
-	
+
 	public String getDimensionName() {
 		return dimName;
 	}
 	@Override
 	public DimensionType getDimensionType(){
 		// TODO: yet to be implemented
+		System.out.printf("ERROR: DON'T call this method, yet to be implemented");
 		DimensionType a = null;// = new DimensionType( dimID, dimName, "?", this);
 		return a;
 	};

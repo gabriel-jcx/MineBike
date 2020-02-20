@@ -2,7 +2,7 @@ package org.ngs.bigx.minecraft.entity.item;
 
 import org.ngs.bigx.minecraft.BiGX;
 
-//import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
@@ -46,7 +46,7 @@ public class EntityRacingCar extends EntityMob
 	
 	public static void createEntity(Class entityClass, String entityName, int solidColor, int spotColor){
 		int randId = EntityRegistry.findGlobalUniqueEntityId();
-		
+		EntityRegistry.registerModEntity();
 		EntityRegistry.registerGlobalEntityID(entityClass, entityName, randId);
 		EntityRegistry.registerModEntity(entityClass, entityName, randId, BiGX.modInstance, 64, 1, true);
 		EntityRegistry.addSpawn(entityClass, 2, 0, 1, EnumCreatureType.creature, BiomeGenBase.forest);

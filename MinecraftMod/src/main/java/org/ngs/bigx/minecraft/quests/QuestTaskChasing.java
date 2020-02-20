@@ -10,8 +10,11 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.minecraft.client.audio.Sound;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import org.ngs.bigx.dictionary.objects.clinical.BiGXPatientPrescription;
@@ -1028,10 +1031,14 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 		// PLAY SOUND
 		if (countdown == 2 || countdown == 1) {
-			player.world.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:beep-ready"));
+			player.playSound(se, 1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:beep-ready", 1.0f, 1.0f);
 //			player.playSound("minebike:beep-ready", 1.0f, 1.0f);
 		} else if (countdown == 0) {
-			player.world.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:beep-go"));
+			player.playSound(se, 1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:beep-go", 1.0f, 1.0f);
 //			player.playSound("minebike:beep-go", 1.0f, 1.0f);
 		}
 
@@ -1347,8 +1354,13 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 					sprintTickCount = sprintTickCountMax;
 				}
 				thiefSpeedUpEffectTickCount = thiefSpeedUpEffectTickCountMax;
-				if(thiefLevel>1)
-					player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+
+				if(thiefLevel>1){
+					SoundEvent se = new SoundEvent(new ResourceLocation("minebike:getawayfromme"));
+					player.playSound(se, 1.0f,1.0f);
+					//player.world.playSoundAtEntity(player, "minebike:getawayfromme", 1.0f, 1.0f);
+
+				}
 			}
 
 			if(positionSelectionTickCount > 0)
@@ -1360,7 +1372,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 				int nextPosition = (new Random()).nextInt(2) - 1;
 				positionSelectionTickCount = positionSelectionTickCountMax;
 				command.setRunStartX(nextPosition);
-				player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:boop"));
+				player.playSound(se, 1.0f,1.0f);
+				//player.world.playSoundAtEntity(player, "minebike:boop", 1.0f, 1.0f);
 			}
 
 			long timeNow = System.currentTimeMillis();
@@ -1526,7 +1540,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 	private void playFellDownSound() {
 		int randomNumber = (new Random()).nextInt() % 4 + 1;
-		player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+		SoundEvent se = new SoundEvent(new ResourceLocation("minebike:hit"));
+		player.playSound(se,1.0f,1.0f);
+		//player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 	}
 
 	public void handlePlayTimeOnClient()
@@ -1747,7 +1763,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		if(flagAccomplished)
 		{
 			// Play Monster Scream Sound
-			player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:monsterdeath"));
+			player.playSound(se,1.0f,1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:monsterdeath", 1.0f, 1.0f);
 
 			flagAccomplished = false;
 			isRewardState = true;
@@ -2144,7 +2162,7 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 //					handleQuestStart();
 //				}
 //				else 
-				if (player.getHeldItem().getDisplayName().contains("Teleportation Potion")
+				if (player.getHeldItem(EnumHand.MAIN_HAND).getDisplayName().contains("Teleportation Potion")
 						&& player.dimension == this.questDestinationDimensionId)
 				{
 					// CHASE QUEST LOSE CONDITION
@@ -2195,7 +2213,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 
 			// Play Monster Hit Sound
 			int randomNumber = (new Random()).nextInt() % 4 + 1;
-			player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:hit"));
+			player.playSound(se,1.0f, 1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:hit" + randomNumber, 1.0f, 1.0f);
 		}
 	}
 
@@ -2352,7 +2372,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		if(event.getItem().getItem().getItem() == Items.FEATHER)
 		//if(event.getItem().getEntityItem().getItem() == Items.FEATHER)
 		{
-			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:powerup"));
+			player.playSound(se,1.0f, 1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("speedUpEffectTickCount refresh");
 			// Speed Up Effect On
 			speedUpEffectTickCount = speedUpEffectTickCountMax;
@@ -2360,7 +2382,9 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 		else if(event.getItem().getItem().getItem() == Items.BLAZE_POWDER)
 		//else if(event.getItem().getEntityItem().getItem() == Items.BLAZE_POWDER)
 		{
-			player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:powerup"));
+			player.playSound(se,1.0f, 1.0f);
+			//player.world.playSoundAtEntity(player, "minebike:powerup", 1.0f, 1.0f);
 			System.out.println("damageUpEffectTickCount refresh");
 			// Power Up Effect On
 			damageUpEffectTickCount = damageUpEffectTickCountMax;
@@ -2401,6 +2425,8 @@ public class QuestTaskChasing extends QuestTask implements IAudioFeedbackPlaybac
 	}
 
 	private void playAudioFeedBack(String audioEffectName) {
-		Minecraft.getMinecraft().player.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
+		SoundEvent se = new SoundEvent(new ResourceLocation("minebike:" + audioEffectName));
+		player.playSound(se,1.5f, 1.0f);
+		//Minecraft.getMinecraft().player.playSound("minebike:" + audioEffectName, 1.5f, 1.0f);
 	}
 }
