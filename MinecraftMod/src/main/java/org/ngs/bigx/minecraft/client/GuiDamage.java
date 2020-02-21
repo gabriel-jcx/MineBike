@@ -4,7 +4,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.VertexBufferUploader;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexBuffer;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
@@ -109,19 +111,25 @@ public class GuiDamage extends GuiScreen {
 	    float f1 = (float)(par4 >> 16 & 255) / 255.0F;
 	    float f2 = (float)(par4 >> 8 & 255) / 255.0F;
 	    float f3 = (float)(par4 & 255) / 255.0F;
-	    
-	    Tessellator tessellator = Tessellator.getInstance().getBuffer();
-		VertexBuffer buffer = Tessellator.getInstance().getBuffer().b;
+		Tessellator tessellator = Tessellator.getInstance();
+	   	//Tessellator tessellator = Tessellator.getInstance().getBuffer();
+		//VertexBuffer buffer = Tessellator.getInstance().getBuffer().b;
 	    GL11.glEnable(GL11.GL_BLEND);
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	    GL11.glColor4f(f1, f2, f3, f);
-	    tessellator.startDrawingQuads();
-	    tessellator.addVertex((double)par0, (double)par3, 0.0D);
-	    tessellator.addVertex((double)par2, (double)par3, 0.0D);
-	    tessellator.addVertex((double)par2, (double)par1, 0.0D);
-	    tessellator.addVertex((double)par0, (double)par1, 0.0D);
-	    tessellator.draw();
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buffer.pos((double)par0, (double)par3, 0.0D).endVertex();
+		buffer.pos((double)par2, (double)par3, 0.0D).endVertex();
+		buffer.pos((double)par2, (double)par1, 0.0D).endVertex();
+		buffer.pos((double)par0, (double)par1, 0.0D).endVertex();//TODO: addvertex might be wrong
+//	    tessellator.startDrawingQuads();
+//	    tessellator.addVertex((double)par0, (double)par3, 0.0D);
+//	    tessellator.addVertex((double)par2, (double)par3, 0.0D);
+//	    tessellator.addVertex((double)par2, (double)par1, 0.0D);
+//	    tessellator.addVertex((double)par0, (double)par1, 0.0D);
+		tessellator.draw();
 	    GL11.glEnable(GL11.GL_TEXTURE_2D);
 	    GL11.glDisable(GL11.GL_BLEND);
 	}

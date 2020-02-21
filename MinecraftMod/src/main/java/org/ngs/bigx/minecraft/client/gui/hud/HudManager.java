@@ -92,12 +92,14 @@ public class HudManager extends GuiScreen
 
 					BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				    //tessellator.startDrawingQuads();
+
 					buffer.pos(x1, y2, 0.0D).endVertex();
-				    //tessellator.addVertex((double)x1, (double)y2, 0.0D);
+
 					buffer.pos(x2, y2, 0.0D).endVertex();
 					buffer.pos(x2, y1, 0.0D).endVertex();
 					buffer.pos(x1, y1, 0.0D).endVertex();
+		//tessellator.startDrawingQuads();
+		//tessellator.addVertex((double)x1, (double)y2, 0.0D);
 //				    tessellator.addVertex((double)x2, (double)y2, 0.0D);
 //				    tessellator.addVertex((double)x2, (double)y1, 0.0D);
 //				    tessellator.addVertex((double)x1, (double)y1, 0.0D);
@@ -166,10 +168,10 @@ public class HudManager extends GuiScreen
 				    //this is where it becomes drawn
 					BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-					buffer.pos(0.0D, 0.0d, 0.0d).tex((double)hudTexture.x, (double)hudTexture.y).endVertex();
-					buffer.pos(0.0D, 0.0d, 1.0d).tex((double)hudTexture.x, (double)hudTexture.y + hudTexture.h).endVertex();
-					buffer.pos(0.0D, 1.0d, 1.0d).tex((double)hudTexture.x + hudTexture.w, (double)hudTexture.y).endVertex();
-					buffer.pos(0.0D, 1.0d, 0.0d).tex((double)hudTexture.x + hudTexture.w, (double)hudTexture.y).endVertex();
+					buffer.pos((double)hudTexture.x, (double)hudTexture.y, 0.0D).tex( 0.0d, 0.0d).endVertex();
+					buffer.pos((double)hudTexture.x, (double)hudTexture.y + hudTexture.h, 0.0D).tex(0.0d, 1.0d).endVertex();
+					buffer.pos((double)hudTexture.x + hudTexture.w, (double)hudTexture.y + hudTexture.h, 0.0D).tex(1.0d, 1.0d).endVertex();
+					buffer.pos((double)hudTexture.x + hudTexture.w, (double)hudTexture.y, 0.0D).tex(1.0d, 0.0d).endVertex();
 					//TODO: addVertexWithUV not sure
 					//tessellator.addVertex((double)x1, (double)y2, 0.0D);
 		//			tessellator.startDrawingQuads();

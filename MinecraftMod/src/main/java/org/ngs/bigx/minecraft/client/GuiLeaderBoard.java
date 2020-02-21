@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -235,11 +237,17 @@ public class GuiLeaderBoard extends GuiScreen {
 	    GL11.glDisable(GL11.GL_TEXTURE_2D);
 	    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	    GL11.glColor4f(f1, f2, f3, f);
-	    tessellator.startDrawingQuads();
-	    tessellator.addVertex((double)par0, (double)par3, 0.0D);
-	    tessellator.addVertex((double)par2, (double)par3, 0.0D);
-	    tessellator.addVertex((double)par2, (double)par1, 0.0D);
-	    tessellator.addVertex((double)par0, (double)par1, 0.0D);
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buffer.pos((double)par0, (double)par3, 0.0D).endVertex();
+		buffer.pos((double)par2, (double)par3, 0.0D).endVertex();
+		buffer.pos((double)par2, (double)par1, 0.0D).endVertex();
+		buffer.pos((double)par0, (double)par1, 0.0D).endVertex();//TODO: addvertex might be wrong
+//	    tessellator.startDrawingQuads();
+//	    tessellator.addVertex((double)par0, (double)par3, 0.0D);
+//	    tessellator.addVertex((double)par2, (double)par3, 0.0D);
+//	    tessellator.addVertex((double)par2, (double)par1, 0.0D);
+//	    tessellator.addVertex((double)par0, (double)par1, 0.0D);
 	    tessellator.draw();
 	    GL11.glEnable(GL11.GL_TEXTURE_2D);
 	    GL11.glDisable(GL11.GL_BLEND);
