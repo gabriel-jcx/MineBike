@@ -1,5 +1,7 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
@@ -20,7 +22,7 @@ public class WorldProviderDungeon extends WorldProvider {
 	public static int groundHeight = 64;
 	private WorldType terrainType;
 
-	@Override
+	//@Override
 	public String getDimensionName() {
 		return dimName;
 	}
@@ -28,14 +30,16 @@ public class WorldProviderDungeon extends WorldProvider {
 	public void registerWorldChunkManager() {
 		this.setDimension(dimID);
 		Biome.BiomeProperties properties = new Biome.BiomeProperties("Dungeon");
-		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenDungeon(properties), 0F);
+		//this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenDungeon(properties), 0F);
 		this.hasSkyLight = false;
 		this.terrainType = WorldType.FLAT;
 		
 	}
 	
-	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), false, flatGenPreset);
+	public IChunkGenerator createChunkGenerator() {
+		WorldType terrian = world.getWorldType();
+		return terrian.getChunkGenerator(this.world, flatGenPreset);
+		//return new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), false, flatGenPreset);
 	}
 	
 	public int getAverageGroundLevel() {
@@ -102,6 +106,13 @@ public class WorldProviderDungeon extends WorldProvider {
 	@Override
 	public double getHorizon() {
 		return 0.0D;
+	}
+
+	@Override
+	public DimensionType getDimensionType() {
+		//DimensionType.register()
+		System.out.printf("ERROR: DON'T call this method, yet to be implemented");
+		return null;
 	}
 
 }

@@ -10,13 +10,14 @@ import net.minecraft.world.World;
 
 public class ItemCustomPainting extends Item
 {
+
     private final Class hangingEntityClass;
 
     public ItemCustomPainting(Class entityClass)
     {
     	super();
         this.hangingEntityClass = entityClass;
-        this.setCreativeTab(CreativeTabs.tabDecorations);
+        this.setCreativeTab(CreativeTabs.DECORATIONS);
     }
 
     /**
@@ -37,6 +38,7 @@ public class ItemCustomPainting extends Item
         }
         else
         {
+
             int i1 = Direction.facingToDirection[p_77648_7_];
             EntityHanging entityhanging = this.createHangingEntity(p_77648_3_, p_77648_4_, p_77648_5_, p_77648_6_, i1);
 

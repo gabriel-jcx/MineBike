@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 
 public class OlReliable extends ItemFishingRod
 {
+
 	public CustomFishHook fishHook = null;
 	public static Clock clock;
 	public static boolean clockTimer = false;

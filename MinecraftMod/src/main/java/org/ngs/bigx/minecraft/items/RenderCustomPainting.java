@@ -164,7 +164,7 @@ public class RenderCustomPainting  extends Render
             i = MathHelper.floor(p_77008_1_.posX - (double)(p_77008_2_ / 16.0F));
         }
 
-        if (p_77008_1_.hangingDirection == 3)
+        if (p_77008_1_..hangingDirection == 3)
         {
             k = MathHelper.floor(p_77008_1_.posZ + (double)(p_77008_2_ / 16.0F));
         }

@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.util.registry.RegistryNamespaced;
-import net.minecraftforge.fml.common.registry.GameData;
+//import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.RegistryNamespaced;
+//import net.minecraft.util.RegistryNamespaced;
 import net.minecraftforge.registries.GameData;
 import scala.collection.parallel.mutable.ParHashSetCombiner.AddingFlatHashTable;
 
 public class MineBikeCustomItems
 {
-  public static final RegistryNamespaced itemRegistry = GameData.getItemRegistry();
+	// TODO: this itemRegistry seems never called in the current mods
+  //public static final RegistryNamespaced itemRegistry = GameData.getWrapper();
   public static HashMap<String, Item> itemMap;
  
 	public static ArrayList<Item> createItems()
@@ -23,13 +24,15 @@ public class MineBikeCustomItems
 		try {
 			returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod"));
 			Item painting = new ItemCustomPainting(CustomPainting.class);
-			painting.setTextureName("customnpcs:painting").setUnlocalizedName("CustomPainting");
+
+			// TODO figure out if setTextureName can be remapped to setRegistryName
+			painting.setRegistryName("customnpcs:painting").setUnlocalizedName("CustomPainting");
 			returned.add(painting);
 	    	for (EnumFishType fish: EnumFishType.values())
 			  {
           Item item = new ItemFish(fish.getHealAmount(), fish.getSaturationModifier(), false, fish.getWeight(), fish.getName());
           item.setUnlocalizedName("ItemFish." + fish.getName());
-          item.setTextureName("customnpcs:" + fish.getName());
+          item.setRegistryName("customnpcs:" + fish.getName());
           returned.add(item);
 			  }
       
