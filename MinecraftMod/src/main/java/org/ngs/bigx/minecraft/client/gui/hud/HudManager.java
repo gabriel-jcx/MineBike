@@ -4,6 +4,9 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.client.gui.GuiChapter;
@@ -16,6 +19,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
+
 public class HudManager extends GuiScreen 
 {
 	//holds the data for the rectangles
@@ -26,7 +30,7 @@ public class HudManager extends GuiScreen
 	private static Minecraft staticMC;
 	public static int mcWidth;
 	public static int mcHeight;
-	
+
 	public HudManager(Minecraft mc) {
 		super();
 		this.mc = mc;
@@ -85,11 +89,19 @@ public class HudManager extends GuiScreen
 //			    GL11.glGetFloat(GL11.GL_CURRENT_COLOR, currentColor);
 			    GL11.glColor4f(r, g, b, a);
 			    //this is where it becomes drawn
-				    tessellator.startDrawingQuads();
-				    tessellator.addVertex((double)x1, (double)y2, 0.0D);
-				    tessellator.addVertex((double)x2, (double)y2, 0.0D);
-				    tessellator.addVertex((double)x2, (double)y1, 0.0D);
-				    tessellator.addVertex((double)x1, (double)y1, 0.0D);
+
+					BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				    //tessellator.startDrawingQuads();
+					buffer.pos(x1, y2, 0.0D).endVertex();
+				    //tessellator.addVertex((double)x1, (double)y2, 0.0D);
+					buffer.pos(x2, y2, 0.0D).endVertex();
+					buffer.pos(x2, y1, 0.0D).endVertex();
+					buffer.pos(x1, y1, 0.0D).endVertex();
+//				    tessellator.addVertex((double)x2, (double)y2, 0.0D);
+//				    tessellator.addVertex((double)x2, (double)y1, 0.0D);
+//				    tessellator.addVertex((double)x1, (double)y1, 0.0D);
+		//TODO: addvertex might be wrong
 				    tessellator.draw();
 //			    GL11.glColor4f(currentColor.get(0), currentColor.get(1), currentColor.get(2), currentColor.get(3));
 		    GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -102,14 +114,14 @@ public class HudManager extends GuiScreen
 	{	
 		
 		//get current texture and then set it back at the end of this function
-		this.fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+		this.fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		//translate to where it is going to be displayed, then scale it
 		GL11.glPushMatrix();
 		GL11.glPushAttrib(GL11.GL_TEXTURE_BIT);
 		GL11.glPushAttrib(GL11.GL_COLOR);
 					GL11.glTranslatef(
 						 (int) (hudString.x + (hudString.centerX ? 
-							mcWidth/2-fontRendererObj.getStringWidth(hudString.text)/2 * hudString.scale
+							mcWidth/2-fontRenderer.getStringWidth(hudString.text)/2 * hudString.scale
 							: 0)),
 							hudString.y + (hudString.centerY ? mcHeight/2 : 0), 
 							0.0f);
@@ -118,7 +130,7 @@ public class HudManager extends GuiScreen
 //					this breaks the other textures
 					if (hudString.shadow)
 					{
-						fontRendererObj.drawStringWithShadow(	
+						fontRenderer.drawStringWithShadow(
 								hudString.text, 
 								0, 
 								0, 
@@ -126,7 +138,7 @@ public class HudManager extends GuiScreen
 					}
 					else
 					{
-						fontRendererObj.drawString(	
+						fontRenderer.drawString(
 								hudString.text, 
 								0, 
 								0, 
@@ -148,15 +160,23 @@ public class HudManager extends GuiScreen
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 			GL11.glColor4f(1.0f, 1.0f, 1.0f, (hudTexture.alpha * 1.0f / 255.0f));
-				Tessellator tessellator = Tessellator.instance;
+				Tessellator tessellator = Tessellator.getInstance();
 			    GL11.glEnable(GL11.GL_TEXTURE_2D);
 					this.mc.renderEngine.bindTexture(hudTexture.resourceLocation);	
 				    //this is where it becomes drawn
-				    tessellator.startDrawingQuads();
-				    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y, 0.0D, 0.0d, 0.0d);
-				    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y + hudTexture.h, 0.0D, 0.0d, 1.0d);
-				    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y + hudTexture.h, 0.0D, 1.0d, 1.0d);
-				    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y, 0.0D, 1.0d, 0.0d);
+					BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+					buffer.pos(0.0D, 0.0d, 0.0d).tex((double)hudTexture.x, (double)hudTexture.y).endVertex();
+					buffer.pos(0.0D, 0.0d, 1.0d).tex((double)hudTexture.x, (double)hudTexture.y + hudTexture.h).endVertex();
+					buffer.pos(0.0D, 1.0d, 1.0d).tex((double)hudTexture.x + hudTexture.w, (double)hudTexture.y).endVertex();
+					buffer.pos(0.0D, 1.0d, 0.0d).tex((double)hudTexture.x + hudTexture.w, (double)hudTexture.y).endVertex();
+					//TODO: addVertexWithUV not sure
+					//tessellator.addVertex((double)x1, (double)y2, 0.0D);
+		//			tessellator.startDrawingQuads();
+//				    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y, 0.0D, 0.0d, 0.0d);
+//				    tessellator.addVertexWithUV((double)hudTexture.x, (double)hudTexture.y + hudTexture.h, 0.0D, 0.0d, 1.0d);
+//				    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y + hudTexture.h, 0.0D, 1.0d, 1.0d);
+//				    tessellator.addVertexWithUV((double)hudTexture.x + hudTexture.w, (double)hudTexture.y, 0.0D, 1.0d, 0.0d);
 				    tessellator.draw();
 			    GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glDisable(GL11.GL_BLEND);
@@ -209,7 +229,7 @@ public class HudManager extends GuiScreen
 	
 	private void updateResolution()
 	{
-	    ScaledResolution sr = new ScaledResolution(mc,mc.displayWidth,mc.displayHeight);
+	    ScaledResolution sr = new ScaledResolution(mc);
     	mcWidth = sr.getScaledWidth();
     	mcHeight = sr.getScaledHeight();
 	}
@@ -217,7 +237,7 @@ public class HudManager extends GuiScreen
 	@SubscribeEvent
     public void eventHandler(RenderGameOverlayEvent event) 
 	{
-	    if(event.isCancelable() || event.type != event.type.TEXT)
+	    if(event.isCancelable() || event.getType() != event.getType().TEXT)
 	    {
 	      return;
 	    }

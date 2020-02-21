@@ -1,14 +1,9 @@
 package org.ngs.bigx.minecraft.items;
 
-import io.netty.buffer.ByteBuf;
-
-import java.awt.Color;
 import java.time.Clock;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 //import net.minecraftforge.fml.common.registry.GameData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,21 +11,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 //import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentProtection;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFishHook;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
@@ -40,7 +26,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.WeightedSpawnerEntity;
-//import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -50,8 +35,6 @@ import org.ngs.bigx.minecraft.client.GuiMessageWindow;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
 import org.ngs.bigx.minecraft.client.gui.hud.HudRectangle;
 import org.ngs.bigx.minecraft.client.gui.hud.HudString;
-import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.items.EnumFishType;
 
 public class CustomFishHook extends EntityFishHook
 {
@@ -143,7 +126,7 @@ public class CustomFishHook extends EntityFishHook
 	/*
 	 * 
 	 */
-	private List<ArrayList<WeightedSpawnerEntity>> fishingSpots = new ArrayList<ArrayList<WeightedSpawnerEntity>>();
+	private List<ArrayList<WeightedRandom>> fishingSpots = new ArrayList<ArrayList<WeightedRandom>>();
 	
 	
 	//The Gui for the Power Level Display
@@ -193,12 +176,16 @@ public class CustomFishHook extends EntityFishHook
         //adds all the common fish to every fish location
         for(int i = 0; i < 7; i++)
         {
-        	fishingSpots.add(new ArrayList<WeightedRandomFishable>());
+        	//fishingSpots.add(new ArrayList<WeightedRandomFishable>());
+            fishingSpots.add(new ArrayList<WeightedRandom>());
         	for (EnumFishType fish: EnumFishType.values())
 			{
         		Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
+                List<Item> collection=null;
+                collection.add(temp);
         		if(fish.getType() == 0)
-        			fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+        			//fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+                    fishingSpots.get(i).add( new WeightedRandom.getRandomItem(collection, fish.getWeight()));
 			}
         }
             
