@@ -46,7 +46,9 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
         {
             CustomPainting.EnumArt enumart = aenumart[j1];
             this.art = enumart;
-            this.setDirection(p_i1600_5_);
+            EnumFacing facingDirectionIn
+            this.facingDirection= p_i1600_5_();
+            //this.setDirection(p_i1600_5_);
 
             if (this.onValidSurface())
             {

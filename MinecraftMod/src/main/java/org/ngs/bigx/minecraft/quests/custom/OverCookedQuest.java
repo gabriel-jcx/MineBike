@@ -620,6 +620,8 @@ public class OverCookedQuest extends CustomQuestAbstract
 							event.player.inventory.consumeInventoryItem(MineBikeCustomItems.itemMap.get("item.hamburger"));
 
 							//System.out.println("burger consumed");
+							//event.player.inventory.consumeInventoryItem(stack.getItem());
+							stack.setCount(stack.getCount() -1);
 							orderList.remove(r);
 							removed = true;
 							display.removeOrderTexture(k);

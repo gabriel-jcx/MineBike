@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.minecraft.util.SoundEvent;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
@@ -137,7 +138,8 @@ public class GuiChapter extends GuiScreen {
 			GuiChapter.unsetFlagProceedToNextChapter();
 			
 			// Play Sound
-			Minecraft.getMinecraft().player.playSound("minebike:victory", 1.5f, 1.0f);
+			SoundEvent s = new SoundEvent(new ResourceLocation("minebike:victory"));
+			Minecraft.getMinecraft().player.playSound(s, 1.5f, 1.0f);
 
 			// Start Timer for close screen
 	        Timer timer = new Timer(true);
@@ -145,7 +147,8 @@ public class GuiChapter extends GuiScreen {
 				@Override
 				public void run() {
 		    		// Play Sound
-					Minecraft.getMinecraft().player.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
+					SoundEvent se = new SoundEvent(new ResourceLocation("minebike:narration_chapter_" + GuiChapter.chapterNumber));
+					Minecraft.getMinecraft().player.playSound(se, 1.0f, 1.0f);
 				}
 			}, 750);
 		}

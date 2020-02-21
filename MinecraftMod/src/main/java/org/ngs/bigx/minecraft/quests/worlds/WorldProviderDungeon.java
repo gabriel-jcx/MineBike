@@ -7,7 +7,7 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderFlat;
+//import net.minecraft.world.gen.ChunkProviderFlat;
 
 public class WorldProviderDungeon extends WorldProvider {
 
