@@ -248,8 +248,9 @@ public class GuiChapter extends GuiScreen {
 					didOneSecondPassed = true;
 					
 					// Play Sound
-					Minecraft.getMinecraft().player.playSound("minebike:chaptertada", 1.0f, 1.0f);
-					
+					//Minecraft.getMinecraft().player.playSound("minebike:chaptertada", 1.0f, 1.0f);
+					SoundEvent se = new SoundEvent(new ResourceLocation("minebike:chaptertada"));
+					Minecraft.getMinecraft().player.playSound(se, 1.0f, 1.0f);
 					if(GuiChapter.chapterNumber == 1)
 					{
 						// Start Timer for close screen
@@ -258,7 +259,9 @@ public class GuiChapter extends GuiScreen {
 							@Override
 							public void run() {
 					    		// Play Sound
-								Minecraft.getMinecraft().player.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
+								SoundEvent se = new SoundEvent(new ResourceLocation("minebike:narration_chapter_" + GuiChapter.chapterNumber));
+								Minecraft.getMinecraft().player.playSound(se, 1.0f, 1.0f);
+								//Minecraft.getMinecraft().player.playSound("minebike:narration_chapter_" + GuiChapter.chapterNumber, 1.0f, 1.0f);
 							}
 						}, 1000);
 					}
