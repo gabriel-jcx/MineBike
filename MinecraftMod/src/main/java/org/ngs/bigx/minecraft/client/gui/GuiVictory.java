@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import net.minecraft.util.SoundEvent;
 import org.lwjgl.opengl.GL11;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -56,7 +57,9 @@ public class GuiVictory extends GuiScreen {
 		isVictoryMsgTimeout = true;
 		
 		// Play Vicotry Sound
-		Minecraft.getMinecraft().player.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
+		SoundEvent se = new SoundEvent(new ResourceLocation("minebike:victorywinfcquest"));
+		Minecraft.getMinecraft().player.playSound(se,1.0f,1.0f);
+		//Minecraft.getMinecraft().player.playSound("minebike:victorywinfcquest", 1.5f, 1.0f);
 	}
 	
 	public GuiVictory(BigxClientContext c, Minecraft mc, int exp, int gold, int extragold, String specialItem) {
@@ -90,7 +93,9 @@ public class GuiVictory extends GuiScreen {
 				isVictoryMsgTimeout = false;
 				// TODO
 	    		// Play Sound
-				Minecraft.getMinecraft().player.playSound("minebike:buyweaponandgetstronger", 1.0f, 1.0f);
+				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:buyweaponandgetstronger"));
+				Minecraft.getMinecraft().player.playSound(se,1.0f,1.0f);
+//				Minecraft.getMinecraft().player.playSound("minebike:buyweaponandgetstronger", 1.0f, 1.0f);
 			}
 		}, 5*1000);
 		

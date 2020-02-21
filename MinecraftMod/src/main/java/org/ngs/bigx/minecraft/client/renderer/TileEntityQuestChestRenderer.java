@@ -73,8 +73,8 @@ public class TileEntityQuestChestRenderer extends TileEntitySpecialRenderer {
 	
 	private void adjustLightFixture(World world, int i, int j, int k, Block block)
 	{
-		Tessellator tess = Tessellator.instance;
-		
+		Tessellator tess = Tessellator.getInstance();
+		//IBlockState b = (IBlockState) block;
 		float brightness = block.getLightValue(world, i, j, k);
 		int skyBrightness = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
 		int mod = skyBrightness % 65536;
