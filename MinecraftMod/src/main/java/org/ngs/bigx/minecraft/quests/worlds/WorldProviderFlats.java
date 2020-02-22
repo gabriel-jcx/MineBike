@@ -1,13 +1,18 @@
 package org.ngs.bigx.minecraft.quests.worlds;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+//import cpw.mods.fml.relauncher.Side;
+//import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
+//import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderFlat;
+import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+//import net.minecraft.world.gen.ChunkProviderFlat;
 
 public class WorldProviderFlats extends WorldProvider {
 
@@ -18,22 +23,35 @@ public class WorldProviderFlats extends WorldProvider {
 	public static String dimName = "Chasing - Outside";
 	private static String flatGenPreset = "2;7,5x1,3x3,2;" + Integer.toString(flatBiomeID) + ";decoration";
 	public static int groundHeight = 11;
-	
-	@Override
+    protected WorldType terrainType;
+
 	public String getDimensionName() {
 		return dimName;
 	}
-	
 	public void registerWorldChunkManager() {
-		this.dimensionId = dimID;
-		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(flatBiomeID), 0F);
-		this.hasNoSky = false;
+		this.setDimension(dimID);
+		Biome.BiomeProperties properties = new Biome.BiomeProperties("Flat");
+		//this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlatCaves(properties), 0F);
+		this.hasSkyLight = false;
 		this.terrainType = WorldType.FLAT;
+
 	}
-	
-	public IChunkProvider createChunkGenerator() {
-		return new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), false, flatGenPreset);
+
+	public IChunkGenerator createChunkGenerator() {
+		WorldType terrian = world.getWorldType();
+		return terrian.getChunkGenerator(this.world, flatGenPreset);
+		//return new ChunkProviderFlat(this.world, this.world.getSeed(), false, flatGenPreset);
 	}
+//	public void registerWorldChunkManager() {
+//		this.dimensionId = dimID;
+//		this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlat(flatBiomeID), 0F);
+//		this.hasNoSky = false;
+//		this.terrainType = WorldType.FLAT;
+//	}
+//
+//	public IChunkProvider createChunkGenerator() {
+//		return new ChunkProviderFlat(this.worldObj, this.worldObj.getSeed(), false, flatGenPreset);
+//	}
 	
 	public int getAverageGroundLevel() {
 		return 0;
@@ -99,5 +117,10 @@ public class WorldProviderFlats extends WorldProvider {
 	@Override
 	public double getHorizon() {
 		return 0.0D;
+	}
+
+	@Override
+	public DimensionType getDimensionType() {
+		return null;
 	}
 }

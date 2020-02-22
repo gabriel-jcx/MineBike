@@ -8,9 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
+//import net.minecraftforge.client.IItemRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 
-public class MysteriousKeyRenderer implements IItemRenderer {
+
+//public class MysteriousKeyRenderer implements IItemRenderer {
+public class MysteriousKeyRenderer implements ItemRenderer {
 
 	private ModelMysteriousKey modelMysteriousKey;
 	

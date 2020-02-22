@@ -111,8 +111,8 @@ public class WorldProviderDungeon extends WorldProvider {
 	@Override
 	public DimensionType getDimensionType() {
 		//DimensionType.register()
-		System.out.printf("ERROR: DON'T call this method, yet to be implemented");
-		return null;
+		return DimensionType.register("Dungeon","Yunho?" ,WorldProviderDungeon.dimID,WorldProviderDungeon.class, true);
+		//return null;
 	}
 
 }

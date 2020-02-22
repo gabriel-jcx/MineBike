@@ -33,9 +33,9 @@ public class WorldProviderDark extends WorldProvider{
 	@Override
 	public DimensionType getDimensionType(){
 		// TODO: yet to be implemented
-		System.out.printf("ERROR: DON'T call this method, yet to be implemented");
-		DimensionType a = null;// = new DimensionType( dimID, dimName, "?", this);
-		return a;
+		//System.out.printf("ERROR: DON'T call this method, yet to be implemented");
+		return DimensionType.register("Dark","Yunho?" ,WorldProviderDark.dimID,WorldProviderDark.class, true);
+		//return a;
 	};
 //	@Override
 //	public String getDimensionName() {
@@ -44,7 +44,7 @@ public class WorldProviderDark extends WorldProvider{
 
 	public void registerWorldChunkManager() {
 		this.setDimension(dimID);
-		//Biome.BiomeProperties properties = new Biome.BiomeProperties("FlatCaves");
+		Biome.BiomeProperties properties = new Biome.BiomeProperties("FlatCaves");
 		//this.worldChunkMgr = new net.minecraft.world.biome.WorldChunkManagerHell(new BiomeGenFlatCaves(properties), 0F);
 		this.hasSkyLight = false;
 		this.terrainType = WorldType.FLAT;

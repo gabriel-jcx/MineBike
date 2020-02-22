@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.entity.item;
 
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import org.ngs.bigx.minecraft.BiGX;
 
 //import cpw.mods.fml.common.registry.EntityRegistry;
