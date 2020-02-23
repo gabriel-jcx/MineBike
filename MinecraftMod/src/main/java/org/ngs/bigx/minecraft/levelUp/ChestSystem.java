@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.levelUp;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.event.ClickEvent;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
@@ -16,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
+import javax.swing.*;
 //import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 
@@ -23,7 +26,7 @@ public class ChestSystem {
 
 	private static Map<String, String> normalChests = populateNormalChests();
 	private static Map<String, String> lockedChests = populateLockedChests();
-	
+
 	private static Map<String, String> populateNormalChests(){
 		Map<String, String> map = new HashMap<String, String>();
 //		map.put(new Vec3d(0, 72, 117).toString(), "TutorialChestWater");
@@ -50,9 +53,12 @@ public class ChestSystem {
 		System.out.println("Interacting with Chest");
 		String chestCoords = new Vec3d(e.getPos()).toString();
 		System.out.println(chestCoords);
+		/PlayerInteractEvent.LeftClickBlock leftClickBlock = new PlayerInteractEvent.LeftClickBlock(e.getEntityPlayer(),e.getPos(),e.getFace(), new Vec3d(e.getFace().getDirectionVec()));
+		EntityPlayer en = e.getEntityPlayer();
+		BlockPos b = e.getPos();
 
 		// If we need to know this chest location, then player can't break it!
-		if (e.action == Action.LEFT_CLICK_BLOCK && (normalChests.containsKey(chestCoords) || lockedChests.containsKey(chestCoords)))
+		if (new PlayerInteractEvent.LeftClickBlock(e,b, ) && (normalChests.containsKey(chestCoords) || lockedChests.containsKey(chestCoords)))
 			e.setCanceled(true);
 		if (normalChests.containsKey(chestCoords))
 			interactWithNormalChest(e, normalChests.get(chestCoords));

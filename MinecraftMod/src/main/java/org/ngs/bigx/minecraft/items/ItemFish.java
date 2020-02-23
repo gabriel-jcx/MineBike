@@ -4,7 +4,7 @@ import java.util.List;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
+//import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,8 +13,8 @@ import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.WeightedRandomFishable;
+//import net.minecraft.util.IIcon;
+//import net.minecraft.util.WeightedRandomFishable;
 import net.minecraft.world.World;
 
 /**
@@ -44,7 +44,7 @@ public String getName()
 	return name;
 }
 
-@Override
+//@Override
 public int func_150905_g(ItemStack stack) {
     ItemFishFood.FishType itemfishfood$fishtype = ItemFishFood.FishType.func_150978_a(stack);
     return this.field_150907_b && itemfishfood$fishtype.func_150973_i()?itemfishfood$fishtype.func_150970_e():itemfishfood$fishtype.func_150975_c();

@@ -183,7 +183,7 @@ public class CustomFishHook extends EntityFishHook
                 collection.add(temp);
         		if(fish.getType() == 0)
         			//fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
-                    fishingSpots.get(i).add( new WeightedRandom.getRandomItem(collection, fish.getWeight()));
+                    fishingSpots.get(i).add( new WeightedRandom.Item(fish.getWeight()));
 			}
         }
             
@@ -583,7 +583,7 @@ public class CustomFishHook extends EntityFishHook
                 this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
                 float f6 = 0.92F;
 
-                if (this.onGround || this.isCollidedHorizontally)//this.isCollidedHorizontally)
+                if (this.onGround || this.collidedHorizontally)//this.isCollidedHorizontally)
                 {
                     f6 = 0.5F;
                 }
@@ -617,7 +617,8 @@ public class CustomFishHook extends EntityFishHook
                     WorldServer worldserver = (WorldServer)this.world;
                     int k = 1;
 
-                    if (this.rand.nextFloat() < 0.25F && this.world.canLightningStrikeAt(MathHelper.floor(this.posX), MathHelper.floor(this.posY) + 1, MathHelper.floor(this.posZ)))
+                    //if (this.rand.nextFloat() < 0.25F && this.world.canLightningStrikeAt(MathHelper.floor(this.posX), MathHelper.floor(this.posY) + 1, MathHelper.floor(this.posZ)))
+                    if (this.rand.nextFloat() < 0.25F && this.world.checkLight(new BlockPos(MathHelper.floor(this.posX), MathHelper.floor(this.posY) + 1, MathHelper.floor(this.posZ))))
                     {
                         k = 2;
                     }
@@ -702,8 +703,8 @@ public class CustomFishHook extends EntityFishHook
 
                             if (this.rand.nextFloat() < f1)
                             {
-                                f7 = MathHelper.randomFloatClamp(this.rand, 0.0F, 360.0F) * 0.017453292F;
-                                f2 = MathHelper.randomFloatClamp(this.rand, 25.0F, 60.0F);
+                                f7 = MathHelper.clamp(this.rand.nextFloat(), 0.0F, 360.0F) * 0.017453292F;
+                                f2 = MathHelper.clamp(this.rand.nextFloat(), 25.0F, 60.0F);
                                 d5 = this.posX + (double)(MathHelper.sin(f7) * f2 * 0.1F);
                                 d11 = (double)((float)MathHelper.floor(this.getEntityBoundingBox().minY) + 1.0F);
                                 d6 = this.posZ + (double)(MathHelper.cos(f7) * f2 * 0.1F);
@@ -712,7 +713,7 @@ public class CustomFishHook extends EntityFishHook
 
                             if (this.ticksCaughtDelay <= 0)
                             {
-                                this.fishApproachAngle = MathHelper.randomFloatClamp(this.rand, 0.0F, 360.0F);
+                                this.fishApproachAngle = MathHelper.clamp(this.rand.nextFloat(), 0.0F, 360.0F);
                                 this.ticksCatchableDelay = 20;//MathHelper.getRandomIntegerInRange(this.rand, 20, 80);
                             }
                         }
@@ -995,7 +996,7 @@ public class CustomFishHook extends EntityFishHook
     		default:
     			System.out.println("defualt Worked");
     			int rand = (int)(Math.random() * 6) + 1;
-                itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(rand))).func_150708_a(this.rand);
+                itemstack = WeightedRandom.getRandomItem(this.rand, new List<ItemFish> b ).func_150708_a(this.rand);
                 difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
                 break;
     	}
