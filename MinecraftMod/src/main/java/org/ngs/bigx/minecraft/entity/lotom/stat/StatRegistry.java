@@ -41,14 +41,13 @@ protected static Map<Class<? extends Entity>, Set<EntityStat>> registry = Maps.n
 		registry.get(clazz).add(stat);
 	}
 	
-//	public static EntityStat getStat(Entity entity, String name) {
-//		return ExtendedProperties.get(entity).getStat(name);
-//	}
+	public static EntityStat getStat(Entity entity, String name) {
+		return ExtendedProperties.get(entity).getStat(name);
+	}
 	
-/*
+
 	public static EntityStat getStat(Entity entity, EntityStat stat) {
 		return getStat(entity, stat.getName());
 	}
-*/
 
 }

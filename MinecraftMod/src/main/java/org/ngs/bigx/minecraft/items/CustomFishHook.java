@@ -300,7 +300,7 @@ public class CustomFishHook extends EntityFishHook
             			HudManager.unregisterRectangle(boxTop);
             			HudManager.unregisterString(powerString);
             			HudManager.unregisterString(failTime);
-            			angler.fishEntity.func_146034_e();
+            			angler.fishEntity.handleHookRetraction();
             			checkFail = false;
             			timeF = 5;
             			beginPull = false;
@@ -384,7 +384,8 @@ public class CustomFishHook extends EntityFishHook
     			if(time == 0)
         		{
         			retractHook();
-        			angler.fishEntity.func_146034_e();
+
+        			angler.fishEntity.handleHookRetraction();
         			beginPull = false;
         			HudManager.unregisterRectangle(powerLvl);
         			HudManager.unregisterRectangle(boxLeft);
@@ -430,10 +431,12 @@ public class CustomFishHook extends EntityFishHook
         else
         {
             if (!this.world.isRemote)
-            {  
-            	ItemStack itemstack = this.angler.getCurrentEquippedItem();
+            {
+                //this.angler.getHeldEquipment(EnumHand.MAIN_HAND);
+                ItemStack itemstack = this.angler.getHeldItem(EnumHand.MAIN_HAND);
+            	//ItemStack itemstack = this.angler.getCurrentEquippedItem();
 
-                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || itemstack.getItem() != MineBikeCustomItems.itemMap.get("item.OlReliable") || this.getDistanceSqToEntity(this.angler) > 1024.0D)
+                if (this.angler.isDead || !this.angler.isEntityAlive() || itemstack == null || itemstack.getItem() != MineBikeCustomItems.itemMap.get("item.OlReliable") || this.getDistanceSq(this.angler) > 1024.0D)
                 {
                 	unRegister();
                 	beginPull = false;

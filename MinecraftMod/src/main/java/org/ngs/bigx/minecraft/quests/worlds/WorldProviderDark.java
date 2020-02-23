@@ -3,6 +3,7 @@ package org.ngs.bigx.minecraft.quests.worlds;
 //import net.minecraft.server.v1_15_R1.ChunkProviderFlat;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 //import cpw.mods.fml.relauncher.Side;
@@ -34,7 +35,8 @@ public class WorldProviderDark extends WorldProvider{
 	public DimensionType getDimensionType(){
 		// TODO: yet to be implemented
 		//System.out.printf("ERROR: DON'T call this method, yet to be implemented");
-		return DimensionType.register("Dark","Yunho?" ,WorldProviderDark.dimID,WorldProviderDark.class, true);
+		return DimensionType.getById(dimID);
+		//return DimensionType.register("Dark","Yunho?" ,WorldProviderDark.dimID,WorldProviderDark.class, true);
 		//return a;
 	};
 //	@Override

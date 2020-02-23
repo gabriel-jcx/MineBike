@@ -124,6 +124,8 @@ public class WorldProviderEmpty extends WorldProvider {
 
 	@Override
 	public DimensionType getDimensionType() {
-		return DimensionType.register("Empty","Yunho?" ,WorldProviderEmpty.dimID,WorldProviderEmpty.class, true);
+		return DimensionType.getById(dimID);
+
+		//return DimensionType.register("Empty","Yunho?" ,WorldProviderEmpty.dimID,WorldProviderEmpty.class, true);
 	}
 }

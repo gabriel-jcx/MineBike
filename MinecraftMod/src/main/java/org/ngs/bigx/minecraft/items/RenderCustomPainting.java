@@ -3,6 +3,9 @@ package org.ngs.bigx.minecraft.items;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -149,27 +152,29 @@ public class RenderCustomPainting  extends Render
         int j = MathHelper.floor(p_77008_1_.posY + (double)(p_77008_3_ / 16.0F));
         int k = MathHelper.floor(p_77008_1_.posZ);
 
-        if (p_77008_1_.hangingDirection == 2)
+        if (p_77008_1_.facingDirection == EnumFacing.NORTH)
         {
             i = MathHelper.floor(p_77008_1_.posX + (double)(p_77008_2_ / 16.0F));
         }
-
-        if (p_77008_1_.hangingDirection == 1)
+        else if(p_77008_1_.facingDirection == EnumFacing.UP)
+        //if (p_77008_1_.hangingDirection == 1)
         {
             k = MathHelper.floor(p_77008_1_.posZ - (double)(p_77008_2_ / 16.0F));
         }
-
-        if (p_77008_1_.hangingDirection == 0)
+        else if(p_77008_1_.facingDirection == EnumFacing.DOWN)
+        //else if (p_77008_1_.hangingDirection == 0)
         {
             i = MathHelper.floor(p_77008_1_.posX - (double)(p_77008_2_ / 16.0F));
         }
-
-        if (p_77008_1_..hangingDirection == 3)
+        else if(p_77008_1_.facingDirection == EnumFacing.SOUTH)
+        //if (p_77008_1_..hangingDirection == 3)
         {
             k = MathHelper.floor(p_77008_1_.posZ + (double)(p_77008_2_ / 16.0F));
         }
-
-        int l = this.renderManager.worldObj.getLightBrightnessForSkyBlocks(i, j, k, 0);
+        // Note: EnumSkyBlock.Block == 0;
+        //       EnumSkyBlock.SKY = 15;
+        int l = this.renderManager.world.getLightFor(EnumSkyBlock.BLOCK, new BlockPos(i,j,k));
+        //int l = this.renderManager.world.getLightBrightnessForSkyBlocks(i, j, k, 0);
         int i1 = l % 65536;
         int j1 = l / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)i1, (float)j1);

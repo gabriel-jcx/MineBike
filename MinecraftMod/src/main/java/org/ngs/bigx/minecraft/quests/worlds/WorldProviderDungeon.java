@@ -111,7 +111,8 @@ public class WorldProviderDungeon extends WorldProvider {
 	@Override
 	public DimensionType getDimensionType() {
 		//DimensionType.register()
-		return DimensionType.register("Dungeon","Yunho?" ,WorldProviderDungeon.dimID,WorldProviderDungeon.class, true);
+		return DimensionType.getById(dimID);
+		//return DimensionType.register("Dungeon","Yunho?" ,WorldProviderDungeon.dimID,WorldProviderDungeon.class, true);
 		//return null;
 	}
 

@@ -1,6 +1,7 @@
 package org.ngs.bigx.minecraft.entity.lotom.stat;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -16,8 +17,12 @@ public class ClientStatHandler implements IMessageHandler<StatPacket, IMessage> 
 		
 		if (entity != null) {
 			//StatRegistry.(message.getStatName());
+			//StatRegistry.
+
+			ExtendedProperties.get(entity).getStat(message.getStatName());
 			ISyncedStat stat = (ISyncedStat) StatRegistry.getStat(entity, message.getStatName());
 			stat.readFromNBT(message.getTag());
+
 		}
 		return null;
 	}

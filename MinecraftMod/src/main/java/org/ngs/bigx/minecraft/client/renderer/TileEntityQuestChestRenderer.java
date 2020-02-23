@@ -70,18 +70,18 @@ public class TileEntityQuestChestRenderer extends TileEntitySpecialRenderer {
 		model.renderAll();
 		GL11.glPopMatrix();
 	}
-	
+	@Deprecated
 	private void adjustLightFixture(World world, int i, int j, int k, Block block)
 	{
 		Tessellator tess = Tessellator.getInstance();
 		IBlockState b = block.getDefaultState();
-		int brightness = block.ligetLightValue(b);
-		int skyBrightness = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
-		int mod = skyBrightness % 65536;
-		int div = skyBrightness / 65536;
+//		int brightness = block.ligetLightValue(b);
+//		int skyBrightness = world.getLightBrightnessForSkyBlocks(i, j, k, 0);
+//		int mod = skyBrightness % 65536;
+//		int div = skyBrightness / 65536;
 
-		tess.getBuffer().putBrightness4(brightness, brightness, brightness,brightness);
-		//tess.setColorOpaque_F(brightness, brightness, brightness);
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) mod, div);
+//		tess.getBuffer().putBrightness4(brightness, brightness, brightness,brightness);
+//		//tess.setColorOpaque_F(brightness, brightness, brightness);
+//		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) mod, div);
 	}
 }

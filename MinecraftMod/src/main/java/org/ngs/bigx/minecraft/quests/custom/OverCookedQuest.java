@@ -6,6 +6,7 @@ import java.util.ArrayList;
 // TODO: Implment the functionality for deleting the wanted item from the ItemStack
 
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
@@ -606,10 +607,13 @@ public class OverCookedQuest extends CustomQuestAbstract
 					{
 						if(r.getType().getUnlocalizedName().equals("item.sandwichbread"))
 						{
-							event.player.inventory.decrStackSize(MineBikeCustomItems.itemMap.get("item.sandwich"));
-							ItemStack iStack = MineBikeCustomItems.itemMap.get("item.sandwich").get;
-							iStack.setCount(iStack.getCount() -1);
-							//System.out.println("sandwich consumed");
+//							event.player.inventory.decrStackSize(MineBikeCustomItems.itemMap.get("item.sandwich"));
+//							ItemStack iStack = MineBikeCustomItems.itemMap.get("item.sandwich").get;
+//							iStack.setCount(iStack.getCount() -1);
+							int itemSlot = event.player.inventory.getSlotFor(MineBikeCustomItems.itemMap.get("item.hamburger").getDefaultInstance());
+
+							event.player.inventory.decrStackSize(itemSlot,1);
+							System.out.println("sandwich consumed");
 							orderList.remove(r);
 							removed = true;
 							display.removeOrderTexture(k);
@@ -617,11 +621,15 @@ public class OverCookedQuest extends CustomQuestAbstract
 						}
 						else if(r.getType().getUnlocalizedName().equals("item.hamburgerbun"))
 						{
-							event.player.inventory.consumeInventoryItem(MineBikeCustomItems.itemMap.get("item.hamburger"));
 
-							//System.out.println("burger consumed");
-							//event.player.inventory.consumeInventoryItem(stack.getItem());
-							stack.setCount(stack.getCount() -1);
+							int itemSlot = event.player.inventory.getSlotFor(MineBikeCustomItems.itemMap.get("item.hamburger").getDefaultInstance());
+
+							event.player.inventory.decrStackSize(itemSlot,1);
+							//event.player.inventory.consumeInventoryItem(MineBikeCustomItems.itemMap.get("item.hamburger"));
+//							MineBikeCustomItems.itemMap.get
+//							//System.out.println("burger consumed");
+//							//event.player.inventory.consumeInventoryItem(stack.getItem());
+//							stack.setCount(stack.getCount() -1);
 							orderList.remove(r);
 							removed = true;
 							display.removeOrderTexture(k);

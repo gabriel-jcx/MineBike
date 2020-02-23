@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockChest.Type;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
@@ -115,6 +116,8 @@ import noppes.npcs.CustomItems;
 	    	for(Item item : customItems)
 	    	{
 
+	    		// TODO: figure out how to reigster items
+				GameRegistry.registerTileEntity(item);
 	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
 	    		//GameRegistry.registerTileEntity(item, item.getUnlocalizedName().substring(5));
 				//GameRegistry.registerEntitySelector(item, item.getUnlocalizedName().substring(5));
@@ -132,11 +135,13 @@ import noppes.npcs.CustomItems;
 
 	    	network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
 	    	network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
+	    	//TODO: figure out how to register TileENtity
+//	    	GameRegistry.registerTileEntity();
+//			GameRegistry.registerTileEntity(BlockQuestFRMCheck.,new ResourceLocation("QuestRFMLucky"));
+//	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
+//	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
 	    	
-	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
-	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
-	    	
-	    	MysteriousKey = new MysteriousKey(4770).setUnlocalizedName("MysteriousKey").setTextureName("bike:MysteriousKey");
+	    	//MysteriousKey = new MysteriousKey(4770).setUnlocalizedName("MysteriousKey").setTextureName("bike:MysteriousKey");
 	    }
 	        
 	    @EventHandler
@@ -153,9 +158,9 @@ import noppes.npcs.CustomItems;
 	    	
 	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	
-	    	GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");
+	    	//GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");
 	    	
-	    	MinecraftForgeClient.registerItemRenderer(BiGX.MysteriousKey, (IItemRenderer)new MysteriousKeyRenderer());
+	    	//MinecraftForgeClient.registerItemRenderer(BiGX.MysteriousKey, (IItemRenderer)new MysteriousKeyRenderer());
 	    }
 	        
 	    @EventHandler

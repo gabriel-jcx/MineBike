@@ -31,6 +31,7 @@ public class WorldProviderMineRun extends WorldProviderFlats
 
 	@Override
 	public DimensionType getDimensionType() {
-		return null;
+		return DimensionType.getById(dimID);
+		//return null;
 	}
 }

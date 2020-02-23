@@ -34,7 +34,7 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
     }
 
     //public CustomPainting(World p_i1600_1_, int p_i1600_2_, int p_i1600_3_, int p_i1600_4_, int p_i1600_5_)
-    public CustomPainting(World p_i1600_1_,BlockPos pos, int p_i1600_5_)
+    public CustomPainting(World p_i1600_1_,BlockPos pos, EnumFacing p_i1600_5_)
     {
 
         super(p_i1600_1_, pos);
@@ -46,8 +46,8 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
         {
             CustomPainting.EnumArt enumart = aenumart[j1];
             this.art = enumart;
-            EnumFacing facingDirectionIn
-            this.facingDirection= p_i1600_5_();
+            //EnumFacing facingDirectionIn
+            this.facingDirection= p_i1600_5_;
             //this.setDirection(p_i1600_5_);
 
             if (this.onValidSurface())
@@ -60,12 +60,28 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
         {
             this.art = (CustomPainting.EnumArt)arraylist.get(this.rand.nextInt(arraylist.size()));
         }
-
-        this.setDirection(p_i1600_5_);
+        this.facingDirection = p_i1600_5_;
+        //this.setDirection(p_i1600_5_);
     }
-
+    public EnumFacing getEnumFacingDirection(int val) {
+        if (val == EnumFacing.UP.getIndex()) {
+            return EnumFacing.UP;
+        }else if(val == EnumFacing.DOWN.getIndex()){
+            return EnumFacing.DOWN;
+        }else if(val == EnumFacing.NORTH.getIndex()){
+            return EnumFacing.NORTH;
+        }else if(val == EnumFacing.SOUTH.getIndex()){
+            return EnumFacing.SOUTH;
+        }else if(val == EnumFacing.WEST.getIndex()){
+            return EnumFacing.WEST;
+        }else if(val == EnumFacing.EAST.getIndex()){
+            return EnumFacing.EAST;
+        }
+        System.out.println("ERROR!!!!!! this passing a wrong value into getEnumFacingDirection, 0 <= val <= 6");
+        return null;
+    }
     @SideOnly(Side.CLIENT)
-    public CustomPainting(World p_i1601_1_, BlockPos pos, int p_i1601_5_, String p_i1601_6_)
+    public CustomPainting(World p_i1601_1_, BlockPos pos, EnumFacing p_i1601_5_, String p_i1601_6_)
     {
         //BlockPos pos = new BlockPos(p_i1601_2_, p_i1601_3_, p_i1601_4_);
         this(p_i1601_1_,pos, p_i1601_5_);
@@ -82,8 +98,8 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
                 break;
             }
         }
-
-        this.setDirection(p_i1601_5_);
+        this.facingDirection = p_i1601_5_;
+        //this.setDirection(p_i1601_5_);
     }
 
     /**
@@ -218,7 +234,7 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
     @Override
     public void writeSpawnData(ByteBuf buffer) {
            EnumArt[] var2 = EnumArt.values();
-           buffer.writeInt(this.hangingDirection);
+           buffer.writeInt(this.facingDirection.getIndex());
             for (int var3 = 0; var3 < var2.length; ++var3)
             {
             if (var2[var3] == this.art)
@@ -231,8 +247,9 @@ public class CustomPainting extends EntityHanging implements IEntityAdditionalSp
     
 
     @Override
-    public void readSpawnData(ByteBuf additionalData) {    
-        this.hangingDirection = additionalData.readInt();
-    int var2 = additionalData.readInt();
-    this.art = EnumArt.values()[var2];
+    public void readSpawnData(ByteBuf additionalData) {
+        this.facingDirection = getEnumFacingDirection(additionalData.readInt());
+        //this.hangingDirection = additionalData.readInt();
+        int var2 = additionalData.readInt();
+        this.art = EnumArt.values()[var2];
     }}

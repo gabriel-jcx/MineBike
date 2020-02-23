@@ -70,36 +70,41 @@ protected void onFoodEaten(ItemStack stack, World worldIn, EntityPlayer player) 
     
     if(name.equals("Cursed Koi"))
     {
-    	player.addPotionEffect(new PotionEffect(19, 200, 1));
-        player.addPotionEffect(new PotionEffect(9, 200, 1));
-        player.addPotionEffect(new PotionEffect(17, 300, 2));
+        // TODO: figure out how to add and create PotionEffect to the item
+//    	player.addPotionEffect(new PotionEffect(19, 200, 1));
+//        player.addPotionEffect(new PotionEffect(9, 200, 1));
+//        player.addPotionEffect(new PotionEffect(17, 300, 2));
     }
     else if(name.equals("Blaze Pike"))
     {
-    	player.addPotionEffect(new PotionEffect(9, 200, 1));
-        player.addPotionEffect(new PotionEffect(17, 300, 2));
+        // TODO: figure out how to add and create PotionEffect to the item
+
+//    	player.addPotionEffect(new PotionEffect(9, 200, 1));
+//        player.addPotionEffect(new PotionEffect(17, 300, 2));
         player.setFire(5);
     }
     else if(name.equals("Bonefish"))
     {
-    	player.addPotionEffect(new PotionEffect(9, 200, 1));
-        player.addPotionEffect(new PotionEffect(17, 300, 2));
+        // TODO: figure out how to add and create PotionEffect to the item
+
+//        player.addPotionEffect(new PotionEffect(9, 200, 1));
+//        player.addPotionEffect(new PotionEffect(17, 300, 2));
     }
     else if(name.equals("Spookyfish"))
     {
-    	player.addPotionEffect(new PotionEffect(15, 300, 2));
-        player.addPotionEffect(new PotionEffect(9, 200, 1));
-        player.addPotionEffect(new PotionEffect(17, 300, 2));
+//    	player.addPotionEffect(new PotionEffect(15, 300, 2));
+//        player.addPotionEffect(new PotionEffect(9, 200, 1));
+//        player.addPotionEffect(new PotionEffect(17, 300, 2));
     }
     else if(name.equals("Withered Crucian"))
     {
-    	player.addPotionEffect(new PotionEffect(20, 200, 1));
-        player.addPotionEffect(new PotionEffect(9, 200, 1));
-        player.addPotionEffect(new PotionEffect(17, 300, 2));
+//    	player.addPotionEffect(new PotionEffect(20, 200, 1));
+//        player.addPotionEffect(new PotionEffect(9, 200, 1));
+//        player.addPotionEffect(new PotionEffect(17, 300, 2));
     }
     else if(name.equals("Cave Trout"))
     {
-    	player.addPotionEffect(new PotionEffect(11, 200, 1));
+//    	player.addPotionEffect(new PotionEffect(11, 200, 1));
     }
     else if(name.equals("Mandarinfish"))
     {

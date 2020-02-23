@@ -121,6 +121,8 @@ public class WorldProviderFlats extends WorldProvider {
 
 	@Override
 	public DimensionType getDimensionType() {
-		return null;
+		return DimensionType.getById(dimID);
+
+		//return null;
 	}
 }
