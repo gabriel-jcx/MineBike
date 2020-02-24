@@ -53,13 +53,15 @@ public class ChestSystem {
 		System.out.println("Interacting with Chest");
 		String chestCoords = new Vec3d(e.getPos()).toString();
 		System.out.println(chestCoords);
-		/PlayerInteractEvent.LeftClickBlock leftClickBlock = new PlayerInteractEvent.LeftClickBlock(e.getEntityPlayer(),e.getPos(),e.getFace(), new Vec3d(e.getFace().getDirectionVec()));
+		//PlayerInteractEvent.LeftClickBlock leftClickBlock = new PlayerInteractEvent.LeftClickBlock(e.getEntityPlayer(),e.getPos(),e.getFace(), new Vec3d(e.getFace().getDirectionVec()));
+		//e.equals(leftClickBlock);
+
 		EntityPlayer en = e.getEntityPlayer();
 		BlockPos b = e.getPos();
 
 		// If we need to know this chest location, then player can't break it!
-		if (new PlayerInteractEvent.LeftClickBlock(e,b, ) && (normalChests.containsKey(chestCoords) || lockedChests.containsKey(chestCoords)))
-			e.setCanceled(true);
+		if (e instanceof PlayerInteractEvent.LeftClickBlock && (normalChests.containsKey(chestCoords) || lockedChests.containsKey(chestCoords)))
+		e.setCanceled(true);
 		if (normalChests.containsKey(chestCoords))
 			interactWithNormalChest(e, normalChests.get(chestCoords));
 		else if (lockedChests.containsKey(chestCoords))
@@ -69,7 +71,7 @@ public class ChestSystem {
 	public static void interactWithNormalChest(PlayerInteractEvent e, String chestName){
 		System.out.println("CHEST FOUND");
 		TileEntityChest c = (TileEntityChest)e.getWorld().getTileEntity(e.getPos());
-		if (e.action == Action.LEFT_CLICK_BLOCK)
+		if (e instanceof  PlayerInteractEvent.LeftClickBlock)//e.action == Action.LEFT_CLICK_BLOCK)
 			e.setCanceled(true);
 		
 		if (chestName == "TutorialChest"){

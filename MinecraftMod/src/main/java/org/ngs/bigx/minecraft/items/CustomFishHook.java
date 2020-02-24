@@ -67,7 +67,7 @@ public class CustomFishHook extends EntityFishHook
     private static final String __OBFID = "CL_00001663";
     private boolean justSpawned;
     
-    
+
     //Pulling Mechanic Variables
     
     //When beginPull is true the custom fishing mechanic will start in the onUpdate method
@@ -124,8 +124,20 @@ public class CustomFishHook extends EntityFishHook
 	/*
 	 * 
 	 */
-	private List<ArrayList<WeightedRandom>> fishingSpots = new ArrayList<ArrayList<WeightedRandom>>();
-	
+
+    public class customContainer{
+        ItemStack itemStack;
+        WeightedRandom.Item item;
+        customContainer(ItemStack itemStack, WeightedRandom.Item item){
+            itemStack = itemStack;
+            item = item;
+        }
+        public ItemStack getItemStack(){
+            return itemStack;
+        }
+    }
+	private List<ArrayList<WeightedRandomFishable>> fishingSpots = new ArrayList<ArrayList<WeightedRandomFishable>>();
+
 	
 	//The Gui for the Power Level Display
  	public static HudString powerString = new HudString(-125, 20, "POWER LEVEL", true, false);
@@ -175,26 +187,27 @@ public class CustomFishHook extends EntityFishHook
         for(int i = 0; i < 7; i++)
         {
         	//fishingSpots.add(new ArrayList<WeightedRandomFishable>());
-            fishingSpots.add(new ArrayList<WeightedRandom>());
+            fishingSpots.add(new ArrayList<WeightedRandomFishable>());
         	for (EnumFishType fish: EnumFishType.values())
 			{
         		Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
                 List<Item> collection=null;
                 collection.add(temp);
         		if(fish.getType() == 0)
-        			//fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
-                    fishingSpots.get(i).add( new WeightedRandom.Item(fish.getWeight()));
+        			fishingSpots.get(i).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+                    //fishingSpots.get(i).add( new ItemStack(temp,1),new WeightedRandom.Item(fish.getWeight())));
+
 			}
         }
-            
-        
+
         //Adds all spot specific fish to the correct fishing location
         	for (EnumFishType fish: EnumFishType.values())
 			{
         		Item temp = MineBikeCustomItems.itemMap.get("item.ItemFish." + fish.getName());
         		if(fish.getType() != 0)
         		{
-        		fishingSpots.get(fish.getType() - 1).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
+        		  //fishingSpots.get(fish.getType() - 1).add(new customContainer(new ItemStack(temp,1),new WeightedRandom.Item(fish.getWeight())));
+        		    fishingSpots.get(fish.getType() - 1).add(new WeightedRandomFishable(new ItemStack(temp, 1), fish.getWeight()));
         		}
 			}
         
@@ -658,8 +671,8 @@ public class CustomFishHook extends EntityFishHook
                                 f1 = (float)MathHelper.floor(this.getEntityBoundingBox().minY);
 
                                 // TODO: Figure out what this func_147487_a is renamed to
-                                worldserver.func_147487_a("bubble", this.posX, (double)(f1 + 1.0F), this.posZ, (int)(1.0F + this.width * 20.0F), (double)this.width, 0.0D, (double)this.width, 0.20000000298023224D);
-                                worldserver.func_147487_a("wake", this.posX, (double)(f1 + 1.0F), this.posZ, (int)(1.0F + this.width * 20.0F), (double)this.width, 0.0D, (double)this.width, 0.20000000298023224D);
+                                worldserver.spawnParticle(EnumParticleTypes.getByName("bubble"), this.posX, (double)(f1 + 1.0F), this.posZ, (int)(1.0F + this.width * 20.0F), (double)this.width, 0.0D, (double)this.width, 0.20000000298023224D);
+                                worldserver.spawnParticle(EnumParticleTypes.getByName("wake"), this.posX, (double)(f1 + 1.0F), this.posZ, (int)(1.0F + this.width * 20.0F), (double)this.width, 0.0D, (double)this.width, 0.20000000298023224D);
                                 this.ticksCatchable = MathHelper.getInt(this.rand, 10, 30);
                             }
                             else
@@ -674,13 +687,13 @@ public class CustomFishHook extends EntityFishHook
 
                                 if (this.rand.nextFloat() < 0.15F)
                                 {
-                                	worldserver.func_147487_a("bubble", d11, d5 - 0.10000000149011612D, d6, 1, (double)f7, 0.1D, (double)f2, 0.0D);
+                                	worldserver.spawnParticle(EnumParticleTypes.getByName("bubble"), d11, d5 - 0.10000000149011612D, d6, 1, (double)f7, 0.1D, (double)f2, 0.0D);
                                 }
 
                                 float f3 = f7 * 0.04F;
                                 float f4 = f2 * 0.04F;
-                                worldserver.func_147487_a("wake", d11, d5, d6, 0, (double)f4, 0.01D, (double)(-f3), 1.0D);
-                                worldserver.func_147487_a("wake", d11, d5, d6, 0, (double)(-f4), 0.01D, (double)f3, 1.0D);
+                                worldserver.spawnParticle(EnumParticleTypes.getByName("wake"), d11, d5, d6, 0, (double)f4, 0.01D, (double)(-f3), 1.0D);
+                                worldserver.spawnParticle(EnumParticleTypes.getByName("wake"), d11, d5, d6, 0, (double)(-f4), 0.01D, (double)f3, 1.0D);
                             }
                         }
                         else if (this.ticksCaughtDelay > 0)
@@ -708,7 +721,7 @@ public class CustomFishHook extends EntityFishHook
                                 d5 = this.posX + (double)(MathHelper.sin(f7) * f2 * 0.1F);
                                 d11 = (double)((float)MathHelper.floor(this.getEntityBoundingBox().minY) + 1.0F);
                                 d6 = this.posZ + (double)(MathHelper.cos(f7) * f2 * 0.1F);
-                                worldserver.func_147487_a("splash", d11, d5, d6, 2 + this.rand.nextInt(2), 0.10000000149011612D, 0.0D, 0.10000000149011612D, 0.0D);
+                                worldserver.spawnParticle(EnumParticleTypes.getByName("splash"), d11, d5, d6, 2 + this.rand.nextInt(2), 0.10000000149011612D, 0.0D, 0.10000000149011612D, 0.0D);
                             }
 
                             if (this.ticksCaughtDelay <= 0)
@@ -960,12 +973,13 @@ public class CustomFishHook extends EntityFishHook
     private ItemStack getFishingResult()
     {
     	ItemStack itemstack;
-    	this.angler.triggerAchievement(StatList.FISH_CAUGHT);
+    	//this.angler.triggerAchievement(StatList.FISH_CAUGHT);
     	switch(fishingLocation) 
     	{
     		case 1:
     			System.out.println("Lake Worked");
                 itemstack = ((WeightedRandomFishable)WeightedRandom.getRandomItem(this.rand, fishingSpots.get(0))).func_150708_a(this.rand);
+                            WeightedRandom.getRandomItem(this.rand,fishingSpots.get(0));
                 difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
                 break;
     		case 2:
@@ -996,7 +1010,7 @@ public class CustomFishHook extends EntityFishHook
     		default:
     			System.out.println("defualt Worked");
     			int rand = (int)(Math.random() * 6) + 1;
-                itemstack = WeightedRandom.getRandomItem(this.rand, new List<ItemFish> b ).func_150708_a(this.rand);
+                itemstack = WeightedRandom.getRandomItem(this.rand, fishingSpots.get(rand) ).func_150708_a(this.rand);
                 difficulty = ((ItemFish)(itemstack.getItem())).getRarity();
                 break;
     	}

@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 //import org.bukkit.block.Block;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
@@ -389,7 +391,22 @@ public class CommonEventHandler {
 				BiGXEventTriggers.chestInteract(e, w, levelSys);
 		}
 	}
-	
+	@SubscribeEvent
+	public void registerBlocks(RegistryEvent.Register<Item> event)
+	{
+		System.out.println("CommonEventHandler: RegisterEvent Triggered");
+		for (Item item : BiGX.instance().customItems){
+			//System.out.println(Item.getIdFromItem(item));
+			System.out.println(item.getUnlocalizedName());
+			event.getRegistry().registerAll(item);
+		}
+
+	}
+	@SubscribeEvent
+	public void registerBlock(RegistryEvent.Register<Block> event){
+		//event.getRegistry().register(BiGX.instance().BlockQuestFRMCheck);
+		//event.getRegistry().register(BiGX.instance().blockQuestChest);
+	}
 	@SubscribeEvent
 	public void onItemToss(ItemTossEvent event) {
 	    Item droppedItem = event.getEntityItem().getItem().getItem();

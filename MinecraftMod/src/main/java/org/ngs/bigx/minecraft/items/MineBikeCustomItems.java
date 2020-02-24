@@ -22,7 +22,7 @@ public class MineBikeCustomItems
 	{
 		ArrayList<Item> returned = new ArrayList<Item>();
 		try {
-			returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod"));
+			returned.add(makeItem(OlReliable.class, "OlReliable", "customnpcs:fishing_rod").setRegistryName("customnpcs:fishing_rod"));
 			Item painting = new ItemCustomPainting(CustomPainting.class);
 
 			// TODO figure out if setTextureName can be remapped to setRegistryName

@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.entity.item;
 
+import net.minecraft.client.renderer.entity.RenderEntity;
 import net.minecraft.util.ResourceLocation;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.client.renderer.EntityRacingCarRenderer;
@@ -23,10 +24,12 @@ public class MineBikeEntityRegistry {
 	
 	public static void RegisterMineBikeRenders()
 	{
-    	RenderingRegistry.registerEntityRenderingHandler(EntityTank.class, new EntityTankRenderer(new ModelTank(), 0));
-    	RenderingRegistry.registerEntityRenderingHandler(EntityRacingCar.class, new EntityRacingCarRenderer(new ModelRacingCar(), 0));
-		RenderingRegistry.registerEntityRenderingHandler(CustomPainting.class,new RenderCustomPainting().getRenderManager());
-    	RenderingRegistry.registerEntityRenderingHandler(CustomPainting.class, new RenderCustomPainting());
+		// TODO: write the renderFactory class for each renderer
+//    	RenderingRegistry.registerEntityRenderingHandler(EntityTank.class, new EntityTankRenderer(new ModelTank(), 0));
+//    	RenderingRegistry.registerEntityRenderingHandler(EntityTank.class, EntityTankRenderer.getFac);
+////    	RenderingRegistry.registerEntityRenderingHandler(EntityRacingCar.class, new EntityRacingCarRenderer(new ModelRacingCar(), 0));
+////		RenderingRegistry.registerEntityRenderingHandler(CustomPainting.class,new RenderCustomPainting().getRenderManager());
+////    	RenderingRegistry.registerEntityRenderingHandler(CustomPainting.class, new RenderCustomPainting());
     	
 	}
 }

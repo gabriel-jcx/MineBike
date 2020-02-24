@@ -9,7 +9,7 @@ import net.minecraftforge.event.GameRuleChangeEvent;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 import org.ngs.bigx.minecraft.block.BlockQuestChest;
 import org.ngs.bigx.minecraft.block.QuestRFMChest;
-import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
+//import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
@@ -78,7 +78,7 @@ import noppes.npcs.CustomItems;
 		// 1. setRegistryName("QuestRFMLucky);
 		// 2. setUnlocalizedName("QuestFRMLucky");
 		//BlockChest.Type = new BlockChest.Type(538); //
-	    public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Type.BASIC)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
+	    //public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Type.BASIC)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
 
 
 	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
@@ -113,18 +113,19 @@ import noppes.npcs.CustomItems;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
-	    	for(Item item : customItems)
-	    	{
+			// Item Register Event is now moved to CommonEventHandler under registerBlocks()
+//	    	for(Item item : customItems)
+//	    	{
+//////				GameRegistry.registerTileEntity(item);
+////	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
+//	    		//GameRegistry.registerTileEntity(item, item.getUnlocalizedName().substring(5));
+//				//GameRegistry.registerEntitySelector(item, item.getUnlocalizedName().substring(5));
+//				;
+//	    	}
+			System.out.println("Register Entities STARTED");
 
-	    		// TODO: figure out how to reigster items
-				GameRegistry.registerTileEntity(item);
-	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
-	    		//GameRegistry.registerTileEntity(item, item.getUnlocalizedName().substring(5));
-				//GameRegistry.registerEntitySelector(item, item.getUnlocalizedName().substring(5));
-				;
-	    	}
-	    	MineBikeEntityRegistry.RegisterMineBikeEntities();
-	    	
+			MineBikeEntityRegistry.RegisterMineBikeEntities();
+			System.out.println("Register Entities DONE");
 	    	instance = this;
 	    	clientContext = new BigxClientContext(this);
 	    	serverContext = new BigxServerContext(this);
@@ -136,8 +137,9 @@ import noppes.npcs.CustomItems;
 	    	network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
 	    	network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
 	    	//TODO: figure out how to register TileENtity
-//	    	GameRegistry.registerTileEntity();
-//			GameRegistry.registerTileEntity(BlockQuestFRMCheck.,new ResourceLocation("QuestRFMLucky"));
+			System.out.println("PreInit Done");
+			// Block registration is now under CommonEventhandler registerBlock()
+
 //	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
 //	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
 	    	

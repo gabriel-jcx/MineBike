@@ -52,16 +52,18 @@ public class ExtendedProperties  implements ICapabilityProvider {
 
 	@SubscribeEvent
     public void expandCapa(AttachCapabilitiesEvent event) {
-	    event.addCapability();
+
     }
 
     protected static void register(Entity entity) {
 
-		IDENTIFIER = entity.registerExtendedProperties(IDENTIFIER, new ExtendedProperties());
+//		IDENTIFIER = entity.registerExtendedProperties(IDENTIFIER, new ExtendedProperties());
 	}
 
 	protected static ExtendedProperties get(Entity entity) {
+		// TODO: figureout how to  get Extended Properties
 		//return (ExtendedProperties) entity.getExtendedProperties(IDENTIFIER);
+		return null;
 	}
 
 	protected EntityStat getStat(String name) {
