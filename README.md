@@ -7,9 +7,13 @@
      ```./gradlew setupDecompWorkspace --refresh-dependencies```
   
   3. For Eclipse workspace setup:
-     ```./gradlew ecplise```
+     ```
+     ./gradlew ecplise
+     ```
      Alternatively, if you wish to use IntelliJ:
-     ```./gradlew genIntellijRuns idea
+     ```
+     ./gradlew genIntellijRuns idea
+     ```
   
   4. Then correctly import the project into your IDE.
   
