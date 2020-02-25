@@ -28,47 +28,47 @@ public class CommonProxy {
 	CommonEventHandler events = new CommonEventHandler();
 	
 	public void preInit(FMLPreInitializationEvent e) {
-		DimensionType flatDType = DimensionType.register("Flats","Yunho?" ,WorldProviderFlats.dimID,WorldProviderFlats.class, true);
+		DimensionType flatDType = DimensionType.register("Flats","Yunho" ,WorldProviderFlats.dimID,WorldProviderFlats.class, true);
 		//DimensionManager.registerProviderType(WorldProviderFlats.dimID, WorldProviderFlats.class, true);
 		DimensionManager.registerDimension(WorldProviderFlats.dimID, flatDType);
 
-		DimensionType fireQuestDType = DimensionType.register("Fire","Yunho?" ,WorldProviderFlats.fireQuestDimID,WorldProviderFlats.class, true);
+		DimensionType fireQuestDType = DimensionType.register("Fire","Yunho" ,WorldProviderFlats.fireQuestDimID,WorldProviderFlats.class, true);
 		//DimensionManager.registerProviderType(WorldProviderFlats.fireQuestDimID, WorldProviderFlats.class, true);
 		DimensionManager.registerDimension(WorldProviderFlats.fireQuestDimID, fireQuestDType);
 
-		DimensionType DarkQuestDType = DimensionType.register("Dark","?" ,WorldProviderDark.dimID,WorldProviderDark.class, true);
+		DimensionType DarkQuestDType = DimensionType.register("Dark","" ,WorldProviderDark.dimID,WorldProviderDark.class, true);
 		//DarkQuestDType.createDimension();
 		//DimensionManager.registerProviderType(WorldProviderDark.dimID, WorldProviderDark.class, true);
 		DimensionManager.registerDimension(WorldProviderDark.dimID, DarkQuestDType);
 
-		DimensionType DungeonQuestDType = DimensionType.register("Dungeon","?" ,WorldProviderDungeon.dimID,WorldProviderDungeon.class, true);
+		DimensionType DungeonQuestDType = DimensionType.register("Dungeon","" ,WorldProviderDungeon.dimID,WorldProviderDungeon.class, true);
 		//DimensionManager.registerProviderType(WorldProviderDungeon.dimID, WorldProviderDungeon.class, true);
 		DimensionManager.registerDimension(WorldProviderDungeon.dimID, DungeonQuestDType);
 
-		DimensionType fireQuestDUType = DimensionType.register("Fire","?" ,WorldProviderDungeon.fireQuestDimID,WorldProviderDungeon.class, true);
+		DimensionType fireQuestDUType = DimensionType.register("Fire","" ,WorldProviderDungeon.fireQuestDimID,WorldProviderDungeon.class, true);
 		//DimensionManager.registerProviderType(WorldProviderDungeon.fireQuestDimID, WorldProviderDungeon.class, true);
 		DimensionManager.registerDimension(WorldProviderDungeon.fireQuestDimID,  fireQuestDUType);
 
-		DimensionType EmptyQuestDType = DimensionType.register("Empty","?" ,WorldProviderEmpty.dimID,WorldProviderEmpty.class, true);
+		DimensionType EmptyQuestDType = DimensionType.register("Empty","" ,WorldProviderEmpty.dimID,WorldProviderEmpty.class, true);
 		//DimensionManager.registerProviderType(WorldProviderEmpty.dimID, WorldProviderEmpty.class, true);
 		DimensionManager.registerDimension(WorldProviderEmpty.dimID, EmptyQuestDType);
 		
 		//soccer dimension
-		DimensionType SoccerQuestDType = DimensionType.register("Soccer","?" ,SoccerQuest.SOCCERDIMENSIONID, WorldProviderSoccer.class, true);
+		DimensionType SoccerQuestDType = DimensionType.register("Soccer","2019_Summer" ,SoccerQuest.SOCCERDIMENSIONID, WorldProviderSoccer.class, true);
 		//DimensionManager.registerProviderType(SoccerQuest.SOCCERDIMENSIONID, WorldProviderSoccer.class, true);
 		DimensionManager.registerDimension(SoccerQuest.SOCCERDIMENSIONID, SoccerQuestDType);
 
-		DimensionType FishingQuestDType = DimensionType.register("Fishing","?" ,FishingQuest.FISHINGDIMENSIONID, WorldProviderFishing.class, true);
+		DimensionType FishingQuestDType = DimensionType.register("Fishing","2019_Summer" ,FishingQuest.FISHINGDIMENSIONID, WorldProviderFishing.class, true);
 		//DimensionManager.registerProviderType(FishingQuest.FISHINGDIMENSIONID, WorldProviderFishing.class, true);
 		DimensionManager.registerDimension(FishingQuest.FISHINGDIMENSIONID, FishingQuestDType);
     
 		//overcooked dimension
-		DimensionType OverCookedQuestDType = DimensionType.register("OverCooked","?" ,OverCookedQuest.OVERCOOKEDDIMENSIONID, WorldProviderOvercooked.class, true);
+		DimensionType OverCookedQuestDType = DimensionType.register("OverCooked","2019_Summer" ,OverCookedQuest.OVERCOOKEDDIMENSIONID, WorldProviderOvercooked.class, true);
 		//DimensionManager.registerProviderType(OverCookedQuest.OVERCOOKEDDIMENSIONID, WorldProviderOvercooked.class, true);
 		DimensionManager.registerDimension(OverCookedQuest.OVERCOOKEDDIMENSIONID,  OverCookedQuestDType);
 		
 		//mineRun dimension
-		DimensionType MinerQuestDType = DimensionType.register("Miner","?" ,MinerQuest.MINERUNDIMENSIONID,WorldProviderMineRun.class, true);
+		DimensionType MinerQuestDType = DimensionType.register("Miner","2019_Summer" ,MinerQuest.MINERUNDIMENSIONID,WorldProviderMineRun.class, true);
 		//DimensionManager.registerProviderType(MinerQuest.MINERUNDIMENSIONID, WorldProviderMineRun.class, true);
 		DimensionManager.registerDimension(MinerQuest.MINERUNDIMENSIONID, MinerQuestDType);
 		

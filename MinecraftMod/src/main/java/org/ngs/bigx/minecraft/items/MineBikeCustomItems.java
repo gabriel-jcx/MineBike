@@ -36,11 +36,11 @@ public class MineBikeCustomItems
           returned.add(item);
 			  }
       
-      	returned.add(makeItem(OvercookedLettuce.class, "lettuce", "customnpcs:minebike/lettuce"));
-        returned.add(makeItem(OvercookedHamburger.class, "hamburger", "customnpcs:minebike/hamburger"));
-        returned.add(makeItem(OvercookedSandwich.class, "sandwich", "customnpcs:minebike/sandwich"));
-        returned.add(makeItem(OvercookedHamburgerbun.class, "hamburgerbun", "customnpcs:minebike/hamburgerbun"));
-        returned.add(makeItem(OvercookedSandwichbread.class, "sandwichbread", "customnpcs:minebike/sandwichbread"));
+      	returned.add(makeItem(OvercookedLettuce.class, "lettuce", "customnpcs:minebike/lettuce").setRegistryName("customnpcs:minebike/lettuce"));
+        returned.add(makeItem(OvercookedHamburger.class, "hamburger", "customnpcs:minebike/hamburger").setRegistryName("customnpcs:minebike/hamburger"));
+        returned.add(makeItem(OvercookedSandwich.class, "sandwich", "customnpcs:minebike/sandwich").setRegistryName("customnpcs:minebike/sandwich"));
+        returned.add(makeItem(OvercookedHamburgerbun.class, "hamburgerbun", "customnpcs:minebike/hamburgerbun").setRegistryName("customnpcs:minebike/hamburgerbun"));
+        returned.add(makeItem(OvercookedSandwichbread.class, "sandwichbread", "customnpcs:minebike/sandwichbread").setRegistryName("customnpcs:minebike/sandwichbread"));
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

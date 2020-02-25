@@ -134,7 +134,7 @@ public class GuiLocation extends GuiScreen {
     	// TEXT (top of the items, fades out alongside top portion)
 	    GL11.glPushMatrix();
 	    	
-	    	if (ClientAreaEvent.previousArea.type != AreaTypeEnum.EVENT)
+	    	if (ClientAreaEvent.previousArea != null && ClientAreaEvent.previousArea.type != AreaTypeEnum.EVENT)
 	    		text = ClientAreaEvent.previousArea.name;
 	    	if (text.indexOf("< ") != -1 && text.indexOf(" >") != -1)
 	    		text = text.substring(text.indexOf("< ")+2, text.indexOf(" >"));

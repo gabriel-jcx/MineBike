@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -423,8 +424,9 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onPlayerUse(PlayerInteractEvent event){
 		EntityPlayer p = event.getEntityPlayer();
-		
-		ItemStack itemOnPlayersHand= p.getHeldItem(p.getActiveHand());
+		//if(p.)
+		//p.getAct
+		ItemStack itemOnPlayersHand= p.getHeldItem(EnumHand.MAIN_HAND);
 		
 		if (itemOnPlayersHand != null){
 			if (itemOnPlayersHand.getItem() == Items.ENCHANTED_BOOK){
