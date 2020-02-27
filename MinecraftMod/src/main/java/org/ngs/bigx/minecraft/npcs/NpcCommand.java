@@ -72,22 +72,22 @@ public class NpcCommand {
 		this.role = 0;
 	}
 	
-	public static void putItemsInNpcInventory(EntityCustomNpc npc, ItemStack... items) {
-		if (items == null)
-			return;
-	
-		// Check Dataisnventory.setInventorySlotContents() for index information
-		int itemIterator = 0;
-		for (int i = npc.inventory.getSizeInventory()-1; i >= 4; --i) {
-			if (npc.inventory.getStackInSlot(i) != null) {
-				npc.inventory.setInventorySlotContents(i, items[itemIterator]);
-				if (++itemIterator == items.length) {
-					return;
-				}
-			}
-		}
-	}
-	
+//	public static void putItemsInNpcInventory(EntityCustomNpc npc, ItemStack... items) {
+//		if (items == null)
+//			return;
+//
+//		// Check Dataisnventory.setInventorySlotContents() for index information
+//		int itemIterator = 0;
+//		for (int i = npc.inventory.getSizeInventory()-1; i >= 4; --i) {
+//			if (npc.inventory.getStackInSlot(i) != null) {
+//				npc.inventory.setInventorySlotContents(i, items[itemIterator]);
+//				if (++itemIterator == items.length) {
+//					return;
+//				}
+//			}
+//		}
+//	}
+//
 	public static EntityCustomNpc spawnNpc(int x, int y, int z, WorldServer w, String name, String texture) {
 		EntityCustomNpc npc = new EntityCustomNpc(w);
 		npc.display.setName(name);
