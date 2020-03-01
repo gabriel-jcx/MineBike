@@ -101,8 +101,8 @@ public class NpcCommand {
 	    //		MathHelper.floor(x),
 	    //		MathHelper.floor(y),
 		//		MathHelper.floor(z)};
-
-		npc.attackEntityAsMob(Minecraft.getMinecraft().player);
+		//TODO: fix the next line?
+		//npc.attackEntityAsMob(Minecraft.getMinecraft().player);
 		
 		w.spawnEntity(npc);
 	    npc.setHealth(10000f);
