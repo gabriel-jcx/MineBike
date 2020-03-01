@@ -319,33 +319,33 @@ public class NpcEvents {
 	//////Private Helper Methods: Traders
 	//////////WeaponsMerchant Market
 	private static void createWeaponsCurrency(NpcMiscInventory inventoryCurrency, Item currency){
-		inventoryCurrency.setInventorySlotContents(0, new ItemStack(currency));
-		inventoryCurrency.setInventorySlotContents(1, new ItemStack(currency,9));
-		inventoryCurrency.setInventorySlotContents(2, new ItemStack(currency,27));
-		inventoryCurrency.setInventorySlotContents(3, new ItemStack(currency,81));
+		inventoryCurrency.func_70299_a(0, new ItemStack(currency));
+		inventoryCurrency.func_70299_a(1, new ItemStack(currency,9));
+		inventoryCurrency.func_70299_a(2, new ItemStack(currency,27));
+		inventoryCurrency.func_70299_a(3, new ItemStack(currency,81));
 //		inventoryCurrency.setInventorySlotContents(4, new ItemStack(currency,81));
 	}
 	
 	private static void createWeaponsSold(NpcMiscInventory inventorySold){
-		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(268)));
-		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(267)));
+		inventorySold.func_70299_a(0, new ItemStack(Item.getItemById(268)));
+		inventorySold.func_70299_a(1, new ItemStack(Item.getItemById(267)));
 		//TODO: need to figure out how to spwan the sword on the
-		//inventorySold.setInventorySlotContents(2, new ItemStack(CustomItems.));
-		//inventorySold.setInventorySlotContents(3, new ItemStack(CustomItems.swordMithril));
-//		inventorySold.setInventorySlotContents(4, new ItemStack(CustomItems.swordEmerald));
+		//inventorySold.func_70299_a(2, new ItemStack(CustomItems.));
+		//inventorySold.func_70299_a(3, new ItemStack(CustomItems.swordMithril));
+//		inventorySold.func_70299_a(4, new ItemStack(CustomItems.swordEmerald));
 	}
 	
 	//////////Blacksmith Market
 	private static void createBlacksmithCurrency(NpcMiscInventory inventoryCurrency){
 		//Exchanges for Swords
-//		inventoryCurrency.setInventorySlotContents(0, new ItemStack(Item.getItemById(268))); //wooden sword
-//		inventoryCurrency.setInventorySlotContents(18, new ItemStack(Item.getItemById(4420)));//water elemental
-//		inventoryCurrency.setInventorySlotContents(1, new ItemStack(Item.getItemById(268)));
-//		inventoryCurrency.setInventorySlotContents(19, new ItemStack(Item.getItemById(4421)));//fire elemental
-//		inventoryCurrency.setInventorySlotContents(2, new ItemStack(Item.getItemById(268)));
-//		inventoryCurrency.setInventorySlotContents(20, new ItemStack(Item.getItemById(4419)));//earth elemental
-//		inventoryCurrency.setInventorySlotContents(3, new ItemStack(Item.getItemById(268)));
-//		inventoryCurrency.setInventorySlotContents(21, new ItemStack(Item.getItemById(4422)));//air elemental
+//		inventoryCurrency.func_70299_a(0, new ItemStack(Item.getItemById(268))); //wooden sword
+//		inventoryCurrency.func_70299_a(18, new ItemStack(Item.getItemById(4420)));//water elemental
+//		inventoryCurrency.func_70299_a(1, new ItemStack(Item.getItemById(268)));
+//		inventoryCurrency.func_70299_a(19, new ItemStack(Item.getItemById(4421)));//fire elemental
+//		inventoryCurrency.func_70299_a(2, new ItemStack(Item.getItemById(268)));
+//		inventoryCurrency.func_70299_a(20, new ItemStack(Item.getItemById(4419)));//earth elemental
+//		inventoryCurrency.func_70299_a(3, new ItemStack(Item.getItemById(268)));
+//		inventoryCurrency.func_70299_a(21, new ItemStack(Item.getItemById(4422)));//air elemental
 	}
 		
 	
@@ -361,7 +361,7 @@ public class NpcEvents {
 	private static void createSkillCurrency(NpcMiscInventory inventoryCurrency, Item currency){
 		int i = 0;
 		for (String name : skillNames){
-			inventoryCurrency.setInventorySlotContents(i++, new ItemStack(currency,15));
+			inventoryCurrency.func_70299_a(i++, new ItemStack(currency,15));
 		}
 	}
 	
@@ -370,64 +370,64 @@ public class NpcEvents {
 		for (String name : skillNames){
 			ItemStack p = new ItemStack(Items.ENCHANTED_BOOK);
 			p.setStackDisplayName(name);
-			inventorySold.setInventorySlotContents(i++, p);
+			inventorySold.func_70299_a(i++, p);
 		}
 	}
 	
 	
 	//////////Trader Market
 	private static void createTraderCurrency(NpcMiscInventory inventoryCurrency){
-		inventoryCurrency.setInventorySlotContents(0,  new ItemStack(Item.getItemById(266),1));
-		inventoryCurrency.setInventorySlotContents(1,  new ItemStack(Item.getItemById(3),32)); //Dirt block
-		inventoryCurrency.setInventorySlotContents(2,  new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
-		inventoryCurrency.setInventorySlotContents(3,  new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank	
-		inventoryCurrency.setInventorySlotContents(4,  new ItemStack(Items.WOODEN_SWORD)); //Wood Sword
-		inventoryCurrency.setInventorySlotContents(5,  new ItemStack(Items.IRON_SWORD)); //Iron Sword
-		//inventoryCurrency.setInventorySlotContents(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
-		//inventoryCurrency.setInventorySlotContents(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
-		inventoryCurrency.setInventorySlotContents(8,  new ItemStack(Items.FEATHER,6)); //Feather
-		inventoryCurrency.setInventorySlotContents(9,  new ItemStack(Items.BLAZE_POWDER,6)); //Burn Element thing
-		inventoryCurrency.setInventorySlotContents(10, new ItemStack(Blocks.CACTUS,12)); //Burn Element thing
-		inventoryCurrency.setInventorySlotContents(11, new ItemStack(Item.getItemById(37),12));
-		inventoryCurrency.setInventorySlotContents(12, new ItemStack(Item.getItemById(295),12));
-		inventoryCurrency.setInventorySlotContents(13, new ItemStack(Item.getItemById(265),2));
-		inventoryCurrency.setInventorySlotContents(14, new ItemStack(Item.getItemById(46),2));
-		inventoryCurrency.setInventorySlotContents(15, new ItemStack(Item.getItemById(366),4));
-		inventoryCurrency.setInventorySlotContents(16, new ItemStack(Item.getItemById(260),6));
+		inventoryCurrency.func_70299_a(0,  new ItemStack(Item.getItemById(266),1));
+		inventoryCurrency.func_70299_a(1,  new ItemStack(Item.getItemById(3),32)); //Dirt block
+		inventoryCurrency.func_70299_a(2,  new ItemStack(Item.getItemById(4),8)); //Cobblestone Block
+		inventoryCurrency.func_70299_a(3,  new ItemStack(Item.getItemById(5),8)); //Oak Wood Plank
+		inventoryCurrency.func_70299_a(4,  new ItemStack(Items.WOODEN_SWORD)); //Wood Sword
+		inventoryCurrency.func_70299_a(5,  new ItemStack(Items.IRON_SWORD)); //Iron Sword
+		//inventoryCurrency.func_70299_a(6,  new ItemStack(CustomItems.swordBronze)); //Bronze Sword
+		//inventoryCurrency.func_70299_a(7,  new ItemStack(CustomItems.swordMithril)); //Mithril Sword
+		inventoryCurrency.func_70299_a(8,  new ItemStack(Items.FEATHER,6)); //Feather
+		inventoryCurrency.func_70299_a(9,  new ItemStack(Items.BLAZE_POWDER,6)); //Burn Element thing
+		inventoryCurrency.func_70299_a(10, new ItemStack(Blocks.CACTUS,12)); //Burn Element thing
+		inventoryCurrency.func_70299_a(11, new ItemStack(Item.getItemById(37),12));
+		inventoryCurrency.func_70299_a(12, new ItemStack(Item.getItemById(295),12));
+		inventoryCurrency.func_70299_a(13, new ItemStack(Item.getItemById(265),2));
+		inventoryCurrency.func_70299_a(14, new ItemStack(Item.getItemById(46),2));
+		inventoryCurrency.func_70299_a(15, new ItemStack(Item.getItemById(366),4));
+		inventoryCurrency.func_70299_a(16, new ItemStack(Item.getItemById(260),6));
 	}
 	
 	private static void createTraderSold(NpcMiscInventory inventorySold){
-//		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(3),32)); //Dirt block
-//		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(4), 8)); //Cobblestone Block
-//		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
-//		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
-//		inventorySold.setInventorySlotContents(4, new ItemStack(Item.getItemById(266),1));
-//		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),1));
-//		inventorySold.setInventorySlotContents(6, new ItemStack(Item.getItemById(266),1));
-//		inventorySold.setInventorySlotContents(7, new ItemStack(Item.getItemById(266),3));
-//		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),9));
-//		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),27));
-//		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266), 81));
-//		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),1));
-//		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.func_70299_a(0, new ItemStack(Item.getItemById(3),32)); //Dirt block
+//		inventorySold.func_70299_a(1, new ItemStack(Item.getItemById(4), 8)); //Cobblestone Block
+//		inventorySold.func_70299_a(2, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
+//		inventorySold.func_70299_a(3, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
+//		inventorySold.func_70299_a(4, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.func_70299_a(5, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.func_70299_a(6, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.func_70299_a(7, new ItemStack(Item.getItemById(266),3));
+//		inventorySold.func_70299_a(8, new ItemStack(Item.getItemById(266),9));
+//		inventorySold.func_70299_a(9, new ItemStack(Item.getItemById(266),27));
+//		inventorySold.func_70299_a(10, new ItemStack(Item.getItemById(266), 81));
+//		inventorySold.func_70299_a(11, new ItemStack(Item.getItemById(266),1));
+//		inventorySold.func_70299_a(12, new ItemStack(Item.getItemById(266),1));
 
-		inventorySold.setInventorySlotContents(0, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
-		inventorySold.setInventorySlotContents(1, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
-		inventorySold.setInventorySlotContents(2, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(3, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(4, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(5, new ItemStack(Item.getItemById(266),9));
-		inventorySold.setInventorySlotContents(6, new ItemStack(Item.getItemById(266),27));
-		inventorySold.setInventorySlotContents(7, new ItemStack(Item.getItemById(266), 81));
-		inventorySold.setInventorySlotContents(8, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(9, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(10, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(11, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(12, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(13, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(14, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(15, new ItemStack(Item.getItemById(266),1));
-		inventorySold.setInventorySlotContents(16, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(0, new ItemStack(Item.getItemById(5), 8)); //Oak Wood Plank
+		inventorySold.func_70299_a(1, new ItemStack(Item.getItemById(266),1)); //Gold Ingots
+		inventorySold.func_70299_a(2, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(3, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(4, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(5, new ItemStack(Item.getItemById(266),9));
+		inventorySold.func_70299_a(6, new ItemStack(Item.getItemById(266),27));
+		inventorySold.func_70299_a(7, new ItemStack(Item.getItemById(266), 81));
+		inventorySold.func_70299_a(8, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(9, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(10, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(11, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(12, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(13, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(14, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(15, new ItemStack(Item.getItemById(266),1));
+		inventorySold.func_70299_a(16, new ItemStack(Item.getItemById(266),1));
 	}
 
 }
