@@ -8,7 +8,7 @@ This is a forked repo of the MineBike Project which aims to upgrade to forge-1.1
   
   3. For Eclipse workspace setup:
      ```
-     ./gradlew ecplise
+     ./gradlew eclipse
      ```
      Alternatively, if you wish to use IntelliJ:
      ```
