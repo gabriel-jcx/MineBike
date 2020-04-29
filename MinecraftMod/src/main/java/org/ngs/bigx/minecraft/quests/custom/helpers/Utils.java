@@ -1,7 +1,6 @@
 package org.ngs.bigx.minecraft.quests.custom.helpers;
 
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
-import org.ngs.bigx.minecraft.npcs.NpcLocations;
 
 import net.minecraft.util.math.Vec3d;
 //import net.minecraftforge.event.entity.player.EntityInteractEvent;

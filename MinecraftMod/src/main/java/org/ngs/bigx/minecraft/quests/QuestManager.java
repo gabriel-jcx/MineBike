@@ -17,14 +17,10 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXEventTriggers;
 import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
-import org.ngs.bigx.minecraft.client.GuiLeaderBoard;
-import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.client.LeaderboardRow;
+
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
-import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
-import org.ngs.bigx.minecraft.npcs.NpcCommand;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeArea;
 import org.ngs.bigx.minecraft.quests.chase.TerrainBiomeAreaIndex;
 import org.ngs.bigx.minecraft.quests.interfaces.IQuestTask;

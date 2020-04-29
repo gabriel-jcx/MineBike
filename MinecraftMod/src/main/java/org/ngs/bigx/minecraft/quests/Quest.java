@@ -21,7 +21,7 @@ public class Quest implements Runnable {
 	private String name, description;
 	private List<EntityPlayer> players;
 	private EntityPlayer player;
-	private List<QuestTask> tasks;
+//	private List<QuestTask> tasks;
 	private List<ItemStack> rewardItems;
 	private int rewardXP, rewardCoins;
 	
@@ -34,35 +34,35 @@ public class Quest implements Runnable {
 		this.name = n;
 		this.description = d;
 		this.questManager = questManager;
-		this.tasks = new ArrayList<QuestTask>();
+//		this.tasks = new ArrayList<QuestTask>();
 	}
 	
-	public List<QuestTask> getTasks()
-	{
-		return this.tasks;
-	}
-	
-	public void addTasks(QuestTask questTask) throws QuestException
-	{
-		if(questTask == null)
-			throw new QuestException("Task is null");
-		
-		if(questTask.getQuestManager() != this.questManager)
-		{
-			questTask.setQuestManager(this.questManager);
-		}
-		
-		for(QuestTask task : this.tasks)
-		{
-			if(task.getClass().equals(questTask.getClass()))
-			{
-				System.out.println("[BiGX] Duplicate Quest Task Detected");
-				return;
-			}
-		}
-		
-		this.tasks.add(questTask);
-	}
+//	public List<QuestTask> getTasks()
+//	{
+//		return this.tasks;
+//	}
+//
+//	public void addTasks(QuestTask questTask) throws QuestException
+//	{
+//		if(questTask == null)
+//			throw new QuestException("Task is null");
+//
+//		if(questTask.getQuestManager() != this.questManager)
+//		{
+//			questTask.setQuestManager(this.questManager);
+//		}
+//
+//		for(QuestTask task : this.tasks)
+//		{
+//			if(task.getClass().equals(questTask.getClass()))
+//			{
+//				System.out.println("[BiGX] Duplicate Quest Task Detected");
+//				return;
+//			}
+//		}
+//
+//		this.tasks.add(questTask);
+//	}
 	
 	/**
 	 * Returns the progress of a Quest in percentage
@@ -71,21 +71,21 @@ public class Quest implements Runnable {
 	 */
 	public int getQuestProgress() throws QuestException // returns 0-100% 
 	{
-		if(this.tasks.size() == 0)
-		{
-			throw new QuestException("Quest with no task detected");
-		}
+//		if(this.tasks.size() == 0)
+//		{
+//			throw new QuestException("Quest with no task detected");
+//		}
 		
 		int returnValue = 0;
 		int countTaskDone = 0;
 		
-		for(QuestTask task : this.tasks)
-		{
-			if(task.isCompleted())
-				countTaskDone++;
-		}
+//		for(QuestTask task : this.tasks)
+//		{
+//			if(task.isCompleted())
+//				countTaskDone++;
+//		}
 		
-		returnValue = countTaskDone / this.tasks.size();
+//		returnValue = countTaskDone / this.tasks.size();
 		
 		return returnValue;
 	}
@@ -103,36 +103,27 @@ public class Quest implements Runnable {
 		return description;
 	}
 
-	public String[] getRequirements() {
-		String[] returnValue = new String[tasks.size()];
-		
-		for(int i=0; i<tasks.size(); i++)
-		{
-			returnValue[i] = tasks.get(i).getTaskDescription();
-		}
-		
-		return returnValue;
-	}
+
 
 	public void AddPlayer(EntityPlayer player) {
 		players.add(player);
 	}
 	
 	public IQuestTask getCurrentQuestTask() {
-		for (IQuestTask e : this.tasks) {
-			if (!e.isCompleted())
-				return e;
-		}
+//		for (IQuestTask e : this.tasks) {
+//			if (!e.isCompleted())
+//				return e;
+//		}
 		return null;
 	}
 	
 	public boolean IsComplete() {
-		for (IQuestTask questTask : this.tasks) {
-			if (!questTask.isCompleted() && (questTask.IsMainTask()) )
-			{
-				return false;
-			}
-		}
+//		for (IQuestTask questTask : this.tasks) {
+//			if (!questTask.isCompleted() && (questTask.IsMainTask()) )
+//			{
+//				return false;
+//			}
+//		}
 		return true;
 	}
 	
@@ -150,31 +141,31 @@ public class Quest implements Runnable {
 	
 	public void stop()
 	{
-		for(QuestTask questTask : this.tasks)
-		{	
-			questTask.deactivateTask();
-		}
+//		for(QuestTask questTask : this.tasks)
+//		{
+//			questTask.deactivateTask();
+//		}
 	}
 
 	@Override
 	public void run() {
 		synchronized(questManager)
 		{
-			if(this.tasks.size() == 0)
-			{
-				try {
-					throw new QuestException("The current Quest has not tasks");
-				} catch (QuestException e) {
-					e.printStackTrace();
-				}
-				return;
-			}
-			
-			for(QuestTask questTask : this.tasks)
-			{
-				questTask.setQuestManager(questManager);
-				questTask.activateTask();
-			}
+//			if(this.tasks.size() == 0)
+//			{
+//				try {
+//					throw new QuestException("The current Quest has not tasks");
+//				} catch (QuestException e) {
+//					e.printStackTrace();
+//				}
+//				return;
+//			}
+//
+//			for(QuestTask questTask : this.tasks)
+//			{
+//				questTask.setQuestManager(questManager);
+//				questTask.activateTask();
+//			}
 		}
 	}
 }

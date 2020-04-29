@@ -27,7 +27,7 @@ import org.ngs.bigx.minecraft.items.MineBikeCustomItems;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
 import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
+//import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
 
 //import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -81,7 +81,7 @@ import noppes.npcs.CustomItems;
 	    //public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Type.BASIC)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
 
 
-	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
+//	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
 	    
 	    public static CharacterProperty characterProperty;
 	    public static BikeProperty bikeProperty;	
@@ -91,18 +91,18 @@ import noppes.npcs.CustomItems;
 	    
 	    public static MouseHelper disableMouseHelper;
 
-	    public static Item MysteriousKey;
+//	    public static Item MysteriousKey;
 	    
-	    public static ArrayList<Item> customItems = MineBikeCustomItems.createItems();
+//	    public static ArrayList<Item> customItems = MineBikeCustomItems.createItems();
 	    
 	    /*
 	     * Instead of using magic numbers, an enum will differentiate our GUIs when
 	     * calling EntityPlayer.openGui().
 	     */
 	    
-	    public enum GUI_ENUM {
-	    	QUEST_COMPLETE
-	    }
+//	    public enum GUI_ENUM {
+//	    	QUEST_COMPLETE
+//	    }
 	    
 	    @Instance(BiGX.MODID)
 	    public static BiGX modInstance;
@@ -150,15 +150,15 @@ import noppes.npcs.CustomItems;
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
 
-	    	QuestEventHandler questEventHandler = new QuestEventHandler();
-			FMLCommonHandler.instance().bus().register(questEventHandler);
-	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
+//	    	QuestEventHandler questEventHandler = new QuestEventHandler();
+//			FMLCommonHandler.instance().bus().register(questEventHandler);
+//	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
 	    	
 	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
 			FMLCommonHandler.instance().bus().register(pedalingToBuild);
 	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
 	    	
-	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
+//	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	
 	    	//GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");
 	    	

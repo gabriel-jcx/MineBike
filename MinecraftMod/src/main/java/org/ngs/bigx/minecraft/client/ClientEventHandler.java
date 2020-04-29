@@ -690,28 +690,28 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
 //							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
 						// New Tutorial
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalForward)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalForward, GuiMessageWindow.PEDAL_FORWARD_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalBackward)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalBackward, GuiMessageWindow.PEDAL_BACKWARD_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsMine)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsMine, GuiMessageWindow.MINE_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsBuild)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsBuild, GuiMessageWindow.BUILD_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsJump)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsAttackNPC)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsExitTutorial)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsExitTutorial, GuiMessageWindow.TALK_TEXTURE, false);
-						else
-							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalForward)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalForward, GuiMessageWindow.PEDAL_FORWARD_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalBackward)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalBackward, GuiMessageWindow.PEDAL_BACKWARD_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsMine)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsMine, GuiMessageWindow.MINE_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsBuild)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsBuild, GuiMessageWindow.BUILD_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsJump)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsAttackNPC)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE, false);
+//						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsExitTutorial)
+//							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsExitTutorial, GuiMessageWindow.TALK_TEXTURE, false);
+//						else
+//							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 					else{
-						if (ClientAreaEvent.previousArea.type == AreaTypeEnum.EVENT)
-							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
+//						if (ClientAreaEvent.previousArea.type == AreaTypeEnum.EVENT)
+//							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
 					}
 					
 					String chosenSong = "";
@@ -763,8 +763,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					
 					ClientAreaEvent.sendLocationGameTag(ClientAreaEvent.previousArea.getId());
 				}
-				else
-					GuiMessageWindow.showMessage("Out of Continent Pangea...");
+//				else
+//					GuiMessageWindow.showMessage("Out of Continent Pangea...");
 			}
 			
 			if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
@@ -896,11 +896,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event) {
-		if (event.getGui() instanceof GuiMainMenu) {
-			GuiMenu gui = new GuiMenu();
-			gui.setContext(context);
-			event.setGui(gui);
-		}
+//		if (event.getGui() instanceof GuiMainMenu) {
+//			GuiMenu gui = new GuiMenu();
+//			gui.setContext(context);
+//			event.setGui(gui);
+//		}
 		
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiMonsterAppears)
 		{

@@ -2,6 +2,7 @@ package org.ngs.bigx.minecraft.quests.worlds;
 
 //import net.minecraft.server.v1_15_R1.ChunkProviderFlat;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.relauncher.Side;
@@ -56,6 +57,7 @@ public class WorldProviderDark extends WorldProvider{
 	public IChunkGenerator createChunkGenerator() {
 		WorldType terrian = world.getWorldType();
 		return terrian.getChunkGenerator(this.world, flatGenPreset);
+
 		//return new ChunkProviderFlat(this.world, this.world.getSeed(), false, flatGenPreset);
 	}
 	

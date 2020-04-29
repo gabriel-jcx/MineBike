@@ -549,9 +549,9 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		}
 	}
 	
-	public static GameSave getCurrentGameState() {
-		return currentGameState;
-	}
+//	public static GameSave getCurrentGameState() {
+//		return currentGameState;
+//	}
 
 	public void setSpeed(float speed) {
 		this.speed = speed;
