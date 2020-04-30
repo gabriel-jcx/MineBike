@@ -9,12 +9,12 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
-import org.ngs.bigx.minecraft.client.gui.GuiAlchemy;
-import org.ngs.bigx.minecraft.client.gui.GuiChapter;
+//import org.ngs.bigx.minecraft.client.gui.GuiAlchemy;
+//import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+//import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
@@ -53,65 +53,6 @@ public class BiGXPacketHandler {
 					boolean chasingQuestOnCountDown = false;
 					float speedchange = 0f;
 					int speedBoostTickCountLeft = 0;
-					boolean isSpeedBoostSkillOn = (context.getCurrentGameState().getSkillManager().getSkills().get(0).getSkillState() == enumSkillState.EFFECTIVE);
-					
-					QuestManager questManager = context.getQuestManager(); 
-					
-					if ((questManager != null) && (questManager.getActiveQuest() != null) )
-					{
-						if (questManager.getActiveQuest().getCurrentQuestTask() instanceof QuestTaskChasing)
-						{
-							QuestTaskChasing questTaskChasing = (QuestTaskChasing) questManager.getActiveQuest().getCurrentQuestTask();
-							chasingQuestOnGoing = questTaskChasing.isChasingQuestOnGoing();
-							chasingQuestOnCountDown = questTaskChasing.isChasingQuestOnCountDown();
-							speedchange = questTaskChasing.getSpeedchange();
-							speedBoostTickCountLeft = questTaskChasing.getSpeedBoostTickCountLeft();
-						}
-					}
-//					 System.out.println("revceived value [" + change + "] Value that will be applied [" + ((double)change) + "]");
-					
-					if(Minecraft.getMinecraft().currentScreen instanceof GuiAlchemy)
-					{
-						GuiAlchemy.increasePedalingSpeed(change);
-					}
-					else
-					{
-						if(chasingQuestOnGoing)
-						{
-							if(!chasingQuestOnCountDown)
-							{
-								maxSpeed = QuestTaskChasing.chaseRunBaseSpeed + speedchange;
-//								maxSpeed = 3 + speedchange;
-								
-								if(speedBoostTickCountLeft > 0)
-								{
-									maxSpeed *= 1.3f;
-									change *= 1.3f;
-								}
-								
-								if(context.getSpeed() + ((double)change) >= 0){
-									context.setSpeed( (float) Math.min( maxSpeed, Math.max( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-								}
-								else{
-									context.setSpeed( (float) Math.max( maxSpeed * -1, Math.min( change * (BiGXConstants.MAXBIKESPEED / 10.0), 0 ) ) );
-								}
-//								context.setSpeed((float)(change * (BiGXConstants.MAXBIKESPEED / 10.0)));
-//								
-//								/**
-//								 * Speed Boost By Pedaling Gauge
-//								 */
-//								if(isSpeedBoostSkillOn)
-//								{
-//									context.setSpeed(context.getSpeed() * 1.3f);
-//								}
-//								break;
-							}
-							else{
-								context.setSpeed(0);
-							}
-						}
-						else
-						{
 							switch(ClientEventHandler.pedalingModeState)
 							{
 							case 0:
@@ -120,7 +61,7 @@ public class BiGXPacketHandler {
 								/**
 								 * Speed Boost By Pedaling Gauge
 								 */
-								if(isSpeedBoostSkillOn)
+								if(true)//if(isSpeedBoostSkillOn)
 								{
 									context.setSpeed(context.getSpeed() * 1.3f);
 								}
@@ -141,8 +82,8 @@ public class BiGXPacketHandler {
 									fuel *= -1;
 								ClientEventHandler.pedalingCombo.increaseGauge(fuel);
 							}
-						}
-					}
+//						}
+
 				}
 			break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.ROTATE:

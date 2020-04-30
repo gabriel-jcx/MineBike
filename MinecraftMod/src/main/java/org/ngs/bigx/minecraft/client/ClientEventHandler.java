@@ -740,11 +740,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					}
 					
 					if (chosenSong != "" && chosenSong != previousSong) {
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_faire stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_camelot stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_avalon stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_rama stop");
+						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_faire stop");
+						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_camelot stop");
+						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_avalon stop");
+						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
+						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_rama stop");
 						
 						stopPreviousTracks(chosenSong);
 
@@ -901,13 +901,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //			gui.setContext(context);
 //			event.setGui(gui);
 //		}
-		
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiMonsterAppears)
-		{
-			System.out.println("[BiGX] onGuiOpen(GuiOpenEvent event)");
-			
-			GuiMonsterAppears.isGuiMonsterAppearsOpened = true;
-		}
+
 	}
 	
 	/**
@@ -917,11 +911,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
-		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
-		{
-			event.setNewSpeed((float) (event.getOriginalSpeed() + SkillBoostMining.boostRate));
-//			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
-		}
+//		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
+//		{
+//			event.setNewSpeed((float) (event.getOriginalSpeed() + SkillBoostMining.boostRate));
+////			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
+//		}
 		
 		if(pedalingModeState == 1)
 		{

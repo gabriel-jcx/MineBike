@@ -142,7 +142,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		clientSelf = this;
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		
-		ClientAreaEvent.initArea();
+//		ClientAreaEvent.initArea();
 				
 //		resistances.put(Blocks.AIR, Resistance.NONE);
 //		resistances.put(Blocks.BRICK_BLOCK, Resistance.LOW);
@@ -411,9 +411,9 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 					{
 						// if gameSave Read
 						System.out.println("[BiGX] Game Save Read");
-						
+
 						isGameSaveRead = true;
-						
+
 //						if(Minecraft.getMinecraft().player.dimension == 0)
 //							GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
 					}
@@ -421,7 +421,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				else
 				{
 					System.out.println("[BiGX] Player is not loaded.");
-					
+
 					if(Minecraft.getMinecraft().player != null)
 					{
 						isPlayerLoadedInWorld = true;
@@ -436,19 +436,19 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				System.out.println("[BiGX] Game Save is not loaded yet.");
 				return;
 			}
-			
+
 			if(Minecraft.getMinecraft().player != null)
 			{
 				BigxServerContext context = BiGX.instance().serverContext;
-				
+
 				if(context.suggestedGamePropertiesReady)
 				{
 					writeGameSave(context.suggestedGameProperties.getPatientCaseId());
 				}
-				
+
 				System.out.println("[BiGX] Game Saved.");
 			}
-			
+
 			try
 			{
 				GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
@@ -462,14 +462,14 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	}
 	
 	public boolean readGameSave(String caseid, EntityPlayer player)
-	{	
+	{
 		try {
 			GameSaveManager.loadCustomQuests(caseid);
 			return GameSaveManager.readGameSaveByUserCaseId(caseid, player);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 	
