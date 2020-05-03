@@ -7,15 +7,13 @@ import net.minecraft.block.BlockChest.Type;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.GameRuleChangeEvent;
 import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
-import org.ngs.bigx.minecraft.block.BlockQuestChest;
-import org.ngs.bigx.minecraft.block.QuestRFMChest;
+
 //import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
+
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
-import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
-import org.ngs.bigx.minecraft.entity.item.MysteriousKey;
 import org.ngs.bigx.minecraft.entity.lotom.BikeProperty;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
@@ -23,9 +21,8 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
-import org.ngs.bigx.minecraft.items.MineBikeCustomItems;
+//import org.ngs.bigx.minecraft.items.MineBikeCustomItems;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
-import org.ngs.bigx.minecraft.quests.QuestEventHandler;
 import org.ngs.bigx.minecraft.quests.QuestManager;
 //import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
@@ -124,7 +121,7 @@ import noppes.npcs.CustomItems;
 //	    	}
 			System.out.println("Register Entities STARTED");
 
-			MineBikeEntityRegistry.RegisterMineBikeEntities();
+//			MineBikeEntityRegistry.RegisterMineBikeEntities();
 			System.out.println("Register Entities DONE");
 	    	instance = this;
 	    	clientContext = new BigxClientContext(this);
@@ -174,6 +171,8 @@ import noppes.npcs.CustomItems;
 	    	System.out.println("[BiGX] Character Property Init Done");
 	    	
 	    	bikeProperty = new BikeProperty("currentBikeLoTomProperty");
+
+	    	// TODO: figure out why the bike is an EntityTank????????
 	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
 	    	System.out.println("[BiGX] Bike Property Init Done");
 	    	

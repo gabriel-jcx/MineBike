@@ -7,8 +7,7 @@ import net.minecraft.block.Block;
 public class BlockPositionMapping {
 	public Block block;
 	public TerrainBiomeAreaIndex terrainBiomeAreaIndex;
-	
-	public BlockPositionMapping(Block block, TerrainBiomeAreaIndex terrainBiomeAreaIndex)
+		public BlockPositionMapping(Block block, TerrainBiomeAreaIndex terrainBiomeAreaIndex)
 	{
 		this.block = block;
 		this.terrainBiomeAreaIndex = terrainBiomeAreaIndex;

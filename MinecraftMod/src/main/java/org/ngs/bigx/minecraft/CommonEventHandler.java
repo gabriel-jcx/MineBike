@@ -12,27 +12,14 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 //import org.bukkit.block.Block;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
-import org.ngs.bigx.minecraft.client.GuiMessageWindow;
-import org.ngs.bigx.minecraft.client.area.Area;
-import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
-import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
+
 import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
 import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
-import org.ngs.bigx.minecraft.npcs.NpcCommand;
-import org.ngs.bigx.minecraft.npcs.NpcEvents;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestException;
-import org.ngs.bigx.minecraft.quests.QuestTaskFightAndChasing;
-import org.ngs.bigx.minecraft.quests.QuestTaskTutorial;
-import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+
 
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -60,8 +47,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-//import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-//import net.minecraftforge.event.entity.player.Entit
+
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -113,71 +99,6 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
-
-		if (event.player.world.isRemote)
-		{
-			if(GameSaveManager.flagEnableChasingQuestClient)
-			{
-				try {
-					GameSaveManager.enableChasingQuest(event.player);
-				} catch (QuestException e) {
-					e.printStackTrace();
-				}
-
-				GameSaveManager.flagEnableChasingQuestClient = false;
-
-				System.out.println("[BiGX] Enabling Chasing Quest Initiated.");
-			}
-			else if(GameSaveManager.flagUpdatePlayerLevelClient)
-			{
-				GameSaveManager.flagUpdatePlayerLevelClient = false;
-
-				GameSaveManager.updatePlayerLevel();
-			}
-
-			if(GameSaveManager.flagEnableFightAndChasingQuestClient)
-			{
-				try {
-					GameSaveManager.enableFightAndChasingQuest(event.player);
-				} catch (QuestException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				GameSaveManager.flagEnableFightAndChasingQuestClient = false;
-			}
-		}
-		else
-		{
-			if(GameSaveManager.flagEnableChasingQuestServer)
-			{
-				try {
-					GameSaveManager.enableChasingQuest(event.player);
-				} catch (QuestException e) {
-					e.printStackTrace();
-				}
-
-				GameSaveManager.flagEnableChasingQuestServer = false;
-
-				System.out.println("[BiGX] Enabling Chasing Quest Initiated.");
-			}
-			else if(GameSaveManager.flagUpdatePlayerLevelServer)
-			{
-				GameSaveManager.flagUpdatePlayerLevelServer = false;
-
-				GameSaveManager.updatePlayerLevel();
-			}
-
-			if(GameSaveManager.flagEnableFightAndChasingQuestServer)
-			{
-				try {
-					GameSaveManager.enableFightAndChasingQuest(event.player);
-					GameSaveManager.flagEnableFightAndChasingQuestServer = false;
-				} catch (QuestException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
 
 		if (!event.player.world.isRemote)
 		{
@@ -252,13 +173,7 @@ public class CommonEventHandler {
 	public void onWorldUnload(WorldEvent.Unload event) {
 		BigxClientContext context = BiGX.instance().clientContext;
 	}
-	
-	@SubscribeEvent
-	public void entityInteractEvent(PlayerInteractEvent.EntityInteract e) {
-		EntityPlayer player = e.getEntityPlayer();
-		System.out.println("Interacting with NPC...");
-		NpcEvents.InteractWithNPC(player, e);
-	}
+
 	
 	@SubscribeEvent
 	public void entityAttacked(LivingAttackEvent event)
@@ -341,51 +256,51 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
-		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null && event.phase == TickEvent.Phase.END) {
-			/**
-			 * Solution to doors being annoying -- auto-open in range.
-			 * NOTE: Only do this for Wooden Doors. Iron Doors should be
-			 * used for more important things... example: puzzle solving.
-			 */
-			if ((server_tick%10) == 0) {
-				int doorOpenDistance = 5;
-				int doorCheckRadius = 10;
-				
-				for (WorldServer ws : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
-					for (EntityPlayer player : (List<EntityPlayer>) ws.playerEntities) {
-						
-						int pX = (int) player.posX;
-						int pY = (int) player.posY;
-						int pZ = (int) player.posZ;
-						
-						for (int xx = pX-doorCheckRadius; xx < pX+doorCheckRadius; ++xx) {
-							for (int zz = pZ-doorCheckRadius; zz < pZ+doorCheckRadius; ++zz) {
-								for (int yy = pY-doorCheckRadius; yy < pY+doorCheckRadius; ++yy) {
-									
-									if (ws.getBlockState(new BlockPos(xx,yy,zz)).getBlock() == Blocks.OAK_DOOR) {
-										double blockDistance = Math.sqrt(Math.pow(Math.abs(xx-pX), 2) + Math.pow(Math.abs((yy-pY)), 2) + Math.pow(Math.abs(zz-pZ), 2));
-										// Open if close
-										IBlockState gottenMeta = ws.getBlockState(new BlockPos(xx, yy, zz));
-										// TODO: re-write the logic for door being annoying, auto-open in range
-//										int meta = gottenMeta;
-//										gottenMeta.getBlock()
+//		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null && event.phase == TickEvent.Phase.END) {
+//			/**
+//			 * Solution to doors being annoying -- auto-open in range.
+//			 * NOTE: Only do this for Wooden Doors. Iron Doors should be
+//			 * used for more important things... example: puzzle solving.
+//			 */
+//			if ((server_tick%10) == 0) {
+//				int doorOpenDistance = 5;
+//				int doorCheckRadius = 10;
 //
-//										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
-//											meta += 4;
-//											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
-//											ws.playAuxSFX(1003, xx, yy, zz, 0);
-//										} else if (blockDistance > doorOpenDistance && (gottenMeta >= 4 && gottenMeta < 8)){
-//											meta -= 4;
-//											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
-//											ws.playAuxSFX(1003, xx, yy, zz, 0);
-//										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+//				for (WorldServer ws : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
+//					for (EntityPlayer player : (List<EntityPlayer>) ws.playerEntities) {
+//
+//						int pX = (int) player.posX;
+//						int pY = (int) player.posY;
+//						int pZ = (int) player.posZ;
+//
+//						for (int xx = pX-doorCheckRadius; xx < pX+doorCheckRadius; ++xx) {
+//							for (int zz = pZ-doorCheckRadius; zz < pZ+doorCheckRadius; ++zz) {
+//								for (int yy = pY-doorCheckRadius; yy < pY+doorCheckRadius; ++yy) {
+//
+//									if (ws.getBlockState(new BlockPos(xx,yy,zz)).getBlock() == Blocks.OAK_DOOR) {
+//										double blockDistance = Math.sqrt(Math.pow(Math.abs(xx-pX), 2) + Math.pow(Math.abs((yy-pY)), 2) + Math.pow(Math.abs(zz-pZ), 2));
+//										// Open if close
+//										IBlockState gottenMeta = ws.getBlockState(new BlockPos(xx, yy, zz));
+//										// TODO: re-write the logic for door being annoying, auto-open in range
+////										int meta = gottenMeta;
+////										gottenMeta.getBlock()
+////
+////										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
+////											meta += 4;
+////											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
+////											ws.playAuxSFX(1003, xx, yy, zz, 0);
+////										} else if (blockDistance > doorOpenDistance && (gottenMeta >= 4 && gottenMeta < 8)){
+////											meta -= 4;
+////											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
+////											ws.playAuxSFX(1003, xx, yy, zz, 0);
+////										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
 	}
 }

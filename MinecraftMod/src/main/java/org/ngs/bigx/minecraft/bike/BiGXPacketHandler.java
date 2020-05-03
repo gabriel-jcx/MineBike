@@ -22,7 +22,7 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import net.minecraft.client.Minecraft;
 
-public class BiGXPacketHandler {
+public class  BiGXPacketHandler {
 	
 	public static int change;
 	

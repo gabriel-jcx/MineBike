@@ -28,14 +28,14 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 //import org.ngs.bigx.minecraft.bike.PedalingComboSoundEffect;
-import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.client.gui.GuiChapter;
+//import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+//import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+//import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -305,7 +305,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				bufferQuestDesignChunkNumber = 0;
 				
 				// Request Quest Design
-				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_GAME_DESIGN_HANDSHAKE, 
+				BiGXNetPacket packet = new BiGXNetPacket(Command.REQ_GAME_DESIGN_HANDSHAKE,
 						0, 0, new byte[9]);
 				BiGXPacketHandler.sendPacket(bigxclient, packet);
 			}
@@ -411,9 +411,9 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 					{
 						// if gameSave Read
 						System.out.println("[BiGX] Game Save Read");
-
+						
 						isGameSaveRead = true;
-
+						
 //						if(Minecraft.getMinecraft().player.dimension == 0)
 //							GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
 					}
@@ -421,7 +421,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				else
 				{
 					System.out.println("[BiGX] Player is not loaded.");
-
+					
 					if(Minecraft.getMinecraft().player != null)
 					{
 						isPlayerLoadedInWorld = true;
@@ -436,40 +436,40 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				System.out.println("[BiGX] Game Save is not loaded yet.");
 				return;
 			}
-
+			
 			if(Minecraft.getMinecraft().player != null)
 			{
 				BigxServerContext context = BiGX.instance().serverContext;
-
+				
 				if(context.suggestedGamePropertiesReady)
 				{
 					writeGameSave(context.suggestedGameProperties.getPatientCaseId());
 				}
-
+				
 				System.out.println("[BiGX] Game Saved.");
 			}
-
-			try
-			{
-				GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
-			}
-			catch(Exception ee)
-			{
-				ee.printStackTrace();
-			}
+			
+//			try
+//			{
+//				GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
+//			}
+//			catch(Exception ee)
+//			{
+//				ee.printStackTrace();
+//			}
 		}
 		
 	}
 	
 	public boolean readGameSave(String caseid, EntityPlayer player)
-	{
+	{	
 		try {
 			GameSaveManager.loadCustomQuests(caseid);
 			return GameSaveManager.readGameSaveByUserCaseId(caseid, player);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
 		return false;
 	}
 	
@@ -549,9 +549,9 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		}
 	}
 	
-//	public static GameSave getCurrentGameState() {
-//		return currentGameState;
-//	}
+	public static GameSave getCurrentGameState() {
+		return currentGameState;
+	}
 
 	public void setSpeed(float speed) {
 		this.speed = speed;
