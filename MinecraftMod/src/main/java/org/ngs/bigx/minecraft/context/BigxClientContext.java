@@ -34,7 +34,6 @@ import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 //import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
@@ -477,7 +476,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	{
 		try {
 			GameSaveManager.writeGameSaveByUserCaseId(caseid);
-			GameSaveManager.saveCustomQuests(caseid);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

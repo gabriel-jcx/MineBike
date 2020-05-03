@@ -13,7 +13,6 @@ import org.ngs.bigx.minecraft.client.ClientProxy;
 //import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.quests.QuestManager;
 //import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;

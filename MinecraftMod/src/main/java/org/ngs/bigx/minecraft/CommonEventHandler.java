@@ -18,7 +18,6 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager.CUSTOMCOMMAND;
-import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -91,8 +90,7 @@ public class CommonEventHandler {
 	int fightAndChaseQuestTickCount = 2000; // Every 20 seconds (10 seconds is too short)
 	
 	private static int thiefMaxLevel = 1;
-	
-	public static LevelSystem levelSys = new LevelSystem();
+
 	boolean chaseQuestInProgress = false;
 	
 	private static int onPlayerTickEventCount = 0;

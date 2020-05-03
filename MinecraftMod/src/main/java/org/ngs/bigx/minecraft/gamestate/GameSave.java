@@ -2,15 +2,17 @@ package org.ngs.bigx.minecraft.gamestate;
 
 import java.util.ArrayList;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.skills.SkillManager;
-import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
+@SideOnly(Side.CLIENT)
 public class GameSave {
 	private long timestamp = 0;
 	
 	// PLAYER STATE
-	private LevelSystem levelSystem = null;
+
 	private ArrayList<String> itemOnItemStack;		// Items by item id
 	
 	// QUEST STATE
@@ -30,7 +32,6 @@ public class GameSave {
 	
 	public GameSave()
 	{
-		this.levelSystem = new LevelSystem();
 		this.itemOnItemStack = new ArrayList<String>();
 		this.gameStateQuestProgress = new GameSaveQuestProgress();
 		this.posDim = 0;
@@ -55,14 +56,6 @@ public class GameSave {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
-	}
-
-	public LevelSystem getLevelSystem() {
-		return levelSystem;
-	}
-
-	public void setLevelSystem(LevelSystem levelSystem) {
-		this.levelSystem = levelSystem;
 	}
 
 	public ArrayList<String> getItemOnItemStack() {

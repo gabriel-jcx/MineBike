@@ -1,14 +1,15 @@
 package org.ngs.bigx.minecraft.gamestate;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import java.util.ArrayList;
 
-import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 public class GameState {
 	private String gamename = "minecraft";
 	
 	// PLAYER STATE
-	private LevelSystem levelSystem = null;
 	private ArrayList<String> itemOnItemStack;		// Items by item id
 	
 	// QUEST STATE
@@ -26,7 +27,6 @@ public class GameState {
 	public GameState()
 	{
 		this.gamename = "minecraft";
-		this.levelSystem = new LevelSystem();
 		this.itemOnItemStack = new ArrayList<String>();
 //		this.gameStateQuestProgress = new GameStateQuestProgress();
 		this.posDim = 0;

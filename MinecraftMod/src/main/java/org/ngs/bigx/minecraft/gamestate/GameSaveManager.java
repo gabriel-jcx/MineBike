@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,13 +13,11 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.common.DimensionManager;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
 import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
 
 import com.google.gson.Gson;
@@ -30,10 +27,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.UserInfo;
 
-import net.minecraft.client.Minecraft;
+
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 
 public class GameSaveManager {
 
@@ -138,14 +133,7 @@ public class GameSaveManager {
 			}
 			
 			// READ SAVED PLAYER LEVEL
-			if(gameSaveJson.isChasingQuestOn())
-			{
-				System.out.println("[BiGX] Chasing Quest is on from Save File");
-				setEnableChasingQuestFlag();
-				setUpdatePlayerLevel(gameSaveJson.getPlayerLevel());
-			}
-			
-			setEnableFightAndChasingQuestFlag();
+
 
 			
 //			QuestTaskChasing.getLevelSystem().getPlayerLevel()
@@ -159,24 +147,10 @@ public class GameSaveManager {
 		return returnValue;
 	}
 	
-	public static void setEnableChasingQuestFlag()
-	{
-		GameSaveManager.flagEnableChasingQuestClient = true;
-		GameSaveManager.flagEnableChasingQuestServer = true;
-	}
+
+
 	
-	public static void setEnableFightAndChasingQuestFlag()
-	{
-		GameSaveManager.flagEnableFightAndChasingQuestClient = true;
-		GameSaveManager.flagEnableFightAndChasingQuestServer = true;
-	}
-	
-	public static void setUpdatePlayerLevel(int savedPlayerLevel)
-	{
-		GameSaveManager.flagUpdatePlayerLevelClient = true;
-		GameSaveManager.flagUpdatePlayerLevelServer = true;
-		GameSaveManager.savedPlayerLevel = savedPlayerLevel;
-	}
+
 	@Deprecated
 	public static void updatePlayerLevel()
 	{
@@ -230,27 +204,14 @@ public class GameSaveManager {
 //			quest.loadFromJson(questJson);
 //		}
 	}
-	@Deprecated
-	public static void saveCustomQuests(String caseid) throws IOException
-	{
-		//for all the quests, convert them to json and then save them
 
-	}
 	
 	public static void writeGameSaveByUserCaseId(String caseid) throws IOException
 	{
-		/*
-		 * private boolean isChasingQuestOn = false;
-		 * private int playerLevel = 1;
-		 * private int skills = 0x0;
-		 */
+
 		GameSaveJson save = new GameSaveJson();
 		
-//		if(BiGX.instance().serverContext.getQuestManager().getActiveQuest() != null)
-//		{
-//			save.setChasingQuestOn(true);
-//		}
-//
+
 
 		try
 		{
