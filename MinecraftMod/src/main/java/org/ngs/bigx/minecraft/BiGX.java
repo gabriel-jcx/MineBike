@@ -6,7 +6,6 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockChest.Type;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.GameRuleChangeEvent;
-import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 
 //import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -150,9 +149,9 @@ import noppes.npcs.CustomItems;
 //			FMLCommonHandler.instance().bus().register(questEventHandler);
 //	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
 	    	
-	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
-			FMLCommonHandler.instance().bus().register(pedalingToBuild);
-	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
+//	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
+//			FMLCommonHandler.instance().bus().register(pedalingToBuild);
+//	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
 	    	
 //	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	

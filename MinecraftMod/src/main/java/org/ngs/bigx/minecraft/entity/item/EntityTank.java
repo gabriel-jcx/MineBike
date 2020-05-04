@@ -76,7 +76,9 @@ public class EntityTank extends EntityMob
 //		}
 		return false;
 	}
-	
+
+
+	//TODO: figure out this function, looks like it might be used
 	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
 	{
 //		if (this.riddenByEntity != null && this.riddenByEntity instanceof EntityLivingBase)

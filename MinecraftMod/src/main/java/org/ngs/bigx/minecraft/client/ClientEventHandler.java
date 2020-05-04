@@ -17,8 +17,6 @@ import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.bike.IPedalingComboEvent;
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
-import org.ngs.bigx.minecraft.bike.PedalingToBuild;
-import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
 
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
@@ -624,10 +622,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 		else if(pedalingModeState == 2)
 		{
-			if(PedalingToBuildEventHandler.buildingId.equals(""))
-				return;
-			BlockPos pos = event.getPos();
-			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(pos.getX(), pos.getY()+1, pos.getZ(), 9, PedalingToBuildEventHandler.buildingId);
+//			if(PedalingToBuildEventHandler.buildingId.equals(""))
+//				return;
+//			BlockPos pos = event.getPos();
+//			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(pos.getX(), pos.getY()+1, pos.getZ(), 9, PedalingToBuildEventHandler.buildingId);
 		}
 	}
 

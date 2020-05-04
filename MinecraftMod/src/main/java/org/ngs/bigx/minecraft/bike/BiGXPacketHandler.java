@@ -69,8 +69,8 @@ public class  BiGXPacketHandler {
 								if(change < 0)
 									change *= -1;
 								
-								if(PedalingToBuildEventHandler.pedalingToBuild != null)
-									PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
+//								if(PedalingToBuildEventHandler.pedalingToBuild != null)
+//									PedalingToBuildEventHandler.pedalingToBuild.proceed(change);
 								break;
 							};
 							

@@ -14,10 +14,7 @@ public class GameSave {
 	// PLAYER STATE
 
 	private ArrayList<String> itemOnItemStack;		// Items by item id
-	
-	// QUEST STATE
-	private GameSaveQuestProgress gameStateQuestProgress = null;
-	
+
 	// LOCATION (SAVED LOCATION IN GAME)
 	private int posX;
 	private int posY;
@@ -33,7 +30,6 @@ public class GameSave {
 	public GameSave()
 	{
 		this.itemOnItemStack = new ArrayList<String>();
-		this.gameStateQuestProgress = new GameSaveQuestProgress();
 		this.posDim = 0;
 		this.posX = 0;
 		this.posY = 0;
@@ -64,15 +60,6 @@ public class GameSave {
 
 	public void setItemOnItemStack(ArrayList<String> itemOnItemStack) {
 		this.itemOnItemStack = itemOnItemStack;
-	}
-
-	public GameSaveQuestProgress getGameStateQuestProgress() {
-		return gameStateQuestProgress;
-	}
-
-	public void setGameStateQuestProgress(
-			GameSaveQuestProgress gameStateQuestProgress) {
-		this.gameStateQuestProgress = gameStateQuestProgress;
 	}
 
 	public int getPosX() {
