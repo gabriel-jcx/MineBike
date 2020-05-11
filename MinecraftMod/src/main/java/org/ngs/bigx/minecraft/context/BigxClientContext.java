@@ -74,7 +74,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	private static boolean isGameSaveRead = false;
 	private static boolean isBiGXConnected = false;
 	private static boolean isPlayerLoadedInWorld = false;
-	
+
+	// This should be moved into or a specific minebike folder
 	public static final String gameServerListFileName = System.getProperty("user.home") + "\\bigxGameServerList.dat";
 	private static Object MiddlewareIPReadMutex = new Object();
 	private static GameServerList gameServerList = null;
@@ -139,6 +140,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		super(main);
 		
 		clientSelf = this;
+
+		// what is this freaking username
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		
 //		ClientAreaEvent.initArea();
@@ -262,7 +265,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 						questDesignString = questDesignString.trim();
 						
 						try{
-							Gson gson = new Gson();
 							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 							suggestedGamePropertiesReady = true;
 							
@@ -585,7 +587,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	public void sendPatientProfileToServer(String questDesignString)
 	{
 		BigxServerContext bigxServerContext = BiGX.instance().serverContext;
-		Gson gson = new Gson();
 		bigxServerContext.suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 		bigxServerContext.suggestedGamePropertiesReady = true;
 	}
