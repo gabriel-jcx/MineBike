@@ -9,21 +9,10 @@ import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonProxy;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistManager;
-import org.ngs.bigx.minecraft.client.gui.GuiStatsSkill;
-import org.ngs.bigx.minecraft.client.gui.hud.HudManager;
-import org.ngs.bigx.minecraft.client.renderer.TileEntityQuestChestRenderer;
+
 import org.ngs.bigx.minecraft.client.skills.SkillEventHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
-import org.ngs.bigx.minecraft.entity.item.EntityTank;
-import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
-import org.ngs.bigx.minecraft.quests.custom.helpers.CustomQuestEventHandler;
-import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
-import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
-import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
-import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
-import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
+
 
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -56,18 +45,15 @@ public class ClientProxy extends CommonProxy {
     	skillEventHandler = new SkillEventHandler(context);
 		FMLCommonHandler.instance().bus().register(skillEventHandler);
     	MinecraftForge.EVENT_BUS.register(skillEventHandler);
+
     	
-    	CustomQuestEventHandler customQuestEventHandler = new CustomQuestEventHandler();
-    	MinecraftForge.EVENT_BUS.register(customQuestEventHandler);
-    	FMLCommonHandler.instance().bus().register(customQuestEventHandler);
-    	
-    	MinecraftForge.EVENT_BUS.register(new GuiStats(context,Minecraft.getMinecraft()));
-    	MinecraftForge.EVENT_BUS.register(new HudManager(Minecraft.getMinecraft()));
-    	MinecraftForge.EVENT_BUS.register(new GuiLocation(context,Minecraft.getMinecraft()));
-    	MinecraftForge.EVENT_BUS.register(new GuiStatsSkill(context,Minecraft.getMinecraft()));
-    	MinecraftForge.EVENT_BUS.register(new GuiDamage(context,Minecraft.getMinecraft()));
-    	MinecraftForge.EVENT_BUS.register(new GuiLeaderBoard(context,Minecraft.getMinecraft()));
-    	MinecraftForge.EVENT_BUS.register(new GuiMessageWindow(context,Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new GuiStats(context,Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new HudManager(Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new GuiLocation(context,Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new GuiStatsSkill(context,Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new GuiDamage(context,Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new GuiLeaderBoard(context,Minecraft.getMinecraft()));
+//    	MinecraftForge.EVENT_BUS.register(new GuiMessageWindow(context,Minecraft.getMinecraft()));
     	
     	try {
 			context.initBigX();
@@ -98,8 +84,8 @@ public class ClientProxy extends CommonProxy {
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchToLeftItem);
     	ClientRegistry.registerKeyBinding(ClientEventHandler.keyBindingSwitchToRightItem);
     	
-    	MineBikeEntityRegistry.RegisterMineBikeRenders();
-    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());
+//    	MineBikeEntityRegistry.RegisterMineBikeRenders();
+//    	ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuestChest.class, new TileEntityQuestChestRenderer());
     }
 	
 	public void postInit(FMLPostInitializationEvent e) {

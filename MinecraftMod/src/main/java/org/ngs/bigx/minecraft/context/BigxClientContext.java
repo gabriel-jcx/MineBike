@@ -28,14 +28,13 @@ import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 //import org.ngs.bigx.minecraft.bike.PedalingComboSoundEffect;
-import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.client.gui.GuiChapter;
+//import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
+//import org.ngs.bigx.minecraft.client.gui.GuiChapter;
 import org.ngs.bigx.minecraft.gamestate.GameSave;
 import org.ngs.bigx.minecraft.gamestate.GameSaveConfig;
 import org.ngs.bigx.minecraft.gamestate.GameSaveList;
 import org.ngs.bigx.minecraft.gamestate.GameSaveManager;
-import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
+//import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClient;
 import org.ngs.bigx.net.gameplugin.client.BiGXNetClientListener;
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
@@ -75,7 +74,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	private static boolean isGameSaveRead = false;
 	private static boolean isBiGXConnected = false;
 	private static boolean isPlayerLoadedInWorld = false;
-	
+
+	// This should be moved into or a specific minebike folder
 	public static final String gameServerListFileName = System.getProperty("user.home") + "\\bigxGameServerList.dat";
 	private static Object MiddlewareIPReadMutex = new Object();
 	private static GameServerList gameServerList = null;
@@ -140,9 +140,11 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		super(main);
 		
 		clientSelf = this;
+
+		// what is this freaking username
 		this.BiGXUserName = "User_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		
-		ClientAreaEvent.initArea();
+//		ClientAreaEvent.initArea();
 				
 //		resistances.put(Blocks.AIR, Resistance.NONE);
 //		resistances.put(Blocks.BRICK_BLOCK, Resistance.LOW);
@@ -263,7 +265,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 						questDesignString = questDesignString.trim();
 						
 						try{
-							Gson gson = new Gson();
 							suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 							suggestedGamePropertiesReady = true;
 							
@@ -305,7 +306,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				bufferQuestDesignChunkNumber = 0;
 				
 				// Request Quest Design
-				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_GAME_DESIGN_HANDSHAKE, 
+				BiGXNetPacket packet = new BiGXNetPacket(Command.REQ_GAME_DESIGN_HANDSHAKE,
 						0, 0, new byte[9]);
 				BiGXPacketHandler.sendPacket(bigxclient, packet);
 			}
@@ -449,14 +450,14 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				System.out.println("[BiGX] Game Saved.");
 			}
 			
-			try
-			{
-				GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
-			}
-			catch(Exception ee)
-			{
-				ee.printStackTrace();
-			}
+//			try
+//			{
+//				GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
+//			}
+//			catch(Exception ee)
+//			{
+//				ee.printStackTrace();
+//			}
 		}
 		
 	}
@@ -477,7 +478,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	{
 		try {
 			GameSaveManager.writeGameSaveByUserCaseId(caseid);
-			GameSaveManager.saveCustomQuests(caseid);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -587,7 +587,6 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 	public void sendPatientProfileToServer(String questDesignString)
 	{
 		BigxServerContext bigxServerContext = BiGX.instance().serverContext;
-		Gson gson = new Gson();
 		bigxServerContext.suggestedGameProperties = new Gson().fromJson(questDesignString, BiGXSuggestedGameProperties.class);
 		bigxServerContext.suggestedGamePropertiesReady = true;
 	}

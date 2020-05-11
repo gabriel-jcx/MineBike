@@ -2,6 +2,8 @@ package org.ngs.bigx.minecraft;
 
 import java.util.Timer;
 
+
+// This contains a ENUM state of the BiGX connection
 public class BiGXConnectionStateManagerClass
 {
 	public connectionStateEnum State;

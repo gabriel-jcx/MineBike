@@ -13,26 +13,11 @@ import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.dictionary.objects.game.BiGXGameTag;
 import org.ngs.bigx.dictionary.protocol.Specification;
 import org.ngs.bigx.minecraft.BiGX;
-import org.ngs.bigx.minecraft.BiGXTextBoxDialogue;
 import org.ngs.bigx.minecraft.CommonEventHandler;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
 import org.ngs.bigx.minecraft.bike.IPedalingComboEvent;
 import org.ngs.bigx.minecraft.bike.PedalingCombo;
-import org.ngs.bigx.minecraft.bike.PedalingToBuild;
-import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
-import org.ngs.bigx.minecraft.client.area.Area;
-import org.ngs.bigx.minecraft.client.area.Area.AreaTypeEnum;
-import org.ngs.bigx.minecraft.client.area.ClientAreaEvent;
-import org.ngs.bigx.minecraft.client.gui.GuiAlchemy;
-import org.ngs.bigx.minecraft.client.gui.GuiBuildinglistManager;
-import org.ngs.bigx.minecraft.client.gui.GuiChapter;
-import org.ngs.bigx.minecraft.client.gui.GuiControllerGuide;
-import org.ngs.bigx.minecraft.client.gui.GuiMonsterAppears;
-import org.ngs.bigx.minecraft.client.gui.GuiQuestlistException;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuest;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlot;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiChasingQuestLevelSlotItem;
-import org.ngs.bigx.minecraft.client.gui.quest.chase.GuiFinishChasingQuest;
+
 import org.ngs.bigx.minecraft.client.skills.Skill.enumSkillState;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostDamage;
 import org.ngs.bigx.minecraft.client.skills.SkillBoostMining;
@@ -40,14 +25,7 @@ import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
 import org.ngs.bigx.minecraft.context.BigxContext.LOGTYPE;
-import org.ngs.bigx.minecraft.quests.Quest;
-import org.ngs.bigx.minecraft.quests.QuestException;
-import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.quests.QuestTaskChasing;
-import org.ngs.bigx.minecraft.quests.worlds.QuestTeleporter;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderDungeon;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderEmpty;
-import org.ngs.bigx.minecraft.quests.worlds.WorldProviderFlats;
+
 import org.ngs.bigx.net.gameplugin.common.BiGXNetPacket;
 import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
@@ -158,41 +136,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
 			Minecraft.getMinecraft().player.setSprinting(false);
 		}
-		if( (Keyboard.getEventKey() == 1) && (Keyboard.getEventCharacter() != '\u0000')) // ESC
-		{
-			if(Minecraft.getMinecraft() == null)
-				return;
-			
-			if( (Minecraft.getMinecraft().player != null) && (!Minecraft.getMinecraft().isGamePaused()) )
-			{
-				if(!Minecraft.getMinecraft().isGamePaused())
-				{
-//					System.out.println("ESC Pressed");
-					EntityPlayer player = Minecraft.getMinecraft().player;
-					
-					if(player.dimension == WorldProviderFlats.dimID)
-					{
-						BigxServerContext context = BiGX.instance().serverContext;;
-						
-						if(context.getQuestManager() == null)
-						{
-//							System.out.println("ESC Pressed 1");
-							return;
-						}
-						
-						if(context.getQuestManager().getActiveQuestTask() == null)
-						{
-//							System.out.println("ESC Pressed 2");
-							return;
-						}
-						
-						GuiFinishChasingQuest gui = new GuiFinishChasingQuest(false); 
 
-						Minecraft.getMinecraft().displayGuiScreen(gui);
-					}
-				}
-			}
-		}
 		if (keyBindingToggleMouse.isPressed()) {
 			enableLock = !enableLock;
 			System.out.println("Movement/Look lock: " + enableLock);
@@ -204,30 +148,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //			animTickFade = 0;
 //			System.out.println("pedalingModeState[" + pedalingModeState + "]");
 		}
-		if(keyBindingToggleControllerInstructionMenu.isPressed())
-		{
-			Minecraft mc = Minecraft.getMinecraft();
-			
-			if(mc.currentScreen == null)
-			{
-				if(mc.player != null)
-				{
-					mc.displayGuiScreen(new GuiControllerGuide(BiGX.instance().clientContext, mc));
-				}
-			}
-		}
-		if(keyBindingToggleAlchemyMenu.isPressed())
-		{
-			Minecraft mc = Minecraft.getMinecraft();
-			
-			if(mc.currentScreen == null)
-			{
-				if(mc.player != null)
-				{
-					mc.displayGuiScreen(new GuiAlchemy(BiGX.instance().clientContext, mc));
-				}
-			}
-		}
+
 		if (keyBindingToggleBike.isPressed()) {
 			enableBike = !enableBike;
 			System.out.println("Toggle Bike Movement: " + enableBike);
@@ -335,37 +256,37 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			}
 		}
 		
-		if(event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer) event.getEntity();
-			Minecraft mc = Minecraft.getMinecraft();
-			
-			if( (player.world.provider.getDimension() == 105) )
-			{
-				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
-				flagOpenChapterGui = true;
-				
-				GuiChapter.sendChapterGameTag(GuiChapter.getChapterNumber());
-				
-				if(BigxClientContext.getIsGameSaveRead())
-					GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
-				
-				if(GuiChapter.getChapterNumber() == 3)
-				{
-					if(QuestTaskChasing.guiChasingQuest != null)
-					{
-						int currentLevel = QuestTaskChasing.guiChasingQuest.getSelectedQuestLevelIndex() + 1;
-						
-						if(currentLevel > 2)
-						{
-							GuiChapter.proceedToNextChapter();
-							flagOpenChapterGui = true;
-						}
-					}
-				}
-			}
-			
-		}
+//		if(event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer)
+//		{
+//			EntityPlayer player = (EntityPlayer) event.getEntity();
+//			Minecraft mc = Minecraft.getMinecraft();
+//
+//			if( (player.world.provider.getDimension() == 105) )
+//			{
+//				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
+//				flagOpenChapterGui = true;
+//
+//				GuiChapter.sendChapterGameTag(GuiChapter.getChapterNumber());
+//
+//				if(BigxClientContext.getIsGameSaveRead())
+//					GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
+//
+//				if(GuiChapter.getChapterNumber() == 3)
+//				{
+//					if(QuestTaskChasing.guiChasingQuest != null)
+//					{
+//						int currentLevel = QuestTaskChasing.guiChasingQuest.getSelectedQuestLevelIndex() + 1;
+//
+//						if(currentLevel > 2)
+//						{
+//							GuiChapter.proceedToNextChapter();
+//							flagOpenChapterGui = true;
+//						}
+//					}
+//				}
+//			}
+//
+//		}
 	}
 	
 	@SubscribeEvent
@@ -407,154 +328,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SideOnly(Side.CLIENT)
 	public void onClientTick(TickEvent.ClientTickEvent event)
 	{
-		if ((Minecraft.getMinecraft().player!=null) 
+		if ((Minecraft.getMinecraft().player!=null)
 				&& (event.phase==TickEvent.Phase.END)) {
-			
-			// TODO
-			synchronized (previousLocationLogTimeStampLock) {
-				if((System.currentTimeMillis() - previousLocationLogTimeStamp ) > 2000)
-				{
-					BigxContext.logWriter(LOGTYPE.LOCATION, "" + Minecraft.getMinecraft().player.dimension + "\t" + Minecraft.getMinecraft().player.posX + "\t" + Minecraft.getMinecraft().player.posY + "\t" + Minecraft.getMinecraft().player.posZ);
-					previousLocationLogTimeStamp = System.currentTimeMillis();
-				}
-			}
-			
-			if(context.getQuestManager() == null)
-			{
-				context.setQuestManager(new QuestManager(context, null, Minecraft.getMinecraft().player));
-			}
-			
-			if(BigxClientContext.getIsGameSaveRead() && flagOpenChapterGui && (Minecraft.getMinecraft().player.world.provider.getDimension() == 0))
-			{	
-				Minecraft mc = Minecraft.getMinecraft();
-				
-				if(mc.currentScreen == null)
-				{
-					System.out.println("[BiGX] GuiChapter opens [" + GuiChapter.getChapterNumber() + "]");
-					
-					if(GuiChapter.getChapterNumber() < 3)
-					{
-						
-					}
-					
-					if(GuiChapter.isFlagProceedToNextChapter())
-						mc.displayGuiScreen(new GuiChapter(mc, GuiChapter.getChapterNumber(),true));
-					else
-						mc.displayGuiScreen(new GuiChapter(mc, GuiChapter.getChapterNumber(),false));
-					
-					flagOpenChapterGui = false;
-				}
-			}
-			//TODO
-			if(BigxClientContext.getIsGameSaveRead() && flagChapterCorrectionFromLoading)
-			{
-				if(Minecraft.getMinecraft().player.world.provider.getDimension() == 0) {
-					EntityPlayerSP p = Minecraft.getMinecraft().player;
-					
-					if( (!GuiChapter.isTodayWorkoutDone()) && (GuiChapter.getChapterNumber() > 3) ) {
-						System.out.println("Chasing Seq 1 dim["+p.dimension+"]");
-						p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-						// TODO (99, 45, 179), new Vec3d(120, 100, 192)
-						if(!( (p.posX >= 99) && (p.posX <=120) &&
-								(p.posY >= 45) && (p.posY <= 100) &&
-								(p.posZ >= 179) && (p.posZ <=192)))
-						{
-							p.sendChatMessage("/tpx 0 107 72 185");
-						}
-					}
-					else if (GuiChapter.getChapterNumber() < 3) {
-						p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-					} else if (GuiChapter.getChapterNumber() < 4) {
-						p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-					} else {
-						p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
-						p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-					}
-					
-					if(GuiChapter.getChapterNumber() < 3)
-					{
-						if(!( (p.posX >= 86) && (p.posX <=103) &&
-								(p.posY >= 45) && (p.posY <= 100) &&
-								(p.posZ >= 235) && (p.posZ <=250)))
-						{
-							QuestTeleporter.teleport(p, 0, 95, 72, 240);
-						}
-					}
-					
-					flagChapterCorrectionFromLoading = false;
-				}
-				else {
-					EntityPlayerSP p = Minecraft.getMinecraft().player;
-					
-					if(p.dimension != 100)
-					{
-//						System.out.println("Chasing Seq 2 dim["+p.dimension+"]");
-						if( (!GuiChapter.isTodayWorkoutDone()) && (GuiChapter.getChapterNumber() > 3) ){
-							p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-							p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-							p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-							p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-							p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-							p.sendChatMessage("/tpx 0 107 72 185");
-						}
-					}
-				}
-			}
-			
-			if(GuiMonsterAppears.isGuiMonsterAppearsOpened)
-			{
-				GuiMonsterAppears.isGuiMonsterAppearsOpened = false;
-				GuiMonsterAppears.isGuiMonsterAppearsClosed = true;
-			}
-			
-			if(CommonEventHandler.flagOpenMonsterEncounter)
-			{
-				System.out.println("[BigX] GuiMonsterAppears open triggered");
 
-				// Monster Encounter Sound Play
-				String chosenSong = "minebike:monsterencounter";
-				SoundEvent se = new SoundEvent(new ResourceLocation(chosenSong));
-				Minecraft.getMinecraft().player.playSound(se, 1.5f, 1.0f);
-				
-				CommonEventHandler.flagOpenMonsterEncounter = false;
-				
-				Minecraft mc = Minecraft.getMinecraft();
-				
-				if(mc.currentScreen == null)
-					mc.displayGuiScreen(new GuiMonsterAppears(BiGX.instance().clientContext, mc));
-			}
-			
-			QuestManager playerQuestManager = context.getQuestManager();
-			
-			if (playerQuestManager != null && playerQuestManager.getActiveQuestId() != "NONE") {
-				try {
-					if (playerQuestManager.CheckActiveQuestCompleted()) {
-						// QUEST DONE!
-						if (playerQuestManager.getActiveQuestRewards() != null)
-							for (ItemStack i : playerQuestManager.getActiveQuestRewards())
-								playerQuestManager.getPlayer().inventory.addItemStackToInventory(i);
-						playerQuestManager.getPlayer().addExperience(playerQuestManager.getActiveQuestRewardXP());
-						playerQuestManager.setActiveQuest(Quest.QUEST_ID_STRING_NONE);
-					}
-				} catch (QuestException e) {
-					e.printStackTrace();
-				}
-			}
+
+
 		
 			/**
 			 * Animation for GuiStats bike mode
@@ -607,6 +385,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			/*
 			 * CHARACTER MOVEMENT LOGIC
 			 */
+			// NOTE: Bike speed logic
 			{
 				float moveSpeed = context.getSpeed()/4;
 				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
@@ -656,116 +435,23 @@ public class ClientEventHandler implements IPedalingComboEvent {
 
 				sendGaugeGameTag(pedalingCombo.getGaugePercentage());
 			}
-
-			hungerTickCount++;
-			
-			if(hungerTickCount == hungerTickCountMax)
-			{
-				hungerTickCount = 0;
-				
-				Minecraft.getMinecraft().player.sendChatMessage("/effect @p 23 2 255");				
-			}
-
-			
+//			NOTE: the following logic set the hunger bar
+//			hungerTickCount++;
+//
+//			if(hungerTickCount == hungerTickCountMax)
+//			{
+//				hungerTickCount = 0;
+//
+//				Minecraft.getMinecraft().player.sendChatMessage("/effect @p 23 2 255");
+//			}
+//
+//
 			/**
 			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
 			 */
 			
 			// Detect if there is area changes where the player is in
-			Area tempCurrentArea = ClientAreaEvent.detectAreaChange(p);
-			
-			if(ClientAreaEvent.isAreaChange())
-			{
-				ClientAreaEvent.unsetAreaChangeFlag();
-				
-				if(ClientAreaEvent.previousArea != null){
-					if (ClientAreaEvent.previousArea.type == Area.AreaTypeEnum.ROOM){
-						// (OLD) Tutorial
-//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeFireRoom)
-//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.fireRoomEntrance);
-//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeWaterRoom)
-//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.waterRoomEntrance);
-//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeEarthRoom)
-//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.earthRoomEntrance);
-//						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeAirRoom)
-//							GuiMessageWindow.showMessage(BiGXTextBoxDialogue.airRoomEntrance);
-						// New Tutorial
-						if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalForward)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalForward, GuiMessageWindow.PEDAL_FORWARD_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsPedalBackward)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsPedalBackward, GuiMessageWindow.PEDAL_BACKWARD_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsMine)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsMine, GuiMessageWindow.MINE_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsBuild)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsBuild, GuiMessageWindow.BUILD_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsJump)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsJump, GuiMessageWindow.JUMP_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsAttackNPC)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsAttackNPC, GuiMessageWindow.HIT_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsDashJump)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsDashJump, GuiMessageWindow.DASH_JUMP_TEXTURE, false);
-						else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.instructionsExitTutorial)
-							GuiMessageWindow.showMessageAndImage(BiGXTextBoxDialogue.instructionsExitTutorial, GuiMessageWindow.TALK_TEXTURE, false);
-						else
-							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
-					}
-					else{
-						if (ClientAreaEvent.previousArea.type == AreaTypeEnum.EVENT)
-							GuiMessageWindow.showMessage(ClientAreaEvent.previousArea.name);
-					}
-					
-					String chosenSong = "";
-					if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeMarket) {
-						chosenSong = "minebike:bg_faire";
-					}
-					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeVillage) {
-						chosenSong = "minebike:bg_camelot";
-					}
-					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeHome) {
-						chosenSong = "minebike:bg_camelot";
-					}
-					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placePoliceDepartment) {
-						chosenSong = "minebike:bg_avalon";
-					}
-					else if (ClientAreaEvent.previousArea.name == BiGXTextBoxDialogue.placeContinentPangea) {
-						chosenSong = "minebike:bg_ladylake";
-					}
-					
-					if (p.dimension == WorldProviderEmpty.dimID || p.dimension == WorldProviderDungeon.dimID) {
-						chosenSong = "minebike:bg_rama";
-					}
-					else if (p.dimension == WorldProviderFlats.dimID) {
-						previousSong = "";
-						chosenSong = "";
-					}
-					
-					if (chosenSong != "" && chosenSong != previousSong) {
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_faire stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_camelot stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_avalon stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_ladylake stop");
-//						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb minebike:bg_rama stop");
-						
-						stopPreviousTracks(chosenSong);
-
-						addTheCurrenTrack(chosenSong);
-						addTheCurrenTrack(previousSong);
-						
-						previousSong = chosenSong;
-						
-						Minecraft.getMinecraft().player.sendChatMessage("/playsoundb " + chosenSong + " loop @p 0.5f");
-					}
-					else
-					{
-						System.out.println("[BiGX] chsone[" + chosenSong + "] prevs[" + previousSong + "]");
-					}
-						
-					
-					ClientAreaEvent.sendLocationGameTag(ClientAreaEvent.previousArea.getId());
-				}
-				else
-					GuiMessageWindow.showMessage("Out of Continent Pangea...");
-			}
+			// NOTE: DELETED THE PLAYER MUSIC CODE
 			
 			if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
 			else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
@@ -806,6 +492,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 					new_resistance = 1;
 				}
 			}
+
+			// NOTE: Detect resistance change, send over
+			// TODO: this should be a function call for once a new value is set.
 			if (new_resistance!=context.resistance) {
 				System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
 				context.resistance = new_resistance;
@@ -896,18 +585,12 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event) {
-		if (event.getGui() instanceof GuiMainMenu) {
-			GuiMenu gui = new GuiMenu();
-			gui.setContext(context);
-			event.setGui(gui);
-		}
-		
-		if(Minecraft.getMinecraft().currentScreen instanceof GuiMonsterAppears)
-		{
-			System.out.println("[BiGX] onGuiOpen(GuiOpenEvent event)");
-			
-			GuiMonsterAppears.isGuiMonsterAppearsOpened = true;
-		}
+//		if (event.getGui() instanceof GuiMainMenu) {
+//			GuiMenu gui = new GuiMenu();
+//			gui.setContext(context);
+//			event.setGui(gui);
+//		}
+
 	}
 	
 	/**
@@ -917,11 +600,11 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent
 	public void damagePlayerFromPunching(PlayerEvent.BreakSpeed event)
 	{
-		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
-		{
-			event.setNewSpeed((float) (event.getOriginalSpeed() + SkillBoostMining.boostRate));
-//			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
-		}
+//		if(context.getCurrentGameState().getSkillManager().getSkills().get(2).getSkillState() == enumSkillState.EFFECTIVE)
+//		{
+//			event.setNewSpeed((float) (event.getOriginalSpeed() + SkillBoostMining.boostRate));
+////			System.out.println("Mining Boost old["+event.originalSpeed+"] new["+event.newSpeed+"]");
+//		}
 		
 		if(pedalingModeState == 1)
 		{
@@ -939,10 +622,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 		else if(pedalingModeState == 2)
 		{
-			if(PedalingToBuildEventHandler.buildingId.equals(""))
-				return;
-			BlockPos pos = event.getPos();
-			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(pos.getX(), pos.getY()+1, pos.getZ(), 9, PedalingToBuildEventHandler.buildingId);
+//			if(PedalingToBuildEventHandler.buildingId.equals(""))
+//				return;
+//			BlockPos pos = event.getPos();
+//			PedalingToBuildEventHandler.pedalingToBuild = new PedalingToBuild(pos.getX(), pos.getY()+1, pos.getZ(), 9, PedalingToBuildEventHandler.buildingId);
 		}
 	}
 

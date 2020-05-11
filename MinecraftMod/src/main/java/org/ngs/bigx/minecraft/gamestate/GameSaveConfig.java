@@ -1,5 +1,6 @@
 package org.ngs.bigx.minecraft.gamestate;
 
+
 public class GameSaveConfig {
 	private String serveraccount = "";
 	private String serverpassword = "";

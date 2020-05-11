@@ -6,16 +6,13 @@ import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockChest.Type;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.GameRuleChangeEvent;
-import org.ngs.bigx.minecraft.bike.PedalingToBuildEventHandler;
-import org.ngs.bigx.minecraft.block.BlockQuestChest;
-import org.ngs.bigx.minecraft.block.QuestRFMChest;
+
 //import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
+
 import org.ngs.bigx.minecraft.entity.item.EntityTank;
-import org.ngs.bigx.minecraft.entity.item.MineBikeEntityRegistry;
-import org.ngs.bigx.minecraft.entity.item.MysteriousKey;
 import org.ngs.bigx.minecraft.entity.lotom.BikeProperty;
 import org.ngs.bigx.minecraft.entity.lotom.CharacterProperty;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ClientStatHandler;
@@ -23,11 +20,9 @@ import org.ngs.bigx.minecraft.entity.lotom.stat.ISyncedStat;
 import org.ngs.bigx.minecraft.entity.lotom.stat.ServerStatHandler;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatPacket;
 import org.ngs.bigx.minecraft.entity.lotom.stat.StatRegistry;
-import org.ngs.bigx.minecraft.items.MineBikeCustomItems;
+//import org.ngs.bigx.minecraft.items.MineBikeCustomItems;
 import org.ngs.bigx.minecraft.networking.HandleHungerMessageOnServer;
-import org.ngs.bigx.minecraft.quests.QuestEventHandler;
-import org.ngs.bigx.minecraft.quests.QuestManager;
-import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
+//import org.ngs.bigx.minecraft.tileentity.TileEntityQuestChest;
 import org.ngs.bigx.utility.Names;
 
 //import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -81,7 +76,7 @@ import noppes.npcs.CustomItems;
 	    //public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Type.BASIC)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
 
 
-	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
+//	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
 	    
 	    public static CharacterProperty characterProperty;
 	    public static BikeProperty bikeProperty;	
@@ -91,18 +86,18 @@ import noppes.npcs.CustomItems;
 	    
 	    public static MouseHelper disableMouseHelper;
 
-	    public static Item MysteriousKey;
+//	    public static Item MysteriousKey;
 	    
-	    public static ArrayList<Item> customItems = MineBikeCustomItems.createItems();
+//	    public static ArrayList<Item> customItems = MineBikeCustomItems.createItems();
 	    
 	    /*
 	     * Instead of using magic numbers, an enum will differentiate our GUIs when
 	     * calling EntityPlayer.openGui().
 	     */
 	    
-	    public enum GUI_ENUM {
-	    	QUEST_COMPLETE
-	    }
+//	    public enum GUI_ENUM {
+//	    	QUEST_COMPLETE
+//	    }
 	    
 	    @Instance(BiGX.MODID)
 	    public static BiGX modInstance;
@@ -124,7 +119,7 @@ import noppes.npcs.CustomItems;
 //	    	}
 			System.out.println("Register Entities STARTED");
 
-			MineBikeEntityRegistry.RegisterMineBikeEntities();
+//			MineBikeEntityRegistry.RegisterMineBikeEntities();
 			System.out.println("Register Entities DONE");
 	    	instance = this;
 	    	clientContext = new BigxClientContext(this);
@@ -150,15 +145,15 @@ import noppes.npcs.CustomItems;
 	    public void init(FMLInitializationEvent e) {
 	    	proxy.init(e);
 
-	    	QuestEventHandler questEventHandler = new QuestEventHandler();
-			FMLCommonHandler.instance().bus().register(questEventHandler);
-	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
+//	    	QuestEventHandler questEventHandler = new QuestEventHandler();
+//			FMLCommonHandler.instance().bus().register(questEventHandler);
+//	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
 	    	
-	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
-			FMLCommonHandler.instance().bus().register(pedalingToBuild);
-	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
+//	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
+//			FMLCommonHandler.instance().bus().register(pedalingToBuild);
+//	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
 	    	
-	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
+//	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
 	    	
 	    	//GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");
 	    	
@@ -174,6 +169,8 @@ import noppes.npcs.CustomItems;
 	    	System.out.println("[BiGX] Character Property Init Done");
 	    	
 	    	bikeProperty = new BikeProperty("currentBikeLoTomProperty");
+
+	    	// TODO: figure out why the bike is an EntityTank????????
 	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
 	    	System.out.println("[BiGX] Bike Property Init Done");
 	    	

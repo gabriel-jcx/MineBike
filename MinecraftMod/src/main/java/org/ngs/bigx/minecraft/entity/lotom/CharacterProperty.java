@@ -35,8 +35,8 @@ public class CharacterProperty extends EntityStat implements ISyncedStat {
 	public void initProperty()
 	{
 		this.weight = 60;
-		this.speedRate = 0.0f;
-		this.speedDecreaseRate = 0.05f;
+		this.speedRate = 0.5f;
+		this.speedDecreaseRate = 0.00f;
 		this.strength = 10;
 		this.skill = 10;
 		this.luck = 10;

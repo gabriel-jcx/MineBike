@@ -2,20 +2,19 @@ package org.ngs.bigx.minecraft.gamestate;
 
 import java.util.ArrayList;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.skills.SkillManager;
-import org.ngs.bigx.minecraft.gamestate.levelup.LevelSystem;
 
+@SideOnly(Side.CLIENT)
 public class GameSave {
 	private long timestamp = 0;
 	
 	// PLAYER STATE
-	private LevelSystem levelSystem = null;
+
 	private ArrayList<String> itemOnItemStack;		// Items by item id
-	
-	// QUEST STATE
-	private GameSaveQuestProgress gameStateQuestProgress = null;
-	
+
 	// LOCATION (SAVED LOCATION IN GAME)
 	private int posX;
 	private int posY;
@@ -30,9 +29,7 @@ public class GameSave {
 	
 	public GameSave()
 	{
-		this.levelSystem = new LevelSystem();
 		this.itemOnItemStack = new ArrayList<String>();
-		this.gameStateQuestProgress = new GameSaveQuestProgress();
 		this.posDim = 0;
 		this.posX = 0;
 		this.posY = 0;
@@ -57,29 +54,12 @@ public class GameSave {
 		this.timestamp = timestamp;
 	}
 
-	public LevelSystem getLevelSystem() {
-		return levelSystem;
-	}
-
-	public void setLevelSystem(LevelSystem levelSystem) {
-		this.levelSystem = levelSystem;
-	}
-
 	public ArrayList<String> getItemOnItemStack() {
 		return itemOnItemStack;
 	}
 
 	public void setItemOnItemStack(ArrayList<String> itemOnItemStack) {
 		this.itemOnItemStack = itemOnItemStack;
-	}
-
-	public GameSaveQuestProgress getGameStateQuestProgress() {
-		return gameStateQuestProgress;
-	}
-
-	public void setGameStateQuestProgress(
-			GameSaveQuestProgress gameStateQuestProgress) {
-		this.gameStateQuestProgress = gameStateQuestProgress;
 	}
 
 	public int getPosX() {

@@ -39,7 +39,7 @@ public class SkillEventHandler {
 			tickCount = 0;
 			
 			// Update the Skill Time Variables
-			BigxClientContext.getCurrentGameState().getSkillManager().updateSkillTime();
+//			BigxClientContext.getCurrentGameState().getSkillManager().updateSkillTime();
 		}
 		else {
 //			tickCount = 0;
