@@ -99,6 +99,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	
 	public static boolean flagOpenChapterGui = false;
 	public static boolean flagChapterCorrectionFromLoading = false;
+
+	public static boolean flagOverrideResistance = false;
 	
 	private static ClientEventHandler handler;
 	private String previousSong;
@@ -482,35 +484,52 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			if (b==Blocks.AIR) {
 				b = p.getEntityWorld().getBlockState(new BlockPos((int) p.posX, (int) p.posY-3,(int) p.posZ)).getBlock();
 			}
-	
-			float new_resistance = context.resistance;
+
+			// create a temporary resistance value
+			float newResistance = context.resistance;
+
+			// enter if a block was successfully read
 			if (b!=null) {
+				// if the read block has a resistance value attached to it, get it
 				if (context.resistances.containsKey(b)) {
-					new_resistance = context.resistances.get(b).getResistance();
+					newResistance = context.resistances.get(b).getResistance();
 				}
+				// the read block was not attached to a resistance. set to default resistance
 				else{
-					new_resistance = 1;
+					newResistance = 1;
 				}
 			}
 
-			// NOTE: Detect resistance change, send over
-			// TODO: this should be a function call for once a new value is set.
-			if (new_resistance!=context.resistance) {
-				System.out.println("New resistance old[" + new_resistance + "] new[" + context.resistance + "]");
-				context.resistance = new_resistance;
-				ByteBuffer buf = ByteBuffer.allocate(5);
-				buf.put((byte) 0x00);
-				buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
-				buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
-				BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100, 
-						org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
-				BiGXPacketHandler.sendPacket(context.bigxclient, packet);
-				
-				sendResistanceGameTag((int)context.resistance);
-			}
+			// continue updating resistance by player block as long as the override flag is false
+			if(!flagOverrideResistance)
+				updateResistance(newResistance);
+
 		}
 	}
-	
+
+	public void updateResistance(float inResistance)
+	{
+		// if the incoming resistance value is different than the current resistance, update the current resistance
+		if (inResistance!=context.resistance) {
+			System.out.println("Chaning Resistance -- Old[" + context.resistance + "] -- new[" + inResistance + "]");
+			context.resistance = inResistance;
+			ByteBuffer buf = ByteBuffer.allocate(5);
+			buf.put((byte) 0x00);
+			buf.put((byte) ((byte) ((int)context.resistance) & 0xFF));
+			buf.put((byte) ((byte) (((int)context.resistance) & 0xFF00)>>8));
+			BiGXNetPacket packet = new BiGXNetPacket(org.ngs.bigx.dictionary.protocol.Specification.Command.REQ_SEND_DATA, 0x0100,
+					org.ngs.bigx.dictionary.protocol.Specification.DataType.RESISTANCE, buf.array());
+			BiGXPacketHandler.sendPacket(context.bigxclient, packet);
+
+			sendResistanceGameTag((int)context.resistance);
+		}
+	}
+
+	public void changeResistanceFlag(boolean newOverrideFlag)
+	{
+		flagOverrideResistance = newOverrideFlag;
+	}
+
 	private void addTheCurrenTrack(String songToBeAdded) {
 		synchronized (previousSongs) {
 			previousSongs.add(songToBeAdded);	
