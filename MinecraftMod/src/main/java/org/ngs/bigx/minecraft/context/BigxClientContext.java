@@ -130,7 +130,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 //	public static String ipAddress = "128.200.115.181";
 //	public static String ipAddress = "192.168.0.53";
 //	public static String ipAddress = "localhost";
-	public static String ipAddress = "192.168.0.161";
+//	public static String ipAddress = "192.168.0.161";
+	public static String ipAddress = "192.168.0.24";
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
@@ -192,6 +193,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 			
 			@Override
 			public void onMessageReceive(BiGXNetPacket packet) {
+				//System.out.println("Received a packet from Middleware!!!");
 				int index = 0;
 				
 				if(packet.commandId == Command.TX_GAME_DESIGN)
@@ -292,6 +294,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 				}
 				else
 				{
+					//System.out.println("a packet fall into this else statment");
 					BiGXPacketHandler.Handle(bigxclient, packet);
 				}
 			}
@@ -373,8 +376,8 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		
 		GameSaveConfig gameSaveConfig = GameSaveManager.readGameSaveServerConfigFile();
 
-		GameSaveManager.serveraccount = gameSaveConfig.getServeraccount();
-		GameSaveManager.serverpassword = gameSaveConfig.getServerpassword();
+//		GameSaveManager.serveraccount = gameSaveConfig.getServeraccount();
+//		GameSaveManager.serverpassword = gameSaveConfig.getServerpassword();
 		
 		this.connectionStateManager = new BiGXConnectionStateManagerClass();
 		
@@ -491,7 +494,7 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		synchronized(MiddlewareIPReadMutex)
 		{
 			isMiddlwareIPFileAvailable = false;
-			isMiddlwareIPAvailable = false;
+			isMiddlwareIPAvailable = true;
 			
 			// CHECK the IP Address FILE
 			isMiddlwareIPFileAvailable = checkIPFile();
@@ -523,14 +526,16 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 					isMiddlwareIPAvailable = true;
 				}
 			}
-			else {
-				return;
-			}
+//			else {
+//				return;
+//			}
 			
 			// SUCCESS THEN CONNECT
 			if(isMiddlwareIPAvailable) {
+				System.out.println();
 				try {
 					connectBiGX();
+					System.out.println();
 					isBiGXConnected = true;
 				} catch (SocketException e) {
 					e.printStackTrace();

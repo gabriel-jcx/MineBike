@@ -31,12 +31,16 @@ public class  BiGXPacketHandler {
 		BigxClientContext context = (BigxClientContext) BiGX.instance().clientContext;
 		
 //		System.out.println("Receiving Data");
-
-		
+		System.out.println("CommandID = "  + packet.commandId);
+		if(packet.commandId == 32){
+			System.out.println(" GOT A HEART RATE PACKET FROM MIDDLEWARE SUCCESSFULLY");
+		}
 		switch (packet.deviceEvent) {
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.HEART:
 				context.heartrate = buf.getInt();
-			break;
+				System.out.println("setting the Heartrate to " + context.heartrate);
+
+				break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.MOVE_FORWARDBACKWARD:
 				if (Minecraft.getMinecraft().player!=null) {
 					change = packet.data[1] | (packet.data[2] << 8);

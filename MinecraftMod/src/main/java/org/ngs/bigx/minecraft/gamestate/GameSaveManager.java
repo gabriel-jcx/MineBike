@@ -34,8 +34,9 @@ public class GameSaveManager {
 
 	private Object lockGameSave = new Object();
 	private BigxClientContext bigxContext;
-	
+	//GamesaveConfigFilename
 	public static final String gameSaveConfigRootFolderName = System.getProperty("user.home") + "\\ixercise";
+
 	public static final String gameSaveConfigFolderName = gameSaveConfigRootFolderName + "\\gameconfig";
 	public static final String gameSaveConfigFileName = gameSaveConfigFolderName + "\\gamesave.conf";
 	

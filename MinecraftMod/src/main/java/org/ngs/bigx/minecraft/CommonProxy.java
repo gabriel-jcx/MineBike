@@ -1,7 +1,6 @@
 package org.ngs.bigx.minecraft;
 
 import net.minecraft.world.DimensionType;
-import org.ngs.bigx.minecraft.networking.BiGXGuiHandler;
 
 
 import net.minecraftforge.fml.common.FMLCommonHandler;

@@ -510,7 +510,6 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			}
 		}
 	}
-	
 	private void addTheCurrenTrack(String songToBeAdded) {
 		synchronized (previousSongs) {
 			previousSongs.add(songToBeAdded);	
