@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.GameRuleChangeEvent;
 
 //import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
+import org.ngs.bigx.minecraft.client.AI.OuterAI;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
 import org.ngs.bigx.minecraft.context.BigxServerContext;
@@ -67,6 +68,9 @@ import noppes.npcs.CustomItems;
 	    public static final String TEXTURE_PREFIX = "minebike";
 	    
 	    private static BiGX instance;
+
+	    public static OuterAI mainAI= new OuterAI();
+
 
 	    // TODO: need to figure out which function to set the Name of the QuestFRMCheck
 		// TODO: figure out what this freaking 538 means.....

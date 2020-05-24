@@ -14,7 +14,7 @@ public class QuestHeartRate  {
     //if the target_time_left==0, the goal has been reached
     private float target_time_left;
     //Average heart rate
-    protected Integer avg=0;
+//    protected Integer avg=0;
     //Prescription heart rate min & max
     protected Integer target_min=0;
     protected Integer target_max=0;
@@ -33,22 +33,30 @@ public class QuestHeartRate  {
     BiGXPatientPrescription p= new BiGXPatientPrescription();
     public QuestHeartRate() {
 
-
     }
     //Only use this for outer AI
     public void setCurrent_heart_rate( Integer load){
         current_heart_rate=load;
         total_heart_rate+=current_heart_rate;
         num_heart_rate+=1;
+        check_remaining();
 
     }
-    public Integer getAvg() {
-
-        return avg;
-    }
+//    public Integer getAvg() {
+//
+//        return avg;
+//    }
     protected Integer calc_avg(){
-
         return (int)total_heart_rate/current_heart_rate;
+    }
+    protected  boolean reach_target(){
+        Integer avg= calc_avg();
+        if( avg<=target_max&&avg>=target_min){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     //if remaining the heart rate for 5 count start to decrease the heart rate time
     protected void check_remaining(){
@@ -62,10 +70,14 @@ public class QuestHeartRate  {
         if (check_fail>=3){
             check_remain=0;
         }
+        decrease_target_time();
     }
     protected void decrease_target_time(){
         if (check_remain>=5 && target_time_left>=1){
             target_time_left -=1;
+        }
+        if (target_time_left==0){
+            System.out.println("GOAL REACHED!");
         }
     }
 
