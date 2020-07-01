@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
+//import org.ngs.bigx.minecraft.client.AI.OuterAI;
 import org.ngs.bigx.minecraft.client.AI.OuterAI;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;

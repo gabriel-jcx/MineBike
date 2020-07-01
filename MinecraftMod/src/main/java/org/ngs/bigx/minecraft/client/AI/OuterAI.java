@@ -1,6 +1,6 @@
 package org.ngs.bigx.minecraft.client.AI;
 
-import net.minecraft.server.v1_15_R1.Tuple;
+//import net.minecraft.server.v1_15_R1.Tuple;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -78,6 +78,8 @@ public class OuterAI extends QuestHeartRate{
         }
 
     }
+    
+
     //TODO: if the kids not in mini-game, and avg heart rate does not reach the goal for __ mins, pop up a quest
     public void pop_up_quest(){
         if(quest_list.size()==0){
