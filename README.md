@@ -6,14 +6,22 @@ This is a forked repo of the MineBike Project which aims to upgrade to forge-1.1
   2. Run the following command
      ```./gradlew setupDecompWorkspace --refresh-dependencies```
   
-  3. For Eclipse workspace setup:
+### Setting up the environment in Eclipse
+     For Eclipse workspace setup:
      ```
      ./gradlew eclipse
      ```
+
+### Setting up the environment in IntelliJ     
      Alternatively, if you wish to use IntelliJ:
      ```
-     ./gradlew genIntellijRuns idea
+     ./gradlew genIntellijRuns
      ```
+     then run:
+     ```
+     ./gradlew idea
+     ```
+     The above command would generate a .ipr intelliJ project file for you to import, you 
   
   4. Then correctly import the project into your IDE. If you import the project using Inteillij, you can choose the ```build.gradle``` file, which would then setup your Module in the MinecraftMod.main.
   
