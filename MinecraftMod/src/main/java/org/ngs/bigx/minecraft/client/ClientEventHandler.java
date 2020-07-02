@@ -117,7 +117,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	}
 
 	// set enable bike to true if using bike
-	boolean enableLock = false, enableBike = false;
+	boolean enableLock = false, enableBike = true;
 	public static int pedalingModeState = 0; // 0: moving, 1:mining, 2:building
 	public static PedalingCombo pedalingCombo = new PedalingCombo();
 	
