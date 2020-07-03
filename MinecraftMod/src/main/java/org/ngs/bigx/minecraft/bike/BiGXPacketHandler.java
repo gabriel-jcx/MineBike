@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConstants;
+//import org.ngs.bigx.minecraft.client.AI.OuterAI;
+import org.ngs.bigx.minecraft.client.AI.OuterAI;
 import org.ngs.bigx.minecraft.client.ClientEventHandler;
 import org.ngs.bigx.minecraft.client.ClientProxy;
 //import org.ngs.bigx.minecraft.client.gui.GuiAlchemy;
@@ -20,6 +22,8 @@ import org.ngs.bigx.net.gameplugin.exception.BiGXInternalGamePluginExcpetion;
 import org.ngs.bigx.net.gameplugin.exception.BiGXNetException;
 
 import net.minecraft.client.Minecraft;
+
+import static org.ngs.bigx.minecraft.BiGX.mainAI;
 
 public class  BiGXPacketHandler {
 	
@@ -39,6 +43,21 @@ public class  BiGXPacketHandler {
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.HEART:
 				context.heartrate = buf.getInt();
 				System.out.println("setting the Heartrate to " + context.heartrate);
+				//Load the heart rate
+				if(mainAI.questStatus== OuterAI.QuestStatus.NONE)
+				{
+					mainAI.setCurrent_heart_rate(context.heartrate);
+				}
+				else if(mainAI.questStatus== OuterAI.QuestStatus.RUNNING)
+				{
+					mainAI.running_game.setCurrent_heart_rate(context.heartrate);
+				}
+				else{
+					System.out.println("Error: Invalid questStatus");
+				}
+
+
+
 
 				break;
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.MOVE_FORWARDBACKWARD:

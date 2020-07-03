@@ -101,6 +101,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static boolean flagChapterCorrectionFromLoading = false;
 
 	public static boolean flagOverrideResistance = false;
+	public float overrideResistanceValue = 0;
 	
 	private static ClientEventHandler handler;
 	private String previousSong;
@@ -114,7 +115,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	public static ClientEventHandler getHandler() {
 		return handler;
 	}
-	
+
+	// set enable bike to true if using bike
 	boolean enableLock = false, enableBike = true;
 	public static int pedalingModeState = 0; // 0: moving, 1:mining, 2:building
 	public static PedalingCombo pedalingCombo = new PedalingCombo();
@@ -124,6 +126,16 @@ public class ClientEventHandler implements IPedalingComboEvent {
 
 	private long previousLocationLogTimeStamp = System.currentTimeMillis();
 	private static Object previousLocationLogTimeStampLock = new Object();
+
+	public static double playerWorldHeight;
+
+	// elevation resistance data
+	public long timer_previous = System.currentTimeMillis();
+	public int upChange = 0;
+	public int downChange = 0;
+	public int previousElevationType = 0;
+	public float elevationResistance = 0;
+
 	
 	@SubscribeEvent
 	public void onLivingJump(LivingJumpEvent event) {
@@ -152,8 +164,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 
 		if (keyBindingToggleBike.isPressed()) {
-			enableBike = !enableBike;
-			System.out.println("Toggle Bike Movement: " + enableBike);
+			//enableBike = !enableBike;
+			//System.out.println("Toggle Bike Movement: " + enableBike);
 		}
 //		if(keyBindingToggleBuildingGui.isPressed())
 //		{
@@ -197,13 +209,13 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(mc.player != null)
 			{
-				EntityPlayerSP player = mc.player;
+				EntityPlayerSP entPlayerSP = mc.player;
 
-				player.inventory.currentItem --;
+				entPlayerSP.inventory.currentItem --;
 				
-				if(player.inventory.currentItem < 0)
+				if(entPlayerSP.inventory.currentItem < 0)
 				{
-					player.inventory.currentItem = 8;
+					entPlayerSP.inventory.currentItem = 8;
 				}
 			}
 		}
@@ -212,13 +224,13 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			
 			if(mc.player != null)
 			{
-				EntityPlayerSP player = mc.player;
+				EntityPlayerSP entPlayerSP = mc.player;
 				
-				player.inventory.currentItem ++;
+				entPlayerSP.inventory.currentItem ++;
 				
-				if(player.inventory.currentItem > 8)
+				if(entPlayerSP.inventory.currentItem > 8)
 				{
-					player.inventory.currentItem = 0;
+					entPlayerSP.inventory.currentItem = 0;
 				}
 			}		
 		}
@@ -230,28 +242,28 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			// TODO fill in JSON boundary int when it's implemented
 			int bounds = 0;
 			
-			EntityPlayerSP p = (EntityPlayerSP)event.getEntity();
+			EntityPlayerSP entPlayerSP = (EntityPlayerSP)event.getEntity();
 			
-			if(p.world.provider.getDimension() == 0)
+			if(entPlayerSP.world.provider.getDimension() == 0)
 			{
 //				if (GuiChapter.getChapterNumber() < 3) {
-//					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
 //				} else if (GuiChapter.getChapterNumber() < 4) {
-//					p.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
 //				} else {
-//					p.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
-//					p.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
+//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
 //				}
 
 				flagChapterCorrectionFromLoading = true;
@@ -260,10 +272,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		
 //		if(event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer)
 //		{
-//			EntityPlayer player = (EntityPlayer) event.getEntity();
+//			EntityPlayer entPlayer = (EntityPlayer) event.getEntity();
 //			Minecraft mc = Minecraft.getMinecraft();
 //
-//			if( (player.world.provider.getDimension() == 105) )
+//			if( (entPlayer.world.provider.getDimension() == 105) )
 //			{
 //				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
 //				flagOpenChapterGui = true;
@@ -310,10 +322,10 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			DamageSource attackSource = event.getSource();
 			if (attackSource.getTrueSource() != null)
 			{
-				EntityPlayer player = (EntityPlayer) attackSource.getTrueSource();
-				if(player.getHeldItem(EnumHand.MAIN_HAND) != null)
+				EntityPlayer entPlayer = (EntityPlayer) attackSource.getTrueSource();
+				if(entPlayer.getHeldItem(EnumHand.MAIN_HAND) != null)
 				{
-					ItemStack itemstack = player.getHeldItem(EnumHand.MAIN_HAND);
+					ItemStack itemstack = entPlayer.getHeldItem(EnumHand.MAIN_HAND);
 					if (itemstack.getDisplayName().equals("Baton"))
 					{
 						NBTTagCompound tag = itemstack.getTagCompound();
@@ -324,194 +336,322 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			}
 		}
 	}
-	
-	//Called whenever the client ticks
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onClientTick(TickEvent.ClientTickEvent event)
 	{
-		if ((Minecraft.getMinecraft().player!=null)
-				&& (event.phase==TickEvent.Phase.END)) {
+		if ((Minecraft.getMinecraft().player != null)
+				&& (event.phase == TickEvent.Phase.END)) {
 
+			// create the player entity representing the found player
+			EntityPlayer entPlayer = Minecraft.getMinecraft().player;
 
+			// animation for GuiStats bike mode
+			animateBikeGuiStats();
 
-		
-			/**
-			 * Animation for GuiStats bike mode
-			 */
-			
-			if (animTickSwitch < animTickSwitchLength) {
-				animTickSwitch++;
-			}
-			if (animTickFade < animTickFadeLength + animTickFadeTime) {
-				animTickFade++;
-			}
-			if (animTickChasingFade < animTickChasingFadeLength + animTickFadeTime) {
-				animTickChasingFade++;
-			}
-			
-			/**
-			 * END OF Animation for GuiStats bike mode
-			 */
-			
-			// Handling Player Skills
-			EntityPlayer p = Minecraft.getMinecraft().player;
-			
-			if (p.world.rainingStrength > 0.0f) {
-				p.world.setRainStrength(0.0f);
-			}
-			
+			// adjust player stats based on weather
+			adjustPlayerWeatherStats(entPlayer);
+
 			// Degrade the current player's speed
-	//					BiGX.characterProperty.decreaseSpeedByTime();
-	//					p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
-			
-			//Dealing with locking keys
-			if (enableLock) {
-				p.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0D);
-				//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
-				p.jumpMovementFactor = 0f;
-				p.capabilities.setPlayerWalkSpeed(0f);
-				p.capabilities.setFlySpeed(0f);
-				p.setJumping(false);
-				p.motionX = 0; p.motionZ = 0;
-				p.setSprinting(false);
-				p.rotationPitch = 0f;
-				p.rotationYaw = 0f;
-			} else {
-				p.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(PLAYER_DEFAULTSPEED);
-				Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
-				p.capabilities.setFlySpeed(0.05F);
-				p.capabilities.setPlayerWalkSpeed(0.1F);
-			}
-			
-			/*
+			//	BiGX.characterProperty.decreaseSpeedByTime();
+			//	p.capabilities.setPlayerWalkSpeed(BiGX.characterProperty.getSpeedRate());
+
+			// handle the locking keys
+			handleLockingKeys(entPlayer);
+
+			/**
 			 * CHARACTER MOVEMENT LOGIC
 			 */
-			// NOTE: Bike speed logic
-			{
-				float moveSpeed = context.getSpeed()/4;
-				double xt = Math.cos(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				double zt = Math.sin(Math.toRadians(p.getRotationYawHead()+90)) * moveSpeed;
-				if (enableBike)
-					p.setVelocity(xt, p.motionY, zt);
-			}  ////// END OF "CHARACTER MOVEMENT LOGIC"
-			
-			/***
-			 * PEDALING MODE: LEVEL/GAUGE EVENTS
-			 */
-			if(levelUpSoundPlayFlag)
-			{
-				levelUpSoundPlayFlag = false;
-				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalinglevelup"));
-				p.playSound(se, 1.0f, 1.0f);
-				//p.world.playSoundAtEntity(p, "minebike:pedalinglevelup", 1.0f, 1.0f);
-			}
+			// check if the bike is enabled. if so, adjust the player's speed according to set bike values
+			if(enableBike)
+				adjustBikeSpeed(entPlayer);
 
-			if(levelDownSoundPlayFlag)
-			{
-				levelDownSoundPlayFlag = false;
-				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalingleveldown"));
-				p.playSound(se,1.0f,1.0f);
-				//p.world.playSound(p,p.getPosition(),se,SoundCategory.,1.0f,1.0f );
-				//p.world.playSoundAtEntity(p, "minebike:pedalingleveldown", 1.0f, 1.0f);
-			}
+			// handle Pedaling mode: Level/Gauge Events
+			adjustPedalingAttributes(entPlayer);
 
-			if(gaugeUpSoundPlayFlag)
-			{
-				gaugeUpSoundPlayFlag = false;
-				SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalinggaugeup"));
-				p.playSound(se, 1.0f, 1.0f);
-				//p.world.playSoundAtEntity(p, "minebike:pedalinggaugeup", 1.0f, 1.0f);
-			}
-			
-			/**
-			 * Pedaling Combo
-			 */
-			pedalingCombo.decreaseGauge();
-			
-			gaugeTaggingTickCount++;
-			
-			if(gaugeTaggingTickCount == gaugeTaggingTickCountMax)
-			{
-				gaugeTaggingTickCount = 0;
-
-				sendGaugeGameTag(pedalingCombo.getGaugePercentage());
-			}
-//			NOTE: the following logic set the hunger bar
-//			hungerTickCount++;
-//
-//			if(hungerTickCount == hungerTickCountMax)
-//			{
-//				hungerTickCount = 0;
-//
-//				Minecraft.getMinecraft().player.sendChatMessage("/effect @p 23 2 255");
-//			}
-//
-//
-			/**
-			 * END OF "PEDALING MODE: LEVEL/GAUGE EVENTS"
-			 */
-			
 			// Detect if there is area changes where the player is in
 			// NOTE: DELETED THE PLAYER MUSIC CODE
-			
-			if( (p.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
-			else if( (p.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
-			else {
-				p.rotationPitch += context.getRotationY();
+			adjustRotation(entPlayer);
+			/**
+			 * END OF CHARACTER MOVEMENT LOGIC
+			 */
+
+			// adjustHungerBar();
+
+			/**
+			 * PEDAL RESISTANCE LOGIC
+			 */
+			// set the pedaling resistance
+			// this variable will be used as the argument for the resistance change
+			float resistance;
+
+			// if we are not overriding the resistance elsewhere in MineBike, use the block/incline resistance
+			if(!flagOverrideResistance) {
+				resistance = getResistance(entPlayer);
 			}
-			context.setRotationY(0);
-			
-			//* EYE TRACKING *//
-			//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
-			if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
-				p.rotationYaw += context.getRotationX() / 8;
-			}
-			else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
-				p.rotationYaw += context.getRotationX() / 4;
-			}
-			else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
-				p.rotationYaw += context.getRotationX() / 2;
-			}
-			else {
-				p.rotationYaw += context.getRotationX();
-			}
-			
-			context.setRotationX(0);
-			
-			// Obtain the block under the main character and set the resistance
-			Block b = p.getEntityWorld().getBlockState(new BlockPos((int) p.posX,(int) p.posY-2,(int) p.posZ)).getBlock();
-			if (b==Blocks.AIR) {
-				b = p.getEntityWorld().getBlockState(new BlockPos((int) p.posX, (int) p.posY-3,(int) p.posZ)).getBlock();
+			// else, get the overriden resistance value set by the public static function "setOverrideResistanceValue"
+			else
+			{
+				resistance = getOverrideResistance();
 			}
 
-			// create a temporary resistance value
-			float newResistance = context.resistance;
+			updateResistance(resistance);
+			/**
+			 * END OF PEDAL RESISTANCE LOGIC
+			 */
+		}
+	}
 
-			// enter if a block was successfully read
-			if (b!=null) {
-				// if the read block has a resistance value attached to it, get it
-				if (context.resistances.containsKey(b)) {
-					newResistance = context.resistances.get(b).getResistance();
+	/**
+	 * onClientTick Methods
+	 */
+	public void animateBikeGuiStats()
+	{
+		if (animTickSwitch < animTickSwitchLength) {
+			animTickSwitch++;
+		}
+		if (animTickFade < animTickFadeLength + animTickFadeTime) {
+			animTickFade++;
+		}
+		if (animTickChasingFade < animTickChasingFadeLength + animTickFadeTime) {
+			animTickChasingFade++;
+		}
+	}
+
+	public void adjustPlayerWeatherStats(EntityPlayer inEntPlayer)
+	{
+		if (inEntPlayer.world.rainingStrength > 0.0f) {
+			inEntPlayer.world.setRainStrength(0.0f);
+		}
+	}
+
+	public void handleLockingKeys(EntityPlayer inEntPlayer)
+	{
+		if(enableLock){
+			inEntPlayer.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0D);
+			//Minecraft.getMinecraft().mouseHelper = BiGX.disableMouseHelper;
+			inEntPlayer.jumpMovementFactor = 0f;
+			inEntPlayer.capabilities.setPlayerWalkSpeed(0f);
+			inEntPlayer.capabilities.setFlySpeed(0f);
+			inEntPlayer.setJumping(false);
+			inEntPlayer.motionX = 0; inEntPlayer.motionZ = 0;
+			inEntPlayer.setSprinting(false);
+			inEntPlayer.rotationPitch = 0f;
+			inEntPlayer.rotationYaw = 0f;
+		} else {
+			inEntPlayer.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(PLAYER_DEFAULTSPEED);
+			Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
+			inEntPlayer.capabilities.setFlySpeed(0.05F);
+			inEntPlayer.capabilities.setPlayerWalkSpeed(0.1F);
+		}
+	}
+
+	public void adjustBikeSpeed(EntityPlayer inEntPlayer)
+	{
+		float moveSpeed = context.getSpeed() / 4;
+		double xt = Math.cos(Math.toRadians(inEntPlayer.getRotationYawHead() + 90)) * moveSpeed;
+		double zt = Math.sin(Math.toRadians(inEntPlayer.getRotationYawHead() + 90)) * moveSpeed;
+		inEntPlayer.setVelocity(xt, inEntPlayer.motionY, zt);
+	}
+
+	public void adjustPedalingAttributes(EntityPlayer inEntPlayer)
+	{
+		if(levelUpSoundPlayFlag)
+		{
+			levelUpSoundPlayFlag = false;
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalinglevelup"));
+			inEntPlayer.playSound(se, 1.0f, 1.0f);
+			//inEntPlayer.world.playSoundAtEntity(inEntPlayer, "minebike:pedalinglevelup", 1.0f, 1.0f);
+		}
+
+		if(levelDownSoundPlayFlag)
+		{
+			levelDownSoundPlayFlag = false;
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalingleveldown"));
+			inEntPlayer.playSound(se,1.0f,1.0f);
+			//inEntPlayer.world.playSound(inEntPlayer,inEntPlayer.getPosition(),se,SoundCategory.,1.0f,1.0f );
+			//inEntPlayer.world.playSoundAtEntity(inEntPlayer, "minebike:pedalingleveldown", 1.0f, 1.0f);
+		}
+
+		if(gaugeUpSoundPlayFlag)
+		{
+			gaugeUpSoundPlayFlag = false;
+			SoundEvent se = new SoundEvent(new ResourceLocation("minebike:pedalinggaugeup"));
+			inEntPlayer.playSound(se, 1.0f, 1.0f);
+			//inEntPlayer.world.playSoundAtEntity(inEntPlayer "minebike:pedalinggaugeup", 1.0f, 1.0f);
+		}
+
+		// Pedaling Combo
+		pedalingCombo.decreaseGauge();
+
+		gaugeTaggingTickCount++;
+
+		if(gaugeTaggingTickCount == gaugeTaggingTickCountMax)
+		{
+			gaugeTaggingTickCount = 0;
+
+			sendGaugeGameTag(pedalingCombo.getGaugePercentage());
+		}
+		// end of Pedaling Combo
+	}
+
+	public void adjustHungerBar()
+	{
+		//	NOTE: the following logic set the hunger bar
+		//	hungerTickCount++;
+		//
+		//	if(hungerTickCount == hungerTickCountMax)
+		//	{
+		//		hungerTickCount = 0;
+		//
+		//		Minecraft.getMinecraft().player.sendChatMessage("/effect @p 23 2 255");
+		//	}
+	}
+
+	public void adjustRotation(EntityPlayer inEntPlayer)
+	{
+		if( (inEntPlayer.rotationPitch < -45) && (context.getRotationY() < 0) ) {	}
+		else if( (inEntPlayer.rotationPitch > 45) && (context.getRotationY() > 0) ) {	}
+		else {
+			inEntPlayer.rotationPitch += context.getRotationY();
+		}
+		context.setRotationY(0);
+
+		//* EYE TRACKING *//
+		//System.out.println("pitch[" + p.rotationPitch + "] yaw[" + p.rotationYaw + "] head[" + p.rotationYawHead + "] X[" + context.getRotationX() + "]");
+		if( (context.getRotationX() < .5) && (context.getRotationX() > -.5)) {
+			inEntPlayer.rotationYaw += context.getRotationX() / 8;
+		}
+		else if( (context.getRotationX() < 1.0) && (context.getRotationX() > -1.0)) {
+			inEntPlayer.rotationYaw += context.getRotationX() / 4;
+		}
+		else if( (context.getRotationX() < 1.5) && (context.getRotationX() > -1.5)) {
+			inEntPlayer.rotationYaw += context.getRotationX() / 2;
+		}
+		else {
+			inEntPlayer.rotationYaw += context.getRotationX();
+		}
+
+		context.setRotationX(0);
+	}
+
+	public float getResistance(EntityPlayer inEntPlayer)
+	{
+		Block current_block = inEntPlayer.getEntityWorld().getBlockState(new BlockPos((int) inEntPlayer.posX,
+											(int) inEntPlayer.posY-2,(int) inEntPlayer.posZ)).getBlock();
+
+		if (current_block == Blocks.AIR) {
+			current_block = inEntPlayer.getEntityWorld().getBlockState(new BlockPos((int) inEntPlayer.posX,
+											(int) inEntPlayer.posY-3,(int) inEntPlayer.posZ)).getBlock();
+		}
+
+		// set a temporary resistance value = current resistance
+		float newBlockResistance = context.resistance;
+
+		// enter if a block was successfully read
+		if (current_block != null) {
+			// if the read block has a resistance value attached to it, get it
+			if (context.resistances.containsKey(current_block)) {
+				newBlockResistance = context.resistances.get(current_block).getResistance();
+			}
+			// the read block was not attached to a resistance. set to default resistance
+			else{
+				newBlockResistance = 1;
+			}
+		}
+
+		// get a resistance value based on change in elevation
+		getElevationResistance(inEntPlayer);
+
+		// add the elevation resistance to the block resistance
+		float tempResistance = newBlockResistance + elevationResistance;
+
+		// if combined resistance is greater than max allowed, set to max
+		if(tempResistance > 5)
+			tempResistance = 5;
+		// else if combined resistance is less than minimum allowed, set to minimum
+		else if(tempResistance < 0)
+			tempResistance = 0;
+
+		// return the combined block + elevation resistance
+		return tempResistance;
+	}
+
+	public void getElevationResistance(EntityPlayer inEntPlayer)
+	{
+		long timer_current =  System.currentTimeMillis();
+
+		// every 1.5 seconds, enter and read the elevation change
+		if(timer_current - timer_previous >= 1500)
+		{
+			double tempPlayerHeight = playerWorldHeight;  // temp_height = old_height
+			playerWorldHeight = inEntPlayer.posY; // old_height = current height
+
+			// check if the player increased elevation
+			if((playerWorldHeight - tempPlayerHeight) > 0) {
+				// only if the elevation change has remained for at least 2 entries (3 seconds), change the resistance
+				if(previousElevationType == 2) {
+					if(upChange < 3)
+						upChange++;
+
+					// increment any built up downhill changes in case the player suddenly goes back down hill
+					// so it will be a more gradual change
+					if(downChange < 0)
+						downChange++;
+
+					// store the new elevation resistance
+					elevationResistance = upChange;
 				}
-				// the read block was not attached to a resistance. set to default resistance
-				else{
-					newResistance = 1;
+
+				// 2 == previously increased in elevation
+				previousElevationType = 2;
+			}
+			// check if player has decreased elevation
+			else if ((playerWorldHeight - tempPlayerHeight) < 0) {
+				// only if the elevation change has remained for at least 2 entries (3 seconds), change the resistance
+				if(previousElevationType == 1) {
+					// decrement the downhill change
+					if(downChange > -3)
+						downChange--;
+
+					// decrement any built up up hill changes in case the player suddenly goes back up hill
+					// so it will be a more gradual change
+					if(upChange > 0)
+						upChange--;
+
+					// store the new elevation resistance
+					elevationResistance = downChange;
 				}
+
+				// 1 == previously decreased in elevation
+				previousElevationType = 1;
+			}
+			else if((playerWorldHeight - tempPlayerHeight) == 0){
+				// only if the elevation change has remained for at least 2 entries (3 seconds), change the resistance
+				if(previousElevationType == 0) {
+					if(upChange > 0)
+						upChange--;
+					if(downChange < 0)
+						downChange++;
+
+					elevationResistance = 0;
+				}
+
+				// 0 == previously no change in elevation (flat ground)
+				previousElevationType = 0;
 			}
 
-			// continue updating resistance by player block as long as the override flag is false
-			if(!flagOverrideResistance)
-				updateResistance(newResistance);
-
+			timer_previous = System.currentTimeMillis();
+			// System.out.println("Elevation Resistance: " + elevationResistance);
 		}
 	}
 
 	public void updateResistance(float inResistance)
 	{
 		// if the incoming resistance value is different than the current resistance, update the current resistance
-		if (inResistance!=context.resistance) {
-			System.out.println("Chaning Resistance -- Old[" + context.resistance + "] -- new[" + inResistance + "]");
+		if (inResistance != context.resistance) {
+			System.out.println("Changing Resistance -- Old[" + context.resistance + "] -- new[" + inResistance + "]");
 			context.resistance = inResistance;
 			ByteBuffer buf = ByteBuffer.allocate(5);
 			buf.put((byte) 0x00);
@@ -525,10 +665,18 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 	}
 
-	public void changeResistanceFlag(boolean newOverrideFlag)
+	public float getOverrideResistance()
 	{
-		flagOverrideResistance = newOverrideFlag;
+		return overrideResistanceValue;
 	}
+
+	public void setOverrideResistanceValue(Float inResistance)
+	{
+		overrideResistanceValue = inResistance;
+	}
+	/**
+	 * End of onClientTick methods
+	 */
 
 	private void addTheCurrenTrack(String songToBeAdded) {
 		synchronized (previousSongs) {
@@ -574,7 +722,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void sendGaugeGameTag(int gaugePercentage)
 	{
 		// SEND GAME TAG - Quest 0x(GAME TAG[0xFF])(questActivityTagEnum [0xF])
@@ -601,7 +749,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onGuiOpen(GuiOpenEvent event) {
 //		if (event.getGui() instanceof GuiMainMenu) {
@@ -611,7 +759,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 //		}
 
 	}
-	
+
 	/**
 	 * Pedaling to Mining
 	 * @param event
