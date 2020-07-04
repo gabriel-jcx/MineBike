@@ -1,35 +1,24 @@
 package org.ngs.bigx.minecraft.client;
 
-import java.awt.Event;
 import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
 
 import org.lwjgl.input.Keyboard;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.CommonProxy;
-import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
+
 
 import org.ngs.bigx.minecraft.client.skills.SkillEventHandler;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 
 
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-//import net.minecraft.client.renderer.entity.RenderItem;
+
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-//import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.World;
+
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -40,10 +29,10 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(e);
 		BigxClientContext context = (BigxClientContext) BiGX.instance().clientContext;
 		clientEvents = new ClientEventHandler(context);
-		FMLCommonHandler.instance().bus().register(clientEvents);
+//		FMLCommonHandler.instance().bus().register(clientEvents);
     	MinecraftForge.EVENT_BUS.register(clientEvents);
     	skillEventHandler = new SkillEventHandler(context);
-		FMLCommonHandler.instance().bus().register(skillEventHandler);
+//		FMLCommonHandler.instance().bus().register(skillEventHandler);
     	MinecraftForge.EVENT_BUS.register(skillEventHandler);
 
     	

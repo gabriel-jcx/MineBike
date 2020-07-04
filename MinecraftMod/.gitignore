@@ -1,5 +1,24 @@
 /MinecraftMod/eclipse/
 /MinecraftMod/forge-1.7.10-10.13.4.1492-1.7.10-changelog.txt
 /MinecraftMod/gradle/
+*gradle/
+.idea/
+.mixin.out/
+ForgeEssentials/
+Forge\ Source/
 /bin/*
 /bin/
+config/
+out/
+logs/
+saves/
+*.dat
+*.log
+*.cfg
+*.txt
+*.json
+*.mcmeta
+
+gradle.properties
+
+bendspacks/

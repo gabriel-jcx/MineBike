@@ -21,7 +21,6 @@ import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
 import org.ngs.bigx.dictionary.objects.game.GameServerList;
 import org.ngs.bigx.dictionary.objects.game.GameServerStatus;
 import org.ngs.bigx.dictionary.protocol.Specification.Command;
-import org.ngs.bigx.input.tobiieyex.eyeTracker;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
 import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.BiGX;
@@ -130,12 +129,12 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 //	public static String ipAddress = "128.200.115.181";
 //	public static String ipAddress = "192.168.0.53";
 //	public static String ipAddress = "localhost";
-//	public static String ipAddress = "192.168.0.161";
-	public static String ipAddress = "192.168.0.24";
+	public static String ipAddress = "192.168.0.161";
+//	public static String ipAddress = "192.168.0.24";
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();
-	public eyeTracker eTracker;
+//	public eyeTracker eTracker;
 	
 	public BigxClientContext(BiGX main) {
 		super(main);
@@ -171,13 +170,13 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		
 //		this.pedalingComboSoundEffect = new PedalingComboSoundEffect();
 		
-		try {
-			this.eTracker = new eyeTracker();
-			this.eTracker.addEyeTrackerListener(this);
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			this.eTracker = new eyeTracker();
+//			this.eTracker.addEyeTrackerListener(this);
+//		} catch (SocketException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static BigxContext getInstance()
