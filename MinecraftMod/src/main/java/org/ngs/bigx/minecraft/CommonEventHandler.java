@@ -11,7 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 //import org.bukkit.block.Block;
-import org.ngs.bigx.minecraft.client.ClientEventHandler;
+import noppes.npcs.client.ClientEventHandler;
+//import org.ngs.bigx.minecraft.client.ClientEventHandler;
 
 import org.ngs.bigx.minecraft.client.skills.Skill;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
@@ -98,6 +99,7 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 
+		BiGX.instance().clientContext.resistance=5;
 		if (!event.player.world.isRemote)
 		{
 

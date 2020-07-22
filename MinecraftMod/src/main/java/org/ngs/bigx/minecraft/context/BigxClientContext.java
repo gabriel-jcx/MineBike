@@ -128,9 +128,11 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 //	public static String ipAddress = "128.195.55.237";
 //	public static String ipAddress = "128.200.115.181";
 //	public static String ipAddress = "192.168.0.53";
-//	public static String ipAddress = "localhost";
-	public static String ipAddress = "192.168.0.161";
+////	public static String ipAddress = "localhost";
+//	public static String ipAddress = "192.168.0.161";
+	public static String ipAddress = "172.16.0.18";
 //	public static String ipAddress = "192.168.0.24";
+
 	public static int port = 1331;
 	
 	public HashMap<Block,Resistance> resistances = new HashMap<Block,Resistance>();

@@ -384,19 +384,19 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			 */
 			// set the pedaling resistance
 			// this variable will be used as the argument for the resistance change
-			float resistance;
-
-			// if we are not overriding the resistance elsewhere in MineBike, use the block/incline resistance
-			if(!flagOverrideResistance) {
-				resistance = getResistance(entPlayer);
-			}
-			// else, get the overriden resistance value set by the public static function "setOverrideResistanceValue"
-			else
-			{
-				resistance = getOverrideResistance();
-			}
-
-			updateResistance(resistance);
+//			float resistance;
+//
+//			// if we are not overriding the resistance elsewhere in MineBike, use the block/incline resistance
+//			if(!flagOverrideResistance) {
+//				resistance = getResistance(entPlayer);
+//			}
+//			// else, get the overriden resistance value set by the public static function "setOverrideResistanceValue"
+//			else
+//			{
+//				resistance = getOverrideResistance();
+//			}
+//
+//			updateResistance(resistance);
 			/**
 			 * END OF PEDAL RESISTANCE LOGIC
 			 */
