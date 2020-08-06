@@ -541,6 +541,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		Block current_block = inEntPlayer.getEntityWorld().getBlockState(new BlockPos((int) inEntPlayer.posX,
 											(int) inEntPlayer.posY-2,(int) inEntPlayer.posZ)).getBlock();
 
+
 		if (current_block == Blocks.AIR) {
 			current_block = inEntPlayer.getEntityWorld().getBlockState(new BlockPos((int) inEntPlayer.posX,
 											(int) inEntPlayer.posY-3,(int) inEntPlayer.posZ)).getBlock();

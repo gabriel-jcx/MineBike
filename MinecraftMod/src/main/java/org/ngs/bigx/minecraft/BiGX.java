@@ -9,6 +9,7 @@ import net.minecraftforge.event.GameRuleChangeEvent;
 
 //import org.ngs.bigx.minecraft.client.renderer.MysteriousKeyRenderer;
 //import org.ngs.bigx.minecraft.client.AI.OuterAI;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.ngs.bigx.minecraft.client.AI.OuterAI;
 import org.ngs.bigx.minecraft.context.BigxClientContext;
 import org.ngs.bigx.minecraft.context.BigxContext;
@@ -70,15 +71,9 @@ import noppes.npcs.CustomItems;
 	    
 	    private static BiGX instance;
 
+	    @SideOnly(Side.CLIENT)
 	    public static OuterAI mainAI= new OuterAI();
 
-
-	    // TODO: need to figure out which function to set the Name of the QuestFRMCheck
-		// TODO: figure out what this freaking 538 means.....
-		// 1. setRegistryName("QuestRFMLucky);
-		// 2. setUnlocalizedName("QuestFRMLucky");
-		//BlockChest.Type = new BlockChest.Type(538); //
-	    //public static final Block BlockQuestFRMCheck = (new QuestRFMChest(Type.BASIC)).setRegistryName("QuestRFMLucky"); //setBlockName("QuestRFMLucky");
 
 
 //	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
@@ -113,18 +108,7 @@ import noppes.npcs.CustomItems;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
-			// Item Register Event is now moved to CommonEventHandler under registerBlocks()
-//	    	for(Item item : customItems)
-//	    	{
-//////				GameRegistry.registerTileEntity(item);
-////	    		GameRegistry.registerItem(item, item.getUnlocalizedName().substring(5));
-//	    		//GameRegistry.registerTileEntity(item, item.getUnlocalizedName().substring(5));
-//				//GameRegistry.registerEntitySelector(item, item.getUnlocalizedName().substring(5));
-//				;
-//	    	}
 			System.out.println("Register Entities STARTED");
-
-//			MineBikeEntityRegistry.RegisterMineBikeEntities();
 			System.out.println("Register Entities DONE");
 	    	instance = this;
 	    	clientContext = new BigxClientContext(this);
