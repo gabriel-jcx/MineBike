@@ -68,7 +68,7 @@ import noppes.npcs.CustomItems;
 	    public static SimpleNetworkWrapper network;
 	    
 	    public static final String TEXTURE_PREFIX = "minebike";
-	    
+
 	    private static BiGX instance;
 
 	    @SideOnly(Side.CLIENT)
