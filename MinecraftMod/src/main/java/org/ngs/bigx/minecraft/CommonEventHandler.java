@@ -99,21 +99,17 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public void onPlayerTickEvent(TickEvent.PlayerTickEvent event) {
 
-		BiGX.instance().clientContext.resistance=5;
-		if (!event.player.world.isRemote)
+//		BiGX.instance().clientContext.resistance=5;
+		if (event.player.world.isRemote)
 		{
-
-
 			try {
 				onPlayerTickEventCount++;
-
 				if(onPlayerTickEventCount >= 50)
 					onPlayerTickEventCount = 0;
 
-				if(onPlayerTickEventCount == 0)
+				if(onPlayerTickEventCount == 0 && EVENT_PLAYERSTATE_FLAG)
 				{
-					if(EVENT_PLAYERSTATE_FLAG)
-					{
+
 						if(EVENT_PLAYERSTATE_LOAD)
 						{
 							GameSaveManager.sendCustomCommand((BigxClientContext)BigxClientContext.getInstance(), BiGX.BIGXSERVERIP, CUSTOMCOMMAND.GETGAMESAVES);
@@ -139,7 +135,7 @@ public class CommonEventHandler {
 
 						if(!(EVENT_PLAYERSTATE_LOAD || EVENT_PLAYERSTATE_RESET || EVENT_PLAYERSTATE_SAVE))
 							EVENT_PLAYERSTATE_FLAG = false;
-					}
+
 				}
 			}
 			catch (IOException e)
@@ -171,7 +167,7 @@ public class CommonEventHandler {
 	
 	@SubscribeEvent
 	public void onWorldUnload(WorldEvent.Unload event) {
-		BigxClientContext context = BiGX.instance().clientContext;
+	//	BigxClientContext context = BiGX.instance().clientContext; // NOTE: what's the significance of this line?
 	}
 
 	
@@ -179,128 +175,27 @@ public class CommonEventHandler {
 	public void entityAttacked(LivingAttackEvent event)
 	{
 //		System.out.println("Attack the player!");
-		EntityLivingBase attackedEnt = event.getEntityLiving();
-		DamageSource attackSource = event.getSource();
-		if(attackedEnt instanceof EntityPlayer)
-		{
-			if(attackSource == DamageSource.FALL)
-			{
-				System.out.println("NO FALL!!!");
-				event.setCanceled(true);
-			}
-		}
+
+		// TODO: implement this no fall damaage on server? do we need it?
+//		EntityLivingBase attackedEnt = event.getEntityLiving();
+//		DamageSource attackSource = event.getSource();
+//		if(attackedEnt instanceof EntityPlayer)
+//		{
+//			if(attackSource == DamageSource.FALL)
+//			{
+//				System.out.println("NO FALL!!!");
+//				event.setCanceled(true);
+//			}
+//		}
 	}
 	
 	@SubscribeEvent
 	public void onLivingFallEvent(LivingFallEvent event) {
 //		System.out.println("Falling...");
-		if (event.getEntityLiving() != null && event.getEntityLiving() instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
-			player.fallDistance = 0.1F;
-		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerInteract(PlayerInteractEvent e) {
-//		EntityPlayer player = e.getEntityPlayer();
-//		World w = e.getWorld();
-//
-//		if (!w.isRemote) {
-//			//BlockPos pos = new BlockPos();
-////			if (w.getBlockState(e.getPos()).getBlock()== Blocks.CHEST)
-////				BiGXEventTriggers.chestInteract(e, w, levelSys);
+//		if (event.getEntityLiving() != null && event.getEntityLiving() instanceof EntityPlayer) {
+//			EntityPlayer player = (EntityPlayer) event.getEntityLiving();
+//			player.fallDistance = 0.1F;
 //		}
 	}
-	@SubscribeEvent
-	public void registerBlocks(RegistryEvent.Register<Item> event)
-	{
-//		System.out.println("CommonEventHandler: RegisterEvent Triggered");
-//		for (Item item : BiGX.instance().customItems){
-//			//System.out.println(Item.getIdFromItem(item));
-//			System.out.println(item.getUnlocalizedName());
-//			event.getRegistry().registerAll(item);
-//		}
 
-	}
-	@SubscribeEvent
-	public void registerBlock(RegistryEvent.Register<Block> event){
-		//event.getRegistry().register(BiGX.instance().BlockQuestFRMCheck);
-		//event.getRegistry().register(BiGX.instance().blockQuestChest);
-	}
-	@SubscribeEvent
-	public void onItemToss(ItemTossEvent event) {
-//	    Item droppedItem = event.getEntityItem().getItem().getItem();
-//	    if (droppedItem == Items.PAPER) {
-//	        event.setCanceled(true);
-//	        event.getPlayer().inventory.addItemStackToInventory(new ItemStack(Items.PAPER));
-//	    }
-//	    if (droppedItem == Item.getItemById(4801)) {
-//	        event.setCanceled(true);
-//	        event.getPlayer().inventory.addItemStackToInventory(new ItemStack(Item.getItemById(4801)));
-//	    }
-	}
-	
-	@SubscribeEvent
-	public void onPlayerUse(PlayerInteractEvent event){
-	}
-	
-	@SubscribeEvent
-	public void onAttackEntityEvent(AttackEntityEvent event) {
-	}
-	
-	
-	@SubscribeEvent
-	public void onDecoratorCreate(DecorateBiomeEvent.Decorate event) {
-
-	}
-	
-	@SubscribeEvent
-	public void onServerTick(TickEvent.ServerTickEvent event) throws Exception {
-//		if (FMLCommonHandler.instance().getMinecraftServerInstance() != null && event.phase == TickEvent.Phase.END) {
-//			/**
-//			 * Solution to doors being annoying -- auto-open in range.
-//			 * NOTE: Only do this for Wooden Doors. Iron Doors should be
-//			 * used for more important things... example: puzzle solving.
-//			 */
-//			if ((server_tick%10) == 0) {
-//				int doorOpenDistance = 5;
-//				int doorCheckRadius = 10;
-//
-//				for (WorldServer ws : FMLCommonHandler.instance().getMinecraftServerInstance().worlds) {
-//					for (EntityPlayer player : (List<EntityPlayer>) ws.playerEntities) {
-//
-//						int pX = (int) player.posX;
-//						int pY = (int) player.posY;
-//						int pZ = (int) player.posZ;
-//
-//						for (int xx = pX-doorCheckRadius; xx < pX+doorCheckRadius; ++xx) {
-//							for (int zz = pZ-doorCheckRadius; zz < pZ+doorCheckRadius; ++zz) {
-//								for (int yy = pY-doorCheckRadius; yy < pY+doorCheckRadius; ++yy) {
-//
-//									if (ws.getBlockState(new BlockPos(xx,yy,zz)).getBlock() == Blocks.OAK_DOOR) {
-//										double blockDistance = Math.sqrt(Math.pow(Math.abs(xx-pX), 2) + Math.pow(Math.abs((yy-pY)), 2) + Math.pow(Math.abs(zz-pZ), 2));
-//										// Open if close
-//										IBlockState gottenMeta = ws.getBlockState(new BlockPos(xx, yy, zz));
-//										// TODO: re-write the logic for door being annoying, auto-open in range
-////										int meta = gottenMeta;
-////										gottenMeta.getBlock()
-////
-////										if (blockDistance <= doorOpenDistance && (gottenMeta >= 0 && gottenMeta < 4)) {
-////											meta += 4;
-////											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
-////											ws.playAuxSFX(1003, xx, yy, zz, 0);
-////										} else if (blockDistance > doorOpenDistance && (gottenMeta >= 4 && gottenMeta < 8)){
-////											meta -= 4;
-////											ws.setBlockMetadataWithNotify(xx, yy, zz, meta, 3);
-////											ws.playAuxSFX(1003, xx, yy, zz, 0);
-////										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-	}
 }

@@ -45,7 +45,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.util.MouseHelper;
+//import net.minecraft.util.MouseHelper;
 //import net.minecraftforge.client
 //import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -71,9 +71,8 @@ import noppes.npcs.CustomItems;
 
 	    private static BiGX instance;
 
-	    @SideOnly(Side.CLIENT)
-	    public static OuterAI mainAI= new OuterAI();
-
+//	    @SideOnly(Side.CLIENT)
+	    public static OuterAI mainAI;
 
 
 //	    public static final BlockQuestChest blockQuestChest = new BlockQuestChest();
@@ -83,8 +82,9 @@ import noppes.npcs.CustomItems;
 
 	    public BigxClientContext clientContext; // BigxClientContext for client and BigxServerContext for server
 	    public BigxServerContext serverContext; // BigxClientContext for client and BigxServerContext for server
-	    
-	    public static MouseHelper disableMouseHelper;
+
+//		@SideOnly(Side.CLIENT)
+//	    public static MouseHelper disableMouseHelper;
 
 //	    public static Item MysteriousKey;
 	    
@@ -103,74 +103,66 @@ import noppes.npcs.CustomItems;
 	    public static BiGX modInstance;
 	    
 	    
-	    @SidedProxy(clientSide="org.ngs.bigx.minecraft.client.ClientProxy", serverSide="org.ngs.bigx.minecraft.server.ServerProxy")
+	    //@SidedProxy(clientSide="org.ngs.bigx.minecraft.client.ClientProxy", serverSide="org.ngs.bigx.minecraft.server.ServerProxy")
 		public static CommonProxy proxy;
 	    
 	    @EventHandler
 	    public void preInit(FMLPreInitializationEvent e) {
-			System.out.println("Register Entities STARTED");
-			System.out.println("Register Entities DONE");
-	    	instance = this;
-	    	clientContext = new BigxClientContext(this);
-	    	serverContext = new BigxServerContext(this);
-	    	
-	    	proxy.preInit(e);
-	    	network = NetworkRegistry.INSTANCE.newSimpleChannel("BikeChannel");
-	    	network.registerMessage(HandleHungerMessageOnServer.Handler.class,HandleHungerMessageOnServer.class,0,Side.SERVER);
+			System.out.println("bikemod PreInit Started");
+	    	if(e.getSide().isClient()){
+				System.out.println("Register Entities STARTED");
+				System.out.println("Register Entities DONE");
+				instance = this;
+				clientContext = new BigxClientContext(this);
+				serverContext = new BigxServerContext(this);
 
-	    	network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
-	    	network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
-	    	//TODO: figure out how to register TileENtity
-			System.out.println("PreInit Done");
-			// Block registration is now under CommonEventhandler registerBlock()
+				proxy.preInit(e);
+				network = NetworkRegistry.INSTANCE.newSimpleChannel("BikeChannel");
+				network.registerMessage(HandleHungerMessageOnServer.Handler.class,HandleHungerMessageOnServer.class,0,Side.SERVER);
 
-//	    	GameRegistry.registerBlock(BlockQuestFRMCheck, "QuestRFMLucky");
-//	    	GameRegistry.registerBlock(blockQuestChest, Names.Blocks.QUEST_CHEST);
-	    	
-	    	//MysteriousKey = new MysteriousKey(4770).setUnlocalizedName("MysteriousKey").setTextureName("bike:MysteriousKey");
+				network.registerMessage(ServerStatHandler.class, StatPacket.class, 3, Side.SERVER);
+				network.registerMessage(ClientStatHandler.class, StatPacket.class, 4, Side.CLIENT);
+				//TODO: figure out how to register TileENtity
+
+			}
+			System.out.println("bikemod PreInit Done");
 	    }
 	        
 	    @EventHandler
 	    public void init(FMLInitializationEvent e) {
-	    	proxy.init(e);
-
-//	    	QuestEventHandler questEventHandler = new QuestEventHandler();
-//			FMLCommonHandler.instance().bus().register(questEventHandler);
-//	    	MinecraftForge.EVENT_BUS.register(questEventHandler);
-	    	
-//	    	PedalingToBuildEventHandler pedalingToBuild = new PedalingToBuildEventHandler();
-//			FMLCommonHandler.instance().bus().register(pedalingToBuild);
-//	    	MinecraftForge.EVENT_BUS.register(pedalingToBuild);
-	    	
-//	    	GameRegistry.registerTileEntity(TileEntityQuestChest.class, Names.TileEntities.QUEST_CHEST);
-	    	
-	    	//GameRegistry.registerItem(MysteriousKey, "MysteriousKey ");
-	    	
-	    	//MinecraftForgeClient.registerItemRenderer(BiGX.MysteriousKey, (IItemRenderer)new MysteriousKeyRenderer());
+	    	if(e.getSide().isClient()){
+	    		mainAI = new OuterAI();
+				proxy.init(e);
+			}
+			System.out.println("bikemod init Done");
 	    }
 	        
 	    @EventHandler
 	    public void postInit(FMLPostInitializationEvent e) {
-	    	proxy.postInit(e);
-	    	
-	    	characterProperty = new CharacterProperty("currentPlayerLoTomProperty");
-	    	StatRegistry.registerStat(characterProperty, EntityPlayer.class);
-	    	System.out.println("[BiGX] Character Property Init Done");
-	    	
-	    	bikeProperty = new BikeProperty("currentBikeLoTomProperty");
+			if(e.getSide().isClient()){
 
-	    	// TODO: figure out why the bike is an EntityTank????????
-	    	StatRegistry.registerStat(bikeProperty, EntityTank.class);
-	    	System.out.println("[BiGX] Bike Property Init Done");
-	    	
-	    	disableMouseHelper = new MouseHelper() {
-	    		@Override
-	    		public void mouseXYChange() {
-	    			deltaX = 0;
-	    			deltaY = 0;
-	    		}
-	    	};
-	    	
+				proxy.postInit(e);
+
+				characterProperty = new CharacterProperty("currentPlayerLoTomProperty");
+				StatRegistry.registerStat(characterProperty, EntityPlayer.class);
+				System.out.println("[BiGX] Character Property Init Done");
+
+				bikeProperty = new BikeProperty("currentBikeLoTomProperty");
+
+				// TODO: figure out why the bike is an EntityTank????????
+				StatRegistry.registerStat(bikeProperty, EntityTank.class);
+				System.out.println("[BiGX] Bike Property Init Done");
+
+//				disableMouseHelper = new MouseHelper() {
+//					@Override
+//					public void mouseXYChange() {
+//						deltaX = 0;
+//						deltaY = 0;
+//					}
+//				};
+			}
+			System.out.println("bikemod postInit Done");
+
 	    	
 	    }
 	    

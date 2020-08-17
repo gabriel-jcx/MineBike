@@ -95,7 +95,9 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	private static final int hungerTickCountMax = 5*10*10; // Every Ten Seconds
 	
 	private static final double PLAYER_DEFAULTSPEED = 0.10000000149011612D;
-	private static final MouseHelper defaultMouseHelper = new MouseHelper();
+
+	@SideOnly(Side.CLIENT)
+	private static MouseHelper defaultMouseHelper;
 	
 	public static boolean flagOpenChapterGui = false;
 	public static boolean flagChapterCorrectionFromLoading = false;
@@ -108,6 +110,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	private ArrayList<String> previousSongs = new ArrayList();
 	
 	public ClientEventHandler(BigxClientContext con) {
+		defaultMouseHelper = new MouseHelper();
 		context = con;
 		handler = this;
 	}
@@ -147,6 +150,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
 	public void onEvent(KeyInputEvent event) 
 	{
+
 		if (Minecraft.getMinecraft().gameSettings.keyBindForward.isPressed()) {
 			Minecraft.getMinecraft().player.setSprinting(false);
 		}
@@ -236,72 +240,7 @@ public class ClientEventHandler implements IPedalingComboEvent {
 		}
 	}
 	
-	@SubscribeEvent
-	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if (event.getEntity().world.provider.getDimension() == 0 && event.getWorld().isRemote && event.getEntity() instanceof EntityPlayerSP) {
-			// TODO fill in JSON boundary int when it's implemented
-			int bounds = 0;
-			
-			EntityPlayerSP entPlayerSP = (EntityPlayerSP)event.getEntity();
-			
-			if(entPlayerSP.world.provider.getDimension() == 0)
-			{
-//				if (GuiChapter.getChapterNumber() < 3) {
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_door allow fe.protection.zone.knockback");
-//				} else if (GuiChapter.getChapterNumber() < 4) {
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village1 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village2 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village3 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village4 allow fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-//				} else {
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village1 deny fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village2 deny fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village3 deny fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_village4 deny fe.protection.zone.knockback");
-//					entPlayerSP.sendChatMessage("/p group _ALL_ zone block_door deny fe.protection.zone.knockback");
-//				}
 
-				flagChapterCorrectionFromLoading = true;
-			}
-		}
-		
-//		if(event.getWorld().isRemote && event.getEntity() instanceof EntityPlayer)
-//		{
-//			EntityPlayer entPlayer = (EntityPlayer) event.getEntity();
-//			Minecraft mc = Minecraft.getMinecraft();
-//
-//			if( (entPlayer.world.provider.getDimension() == 105) )
-//			{
-//				System.out.println("[BiGX] Player!!!!!!!!!! ===================");
-//				flagOpenChapterGui = true;
-//
-//				GuiChapter.sendChapterGameTag(GuiChapter.getChapterNumber());
-//
-//				if(BigxClientContext.getIsGameSaveRead())
-//					GuiChapter.setTodayWorkoutDone(QuestTaskChasing.getLevelSystem().getPlayerLevel() >= GuiChapter.getTargetedLevel());
-//
-//				if(GuiChapter.getChapterNumber() == 3)
-//				{
-//					if(QuestTaskChasing.guiChasingQuest != null)
-//					{
-//						int currentLevel = QuestTaskChasing.guiChasingQuest.getSelectedQuestLevelIndex() + 1;
-//
-//						if(currentLevel > 2)
-//						{
-//							GuiChapter.proceedToNextChapter();
-//							flagOpenChapterGui = true;
-//						}
-//					}
-//				}
-//			}
-//
-//		}
-	}
 	
 	@SubscribeEvent
 	public void entityAttacked(LivingHurtEvent event)
@@ -441,7 +380,8 @@ public class ClientEventHandler implements IPedalingComboEvent {
 			inEntPlayer.rotationYaw = 0f;
 		} else {
 			inEntPlayer.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(PLAYER_DEFAULTSPEED);
-			Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
+			if(inEntPlayer.world.isRemote)
+				Minecraft.getMinecraft().mouseHelper = defaultMouseHelper;
 			inEntPlayer.capabilities.setFlySpeed(0.05F);
 			inEntPlayer.capabilities.setPlayerWalkSpeed(0.1F);
 		}

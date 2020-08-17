@@ -23,8 +23,8 @@ import org.ngs.bigx.dictionary.objects.game.BiGXSuggestedGameProperties;
 import org.ngs.bigx.dictionary.objects.game.GameServerList;
 import org.ngs.bigx.dictionary.objects.game.GameServerStatus;
 import org.ngs.bigx.dictionary.protocol.Specification.Command;
-import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
-import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
+//import org.ngs.bigx.input.tobiieyex.eyeTrackerListner;
+//import org.ngs.bigx.input.tobiieyex.eyeTrackerUDPData;
 import org.ngs.bigx.minecraft.BiGX;
 import org.ngs.bigx.minecraft.BiGXConnectionStateManagerClass;
 import org.ngs.bigx.minecraft.bike.BiGXPacketHandler;
@@ -50,8 +50,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 
-@SideOnly(Side.CLIENT)
-public class BigxClientContext extends BigxContext implements eyeTrackerListner {
+//@SideOnly(Side.CLIENT)
+public class BigxClientContext extends BigxContext{
 	// CLIENT
 	public static BiGXNetClient bigxclient;
 	private Timer bigxclientTimer;
@@ -586,12 +586,12 @@ public class BigxClientContext extends BigxContext implements eyeTrackerListner 
 		BigxClientContext.gameSaveList = gameSaveList;
 	}
 
-	@Override
-	public void onMessageReceive(Event event, eyeTrackerUDPData trackerData) {
-		this.rotationX = (float) trackerData.X;
-		this.rotationY = (float) trackerData.Y;
-	}
-	
+//	@Override
+//	public void onMessageReceive(Event event, eyeTrackerUDPData trackerData) {
+//		this.rotationX = (float) trackerData.X;
+//		this.rotationY = (float) trackerData.Y;
+//	}
+//
 	// TODO: NEED TO REVISE THIS FUNCTION VERY UNSTABLE
 	public void sendPatientProfileToServer(String questDesignString)
 	{
