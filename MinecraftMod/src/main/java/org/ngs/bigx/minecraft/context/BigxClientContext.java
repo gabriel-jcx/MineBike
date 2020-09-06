@@ -505,11 +505,11 @@ public class BigxClientContext extends BigxContext{
 			
 			// Extract IP of Middleware
 			if(isMiddlwareIPFileAvailable) {
-				try {
-					ipAddress = extractMiddlewareIP();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					ipAddress = extractMiddlewareIP();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 				
 				if(!ipAddress.equals("")) {
 					isMiddlwareIPAvailable = true;

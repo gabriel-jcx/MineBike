@@ -103,7 +103,7 @@ import noppes.npcs.CustomItems;
 	    public static BiGX modInstance;
 	    
 	    
-	    //@SidedProxy(clientSide="org.ngs.bigx.minecraft.client.ClientProxy", serverSide="org.ngs.bigx.minecraft.server.ServerProxy")
+	    @SidedProxy(clientSide="org.ngs.bigx.minecraft.client.ClientProxy", serverSide="org.ngs.bigx.minecraft.server.ServerProxy")
 		public static CommonProxy proxy;
 	    
 	    @EventHandler

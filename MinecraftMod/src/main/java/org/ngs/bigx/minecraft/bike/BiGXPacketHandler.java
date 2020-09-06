@@ -35,10 +35,10 @@ public class  BiGXPacketHandler {
 		BigxClientContext context = (BigxClientContext) BiGX.instance().clientContext;
 		
 //		System.out.println("Receiving Data");
-		System.out.println("CommandID = "  + packet.commandId);
-		if(packet.commandId == 32){
-			System.out.println(" GOT A HEART RATE PACKET FROM MIDDLEWARE SUCCESSFULLY");
-		}
+//		System.out.println("CommandID = "  + packet.commandId);
+//		if(packet.commandId == 32){
+////			System.out.println(" GOT A HEART RATE PACKET FROM MIDDLEWARE SUCCESSFULLY");
+//		}
 		switch (packet.deviceEvent) {
 			case org.ngs.bigx.dictionary.protocol.Specification.DataType.HEART:
 				context.heartrate = buf.getInt();
