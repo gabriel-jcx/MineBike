@@ -360,6 +360,7 @@ public class BigxClientContext extends BigxContext{
 		for(GameServerStatus gameServerStatus : gameServerList.getGameserverlist())
 		{
 			// /
+
 			String ip = InetAddress.getLocalHost().toString().split("/")[1];
 			
 			System.out.println("InetAddress.getLocalHost()[" + ip + "]");
